@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#95d3c1",
+                    "on-surface": "#1c1c1a",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-container": "#b6ae96",
+                    "tertiary": "#302c1a",
+                    "on-error": "#ffffff",
+                    "primary-container": "#004b3e",
+                    "primary": "#003229",
+                    "surface-container-highest": "#e5e2df",
+                    "on-surface-variant": "#404945",
+                    "tertiary-container": "#47422f",
+                    "outline-variant": "#bfc9c4",
+                    "on-primary-fixed": "#00201a",
+                    "outline": "#707975",
+                    "surface-variant": "#e5e2df",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#785a1a",
+                    "secondary-fixed": "#ffdea5",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#2b695a",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#fcf9f6",
+                    "on-background": "#1c1c1a",
+                    "surface-container-high": "#eae8e5",
+                    "surface-container-low": "#f6f3f0",
+                    "background": "#fcf9f6",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#f3f0ed",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#e9c176",
+                    "secondary-container": "#fed488",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#261900",
+                    "primary-fixed": "#b0efdd",
+                    "surface-dim": "#dcdad7",
+                    "on-primary-container": "#7dbaa9",
+                    "tertiary-fixed-dim": "#cec6ad",
+                    "surface": "#fcf9f6",
+                    "secondary": "#775a19",
+                    "on-tertiary-fixed": "#1f1c0b",
+                    "inverse-surface": "#31302f",
+                    "on-primary-fixed-variant": "#0a5043",
+                    "inverse-primary": "#95d3c1",
+                    "tertiary-fixed": "#ebe2c8",
+                    "on-tertiary-fixed-variant": "#4c4733",
+                    "surface-container": "#f0edea",
+                    "on-secondary-fixed-variant": "#5d4201"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Newsreader"],
+                    "body": ["Newsreader"],
+                    "label": ["Public Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .serif-tight { font-family: 'Newsreader', serif; letter-spacing: -0.02em; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        [dir="rtl"] .rtl-flip { transform: scaleX(-1); }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-fixed overflow-x-hidden">
+<!-- Top Navigation Shell (Component Inspired) -->
+<nav class="fixed top-0 w-full z-50 bg-[#fcf9f6]/80 backdrop-blur-md shadow-[0_20px_40px_rgba(0,50,41,0.05)] border-b border-outline-variant/10">
+<div class="flex justify-between items-center w-full px-6 py-3 max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer scale-95 active:opacity-80 transition-all rtl-flip" data-icon="arrow_back">arrow_back</span>
+<div class="h-10 w-auto">
+<img alt="Ebzim Logo" class="h-full w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ujSeLZIkdzaGhiRQtr3_b9JvTENUxNSA54RLVLcu_805fZmxdl_IRNstNyxqVb2UZ4Jero7oJ5E3er5m994XSG4bnBg7Z7qGWqhgYV31K3AzD3_Ky5V8bOjfuRZ36lHExq1HL-L1UW4G0bkGpsNcfTNEtyPxALMu4INn0OhX0ZyuHww798jX2p0CelULHI2ic-4PEvIJby4Sxd_Oyzzvd7cv_emtU47d3SzeXyjww2HVeYOeuatwHcKE1WPPXEd2X1HmdHn4ulu5hw"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/15 ring-2 ring-primary/5">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a man in business attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjAibfZya9Rm9WjJYvI64yXzt7ZgdfDyN32G-pWO6B3qWr5hV0VQ66ajlLI5Ct7wYbr5zbqwkppd8-DZMQ_RM3j8uo_cJZd0XOnPoq_crIJud-1bWuIOSsZb1CbTJbWYzPsEQTFSSuABbH55GL4DRA8Tvq7CZRmdRaeELwhM9h6vgdYKlS0u0KGH8dM6uubXIQCJUCPSJAaTOFJUm3bROwOPjDjh8es95lKybM6rBbOqusdx_d3oOAEI3z2G9uOsVFe7rFowrqivSD"/>
+</div>
+<span class="material-symbols-outlined text-primary cursor-pointer lg:hidden" data-icon="menu">menu</span>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto">
+<!-- Header & Search Section -->
+<header class="mb-12 md:flex md:items-end md:justify-between gap-12">
+<div class="max-w-2xl">
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-secondary mb-3 block" dir="auto">Leadership &amp; Governance | القيادة والحوكمة</span>
+<h2 class="text-4xl md:text-6xl font-headline font-bold text-primary mb-4 leading-[1.1]" dir="auto">Our Curators of Heritage.</h2>
+<p class="text-lg md:text-xl text-on-surface-variant font-light italic leading-relaxed" dir="auto">Preserving the legacy of Ebzim through institutional wisdom and cultural stewardship.</p>
+</div>
+<div class="mt-8 md:mt-0 w-full md:w-80">
+<div class="relative group">
+<input class="w-full bg-surface-container border-b-2 border-outline-variant/30 focus:border-primary transition-all py-3 pl-10 pr-4 font-label text-sm outline-none placeholder:text-outline-variant/70" placeholder="Search by name or role..." type="text"/>
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+</div>
+<div class="flex gap-2 mt-4 overflow-x-auto pb-2 no-scrollbar">
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider font-label whitespace-nowrap">All</button>
+<button class="bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider font-label whitespace-nowrap">Board Members</button>
+<button class="bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider font-label whitespace-nowrap">Executive</button>
+</div>
+</div>
+</header>
+<!-- Spotlight Section (President) -->
+<section class="mb-20 relative">
+<div class="absolute inset-0 bg-primary-container rounded-2xl -z-10 translate-x-3 translate-y-3 opacity-5"></div>
+<div class="bg-surface-container-low rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-[0_20px_60px_rgba(0,50,41,0.04)] border border-outline-variant/10">
+<div class="w-full md:w-2/5 aspect-[4/5] md:aspect-auto">
+<img class="w-full h-full object-cover" data-alt="formal portrait of Dr. Amin Al-Mansour" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpkhIP5p1lPL-j7AXej-0zGIAxc43gOv3b4FJgOSz-UlO_ehRUE-7bniRy1FpOw9LuqakfeYsmKQ-6GO4cDXKj2gJoKm_49KeLij3lyjpOVi8nXgdnkbDkmJrhpz1Z4Nd8s4QJM6eXnVBhlScCwFpUST3TxQsW1z6DNL7EVw4PJSvT5gh8Sa9JO172ekDW5VaqM529slh41N5PwVdA_NDPf7WGlsV3OgccFOyAGdHIyX9bd6JU8Su5BHQffOhKMN3qezglCvuzeKpK"/>
+</div>
+<div class="w-full md:w-3/5 p-8 md:p-14 flex flex-col justify-center relative">
+<div class="mb-4">
+<span class="bg-secondary-container text-on-secondary-fixed font-label text-[9px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full inline-block">Executive Leadership</span>
+</div>
+<h3 class="text-3xl md:text-5xl font-headline font-bold text-primary mb-2" dir="auto">Dr. Amin Al-Mansour</h3>
+<p class="text-lg text-secondary font-label font-medium mb-6 flex flex-wrap gap-2 items-center" dir="auto">
+                    Founding President 
+                    <span class="text-outline-variant/40 hidden md:inline">|</span>
+<span class="font-headline italic text-primary/80">رئيس مجلس الإدارة</span>
+</p>
+<p class="text-lg md:text-xl text-on-surface-variant leading-relaxed italic mb-8 max-w-xl border-l-2 border-secondary/30 pl-6" dir="auto">
+                    "The mission of Ebzim is not merely to archive our past, but to synthesize it with the innovations of tomorrow. We stand as a bridge between generations."
+                </p>
+<div class="flex flex-wrap gap-6 items-center justify-between">
+<a class="group flex items-center gap-2 text-primary font-label text-xs uppercase tracking-[0.15em] border-b-2 border-secondary/40 pb-1 hover:border-secondary transition-all" href="#">
+                        Full Biography
+                        <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform rtl-flip" data-icon="arrow_right_alt">arrow_right_alt</span>
+</a>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors text-xl" data-icon="share">share</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors text-xl" data-icon="mail">mail</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Committee Section -->
+<section class="mb-20">
+<div class="flex items-center gap-4 mb-10">
+<h4 class="text-2xl font-headline font-semibold text-primary whitespace-nowrap" dir="auto">The Governing Board</h4>
+<div class="flex-grow h-px bg-outline-variant/30"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Member Card 1 -->
+<div class="group bg-surface-container-low rounded-xl p-6 transition-all duration-500 hover:bg-white hover:shadow-xl hover:shadow-primary/5 border border-outline-variant/10">
+<div class="relative w-full aspect-square rounded-lg overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" data-alt="portrait of Laila Belkacem" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3HHRkVaLb7ZwDpZu-zo7k_xI-9cyogTL08ZF-qeb__9YPli4taf1lPcuvrSPAbwtRhuqlp8w_4g2swnro_dK-rR7Iu98bei85oVgK-HXhq7CeV_Afmr6KAqQ0tbOi-VvoQDyyG6bMCrwzPReYRN85cNWpwPTOAFR_6AFpjVS0wEFq72kZP4eTIu5FbgoiKgg0e4ozGZ7vZg9hUUjRhTbp1z1yCMyaHvTuCyPpAYHio-DHmeZ0rAxEeSxJgjKEGcx7YoG3AgDm2Bfa"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="space-y-4">
+<div>
+<h5 class="text-xl font-headline font-bold text-primary" dir="auto">Laila Belkacem</h5>
+<p class="text-secondary font-label text-[10px] uppercase tracking-widest font-semibold mt-1">Director of Cultural Affairs</p>
+</div>
+<p class="text-on-surface-variant font-light text-sm leading-relaxed line-clamp-3" dir="auto">Expert in Maghrebi heritage preservation with over 15 years of institutional research in regional arts.</p>
+<div class="pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-outline-variant text-lg hover:text-primary cursor-pointer transition-colors" data-icon="language">language</span>
+<span class="material-symbols-outlined text-outline-variant text-lg hover:text-primary cursor-pointer transition-colors" data-icon="school">school</span>
+</div>
+<button class="bg-surface-container text-primary p-2 rounded-full hover:bg-primary hover:text-on-primary transition-all active:scale-90">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Member Card 2 -->
+<div class="group bg-surface-container-low rounded-xl p-6 transition-all duration-500 hover:bg-white hover:shadow-xl hover:shadow-primary/5 border border-outline-variant/10">
+<div class="relative w-full aspect-square rounded-lg overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" data-alt="portrait of Karim Idris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtAVrqTw9eND9Db33V_KdbNkKQoRM8wBfcyBd5a0OHpIuB6q09zq6XDXEaKpGGBG9Vzbw6f7evfkOA-YtR1JJHh5E-iqfqYP9Apx9YigQGcBGb15UlxgVvPhD5v5_uJ_XoX7MGj4I3CUcW1u4iWRXrrSHbjEM3Qu4pu2rGfO5UdTq_0tmxcEdpfORlsRusc5xqgfmPxyQ5a6qKEvzPlzJw7216bV2X4iW0W7QVpEfqJbM7iyH30rWqLHc-XGPXZQKXGh-oyDo_4wBu"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="space-y-4">
+<div>
+<h5 class="text-xl font-headline font-bold text-primary" dir="auto">Karim Idris</h5>
+<p class="text-secondary font-label text-[10px] uppercase tracking-widest font-semibold mt-1">Strategic Operations</p>
+</div>
+<p class="text-on-surface-variant font-light text-sm leading-relaxed line-clamp-3" dir="auto">Specializes in digital transformation for non-profit cultural entities and sustainable growth modeling.</p>
+<div class="pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-outline-variant text-lg hover:text-primary cursor-pointer transition-colors" data-icon="database">database</span>
+<span class="material-symbols-outlined text-outline-variant text-lg hover:text-primary cursor-pointer transition-colors" data-icon="policy">policy</span>
+</div>
+<button class="bg-surface-container text-primary p-2 rounded-full hover:bg-primary hover:text-on-primary transition-all active:scale-90">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Member Card 3 -->
+<div class="group bg-surface-container-low rounded-xl p-6 transition-all duration-500 hover:bg-white hover:shadow-xl hover:shadow-primary/5 border border-outline-variant/10">
+<div class="relative w-full aspect-square rounded-lg overflow-hidden mb-6">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" data-alt="portrait of Sarah Chevalier" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrtsJcLG1pgNxanWhPotGTvpkSyWP5fsBHuROAex6JCtNMK_gxu0uUPdbbtlzTTXRII17wET8AEz0EfeAP25ukNSuWTHnD_XYbj_hlL96RQoK_3eorU7IeNZir6xS2DfkJNawUxl4hKOS-Bp5Vdwuvw6wpP63YtAktUxD7ld34H2wZFVbUZj7FmeNRS15_ndlb_zN1uGBM_X5Y-aJPkqoFUt_prvBUJEjmyOjIGTvzNeDHXo33nX90VWxU9nBj7HB2Jy8qhMw3robU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="space-y-4">
+<div>
+<h5 class="text-xl font-headline font-bold text-primary" dir="auto">Sarah Chevalier</h5>
+<p class="text-secondary font-label text-[10px] uppercase tracking-widest font-semibold mt-1">International Liaison</p>
+</div>
+<p class="text-on-surface-variant font-light text-sm leading-relaxed line-clamp-3" dir="auto">Facilitating cross-continental partnerships with European museums and archival institutions.</p>
+<div class="pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-outline-variant text-lg hover:text-primary cursor-pointer transition-colors" data-icon="public">public</span>
+<span class="material-symbols-outlined text-outline-variant text-lg hover:text-primary cursor-pointer transition-colors" data-icon="translate">translate</span>
+</div>
+<button class="bg-surface-container text-primary p-2 rounded-full hover:bg-primary hover:text-on-primary transition-all active:scale-90">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Join Advisory CTA -->
+<section class="relative min-h-[300px] rounded-2xl overflow-hidden flex items-center justify-center">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="interior of a grand library" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQFWYWC5tqyZR42dhIUmzaVEwZ2V3CJqN-sVGQ59gWzVHbyGW9ECQR2u5chXRwFUPAj4EhG8rI_7zUwG7sJpUFXytvdp2k8ueOLAGtSY5aU0xLvcyT8f9LIjKdUpeZaamNMDBgEJPcm7w9XFHYEsBTQZ42wD11ZDORHK3_tN_-HJtOUrBU6b3QHeY-vH7CjmaIlCm6iSPCRGZYq94tYnXg2A12aX_aByuY6lRTeWnhIYNgs89cjdn6ZBuJGpnpgfnxzoiEPG8Rj_YZ"/>
+<div class="absolute inset-0 bg-primary/60 backdrop-blur-[2px]"></div>
+<div class="relative glass-card p-10 md:p-14 text-center max-w-2xl border border-white/30 rounded-2xl mx-4">
+<h4 class="text-2xl md:text-3xl font-headline font-bold text-primary mb-4" dir="auto">Interested in joining our advisory?</h4>
+<p class="font-body text-on-surface-variant mb-8 leading-relaxed" dir="auto">We are always seeking experts in heritage, technology, and cultural anthropology to guide our mission.</p>
+<button class="bg-primary text-on-primary px-10 py-3.5 rounded-lg font-label text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all shadow-lg">Submit Candidacy</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell (Unified Component Implementation) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe bg-[#fcf9f6] dark:bg-[#003229] shadow-[0_-10px_30px_rgba(0,50,41,0.03)] z-50 rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-[#003229]/50 dark:text-[#fcf9f6]/50 tap-highlight-none transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-public-sans text-[10px] uppercase tracking-widest mt-1">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#775a19] font-bold tap-highlight-none transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="account_balance" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="font-public-sans text-[10px] uppercase tracking-widest mt-1">Directory</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#003229]/50 dark:text-[#fcf9f6]/50 tap-highlight-none transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-public-sans text-[10px] uppercase tracking-widest mt-1">Activities</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#003229]/50 dark:text-[#fcf9f6]/50 tap-highlight-none transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-public-sans text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</div>
+</nav>
+</body></html>

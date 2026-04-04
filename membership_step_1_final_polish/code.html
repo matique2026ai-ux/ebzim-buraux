@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="light" dir="ltr" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ebzim | Membership Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Public+Sans:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#95d3c1",
+                        "on-surface": "#1c1c1a",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#b6ae96",
+                        "tertiary": "#302c1a",
+                        "on-error": "#ffffff",
+                        "primary-container": "#004b3e",
+                        "primary": "#003229",
+                        "surface-container-highest": "#e5e2df",
+                        "on-surface-variant": "#404945",
+                        "tertiary-container": "#47422f",
+                        "outline-variant": "#bfc9c4",
+                        "on-primary-fixed": "#00201a",
+                        "outline": "#707975",
+                        "surface-variant": "#e5e2df",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#785a1a",
+                        "secondary-fixed": "#ffdea5",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#2b695a",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#fcf9f6",
+                        "on-background": "#1c1c1a",
+                        "surface-container-high": "#eae8e5",
+                        "surface-container-low": "#f6f3f0",
+                        "background": "#fcf9f6",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ed",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#e9c176",
+                        "secondary-container": "#fed488",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#261900",
+                        "primary-fixed": "#b0efdd",
+                        "surface-dim": "#dcdad7",
+                        "on-primary-container": "#7dbaa9",
+                        "tertiary-fixed-dim": "#cec6ad",
+                        "surface": "#fcf9f6",
+                        "secondary": "#775a19",
+                        "on-tertiary-fixed": "#1f1c0b",
+                        "inverse-surface": "#31302f",
+                        "on-primary-fixed-variant": "#0a5043",
+                        "inverse-primary": "#95d3c1",
+                        "tertiary-fixed": "#ebe2c8",
+                        "on-tertiary-fixed-variant": "#4c4733",
+                        "surface-container": "#f0edea",
+                        "on-secondary-fixed-variant": "#5d4201"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Newsreader", "serif"],
+                        "body": ["Newsreader", "serif"],
+                        "label": ["Public Sans", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Newsreader', serif; }
+        .font-label { font-family: 'Public Sans', sans-serif; }
+        input:focus, select:focus { outline: none !important; box-shadow: none !important; }
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(13%) sepia(10%) saturate(2395%) hue-rotate(124deg) brightness(97%) contrast(101%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-secondary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#fcf9f6]/80 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex justify-between items-center px-4 md:px-6 h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<img alt="Ebzim Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ujSeLZIkdzaGhiRQtr3_b9JvTENUxNSA54RLVLcu_805fZmxdl_IRNstNyxqVb2UZ4Jero7oJ5E3er5m994XSG4bnBg7Z7qGWqhgYV31K3AzD3_Ky5V8bOjfuRZ36lHExq1HL-L1UW4G0bkGpsNcfTNEtyPxALMu4INn0OhX0ZyuHww798jX2p0CelULHI2ic-4PEvIJby4Sxd_Oyzzvd7cv_emtU47d3SzeXyjww2HVeYOeuatwHcKE1WPPXEd2X1HmdHn4ulu5hw"/>
+<h1 class="text-lg font-bold text-primary font-headline tracking-tight hidden sm:block">Ebzim | إبزيم</h1>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-outline-variant/15">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7KyyeIQtyPYzJWRiO84ojtMMOP9Uypzaptx8FGdN_h5PIIpF3l8nDFdJ-1tN8zbJ9ARzx-Fo-FWXdmv_2l_Rf7bofuFDBMOLwdERf3EwPKN9ctSUGtrYZ_BreUFVE6vjuAAZ8Cajxc7dgjptEpTHt93zTOd7y2hYQ9RKLEvA_Ih3vO2zkVoCKlucLpO1HmI7B0H6EWS2j11utK1tucS9c8MtT3SkIKlps3MC-OJ50xwza1l0o4KrRNjYazf8dpdd691nmJo-QKDc_"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 min-h-screen flex flex-col items-center px-4 md:px-8">
+<div class="w-full max-w-2xl">
+<!-- Progress Stepper -->
+<div class="mb-12 flex items-center justify-between relative px-2">
+<div class="absolute top-5 left-0 w-full h-[1px] bg-outline-variant/30 -z-10"></div>
+<!-- Step 1: Active -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-label font-bold text-sm shadow-lg ring-4 ring-background">1</div>
+<span class="font-label text-[10px] uppercase tracking-widest text-primary font-bold">Identity</span>
+</div>
+<!-- Step 2: Inactive -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container text-outline flex items-center justify-center font-label font-bold text-sm ring-4 ring-background">2</div>
+<span class="font-label text-[10px] uppercase tracking-widest text-outline">Contact</span>
+</div>
+<!-- Step 3: Inactive -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container text-outline flex items-center justify-center font-label font-bold text-sm ring-4 ring-background">3</div>
+<span class="font-label text-[10px] uppercase tracking-widest text-outline">Credentials</span>
+</div>
+<!-- Step 4: Inactive -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container text-outline flex items-center justify-center font-label font-bold text-sm ring-4 ring-background">4</div>
+<span class="font-label text-[10px] uppercase tracking-widest text-outline">Review</span>
+</div>
+</div>
+<!-- Form Content -->
+<div class="bg-surface-container-low p-8 md:p-12 rounded-xl shadow-[0_20px_50px_rgba(0,50,41,0.04)] border border-outline-variant/10">
+<div class="mb-12">
+<h2 class="text-4xl md:text-5xl font-headline font-bold text-primary tracking-tight mb-2">Personal Information</h2>
+<p class="text-secondary font-headline italic text-lg" dir="rtl">المعلومات الشخصية</p>
+</div>
+<form class="space-y-10">
+<!-- Full Name -->
+<div class="group relative">
+<label class="font-label text-[11px] uppercase tracking-[0.2em] text-outline mb-1 block font-semibold" for="fullname">Full Name / الاسم الكامل</label>
+<input class="w-full bg-transparent border-0 border-b-2 border-outline-variant/30 focus:border-primary py-4 px-0 text-xl md:text-2xl font-headline transition-all placeholder:text-outline/40 placeholder:italic" id="fullname" placeholder="Enter your legal full name" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+<!-- Date of Birth -->
+<div class="group relative">
+<label class="font-label text-[11px] uppercase tracking-[0.2em] text-outline mb-1 block font-semibold" for="dob">Date of Birth / تاريخ الميلاد</label>
+<input class="w-full bg-transparent border-0 border-b-2 border-outline-variant/30 focus:border-primary py-4 px-0 text-xl font-headline transition-all appearance-none" id="dob" type="date"/>
+</div>
+<!-- Gender -->
+<div class="group relative">
+<label class="font-label text-[11px] uppercase tracking-[0.2em] text-outline mb-1 block font-semibold">Gender / الجنس</label>
+<div class="flex gap-4 pt-2">
+<label class="flex-1 cursor-pointer group/radio">
+<input class="hidden peer" name="gender" type="radio" value="male"/>
+<div class="py-4 px-4 border-2 border-outline-variant/20 peer-checked:border-secondary peer-checked:bg-secondary-container/10 text-center font-label text-xs uppercase tracking-widest text-outline peer-checked:text-secondary-fixed-variant transition-all rounded-lg">
+                                        Male / ذكر
+                                    </div>
+</label>
+<label class="flex-1 cursor-pointer group/radio">
+<input class="hidden peer" name="gender" type="radio" value="female"/>
+<div class="py-4 px-4 border-2 border-outline-variant/20 peer-checked:border-secondary peer-checked:bg-secondary-container/10 text-center font-label text-xs uppercase tracking-widest text-outline peer-checked:text-secondary-fixed-variant transition-all rounded-lg">
+                                        Female / أنثى
+                                    </div>
+</label>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+<!-- Wilaya -->
+<div class="group relative">
+<label class="font-label text-[11px] uppercase tracking-[0.2em] text-outline mb-1 block font-semibold" for="wilaya">Wilaya / الولاية</label>
+<div class="relative">
+<select class="w-full bg-transparent border-0 border-b-2 border-outline-variant/30 focus:border-primary py-4 px-0 text-xl font-headline transition-all appearance-none cursor-pointer" id="wilaya">
+<option disabled="" selected="" value="">Select Wilaya</option>
+<option value="1">01 Adrar</option>
+<option value="16">16 Algiers</option>
+<option value="31">31 Oran</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Commune -->
+<div class="group relative">
+<label class="font-label text-[11px] uppercase tracking-[0.2em] text-outline mb-1 block font-semibold" for="commune">Commune / البلدية</label>
+<div class="relative">
+<select class="w-full bg-transparent border-0 border-b-2 border-outline-variant/30 focus:border-primary py-4 px-0 text-xl font-headline transition-all appearance-none cursor-pointer" id="commune">
+<option disabled="" selected="" value="">Select Commune</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="pt-12 space-y-8">
+<p class="text-sm text-outline font-body italic text-center max-w-md mx-auto leading-relaxed">
+                            Your information is securely processed and preserved in accordance with Association Ebzim's archival standards.
+                        </p>
+<button class="w-full bg-primary text-on-primary py-5 rounded-lg font-label font-bold text-sm uppercase tracking-[0.2em] shadow-lg hover:shadow-xl hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-4 group" type="button">
+                            Next Step
+                            <span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Heritage Badge Decoration -->
+<div class="mt-16 flex justify-center">
+<div class="bg-secondary-container/30 px-6 py-2.5 rounded-full flex items-center gap-3 border border-secondary/10">
+<span class="material-symbols-outlined text-secondary scale-75" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label text-[10px] uppercase tracking-[0.15em] text-on-secondary-fixed-variant font-bold">Official Registration Portal</span>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-auto py-12 px-6 border-t border-outline-variant/5">
+<div class="max-w-7xl mx-auto flex flex-col items-center gap-8 opacity-60">
+<span class="font-label text-[10px] uppercase tracking-widest text-outline text-center">© 2024 Ebzim Association. All Rights Reserved.</span>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-label text-[10px] uppercase tracking-widest text-outline hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label text-[10px] uppercase tracking-widest text-outline hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label text-[10px] uppercase tracking-widest text-outline hover:text-primary transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Manrope:wght@200..800&amp;family=Amiri:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#d3c5ad",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#eddec5",
+                    "background": "#f9f9ff",
+                    "surface-container-low": "#f3f3fa",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#f0f0f7",
+                    "on-tertiary-fixed-variant": "#92001f",
+                    "tertiary-fixed": "#ffdad9",
+                    "inverse-primary": "#82db6f",
+                    "on-primary-fixed-variant": "#005300",
+                    "on-secondary-fixed-variant": "#4f4533",
+                    "surface-container": "#ededf4",
+                    "surface-dim": "#d9d9e0",
+                    "on-primary-container": "#86df72",
+                    "primary-fixed": "#9df888",
+                    "on-secondary-fixed": "#221b0b",
+                    "on-tertiary-fixed": "#410008",
+                    "inverse-surface": "#2e3036",
+                    "surface": "#f9f9ff",
+                    "secondary": "#685d4a",
+                    "tertiary-fixed-dim": "#ffb3b2",
+                    "on-error": "#ffffff",
+                    "tertiary": "#82001b",
+                    "surface-container-highest": "#e2e2e9",
+                    "primary-container": "#006400",
+                    "primary": "#004900",
+                    "on-surface": "#191c20",
+                    "primary-fixed-dim": "#82db6f",
+                    "on-tertiary-container": "#ffb9b8",
+                    "on-error-container": "#93000a",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#126e0c",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed": "#f0e0c8",
+                    "on-secondary-container": "#6c614e",
+                    "surface-container-high": "#e7e8ee",
+                    "on-background": "#191c20",
+                    "surface-bright": "#f9f9ff",
+                    "surface-variant": "#e2e2e9",
+                    "outline": "#707a6a",
+                    "outline-variant": "#bfcab7",
+                    "tertiary-container": "#ae0027",
+                    "on-primary-fixed": "#002200",
+                    "on-surface-variant": "#404a3b",
+                    "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Newsreader", "serif"],
+                    "body": ["Manrope", "sans-serif"],
+                    "label": ["Manrope", "sans-serif"],
+                    "arabic": ["Amiri", "serif"]
+            }
+          },
+        }
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .active-ring {
+            box-shadow: inset 0 0 0 2px #004900, 0 8px 32px 0 rgba(0, 73, 0, 0.1);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(0, 73, 0, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-white overflow-x-hidden">
+<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl flex justify-between items-center px-6 py-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.05)]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="translate">translate</span>
+<img alt="Ebzim Logo" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ujSeLZIkdzaGhiRQtr3_b9JvTENUxNSA54RLVLcu_805fZmxdl_IRNstNyxqVb2UZ4Jero7oJ5E3er5m994XSG4bnBg7Z7qGWqhgYV31K3AzD3_Ky5V8bOjfuRZ36lHExq1HL-L1UW4G0bkGpsNcfTNEtyPxALMu4INn0OhX0ZyuHww798jX2p0CelULHI2ic-4PEvIJby4Sxd_Oyzzvd7cv_emtU47d3SzeXyjww2HVeYOeuatwHcKE1WPPXEd2X1HmdHn4ulu5hw"/>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/15">
+<img alt="Cultural Representative Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD98Hc0AWTuE8j9hh44P7_t8E1-9VnwcHtH1bkVq5dAB8jrSa88sE2oT2hkdBoJLQdAO_NXpI0HnOb9--Up0m4fht91hmNKiSKooZoT2yt_0PDkCM6WAwcc0624GG49pPk5K0rzhA0mmF_qTIDnwmiDvdArxlq99rWfDrsR0x1YAGyx-5_RlqYffz1J1oxa_ZbuSgdiktK_xhe6LIYtkmxn-7bV8LhqJ9PnGkMi8s8u0Im_ARvs6oGc8uz4j_GKEAb7h5PIkfyWmDpw"/>
+</div>
+</header>
+<main class="relative min-h-screen pt-28 pb-12 px-6 flex flex-col items-center bg-background">
+<!-- Background Decor -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+<div class="absolute top-0 right-0 w-[50%] h-[40%] bg-primary/5 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-1/4 left-0 w-[40%] h-[30%] bg-secondary-fixed/10 blur-[100px] rounded-full"></div>
+</div>
+<div class="relative z-10 w-full max-w-xl flex flex-col items-center">
+<!-- Unified Header Section -->
+<div class="mb-12 text-center w-full">
+<span class="label-md uppercase tracking-[0.25em] text-secondary font-bold mb-4 block">Bienvenue • Welcome • أهلاً بك</span>
+<h1 class="font-headline text-5xl text-primary font-bold tracking-tight leading-tight mb-4">
+                Select Your<br/>
+<span class="italic font-normal">Heritage Voice</span>
+</h1>
+<p class="text-on-surface-variant text-base leading-relaxed font-body opacity-80 px-4">
+                Experience the cultural depth of Sétif in the language that connects most deeply with your soul.
+            </p>
+</div>
+<!-- Language Cards Stack (Vertical for Mobile Focus) -->
+<div class="flex flex-col gap-5 w-full">
+<!-- Arabic Card (Selected State Example) -->
+<button class="glass-card group relative flex flex-col p-8 rounded-[2rem] active-ring border border-primary/20 transition-all duration-500 text-right w-full">
+<div class="absolute top-8 left-8 opacity-20">
+<span class="material-symbols-outlined text-4xl text-primary/40" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="mt-8">
+<h2 class="font-arabic text-4xl text-primary font-bold">العربية</h2>
+<p class="text-secondary text-xs font-bold tracking-widest mt-1">ARABIC</p>
+</div>
+<div class="absolute bottom-8 right-8 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-xl" data-icon="check" data-weight="fill">check</span>
+</div>
+<div class="absolute bottom-6 left-12 opacity-10 pointer-events-none">
+<span class="font-arabic text-6xl text-primary select-none italic">جزائر</span>
+</div>
+</button>
+<!-- English Card -->
+<button class="glass-card group relative flex flex-col p-8 rounded-[2rem] border border-outline-variant/20 transition-all duration-500 hover:bg-white hover:shadow-xl text-left w-full">
+<div class="absolute top-8 right-8 opacity-20">
+<span class="material-symbols-outlined text-4xl text-primary/40" data-icon="public">public</span>
+</div>
+<div class="mt-8">
+<h2 class="font-headline text-3xl text-primary font-bold">English</h2>
+<p class="text-secondary text-xs font-bold tracking-widest mt-1 uppercase">United Kingdom / US</p>
+</div>
+<div class="absolute bottom-8 right-8 w-10 h-10 border border-outline-variant/30 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined text-xl" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</button>
+<!-- Français Card -->
+<button class="glass-card group relative flex flex-col p-8 rounded-[2rem] border border-outline-variant/20 transition-all duration-500 hover:bg-white hover:shadow-xl text-left w-full">
+<div class="absolute top-8 right-8 opacity-20">
+<span class="material-symbols-outlined text-4xl text-primary/40" data-icon="stars">stars</span>
+</div>
+<div class="mt-8">
+<h2 class="font-headline text-3xl text-primary font-bold">Français</h2>
+<p class="text-secondary text-xs font-bold tracking-widest mt-1 uppercase">France / Maghreb</p>
+</div>
+<div class="mt-10 italic text-primary/20 text-2xl font-headline tracking-tighter">
+                    L'art de vivre
+                </div>
+<div class="absolute bottom-8 right-8 w-10 h-10 border border-outline-variant/30 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined text-xl" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</button>
+</div>
+<!-- Unified Continue CTA -->
+<div class="mt-16 w-full px-4 flex flex-col items-center">
+<button class="w-full max-w-sm group relative px-8 py-5 rounded-full bg-primary text-white font-bold tracking-wide shadow-[0_12px_40px_rgba(0,73,0,0.25)] hover:bg-primary-container active:scale-95 transition-all duration-300">
+<span class="flex items-center justify-center gap-3 relative z-10">
+                    Continue to Experience
+                    <span class="material-symbols-outlined transition-transform group-hover:translate-x-1" data-icon="arrow_right_alt">arrow_right_alt</span>
+</span>
+</button>
+<p class="mt-8 text-on-surface-variant/50 text-[10px] font-bold tracking-[0.2em] uppercase">Secured by Ebzim Cultural Guild</p>
+</div>
+</div>
+</main>
+<div class="fixed inset-0 bg-gradient-to-b from-transparent to-surface-container-low/20 pointer-events-none -z-10"></div>
+</body></html>

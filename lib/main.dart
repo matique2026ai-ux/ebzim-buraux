@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'core/localization/l10n/app_localizations.dart'; 
-import 'core/theme/app_theme.dart';
-import 'core/router/app_router.dart';
+import 'package:ebzim_app/core/localization/l10n/app_localizations.dart'; 
+import 'package:ebzim_app/core/theme/app_theme.dart';
+import 'package:ebzim_app/core/router/app_router.dart';
+import 'package:ebzim_app/core/providers/locale_provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: EbzimApp()));
 }
-
-/// A simple provider to hold the current app locale state
-final localeProvider = StateProvider<Locale>((ref) => const Locale('ar'));
 
 class EbzimApp extends ConsumerWidget {
   const EbzimApp({super.key});

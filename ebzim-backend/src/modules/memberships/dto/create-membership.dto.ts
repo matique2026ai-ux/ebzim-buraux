@@ -3,27 +3,44 @@ import { IsString, IsNotEmpty, IsArray, IsOptional, IsEnum } from 'class-validat
 export class CreateMembershipDto {
   @IsString()
   @IsNotEmpty()
-  firstName: string;
+  fullName: string;
+
+  @IsString()
+  @IsOptional()
+  dob?: string;
+
+  @IsString()
+  @IsOptional()
+  gender?: string;
 
   @IsString()
   @IsNotEmpty()
-  lastName: string;
+  wilayaId: string;
 
   @IsString()
   @IsNotEmpty()
-  profession: string;
+  communeId: string;
 
   @IsString()
   @IsNotEmpty()
   phone: string;
 
+  @IsString()
+  @IsOptional()
+  email?: string;
+
   @IsArray()
   @IsString({ each: true })
-  domainsOfInterest: string[];
+  interests: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  skills?: string[];
 
   @IsString()
   @IsNotEmpty()
-  desiredContribution: string;
+  motivation: string;
 }
 
 export class ReviewMembershipDto {

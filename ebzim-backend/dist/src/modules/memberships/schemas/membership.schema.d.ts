@@ -1,12 +1,16 @@
 import { Document, Types } from 'mongoose';
 export type MembershipDocument = Membership & Document;
 export declare class MembershipProfileData {
-    firstName: string;
-    lastName: string;
-    profession: string;
+    fullName: string;
+    dob?: string;
+    gender?: string;
+    wilayaId: string;
+    communeId: string;
     phone: string;
-    domainsOfInterest: string[];
-    desiredContribution: string;
+    email?: string;
+    interests: string[];
+    skills?: string[];
+    motivation: string;
 }
 export declare class Membership {
     userId: Types.ObjectId;

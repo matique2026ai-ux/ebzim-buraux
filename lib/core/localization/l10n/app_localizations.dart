@@ -319,7 +319,7 @@ abstract class AppLocalizations {
   /// No description provided for @authErrorInvalid.
   ///
   /// In ar, this message translates to:
-  /// **'بيانات الاعتماد غير صحيحة. يرجى المحاولة مرة أخرى.'**
+  /// **'بيانات الدخول غير صحيحة. يرجى المحاولة مرة أخرى.'**
   String get authErrorInvalid;
 
   /// No description provided for @authErrorNoConnection.
@@ -346,6 +346,18 @@ abstract class AppLocalizations {
   /// **'نظام استعادة الحساب التلقائي قيد التطوير حالياً. يرجى التواصل مع إدارة الجمعية أو إرسال بريد إلكتروني للدعم الفني للمساعدة في استعادة بياناتك.'**
   String get authForgotPasswordDesc;
 
+  /// No description provided for @authAssocName.
+  ///
+  /// In ar, this message translates to:
+  /// **'جمعية إبزيم'**
+  String get authAssocName;
+
+  /// No description provided for @authGuestBrowse.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصفح كزائر ←'**
+  String get authGuestBrowse;
+
   /// No description provided for @authBiometric.
   ///
   /// In ar, this message translates to:
@@ -361,7 +373,7 @@ abstract class AppLocalizations {
   /// No description provided for @authCreateAccount.
   ///
   /// In ar, this message translates to:
-  /// **'إنشاء حساب عضو'**
+  /// **'إنشاء حساب مستخدم'**
   String get authCreateAccount;
 
   /// No description provided for @authPrivacy.
@@ -376,17 +388,89 @@ abstract class AppLocalizations {
   /// **'الشروط'**
   String get authTerms;
 
+  /// No description provided for @authPrivacyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get authPrivacyTitle;
+
+  /// No description provided for @authTermsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشروط والأحكام'**
+  String get authTermsTitle;
+
+  /// No description provided for @authResetPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة تعيين كلمة المرور'**
+  String get authResetPassword;
+
+  /// No description provided for @authResetPasswordDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'قم بإدخال بيانات الاعتماد السرية الجديدة.'**
+  String get authResetPasswordDesc;
+
+  /// No description provided for @authEmailSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال التعليمات'**
+  String get authEmailSent;
+
+  /// No description provided for @authEmailSentDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى التحقق من بريدك الإلكتروني لخطوات الاستعادة.'**
+  String get authEmailSentDesc;
+
+  /// No description provided for @authOtpTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحقق من الهوية'**
+  String get authOtpTitle;
+
+  /// No description provided for @authOtpDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رمز التحقق المرسل إلى بريدك الإلكتروني.'**
+  String get authOtpDesc;
+
+  /// No description provided for @authNewPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get authNewPassword;
+
+  /// No description provided for @authConfirmNewPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور'**
+  String get authConfirmNewPassword;
+
+  /// No description provided for @authPasswordResetSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت إعادة تعيين كلمة المرور بنجاح'**
+  String get authPasswordResetSuccess;
+
   /// No description provided for @regTitle.
   ///
   /// In ar, this message translates to:
-  /// **'إنشاء حساب'**
+  /// **'إنشاء حساب جديد'**
   String get regTitle;
 
   /// No description provided for @regSubtitle.
   ///
   /// In ar, this message translates to:
-  /// **'انضم إلى مجتمع جمعية إبزيم للحفاظ على الثقافة.'**
+  /// **'أنشئ حسابك للوصول إلى خدمات المنصة ومتابعة أنشطتك بكل سهولة.'**
   String get regSubtitle;
+
+  /// No description provided for @regMembershipNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء حساب في المنصة لا يعني اكتساب العضوية الرسمية في الجمعية.'**
+  String get regMembershipNote;
 
   /// No description provided for @regFullName.
   ///
@@ -397,7 +481,7 @@ abstract class AppLocalizations {
   /// No description provided for @regFullNameHint.
   ///
   /// In ar, this message translates to:
-  /// **'سليم المنصور'**
+  /// **'عكرور توفيق'**
   String get regFullNameHint;
 
   /// No description provided for @regPhone.
@@ -445,7 +529,7 @@ abstract class AppLocalizations {
   /// No description provided for @regAction.
   ///
   /// In ar, this message translates to:
-  /// **'إنشاء الحساب'**
+  /// **'إنشاء حساب'**
   String get regAction;
 
   /// No description provided for @regAlreadyHaveAccount.
@@ -463,7 +547,7 @@ abstract class AppLocalizations {
   /// No description provided for @regMembership.
   ///
   /// In ar, this message translates to:
-  /// **'بدء طلب الانضمام للجمعية'**
+  /// **'تقديم طلب انضمام خطي'**
   String get regMembership;
 
   /// No description provided for @valRequired.
@@ -577,13 +661,13 @@ abstract class AppLocalizations {
   /// No description provided for @navDashboard.
   ///
   /// In ar, this message translates to:
-  /// **'لوحة التحكم'**
+  /// **'الرئيسية'**
   String get navDashboard;
 
   /// No description provided for @navDirectory.
   ///
   /// In ar, this message translates to:
-  /// **'دليل الأعضاء'**
+  /// **'مجلس الجمعية'**
   String get navDirectory;
 
   /// No description provided for @navActivities.
@@ -595,8 +679,14 @@ abstract class AppLocalizations {
   /// No description provided for @navProfile.
   ///
   /// In ar, this message translates to:
-  /// **'الحساب'**
+  /// **'حسابي'**
   String get navProfile;
+
+  /// No description provided for @navNews.
+  ///
+  /// In ar, this message translates to:
+  /// **'أخبار'**
+  String get navNews;
 
   /// No description provided for @eventFeaturedBadge.
   ///
@@ -961,13 +1051,13 @@ abstract class AppLocalizations {
   /// No description provided for @memSuccessTitle.
   ///
   /// In ar, this message translates to:
-  /// **'مرحباً بك في رحلتنا'**
+  /// **'تم تقديم الطلب الخطي'**
   String get memSuccessTitle;
 
   /// No description provided for @memSuccessSub.
   ///
   /// In ar, this message translates to:
-  /// **'تم استلام طلبك بنجاح.'**
+  /// **'طلبك قيد المراجعة من طرف المكتب التنفيذي'**
   String get memSuccessSub;
 
   /// No description provided for @memSuccessHome.
@@ -975,6 +1065,36 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'العودة للرئيسية'**
   String get memSuccessHome;
+
+  /// No description provided for @memStatusNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد طلب انضمام مسجل حالياً'**
+  String get memStatusNone;
+
+  /// No description provided for @memStatusSubmitted.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبك قيد المراجعة من طرف المكتب التنفيذي للجمعية'**
+  String get memStatusSubmitted;
+
+  /// No description provided for @memStatusNeedsInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب الانضمام يحتاج إلى معلومات إضافية من جانبكم'**
+  String get memStatusNeedsInfo;
+
+  /// No description provided for @memStatusApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم قبول طلب الانضمام - أهلاً بك كأحد أعضاء الجمعية'**
+  String get memStatusApproved;
+
+  /// No description provided for @memStatusRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'عذراً، لم يتم قبول طلب الانضمام في الوقت الحالي'**
+  String get memStatusRejected;
 
   /// No description provided for @leadHeroBadge.
   ///
@@ -1039,13 +1159,19 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardWelcome.
   ///
   /// In ar, this message translates to:
-  /// **'مرحباً'**
-  String get dashboardWelcome;
+  /// **'مرحباً بك في منصة إبزيم، {name}'**
+  String dashboardWelcome(Object name);
+
+  /// No description provided for @dashboardWelcomePublic.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحباً بك في منصة إبزيم، فضاء المواطنة والثقافة.'**
+  String get dashboardWelcomePublic;
 
   /// No description provided for @dashboardWelcomeBack.
   ///
   /// In ar, this message translates to:
-  /// **'أهلاً بك مجدداً'**
+  /// **'أهلاً بك مجدداً في رحاب إبزيم'**
   String get dashboardWelcomeBack;
 
   /// No description provided for @dashboardStatus.
@@ -1075,7 +1201,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardQuickReg.
   ///
   /// In ar, this message translates to:
-  /// **'التسجيل'**
+  /// **'نشاطاتنا'**
   String get dashboardQuickReg;
 
   /// No description provided for @dashboardProgress.
@@ -1087,7 +1213,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardProgressDesc.
   ///
   /// In ar, this message translates to:
-  /// **'خطوات متبقية للوصول إلى الأرشيف.'**
+  /// **'بوابة إبزيم: أكمل بياناتك الشخصية للوصول إلى ميزات المواطنة الكاملة.'**
   String get dashboardProgressDesc;
 
   /// No description provided for @dashboardUpcoming.
@@ -1101,6 +1227,192 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'العناصر المحفوظة'**
   String get dashboardBookmarked;
+
+  /// No description provided for @dashLoading.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التحميل...'**
+  String get dashLoading;
+
+  /// No description provided for @dashViewAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الكل'**
+  String get dashViewAll;
+
+  /// No description provided for @dashJoinTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'انضم لجمعية إبزيم'**
+  String get dashJoinTitle;
+
+  /// No description provided for @dashJoinDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'ساهم في حماية تراثنا وتعزيز المواطنة الثقافية عبر طلب العضوية الرسمية الآن.'**
+  String get dashJoinDesc;
+
+  /// No description provided for @dashJoinAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب الانخراط الآن'**
+  String get dashJoinAction;
+
+  /// No description provided for @dashPendingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبك قيد المراجعة'**
+  String get dashPendingTitle;
+
+  /// No description provided for @dashPendingDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتم مراجعة طلب انضمامك من قبل المكتب التنفيذي حالياً. سنخطرك فور تحديث الحالة.'**
+  String get dashPendingDesc;
+
+  /// No description provided for @dashMemberLevelPublic.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب مستخدم (منصة إبزيم)'**
+  String get dashMemberLevelPublic;
+
+  /// No description provided for @dashMemberLevelMember.
+  ///
+  /// In ar, this message translates to:
+  /// **'عضو رسمي بالجمعية'**
+  String get dashMemberLevelMember;
+
+  /// No description provided for @dashAccountStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة الحساب'**
+  String get dashAccountStatus;
+
+  /// No description provided for @dashAccountActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب نشط'**
+  String get dashAccountActive;
+
+  /// No description provided for @dashAccountNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه: إنشاء حساب في المنصة لا يعني اكتساب العضوية الرسمية في الجمعية.'**
+  String get dashAccountNote;
+
+  /// No description provided for @dashQuickProfile.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف الشخصي'**
+  String get dashQuickProfile;
+
+  /// No description provided for @dashNoEvents.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد فعاليات مجدولة حالياً'**
+  String get dashNoEvents;
+
+  /// No description provided for @dashErrorData.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدث خطأ أثناء تحميل البيانات'**
+  String get dashErrorData;
+
+  /// No description provided for @dashPublicIntroTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'البيت الرقمي لإبزيم'**
+  String get dashPublicIntroTitle;
+
+  /// No description provided for @dashPublicIntroDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'فضاؤكم لاكتشاف النشاطات الثقافية، استكشاف مبادرات الجمعية، والتواصل مع الهوية المحلية لمدينة سطيف.'**
+  String get dashPublicIntroDesc;
+
+  /// No description provided for @dashQuickAbout.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن الجمعية'**
+  String get dashQuickAbout;
+
+  /// No description provided for @dashMembershipInvite.
+  ///
+  /// In ar, this message translates to:
+  /// **'الانضمام إلى الجمعية'**
+  String get dashMembershipInvite;
+
+  /// No description provided for @dashMembershipLearnMore.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتشف شروط العضوية والانتساب'**
+  String get dashMembershipLearnMore;
+
+  /// No description provided for @dashMembershipDiscover.
+  ///
+  /// In ar, this message translates to:
+  /// **'مزايا العضوية الرسمية'**
+  String get dashMembershipDiscover;
+
+  /// No description provided for @dashStatusActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط'**
+  String get dashStatusActive;
+
+  /// No description provided for @dashPillar1.
+  ///
+  /// In ar, this message translates to:
+  /// **'الثقافة والفنون'**
+  String get dashPillar1;
+
+  /// No description provided for @dashPillar2.
+  ///
+  /// In ar, this message translates to:
+  /// **'التراث والذاكرة الوطنية'**
+  String get dashPillar2;
+
+  /// No description provided for @dashPillar3.
+  ///
+  /// In ar, this message translates to:
+  /// **'المواطنة والمجتمع'**
+  String get dashPillar3;
+
+  /// No description provided for @cardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بطاقة العضوية'**
+  String get cardTitle;
+
+  /// No description provided for @cardFullName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم الكامل'**
+  String get cardFullName;
+
+  /// No description provided for @cardMemberId.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرقم التعريفي'**
+  String get cardMemberId;
+
+  /// No description provided for @cardIssueDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الإصدار'**
+  String get cardIssueDate;
+
+  /// No description provided for @cardExpiryDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الانتهاء'**
+  String get cardExpiryDate;
+
+  /// No description provided for @cardScanMe.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح ضوئي'**
+  String get cardScanMe;
 
   /// No description provided for @profilePersonal.
   ///

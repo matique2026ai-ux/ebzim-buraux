@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ebzim_app/features/events/services/event_service.dart';
-import 'package:ebzim_app/features/auth/services/auth_service.dart';
+import 'package:ebzim_app/core/services/event_service.dart';
+import 'package:ebzim_app/core/services/auth_service.dart';
 import 'package:ebzim_app/core/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

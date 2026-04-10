@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/onboarding/screens/splash_screen.dart';
-import '../../features/localization/screens/language_selection_screen.dart';
-import '../../features/onboarding/screens/onboarding_slider_screen.dart';
-import '../../features/auth/screens/login_screen.dart';
-import '../../features/auth/screens/register_screen.dart';
-import '../../features/association/screens/home_screen.dart';
-import '../../features/events/screens/event_details_screen.dart';
-import '../../features/association/screens/about_screen.dart';
-import '../../features/events/screens/activities_screen.dart';
-import '../../features/members/screens/leadership_screen.dart';
-import '../../features/membership/screens/membership_flow_screen.dart';
-import '../../features/membership/screens/membership_success_screen.dart';
-import '../../core/widgets/main_shell_screen.dart';
-import '../../features/dashboard/screens/dashboard_screen.dart';
-import '../../features/profile/screens/profile_screen.dart';
-import '../../features/notifications/screens/notifications_screen.dart';
-import '../../features/settings/screens/settings_screen.dart';
+import 'package:ebzim_app/screens/splash_screen.dart';
+import 'package:ebzim_app/screens/language_selection_screen.dart';
+import 'package:ebzim_app/screens/onboarding_slider_screen.dart';
+import 'package:ebzim_app/screens/login_screen.dart';
+import 'package:ebzim_app/screens/register_screen.dart';
+import 'package:ebzim_app/screens/home_screen.dart';
+import 'package:ebzim_app/screens/event_details_screen.dart';
+import 'package:ebzim_app/screens/about_screen.dart';
+import 'package:ebzim_app/screens/activities_screen.dart';
+import 'package:ebzim_app/screens/leadership_screen.dart';
+import 'package:ebzim_app/screens/membership_flow_screen.dart';
+import 'package:ebzim_app/screens/membership_success_screen.dart';
+import 'package:ebzim_app/core/widgets/main_shell_screen.dart';
+import 'package:ebzim_app/screens/dashboard_screen.dart';
+import 'package:ebzim_app/screens/profile_screen.dart';
+import 'package:ebzim_app/screens/notifications_screen.dart';
+import 'package:ebzim_app/screens/settings_screen.dart';
+import 'package:ebzim_app/screens/membership_review_screen.dart';
+import 'package:ebzim_app/screens/legal_content_screen.dart';
+import 'package:ebzim_app/screens/forgot_password_screen.dart';
+import 'package:ebzim_app/screens/otp_verification_screen.dart';
+import 'package:ebzim_app/screens/reset_password_screen.dart';
+import 'package:ebzim_app/screens/admin_dashboard_screen.dart';
+import 'package:ebzim_app/screens/news_screen.dart';
+import 'package:ebzim_app/screens/membership_discover_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/splash',
   routes: [
+    GoRoute(
+      path: '/',
+      redirect: (_, _) => '/splash',
+    ),
     GoRoute(
       path: '/splash',
       builder: (context, state) => const SplashScreen(),
@@ -28,6 +40,33 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/auth/forgot-password',
+      builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+
+    GoRoute(
+      path: '/auth/forgot-password/otp',
+      builder: (context, state) {
+        final email = state.extra as String? ?? '';
+        return OtpVerificationScreen(email: email);
+      },
+    ),
+    GoRoute(
+      path: '/auth/reset-password',
+      builder: (context, state) {
+        final token = state.extra as String? ?? '';
+        return ResetPasswordScreen(token: token);
+      },
+    ),
+    GoRoute(
+      path: '/auth/privacy',
+      builder: (context, state) => const LegalContentScreen(type: 'privacy'),
+    ),
+    GoRoute(
+      path: '/auth/terms',
+      builder: (context, state) => const LegalContentScreen(type: 'terms'),
     ),
     GoRoute(
       path: '/register',
@@ -57,6 +96,10 @@ final appRouter = GoRouter(
           builder: (context, state) => const ActivitiesScreen(),
         ),
         GoRoute(
+          path: '/news',
+          builder: (context, state) => const NewsScreen(),
+        ),
+        GoRoute(
           path: '/profile',
           builder: (context, state) => const ProfileScreen(),
         ),
@@ -71,12 +114,20 @@ final appRouter = GoRouter(
       builder: (context, state) => const NotificationsScreen(),
     ),
     GoRoute(
+      path: '/membership/discover',
+      builder: (context, state) => const MembershipDiscoverScreen(),
+    ),
+    GoRoute(
       path: '/membership/apply',
       builder: (context, state) => const MembershipFlowScreen(),
     ),
     GoRoute(
       path: '/membership/success',
       builder: (context, state) => const MembershipSuccessScreen(),
+    ),
+    GoRoute(
+      path: '/membership/review', 
+      builder: (context, state) => const MembershipReviewScreen(),
     ),
     GoRoute(
       path: '/event/:id',
@@ -86,8 +137,11 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: '/admin',
+      builder: (context, state) => const AdminDashboardScreen(),
+    ),
+    GoRoute(
       path: '/language',
-      builder: (context, state) => const LanguageSelectionScreen(),
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: const LanguageSelectionScreen(),
@@ -101,7 +155,6 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/onboarding',
-      builder: (context, state) => const OnboardingSliderScreen(),
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: const OnboardingSliderScreen(),

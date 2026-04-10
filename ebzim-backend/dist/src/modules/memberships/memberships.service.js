@@ -16,12 +16,15 @@ exports.MembershipsService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const role_enum_1 = require("../../common/enums/role.enum");
 const membership_workflow_util_1 = require("./utils/membership-workflow.util");
 const pagination_util_1 = require("../../common/utils/pagination.util");
 let MembershipsService = class MembershipsService {
     membershipModel;
-    constructor(membershipModel) {
+    userModel;
+    constructor(membershipModel, userModel) {
         this.membershipModel = membershipModel;
+        this.userModel = userModel;
     }
     async submit(userId, applicationData) {
         return this.membershipModel.findOneAndUpdate({ userId }, { applicationData, status: 'SUBMITTED', submissionDate: new Date() }, { upsert: true, new: true });
@@ -47,6 +50,9 @@ let MembershipsService = class MembershipsService {
             membership.status = updateDto.status;
             membership.reviewDate = new Date();
             membership.reviewedBy = adminUser.userId;
+            if (updateDto.status === 'APPROVED') {
+                await this.userModel.findByIdAndUpdate(membership.userId, { role: role_enum_1.Role.MEMBER });
+            }
         }
         if (updateDto.internalReviewNotes) {
             membership.internalReviewNotes = updateDto.internalReviewNotes;
@@ -58,6 +64,8 @@ exports.MembershipsService = MembershipsService;
 exports.MembershipsService = MembershipsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)('Membership')),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, mongoose_1.InjectModel)('User')),
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Model])
 ], MembershipsService);
 //# sourceMappingURL=memberships.service.js.map

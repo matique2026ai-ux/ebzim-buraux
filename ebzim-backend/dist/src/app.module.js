@@ -15,6 +15,7 @@ const app_service_1 = require("./app.service");
 const auth_module_1 = require("./modules/auth/auth.module");
 const categories_module_1 = require("./modules/categories/categories.module");
 const posts_module_1 = require("./modules/posts/posts.module");
+const mail_module_1 = require("./modules/mail/mail.module");
 const events_module_1 = require("./modules/events/events.module");
 const memberships_module_1 = require("./modules/memberships/memberships.module");
 const reports_module_1 = require("./modules/reports/reports.module");
@@ -29,6 +30,7 @@ exports.AppModule = AppModule = __decorate([
                 imports: [config_1.ConfigModule],
                 useFactory: async (configService) => ({
                     uri: configService.get('MONGODB_URI'),
+                    serverSelectionTimeoutMS: 5000,
                 }),
                 inject: [config_1.ConfigService],
             }),
@@ -36,6 +38,7 @@ exports.AppModule = AppModule = __decorate([
             categories_module_1.CategoriesModule,
             posts_module_1.PostsModule,
             events_module_1.EventsModule,
+            mail_module_1.MailModule,
             memberships_module_1.MembershipsModule,
             reports_module_1.ReportsModule,
         ],

@@ -122,7 +122,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get authErrorInvalid =>
-      'بيانات الاعتماد غير صحيحة. يرجى المحاولة مرة أخرى.';
+      'بيانات الدخول غير صحيحة. يرجى المحاولة مرة أخرى.';
 
   @override
   String get authErrorNoConnection =>
@@ -139,13 +139,19 @@ class AppLocalizationsAr extends AppLocalizations {
       'نظام استعادة الحساب التلقائي قيد التطوير حالياً. يرجى التواصل مع إدارة الجمعية أو إرسال بريد إلكتروني للدعم الفني للمساعدة في استعادة بياناتك.';
 
   @override
+  String get authAssocName => 'جمعية إبزيم';
+
+  @override
+  String get authGuestBrowse => 'تصفح كزائر ←';
+
+  @override
   String get authBiometric => 'دخول آمن بالبصمة';
 
   @override
   String get authNewHere => 'هل أنت جديد في إبزيم؟';
 
   @override
-  String get authCreateAccount => 'إنشاء حساب عضو';
+  String get authCreateAccount => 'إنشاء حساب مستخدم';
 
   @override
   String get authPrivacy => 'الخصوصية';
@@ -154,16 +160,56 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authTerms => 'الشروط';
 
   @override
-  String get regTitle => 'إنشاء حساب';
+  String get authPrivacyTitle => 'سياسة الخصوصية';
 
   @override
-  String get regSubtitle => 'انضم إلى مجتمع جمعية إبزيم للحفاظ على الثقافة.';
+  String get authTermsTitle => 'الشروط والأحكام';
+
+  @override
+  String get authResetPassword => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get authResetPasswordDesc =>
+      'قم بإدخال بيانات الاعتماد السرية الجديدة.';
+
+  @override
+  String get authEmailSent => 'تم إرسال التعليمات';
+
+  @override
+  String get authEmailSentDesc =>
+      'يرجى التحقق من بريدك الإلكتروني لخطوات الاستعادة.';
+
+  @override
+  String get authOtpTitle => 'التحقق من الهوية';
+
+  @override
+  String get authOtpDesc => 'أدخل رمز التحقق المرسل إلى بريدك الإلكتروني.';
+
+  @override
+  String get authNewPassword => 'كلمة المرور الجديدة';
+
+  @override
+  String get authConfirmNewPassword => 'تأكيد كلمة المرور';
+
+  @override
+  String get authPasswordResetSuccess => 'تمت إعادة تعيين كلمة المرور بنجاح';
+
+  @override
+  String get regTitle => 'إنشاء حساب جديد';
+
+  @override
+  String get regSubtitle =>
+      'أنشئ حسابك للوصول إلى خدمات المنصة ومتابعة أنشطتك بكل سهولة.';
+
+  @override
+  String get regMembershipNote =>
+      'إنشاء حساب في المنصة لا يعني اكتساب العضوية الرسمية في الجمعية.';
 
   @override
   String get regFullName => 'الاسم الكامل';
 
   @override
-  String get regFullNameHint => 'سليم المنصور';
+  String get regFullNameHint => 'عكرور توفيق';
 
   @override
   String get regPhone => 'رقم الهاتف';
@@ -187,7 +233,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get regLang => 'اللغة المفضلة';
 
   @override
-  String get regAction => 'إنشاء الحساب';
+  String get regAction => 'إنشاء حساب';
 
   @override
   String get regAlreadyHaveAccount => 'هل لديك حساب بالفعل؟';
@@ -196,7 +242,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get regLogin => 'تسجيل الدخول';
 
   @override
-  String get regMembership => 'بدء طلب الانضمام للجمعية';
+  String get regMembership => 'تقديم طلب انضمام خطي';
 
   @override
   String get valRequired => 'هذا الحقل مطلوب';
@@ -254,16 +300,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeLatestHighlights => 'آخر المستجدات';
 
   @override
-  String get navDashboard => 'لوحة التحكم';
+  String get navDashboard => 'الرئيسية';
 
   @override
-  String get navDirectory => 'دليل الأعضاء';
+  String get navDirectory => 'مجلس الجمعية';
 
   @override
   String get navActivities => 'الأنشطة';
 
   @override
-  String get navProfile => 'الحساب';
+  String get navProfile => 'حسابي';
+
+  @override
+  String get navNews => 'أخبار';
 
   @override
   String get eventFeaturedBadge => 'فعالية مميزة';
@@ -455,13 +504,32 @@ class AppLocalizationsAr extends AppLocalizations {
       'تتم معالجة معلوماتك والحفاظ عليها بشكل آمن وفقًا للمعايير الأرشيفية لجمعية إبزيم.';
 
   @override
-  String get memSuccessTitle => 'مرحباً بك في رحلتنا';
+  String get memSuccessTitle => 'تم تقديم الطلب الخطي';
 
   @override
-  String get memSuccessSub => 'تم استلام طلبك بنجاح.';
+  String get memSuccessSub => 'طلبك قيد المراجعة من طرف المكتب التنفيذي';
 
   @override
   String get memSuccessHome => 'العودة للرئيسية';
+
+  @override
+  String get memStatusNone => 'لا يوجد طلب انضمام مسجل حالياً';
+
+  @override
+  String get memStatusSubmitted =>
+      'طلبك قيد المراجعة من طرف المكتب التنفيذي للجمعية';
+
+  @override
+  String get memStatusNeedsInfo =>
+      'طلب الانضمام يحتاج إلى معلومات إضافية من جانبكم';
+
+  @override
+  String get memStatusApproved =>
+      'تم قبول طلب الانضمام - أهلاً بك كأحد أعضاء الجمعية';
+
+  @override
+  String get memStatusRejected =>
+      'عذراً، لم يتم قبول طلب الانضمام في الوقت الحالي';
 
   @override
   String get leadHeroBadge => 'القيادة والحوكمة';
@@ -496,10 +564,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leadJoinBtn => 'تقديم طلب الترشح';
 
   @override
-  String get dashboardWelcome => 'مرحباً';
+  String dashboardWelcome(Object name) {
+    return 'مرحباً بك في منصة إبزيم، $name';
+  }
 
   @override
-  String get dashboardWelcomeBack => 'أهلاً بك مجدداً';
+  String get dashboardWelcomePublic =>
+      'مرحباً بك في منصة إبزيم، فضاء المواطنة والثقافة.';
+
+  @override
+  String get dashboardWelcomeBack => 'أهلاً بك مجدداً في رحاب إبزيم';
 
   @override
   String get dashboardStatus => 'حالة العضوية';
@@ -514,19 +588,117 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dashboardQuickCard => 'بطاقة الهوية';
 
   @override
-  String get dashboardQuickReg => 'التسجيل';
+  String get dashboardQuickReg => 'نشاطاتنا';
 
   @override
   String get dashboardProgress => 'إكمال الملف الشخصي';
 
   @override
-  String get dashboardProgressDesc => 'خطوات متبقية للوصول إلى الأرشيف.';
+  String get dashboardProgressDesc =>
+      'بوابة إبزيم: أكمل بياناتك الشخصية للوصول إلى ميزات المواطنة الكاملة.';
 
   @override
   String get dashboardUpcoming => 'الفعاليات القادمة';
 
   @override
   String get dashboardBookmarked => 'العناصر المحفوظة';
+
+  @override
+  String get dashLoading => 'جاري التحميل...';
+
+  @override
+  String get dashViewAll => 'عرض الكل';
+
+  @override
+  String get dashJoinTitle => 'انضم لجمعية إبزيم';
+
+  @override
+  String get dashJoinDesc =>
+      'ساهم في حماية تراثنا وتعزيز المواطنة الثقافية عبر طلب العضوية الرسمية الآن.';
+
+  @override
+  String get dashJoinAction => 'طلب الانخراط الآن';
+
+  @override
+  String get dashPendingTitle => 'طلبك قيد المراجعة';
+
+  @override
+  String get dashPendingDesc =>
+      'تتم مراجعة طلب انضمامك من قبل المكتب التنفيذي حالياً. سنخطرك فور تحديث الحالة.';
+
+  @override
+  String get dashMemberLevelPublic => 'حساب مستخدم (منصة إبزيم)';
+
+  @override
+  String get dashMemberLevelMember => 'عضو رسمي بالجمعية';
+
+  @override
+  String get dashAccountStatus => 'حالة الحساب';
+
+  @override
+  String get dashAccountActive => 'حساب نشط';
+
+  @override
+  String get dashAccountNote =>
+      'تنبيه: إنشاء حساب في المنصة لا يعني اكتساب العضوية الرسمية في الجمعية.';
+
+  @override
+  String get dashQuickProfile => 'الملف الشخصي';
+
+  @override
+  String get dashNoEvents => 'لا توجد فعاليات مجدولة حالياً';
+
+  @override
+  String get dashErrorData => 'حدث خطأ أثناء تحميل البيانات';
+
+  @override
+  String get dashPublicIntroTitle => 'البيت الرقمي لإبزيم';
+
+  @override
+  String get dashPublicIntroDesc =>
+      'فضاؤكم لاكتشاف النشاطات الثقافية، استكشاف مبادرات الجمعية، والتواصل مع الهوية المحلية لمدينة سطيف.';
+
+  @override
+  String get dashQuickAbout => 'عن الجمعية';
+
+  @override
+  String get dashMembershipInvite => 'الانضمام إلى الجمعية';
+
+  @override
+  String get dashMembershipLearnMore => 'اكتشف شروط العضوية والانتساب';
+
+  @override
+  String get dashMembershipDiscover => 'مزايا العضوية الرسمية';
+
+  @override
+  String get dashStatusActive => 'نشط';
+
+  @override
+  String get dashPillar1 => 'الثقافة والفنون';
+
+  @override
+  String get dashPillar2 => 'التراث والذاكرة الوطنية';
+
+  @override
+  String get dashPillar3 => 'المواطنة والمجتمع';
+
+  @override
+  String get cardTitle => 'بطاقة العضوية';
+
+  @override
+  String get cardFullName => 'الاسم الكامل';
+
+  @override
+  String get cardMemberId => 'الرقم التعريفي';
+
+  @override
+  String get cardIssueDate => 'تاريخ الإصدار';
+
+  @override
+  String get cardExpiryDate => 'تاريخ الانتهاء';
+
+  @override
+  String get cardScanMe => 'مسح ضوئي';
 
   @override
   String get profilePersonal => 'المعلومات الشخصية';

@@ -8,8 +8,8 @@ class MembershipWorkflowUtil {
         if (user.role === role_enum_1.Role.SUPER_ADMIN)
             return;
         if (newStatus === 'APPROVED' || newStatus === 'REJECTED') {
-            if (currentStatus !== 'UNDER_REVIEW' && currentStatus !== 'NEEDS_INFO') {
-                throw new common_1.BadRequestException(`Cannot transition to ${newStatus} without reviewing the application first`);
+            if (currentStatus !== 'SUBMITTED' && currentStatus !== 'UNDER_REVIEW' && currentStatus !== 'NEEDS_INFO') {
+                throw new common_1.BadRequestException(`Cannot transition from ${currentStatus} to ${newStatus}`);
             }
         }
     }

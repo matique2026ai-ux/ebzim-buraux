@@ -12,44 +12,69 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewMembershipDto = exports.CreateMembershipDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateMembershipDto {
-    firstName;
-    lastName;
-    profession;
+    fullName;
+    dob;
+    gender;
+    wilayaId;
+    communeId;
     phone;
-    domainsOfInterest;
-    desiredContribution;
+    email;
+    interests;
+    skills;
+    motivation;
 }
 exports.CreateMembershipDto = CreateMembershipDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateMembershipDto.prototype, "firstName", void 0);
+], CreateMembershipDto.prototype, "fullName", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateMembershipDto.prototype, "dob", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateMembershipDto.prototype, "gender", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateMembershipDto.prototype, "lastName", void 0);
+], CreateMembershipDto.prototype, "wilayaId", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateMembershipDto.prototype, "profession", void 0);
+], CreateMembershipDto.prototype, "communeId", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateMembershipDto.prototype, "phone", void 0);
 __decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateMembershipDto.prototype, "email", void 0);
+__decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsString)({ each: true }),
     __metadata("design:type", Array)
-], CreateMembershipDto.prototype, "domainsOfInterest", void 0);
+], CreateMembershipDto.prototype, "interests", void 0);
+__decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], CreateMembershipDto.prototype, "skills", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateMembershipDto.prototype, "desiredContribution", void 0);
+], CreateMembershipDto.prototype, "motivation", void 0);
 class ReviewMembershipDto {
     status;
     internalReviewNotes;

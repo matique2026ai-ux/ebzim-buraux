@@ -1,10 +1,14 @@
 export declare class CreateMembershipDto {
-    firstName: string;
-    lastName: string;
-    profession: string;
+    fullName: string;
+    dob?: string;
+    gender?: string;
+    wilayaId: string;
+    communeId: string;
     phone: string;
-    domainsOfInterest: string[];
-    desiredContribution: string;
+    email?: string;
+    interests: string[];
+    skills?: string[];
+    motivation: string;
 }
 export declare class ReviewMembershipDto {
     status?: string;

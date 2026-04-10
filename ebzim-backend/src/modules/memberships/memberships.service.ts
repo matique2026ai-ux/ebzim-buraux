@@ -2,12 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MembershipDocument } from './schemas/membership.schema';
+import { UserDocument } from '../users/schemas/user.schema';
+import { Role } from '../../common/enums/role.enum';
 import { MembershipWorkflowUtil } from './utils/membership-workflow.util';
 import { buildOffsetPagination, formatOffsetPaginatedResponse } from '../../common/utils/pagination.util';
 
 @Injectable()
 export class MembershipsService {
-  constructor(@InjectModel('Membership') private membershipModel: Model<MembershipDocument>) {}
+  constructor(
+    @InjectModel('Membership') private membershipModel: Model<MembershipDocument>,
+    @InjectModel('User') private userModel: Model<UserDocument>
+  ) {}
 
   async submit(userId: string, applicationData: any) {
     // Upsert equivalent: only 1 active line of membership allowed per user
@@ -41,6 +46,10 @@ export class MembershipsService {
         membership.status = updateDto.status;
         membership.reviewDate = new Date();
         membership.reviewedBy = adminUser.userId;
+
+        if (updateDto.status === 'APPROVED') {
+            await this.userModel.findByIdAndUpdate(membership.userId, { role: Role.MEMBER });
+        }
     }
 
     if (updateDto.internalReviewNotes) {

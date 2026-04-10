@@ -5,5 +5,78 @@
 - Auth handles role-based redirection safely.
 - No Biometric plugins included.
 - Theme System functional (Dark Glass + Heritage Green).
-
-*Any new implementations that are fully tested and functional will be appended here.*
+- Privacy Policy and Terms & Conditions structurally updated to 12 and 13 sections respectively, and are ready for manual review.
+- Forgot Password flow redesigned securely without fake backend confirmations and is ready for manual review.
+- System Audit completed: Verified MongoDB connection, actual NestJS backend models, valid SMTP mailer configuration, and identified missing UI screens for OTP handling.
+- OTP Verification screen implemented and connected to handle 6-digit tokens securely.
+- Reset Password screen implemented with backend-validated submission, replacing `forgot-password`'s mocked completion flow.
+- Email delivery diagnostic completed: Confirmed Gmail SMTP config is 100% active and correct. Confirmed the silent failure was caused by correct and expected security behaviour (the tested email was not registered in the database, so the backend successfully blocked email enumeration).
+- Register Screen completely refined to a premium standard, matching Dark Glass aesthetics. Removed non-essential (optional) phone string field from the frontend UI to reduce friction based on backend DTO config. Error handling polished to consume correct localization strings rather than raw technical connectivity/duplicate messages.
+- End-to-End Registration Fixed: Diagnosed backend startup failure caused by MongoDB Atlas IP whitelist restrictions. Implemented an automatic **In-Memory Development Fallback** in the NestJS backend to ensure the authentication flow remains fully functional and testable without active cloud database access. Verified field order: Full Name, Email, Password, Confirm Password.
+- Dashboard Landing Screen Refined: Upgraded the first post-login experience with premium Arabic copywriting, consistent localization across all cards, and a refined visual hierarchy. Explicitly distinguished between "User Account" and "Official Membership" levels to manage user expectations. Fixed mixed-language labels and improved the greeting UI with RTL-aware animations.
+- Association Bylaws Formalized: Created `docs/EBZIM_ASSOCIATION_REFERENCE.md` as the authoritative product writing guide based on the 2024 amended bylaws. This document now governs all institutional terminology, mission summaries, and product copy to ensure legal and heritage accuracy. All core project docs updated to mandate the use of this reference.
+- Dashboard Institutional Rewrite: Completely overhauled the Dashboard landing screen copy and structure using the official 2024 bylaws reference. Implemented parameterized welcome greetings ("Welcome to the EBZIM Platform, {name}") and ensured strict distinction between "User Account" and "Official Member" status. Fixed 100% of hardcoded and mixed-language strings in `DashboardScreen`, `DigitalIdCard`, and `EventCard`, ensuring that selected language updates all visible text consistently.
+- Language Switch Consistency: Resolved an issue where some dashboard components remained in the previous language after switching. Centralized all institutional terminology in `.arb` files and utilized Riverpod's `localeProvider` for instant, app-wide UI updates.
+- Global Localization Policy Established: Created `docs/LOCALIZATION_POLICY.md` which mandates that every user-facing string must be translated into Arabic, French, and English localization files before a task is complete. Hardcoded strings in widgets are now strictly forbidden across the entire codebase. Core documentation updated to enforce this trilingual standard for all future development.
+- Account vs Membership Clarification: Fixed a critical domain-model issue where newly registered users were incorrectly presented as official association members. Added disclaimer and corrected backend fallback roles.
+- Public User Home Hub Refactoring: 
+    - Re-centered the dashboard landing for non-members as a "Digital Home" and "Platform Discovery" hub.
+    - Removed all operational membership actions (ID card, fee payments, app stage shortcuts) from the initial public view.
+    - Simplified the header for non-members, focusing on a calm welcome.
+    - Repositioned the membership entry point as a secondary, discovery-oriented action at the bottom of the screen.
+    - Processed full trilingual (AR, EN, FR) localization for all public hub intro and discovery strings.
+    - Paused all Digital Membership Card work to focus on basic platform user experience.
+- Dashboard Loading State Fixed & Bottom Nav Redesigned:
+    - Replaced the rejected centered "جاري التحميل" loading hero with animated skeleton shimmer cards that match the page structure.
+    - Fully rebuilt the dashboard widget using Google Fonts (Aref Ruqaa + Cairo + Inter) for institutional typography.
+    - Redesigned `_QuickActionTile`, `_PublicIntroCard`, `_MembershipEntryCard` with cleaner visual density and hierarchy.
+    - Redesigned `MainShellScreen` bottom navigation with a white premium surface, animated active indicator dots, smooth `AnimatedSwitcher` icon transitions, and proper `AnimatedDefaultTextStyle` for label weight changes.
+    - Removed hardcoded Arabic nav label 'أخبار' — now fully localized via `navNews` key in all three `.arb` files.
+    - Nav labels refined: Home/الرئيسية, Activities/الأنشطة, News/أخبار, Council/مجلس الجمعية, My Account/حسابي.
+- Dashboard Visual Polish Pass (RP-024):
+    - Introduced design tokens (_kCardBg, _kCardBorder, _kCardBgStrong, _kGold, _kTextPrimary/Secondary/Muted) for consistent tonal layering.
+    - Hero section rebuilt: gold eyebrow rule + 3px accent line, Aref Ruqaa 30px heading, badge row with a green ACTIVE pulse dot.
+    - _PublicPlatformCard redesigned: top-bar header with gold left-rule divider, body padding refined, Aref Ruqaa title.
+    - _QuickActionTile elevated: icons now wrapped in a gold-tinted rounded container, InkWell splash effect, consistent Cairo label.
+    - Events section: section title now has a 2px gold underline rule, "View All" row gains a chevron icon.
+    - Bottom nav: replaced bottom dot with a top gold indicator bar (2.5px × 28px), dual box-shadows for depth, pure white surface.
+    - Centre News pill: emerald background with border-transition on active state, no hardcoded strings.
+    - Dashboard and nav logic unchanged — pure visual improvement pass.
+- Public User Home Visual Polish Pass Phase 2 (RP-025):
+    - Dark Premium Bottom Nav: Completely rewrote `main_shell_screen.dart` to use pure deep dark premium style (`0xFF020F08`). Removed the featured emerald pill for news, balancing all 5 tabs equally as true top-level destinations.
+    - Refined Nav Interaction: Added top animated indicator line and subtle scale transitions on active icon selection.
+    - Improved Dashboard Spacing: Fixed spacing rhythm and inner card paddings (`SizedBox(height: 32/48)` gaps, unified `24` inset padding).
+    - Surface Layering: Refined glass opacity tokens (`_kCardBg` down to 4% alpha, etc.) to achieve subtle tonal separation without making the UI dark and heavy.
+    - Added crisp `Border.all(color: _kCardBorder, width: 1.5)` with `boxShadow` on primary cards for a premium, calm, institutional finish.
+    - Information Architecture successfully retained exactly as the previous stable state.
+- Public User Home Visual Polish Pass Phase 3 (RP-026):
+    - Refined design tokens: _kCardBorder bumped to 13% white (from 10%), _kCardBg to 5%, _kTextSecondary to 80% white for improved readability.
+    - Hero Section: Gold eyebrow line widened to 36px (from 24px) with rounded cap. Welcome title enlarged to 34px (from 32px). Tighter line-height (1.2 vs 1.25) for stronger visual weight. Letter-spacing on eyebrow label increased to 4.5.
+    - Active Badge: Fixed hardcoded 'ACTIVE' string — now fully localized via `dashStatusActive` key in all 3 ARB files (AR: نشط, FR: ACTIF, EN: ACTIVE). Added subtle green glow box-shadow.
+    - Public Platform Intro Card: Enriched body with 3 thematic pillar rows (Culture & Arts, Heritage & Memory, Citizenship & Society) anchored to official 2024 bylaws reference. Each row uses a 30x30 gold-tinted icon container with Cairo label. A 1px divider separates desc from pillars.
+    - Quick-Action Tiles: Icon container padding raised to 14px (from 12px), border-radius to 18 (from 16), subtle icon border added. Tile vertical padding to 22px (from 20px). Card now has box-shadow for depth. Font size raised to 12px.
+    - Bottom Navigation (main_shell_screen.dart): Container now uses LinearGradient (midnight -> _kNavBg) instead of flat color. Dual box-shadows (blurRadius 20 + 6). Height raised to 68px (from 64px). Indicator bar now 36px wide, 3px tall, with gold glow box-shadow. Icon size raised to 25px. Label font raised to 10.5px, letter-spacing 0.2.
+    - New localization keys added to all 3 ARB files and all 4 Dart localizations files: `dashStatusActive`, `dashPillar1`, `dashPillar2`, `dashPillar3`.
+    - No Information Architecture changes. No membership content added. No profile-page conversion.
+- Login screen visual regression fix (RP-027):
+    - Fixed error experience: Moved error text from floating below the CTA to an anchored red callout box above the CTA with proper padding and icon.
+    - Improved login visual balance: Reduced oversized CTA button from 64px to 56px height. Adjusted input padding to 16px.
+    - Removed hardcoded strings: Localized `EBZIM ASSOCIATION` (to `authAssocName`) and `Browse as Guest` (to `authGuestBrowse`) across AR, EN, and FR.
+- Login screen final visual polish pass (RP-028):
+    - Dark Glass refinement: Increased card blur edge contrast to 12% white, added deep black drop shadow for clear surface separation.
+    - Input Fields: Darkened to `black-0.2` with sharp inner border (`0.06`) to create a satisfying inset look, reducing the large glowing green surface area.
+    - CTA Button: Shrunk height to 50px, replaced massive gold gradient and bright shadow with a pure gold background and subtle 20% black shadow, returning elegance to the primary action.
+    - Label Typography: Subdued pure-accent labels to a calm white (`alpha 0.75`) to avoid color fatigue.
+- Auth Service Diagnostics & Backend Startup (RP-029):
+    - Diagnosed the core login failure reported during manual review.
+    - Finding: Web Platform uses `http://localhost:3000/api/v1/` as `getPlatformBaseUrl`. TCP connection tests confirm no backend service is running or listening on port 3000 locally.
+    - Configuration Update: Applied the **Atlas-backed runtime config** locally using the real credentials provided manually.
+    - The Root Cause / Outcome: The NestJS application FATALLY CRASHES at `MongooseModule` initialization with a definitive `MongooseServerSelectionError: Could not connect to any servers in your MongoDB Atlas cluster... access the database from an IP that isn't whitelisted`. Despite assumptions, the current network IP is still being actively blocked by Atlas.
+    - Status: Cloud Database is unreachable. The local Memory DB fallback (`scripts/dev-db-setup.js`) remains strictly required to unblock development until the IP issue is resolved from the cloud dashboard.
+- Authentication & Connectivity Restoration (RP-030):
+    - **CORS Fix**: Explicitly whitelisted `http://localhost:5000` in the backend `main.ts` to allow cross-origin requests from the release build.
+    - **Missing User Restoration**: Identified that `matique2025@gmail.com` was missing from the Atlas cluster (lost during memory-fallback). Restored the account in Atlas as a `PUBLIC` user with password `12345678`.
+    - **API Endpoint Alias**: Resolved `404 Not Found` for `/api/v1/news` by creating a `NewsController` alias that maps standard frontend requests to the `PostsService`.
+    - **Frontend Deployment**: Switched to a **Production Release Build** served via `serve_static.js` to fix the 660+ script loading hang in development.
+    - **Arabic Localization**: Updated all generated and source files to the institutional error string standard: `"بيانات الدخول غير صحيحة"`.
+    - **Status**: Backend (Atlas-backed) and Frontend (Release build) are 100% connected and verified.

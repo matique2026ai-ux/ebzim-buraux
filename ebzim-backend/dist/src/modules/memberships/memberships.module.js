@@ -12,12 +12,18 @@ const mongoose_1 = require("@nestjs/mongoose");
 const memberships_controller_1 = require("./memberships.controller");
 const memberships_service_1 = require("./memberships.service");
 const membership_schema_1 = require("./schemas/membership.schema");
+const user_schema_1 = require("../users/schemas/user.schema");
 let MembershipsModule = class MembershipsModule {
 };
 exports.MembershipsModule = MembershipsModule;
 exports.MembershipsModule = MembershipsModule = __decorate([
     (0, common_1.Module)({
-        imports: [mongoose_1.MongooseModule.forFeature([{ name: 'Membership', schema: membership_schema_1.MembershipSchema }])],
+        imports: [
+            mongoose_1.MongooseModule.forFeature([
+                { name: 'Membership', schema: membership_schema_1.MembershipSchema },
+                { name: 'User', schema: user_schema_1.UserSchema }
+            ])
+        ],
         controllers: [memberships_controller_1.MembershipsController],
         providers: [memberships_service_1.MembershipsService],
     })

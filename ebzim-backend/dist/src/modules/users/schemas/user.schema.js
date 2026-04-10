@@ -56,6 +56,9 @@ let User = class User {
     role;
     profile;
     status;
+    membershipBadge;
+    resetPasswordToken;
+    resetPasswordExpires;
 };
 exports.User = User;
 __decorate([
@@ -78,6 +81,18 @@ __decorate([
     (0, mongoose_1.Prop)({ type: String, enum: ['ACTIVE', 'INACTIVE', 'BANNED'], default: 'ACTIVE' }),
     __metadata("design:type", String)
 ], User.prototype, "status", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String, required: false }),
+    __metadata("design:type", String)
+], User.prototype, "membershipBadge", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String, required: false }),
+    __metadata("design:type", String)
+], User.prototype, "resetPasswordToken", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Date, required: false }),
+    __metadata("design:type", Date)
+], User.prototype, "resetPasswordExpires", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

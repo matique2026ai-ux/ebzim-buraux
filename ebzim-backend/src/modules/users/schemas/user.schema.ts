@@ -43,6 +43,15 @@ export class User {
 
   @Prop({ type: String, enum: ['ACTIVE', 'INACTIVE', 'BANNED'], default: 'ACTIVE' })
   status: string;
+
+  @Prop({ type: String, required: false })
+  membershipBadge?: string; // e.g., 'BRONZE', 'SILVER', 'GOLD', 'HONORARY'
+
+  @Prop({ type: String, required: false })
+  resetPasswordToken?: string;
+
+  @Prop({ type: Date, required: false })
+  resetPasswordExpires?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

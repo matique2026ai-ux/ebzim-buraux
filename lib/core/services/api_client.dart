@@ -1,10 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'storage_service.dart';
-
-// Conditional logic is handled inside api_client_platform.dart via exports.
-import 'api_client_platform.dart';
+import 'package:ebzim_app/core/services/storage_service.dart';
+import 'package:ebzim_app/core/services/api_client_platform.dart';
 
 
 class ApiClient {
@@ -57,6 +55,9 @@ final apiClientProvider = Provider((ref) {
   // Use the platform-safe helper to detect tests and base URLs.
   final isTest = isPlatformTest;
   final baseUrl = getPlatformBaseUrl(isTest);
+  if (kDebugMode) {
+    print('[DEBUG API] Initializing ApiClient with baseUrl: $baseUrl');
+  }
 
   final dio = Dio(BaseOptions(
     baseUrl: baseUrl,

@@ -139,13 +139,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'Automatic account recovery is currently under development. Please contact the association\'s administration or technical support for assistance.';
 
   @override
+  String get authAssocName => 'EBZIM ASSOCIATION';
+
+  @override
+  String get authGuestBrowse => 'Browse as Guest →';
+
+  @override
   String get authBiometric => 'Secure biometric entry';
 
   @override
   String get authNewHere => 'New to Ebzim?';
 
   @override
-  String get authCreateAccount => 'Create Member Account';
+  String get authCreateAccount => 'Create User Account';
 
   @override
   String get authPrivacy => 'Privacy';
@@ -154,17 +160,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authTerms => 'Terms';
 
   @override
-  String get regTitle => 'Create Account';
+  String get authPrivacyTitle => 'Privacy Policy';
+
+  @override
+  String get authTermsTitle => 'Terms & Conditions';
+
+  @override
+  String get authResetPassword => 'Reset Password';
+
+  @override
+  String get authResetPasswordDesc => 'Enter your new secret credentials.';
+
+  @override
+  String get authEmailSent => 'Instructions Sent';
+
+  @override
+  String get authEmailSentDesc => 'Please check your inbox for recovery steps.';
+
+  @override
+  String get authOtpTitle => 'Verify Identity';
+
+  @override
+  String get authOtpDesc => 'Enter the verification code sent to your email.';
+
+  @override
+  String get authNewPassword => 'New Password';
+
+  @override
+  String get authConfirmNewPassword => 'Confirm New Password';
+
+  @override
+  String get authPasswordResetSuccess => 'Password Reset Successfully';
+
+  @override
+  String get regTitle => 'Create New Account';
 
   @override
   String get regSubtitle =>
-      'Join Association Ebzim\'s community of cultural preservation.';
+      'Create your account to access the platform services and easily track your activities.';
+
+  @override
+  String get regMembershipNote =>
+      'Creating an account on the platform does not grant official membership in the association.';
 
   @override
   String get regFullName => 'Full Name';
 
   @override
-  String get regFullNameHint => 'Salim Al-Mansour';
+  String get regFullNameHint => 'Akrouf Toufik';
 
   @override
   String get regPhone => 'Phone Number';
@@ -257,16 +300,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeLatestHighlights => 'Latest Highlights';
 
   @override
-  String get navDashboard => 'Dashboard';
+  String get navDashboard => 'Home';
 
   @override
-  String get navDirectory => 'Directory';
+  String get navDirectory => 'Council';
 
   @override
   String get navActivities => 'Activities';
 
   @override
-  String get navProfile => 'Profile';
+  String get navProfile => 'My Account';
+
+  @override
+  String get navNews => 'News';
 
   @override
   String get eventFeaturedBadge => 'Featured Event';
@@ -469,6 +515,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memSuccessHome => 'Return to Home';
 
   @override
+  String get memStatusNone => 'لا يوجد طلب انضمام مسجل حالياً';
+
+  @override
+  String get memStatusSubmitted =>
+      'طلبك قيد المراجعة من طرف المكتب التنفيذي للجمعية';
+
+  @override
+  String get memStatusNeedsInfo =>
+      'طلب الانضمام يحتاج إلى معلومات إضافية من جانبكم';
+
+  @override
+  String get memStatusApproved =>
+      'تم قبول طلب الانضمام - أهلاً بك كأحد أعضاء الجمعية';
+
+  @override
+  String get memStatusRejected =>
+      'عذراً، لم يتم قبول طلب الانضمام في الوقت الحالي';
+
+  @override
   String get leadHeroBadge => 'Leadership & Governance';
 
   @override
@@ -501,37 +566,141 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leadJoinBtn => 'Submit Candidacy';
 
   @override
-  String get dashboardWelcome => 'Welcome';
+  String dashboardWelcome(Object name) {
+    return 'Welcome to the EBZIM Platform, $name';
+  }
 
   @override
-  String get dashboardWelcomeBack => 'Welcome back';
+  String get dashboardWelcomePublic =>
+      'Welcome to the EBZIM Platform, a space for citizenship and culture.';
+
+  @override
+  String get dashboardWelcomeBack => 'Welcome back to the EBZIM gateway';
 
   @override
   String get dashboardStatus => 'Membership Status';
 
   @override
-  String get dashboardValidUntil => 'Valid Until';
+  String get dashboardValidUntil => 'Valid until';
 
   @override
-  String get dashboardQuickPay => 'Pay Fees';
+  String get dashboardQuickPay => 'Fees';
 
   @override
   String get dashboardQuickCard => 'ID Card';
 
   @override
-  String get dashboardQuickReg => 'Register';
+  String get dashboardQuickReg => 'Activities';
 
   @override
-  String get dashboardProgress => 'Complete Profile';
+  String get dashboardProgress => 'Profile Progress';
 
   @override
-  String get dashboardProgressDesc => 'Steps remaining for archive access.';
+  String get dashboardProgressDesc =>
+      'EBZIM Gateway: Complete your profile to access full citizenship features.';
 
   @override
-  String get dashboardUpcoming => 'Upcoming Activities';
+  String get dashboardUpcoming => 'Upcoming Events';
 
   @override
   String get dashboardBookmarked => 'Bookmarked';
+
+  @override
+  String get dashLoading => 'Loading...';
+
+  @override
+  String get dashViewAll => 'View All';
+
+  @override
+  String get dashJoinTitle => 'Join Association EBZIM';
+
+  @override
+  String get dashJoinDesc =>
+      'Help protect our heritage and promote cultural citizenship by applying for official membership now.';
+
+  @override
+  String get dashJoinAction => 'Apply for Membership Now';
+
+  @override
+  String get dashPendingTitle => 'Your Application is Under Review';
+
+  @override
+  String get dashPendingDesc =>
+      'Your membership application is currently being reviewed by the executive office. We will notify you once the status is updated.';
+
+  @override
+  String get dashMemberLevelPublic => 'User Account (EBZIM Platform)';
+
+  @override
+  String get dashMemberLevelMember => 'Official Member';
+
+  @override
+  String get dashAccountStatus => 'Account Status';
+
+  @override
+  String get dashAccountActive => 'Active Account';
+
+  @override
+  String get dashAccountNote =>
+      'Note: Creating a platform account does not grant official association membership.';
+
+  @override
+  String get dashQuickProfile => 'Profile';
+
+  @override
+  String get dashNoEvents => 'No scheduled events currently';
+
+  @override
+  String get dashErrorData => 'Error loading data';
+
+  @override
+  String get dashPublicIntroTitle => 'Ebzim Digital Hub';
+
+  @override
+  String get dashPublicIntroDesc =>
+      'Your discovery space for cultural activities, association initiatives, and the local identity of Sétif.';
+
+  @override
+  String get dashQuickAbout => 'About Association';
+
+  @override
+  String get dashMembershipInvite => 'Join the Association';
+
+  @override
+  String get dashMembershipLearnMore => 'Discover membership terms & benefits';
+
+  @override
+  String get dashMembershipDiscover => 'Official Membership Benefits';
+
+  @override
+  String get dashStatusActive => 'ACTIVE';
+
+  @override
+  String get dashPillar1 => 'Culture & Arts';
+
+  @override
+  String get dashPillar2 => 'Heritage & National Memory';
+
+  @override
+  String get dashPillar3 => 'Citizenship & Society';
+
+  @override
+  String get cardTitle => 'MEMBERSHIP CARD';
+
+  @override
+  String get cardFullName => 'FULL NAME';
+
+  @override
+  String get cardMemberId => 'MEMBER ID';
+
+  @override
+  String get cardIssueDate => 'ISSUE DATE';
+
+  @override
+  String get cardExpiryDate => 'EXPIRY DATE';
+
+  @override
+  String get cardScanMe => 'SCAN ME';
 
   @override
   String get profilePersonal => 'Personal Information';

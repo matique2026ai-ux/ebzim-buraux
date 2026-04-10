@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../localization/l10n/app_localizations.dart';
-import '../theme/app_theme.dart';
+import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
+import 'package:ebzim_app/core/theme/app_theme.dart';
 
 class EbzimSliverAppBar extends StatelessWidget {
   final Widget? leading;
@@ -19,7 +19,7 @@ class EbzimSliverAppBar extends StatelessWidget {
     return SliverAppBar(
       floating: true,
       pinned: true,
-      backgroundColor: AppTheme.backgroundLight.withValues(alpha: 242), // ~0.95 opacity
+      backgroundColor: AppTheme.primaryColor.withValues(alpha: 242), // ~0.95 opacity
       elevation: 0,
       forceElevated: true,
       leading: leading,

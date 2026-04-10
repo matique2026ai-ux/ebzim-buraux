@@ -10,6 +10,7 @@ import { UserSchema } from '../users/schemas/user.schema';
 
 @Module({
   imports: [
+    // Standard registration, but in AuthService we handle the connection error
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     PassportModule,
     JwtModule.registerAsync({

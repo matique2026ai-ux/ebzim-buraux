@@ -1,65 +1,130 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../theme/app_theme.dart';
-import '../localization/l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
+
+// Design tokens
+const _kNavBg = Color(0xFF020F08);         // Midnight Green / Deepest dark
+const _kNavBorder = Color(0x1AFFFFFF);     // 10% white top border
+const _kActiveColor = Color(0xFFC5A059);   // Heritage Gold
+const _kInactiveColor = Color(0x80FFFFFF); // 50% white
 
 class MainShellScreen extends StatelessWidget {
   final Widget child;
   const MainShellScreen({super.key, required this.child});
 
   int _calculateSelectedIndex(BuildContext context) {
-    final location = GoRouterState.of(context).uri.toString();
-    if (location.startsWith('/dashboard')) return 0;
-    if (location.startsWith('/leadership')) return 1;
-    if (location.startsWith('/activities')) return 2;
-    if (location.startsWith('/profile')) return 3;
-    return 0; // default
+    final loc = GoRouterState.of(context).uri.toString();
+    if (loc.startsWith('/dashboard')) return 0;
+    if (loc.startsWith('/activities')) return 1;
+    if (loc.startsWith('/news')) return 2;
+    if (loc.startsWith('/leadership')) return 3;
+    if (loc.startsWith('/profile')) return 4;
+    return 0;
   }
 
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
-      case 0:
-        context.go('/dashboard');
-        break;
-      case 1:
-        context.go('/leadership');
-        break;
-      case 2:
-        context.go('/activities');
-        break;
-      case 3:
-        context.go('/profile');
-        break;
+      case 0: context.go('/dashboard'); break;
+      case 1: context.go('/activities'); break;
+      case 2: context.go('/news'); break;
+      case 3: context.go('/leadership'); break;
+      case 4: context.go('/profile'); break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final currentIndex = _calculateSelectedIndex(context);
-    final loc = AppLocalizations.of(context)!;
+    final l = AppLocalizations.of(context)!;
+
+    final items = [
+      _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: l.navDashboard),
+      _NavItem(icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month_rounded, label: l.navActivities),
+      _NavItem(icon: Icons.article_outlined, activeIcon: Icons.article_rounded, label: l.navNews),
+      _NavItem(icon: Icons.account_balance_outlined, activeIcon: Icons.account_balance_rounded, label: l.navDirectory),
+      _NavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: l.navProfile),
+    ];
 
     return Scaffold(
       body: child,
-      extendBody: true, // For curved nav bar backgrounds
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: AppTheme.backgroundLight,
-          boxShadow: [BoxShadow(color: AppTheme.primaryColor.withValues(alpha: 0.05), blurRadius: 30, offset: const Offset(0, -10))],
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      extendBody: true,
+      bottomNavigationBar: _NavBar(
+        items: items,
+        currentIndex: currentIndex,
+        onTap: (i) => _onItemTapped(i, context),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DATA CLASS
+// ─────────────────────────────────────────────────────────────────────────────
+class _NavItem {
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+
+  const _NavItem({
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NAV BAR CONTAINER
+// ─────────────────────────────────────────────────────────────────────────────
+class _NavBar extends StatelessWidget {
+  final List<_NavItem> items;
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+  const _NavBar({required this.items, required this.currentIndex, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF010C06), // Slightly darker at the very top edge
+            _kNavBg,
+          ],
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _NavBarItem(icon: Icons.dashboard, label: loc.navDashboard, isSelected: currentIndex == 0, onTap: () => _onItemTapped(0, context)),
-                _NavBarItem(icon: Icons.account_balance, label: loc.navDirectory, isSelected: currentIndex == 1, onTap: () => _onItemTapped(1, context)),
-                _NavBarItem(icon: Icons.explore, label: loc.navActivities, isSelected: currentIndex == 2, onTap: () => _onItemTapped(2, context)),
-                _NavBarItem(icon: Icons.person, label: loc.navProfile, isSelected: currentIndex == 3, onTap: () => _onItemTapped(3, context)),
-              ],
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.30),
+            blurRadius: 20,
+            offset: const Offset(0, -6),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 6,
+            offset: const Offset(0, -2),
+          ),
+        ],
+        border: const Border(
+          top: BorderSide(color: _kNavBorder, width: 1.0),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 68,
+          child: Row(
+            children: items.asMap().entries.map((e) {
+              return Expanded(
+                child: _NavTile(
+                  item: e.value,
+                  index: e.key,
+                  isSelected: currentIndex == e.key,
+                  onTap: () => onTap(e.key),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ),
@@ -67,35 +132,96 @@ class MainShellScreen extends StatelessWidget {
   }
 }
 
-class _NavBarItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
+// ─────────────────────────────────────────────────────────────────────────────
+// NAV TILE
+// ─────────────────────────────────────────────────────────────────────────────
+class _NavTile extends StatelessWidget {
+  final _NavItem item;
+  final int index;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _NavBarItem({required this.icon, required this.label, required this.isSelected, required this.onTap});
+  const _NavTile({
+    required this.item,
+    required this.index,
+    required this.isSelected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final color = isSelected ? _kActiveColor : _kInactiveColor;
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Icon(icon, color: isSelected ? AppTheme.secondaryColor : AppTheme.primaryColor.withValues(alpha: 0.4), size: 28),
-          const SizedBox(height: 4),
-          Text(
-            label.toUpperCase(),
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-              color: isSelected ? AppTheme.secondaryColor : AppTheme.primaryColor.withValues(alpha: 0.4),
-              letterSpacing: 2,
+          // Active Indicator Line
+          Positioned(
+            top: 0,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic,
+              height: 3,
+              width: isSelected ? 36 : 0,
+              decoration: BoxDecoration(
+                color: _kActiveColor,
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(3)),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: _kActiveColor.withValues(alpha: 0.45),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : [],
+              ),
             ),
-          )
+          ),
+          // Content
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                switchInCurve: Curves.easeOut,
+                switchOutCurve: Curves.easeIn,
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: ScaleTransition(
+                      scale: animation.drive(Tween(begin: 0.85, end: 1.0)),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Icon(
+                  isSelected ? item.activeIcon : item.icon,
+                  key: ValueKey<bool>(isSelected),
+                  size: 25,
+                  color: color,
+                ),
+              ),
+              const SizedBox(height: 4),
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
+                style: GoogleFonts.cairo(
+                  fontSize: 10.5,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: color,
+                  letterSpacing: 0.2,
+                ),
+                child: Text(item.label, maxLines: 1, overflow: TextOverflow.ellipsis),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
+

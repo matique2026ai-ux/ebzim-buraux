@@ -6,22 +6,34 @@ export type MembershipDocument = Membership & Document;
 @Schema({ _id: false })
 export class MembershipProfileData {
   @Prop({ required: true })
-  firstName: string;
+  fullName: string;
+
+  @Prop()
+  dob?: string;
+
+  @Prop()
+  gender?: string;
 
   @Prop({ required: true })
-  lastName: string;
+  wilayaId: string;
 
   @Prop({ required: true })
-  profession: string;
+  communeId: string;
 
   @Prop({ required: true })
   phone: string;
 
+  @Prop()
+  email?: string;
+
   @Prop({ type: [String], required: true })
-  domainsOfInterest: string[];
+  interests: string[];
+
+  @Prop({ type: [String] })
+  skills?: string[];
 
   @Prop({ required: true })
-  desiredContribution: string;
+  motivation: string;
 }
 const MembershipProfileDataSchema = SchemaFactory.createForClass(MembershipProfileData);
 

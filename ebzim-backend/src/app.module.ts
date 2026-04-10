@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { PostsModule } from './modules/posts/posts.module';
+import { MailModule } from './modules/mail/mail.module';
 import { EventsModule } from './modules/events/events.module';
 import { MembershipsModule } from './modules/memberships/memberships.module';
 import { ReportsModule } from './modules/reports/reports.module';
@@ -18,6 +19,7 @@ import { ReportsModule } from './modules/reports/reports.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),
+        serverSelectionTimeoutMS: 5000, // Fail fast if DB is unreachable
       }),
       inject: [ConfigService],
     }),
@@ -25,6 +27,7 @@ import { ReportsModule } from './modules/reports/reports.module';
     CategoriesModule,
     PostsModule,
     EventsModule,
+    MailModule,
     MembershipsModule,
     ReportsModule,
   ],

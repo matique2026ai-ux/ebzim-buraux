@@ -13,38 +13,58 @@ exports.MembershipSchema = exports.Membership = exports.MembershipProfileData = 
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 let MembershipProfileData = class MembershipProfileData {
-    firstName;
-    lastName;
-    profession;
+    fullName;
+    dob;
+    gender;
+    wilayaId;
+    communeId;
     phone;
-    domainsOfInterest;
-    desiredContribution;
+    email;
+    interests;
+    skills;
+    motivation;
 };
 exports.MembershipProfileData = MembershipProfileData;
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], MembershipProfileData.prototype, "firstName", void 0);
+], MembershipProfileData.prototype, "fullName", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], MembershipProfileData.prototype, "dob", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], MembershipProfileData.prototype, "gender", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], MembershipProfileData.prototype, "lastName", void 0);
+], MembershipProfileData.prototype, "wilayaId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], MembershipProfileData.prototype, "profession", void 0);
+], MembershipProfileData.prototype, "communeId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], MembershipProfileData.prototype, "phone", void 0);
 __decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], MembershipProfileData.prototype, "email", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ type: [String], required: true }),
     __metadata("design:type", Array)
-], MembershipProfileData.prototype, "domainsOfInterest", void 0);
+], MembershipProfileData.prototype, "interests", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [String] }),
+    __metadata("design:type", Array)
+], MembershipProfileData.prototype, "skills", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], MembershipProfileData.prototype, "desiredContribution", void 0);
+], MembershipProfileData.prototype, "motivation", void 0);
 exports.MembershipProfileData = MembershipProfileData = __decorate([
     (0, mongoose_1.Schema)({ _id: false })
 ], MembershipProfileData);

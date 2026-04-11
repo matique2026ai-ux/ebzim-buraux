@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Headers, Query, UseGuards, Request, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Headers, Query, UseGuards, Request, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiHeader, ApiQuery } from '@nestjs/swagger';
 import { EventsService } from './events.service';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -43,6 +43,24 @@ export class EventsController {
   @ApiOperation({ summary: 'Admin create event entry' })
   async createEvent(@Body() dto: CreateEventDto) {
     return this.eventsService.createEvent(dto);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update an existing event' })
+  async updateEvent(@Param('id') id: string, @Body() updateData: any) {
+    return this.eventsService.updateEvent(id, updateData);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete an event' })
+  async deleteEvent(@Param('id') id: string) {
+    return this.eventsService.deleteEvent(id);
   }
 
   @Post(':id/rsvp')

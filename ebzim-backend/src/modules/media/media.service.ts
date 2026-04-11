@@ -15,8 +15,8 @@ export class MediaService {
   async uploadImage(file: any, folder = 'ebzim/uploads'): Promise<CloudinaryResponse> {
     
     // Strict MIME boundary validation
-    if (!file.mimetype.match(/^image\/(jpeg|png|gif|webp)$/)) {
-      throw new BadRequestException('Invalid file type. Only jpeg, png, gif, and webp are allowed.');
+    if (!file.mimetype.match(/^(image\/(jpeg|png|gif|webp)|video\/(mp4|webm))$/)) {
+      throw new BadRequestException('Invalid file type. Only jpeg, png, gif, webp imagery or mp4, webm videos are allowed.');
     }
 
     // Typical MVP size restriction (e.g. 5MB)

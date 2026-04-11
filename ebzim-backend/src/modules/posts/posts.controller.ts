@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Query, Headers, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Query, Headers, UseGuards, Request, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiHeader, ApiQuery } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -46,5 +46,22 @@ export class PostsController {
   async createPost(@Body() createPostDto: CreatePostDto, @Request() req: { user?: any }) {
     return this.postsService.createPost(createPostDto, req.user.userId);
   }
-}
 
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update an existing multilingual post' })
+  async updatePost(@Param('id') id: string, @Body() updateData: any) {
+    return this.postsService.updatePost(id, updateData);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a post' })
+  async deletePost(@Param('id') id: string) {
+    return this.postsService.deletePost(id);
+  }
+}

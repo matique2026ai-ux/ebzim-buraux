@@ -30,9 +30,10 @@ export class PostsService {
     // Multilingual payload map: Strip unneeded languages to save mobile parsing speed
     const localizedPosts = posts.map((post) => ({
       _id: post._id,
-      title: post.title[locale as keyof typeof post.title] || post.title.en,
-      summary: post.summary[locale as keyof typeof post.summary] || post.summary.en,
-      coverImage: post.media.find(m => m.type === 'IMAGE') || null,
+      title: post.title,
+      summary: post.summary,
+      content: post.content,
+      imageUrl: post.media.find(m => m.type === 'IMAGE')?.cloudinaryUrl || '',
       publishedAt: post.publishedAt,
     }));
 
@@ -54,5 +55,13 @@ export class PostsService {
   async createPost(dto: any, authorId: string) {
     // Implementation uses native mongoose creation
     return this.postModel.create({ ...dto, authorId });
+  }
+
+  async updatePost(id: string, dto: any) {
+    return this.postModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+  }
+
+  async deletePost(id: string) {
+    return this.postModel.findByIdAndDelete(id).exec();
   }
 }

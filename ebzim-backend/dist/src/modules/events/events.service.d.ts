@@ -7,8 +7,8 @@ export declare class EventsService {
     getPublicFeed(locale: string, options: any): Promise<{
         data: {
             _id: import("mongoose").Types.ObjectId;
-            title: string;
-            description: string;
+            title: import("../institutions/schemas/institution.schema").MultilingualText;
+            description: import("../institutions/schemas/institution.schema").MultilingualText;
             startDate: Date;
             location: import("./schemas/event.schema").LocationData | undefined;
             coverImage: {
@@ -38,6 +38,20 @@ export declare class EventsService {
     } & {
         id: string;
     }>;
+    updateEvent(id: string, dto: any): Promise<(import("mongoose").Document<unknown, {}, EventDocument, {}, import("mongoose").DefaultSchemaOptions> & import("./schemas/event.schema").Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    } & {
+        id: string;
+    }) | null>;
+    deleteEvent(id: string): Promise<(import("mongoose").Document<unknown, {}, EventDocument, {}, import("mongoose").DefaultSchemaOptions> & import("./schemas/event.schema").Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    } & {
+        id: string;
+    }) | null>;
     rsvp(eventId: string, userId: string): Promise<import("mongoose").Document<unknown, {}, EventRsvpDocument, {}, import("mongoose").DefaultSchemaOptions> & import("./schemas/event.schema").EventRsvp & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
         _id: import("mongoose").Types.ObjectId;
     }> & {

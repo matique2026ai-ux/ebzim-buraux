@@ -11,6 +11,7 @@ import { MailModule } from './modules/mail/mail.module';
 import { EventsModule } from './modules/events/events.module';
 import { MembershipsModule } from './modules/memberships/memberships.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { MediaModule } from './modules/media/media.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ReportsModule } from './modules/reports/reports.module';
     MailModule,
     MembershipsModule,
     ReportsModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

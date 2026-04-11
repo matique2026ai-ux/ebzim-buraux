@@ -35,8 +35,8 @@ export class EventsService {
 
     const localizedEvents = events.map((event) => ({
       _id: event._id,
-      title: event.title[locale as keyof typeof event.title] || event.title.en,
-      description: event.description[locale as keyof typeof event.description] || event.description.en,
+      title: event.title,
+      description: event.description,
       startDate: event.startDate,
       location: event.location,
       coverImage: event.coverImage,
@@ -59,6 +59,14 @@ export class EventsService {
 
   async createEvent(dto: any) {
     return this.eventModel.create(dto);
+  }
+
+  async updateEvent(id: string, dto: any) {
+    return this.eventModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+  }
+
+  async deleteEvent(id: string) {
+    return this.eventModel.findByIdAndDelete(id).exec();
   }
 
   async rsvp(eventId: string, userId: string) {

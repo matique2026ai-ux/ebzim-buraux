@@ -1,25 +1,39 @@
-# Build stage
-FROM node:18-alpine AS builder
+# Build Stage
+FROM node:24-alpine as builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
-RUN npm ci
 
+# Install dependencies including devDependencies for build
+RUN npm install
+
+# Copy source code
 COPY . .
+
+# Build the project
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine
+# Production Stage
+FROM node:24-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
-RUN npm ci --only=production
 
-COPY --from=builder /usr/src/app/dist ./dist
+# Install only production dependencies
+RUN npm install --only=production
 
-# Standard NestJS port
+# Copy build artifacts from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Explicitly expose the port (Render will override this, but it's good practice)
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+# Set environment to production
+ENV NODE_ENV=production
+
+# Start the application
+CMD ["node", "dist/main"]

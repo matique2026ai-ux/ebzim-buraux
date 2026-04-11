@@ -34,9 +34,10 @@ let PostsService = class PostsService {
             .exec();
         const localizedPosts = posts.map((post) => ({
             _id: post._id,
-            title: post.title[locale] || post.title.en,
-            summary: post.summary[locale] || post.summary.en,
-            coverImage: post.media.find(m => m.type === 'IMAGE') || null,
+            title: post.title,
+            summary: post.summary,
+            content: post.content,
+            imageUrl: post.media.find(m => m.type === 'IMAGE')?.cloudinaryUrl || '',
             publishedAt: post.publishedAt,
         }));
         return (0, pagination_util_1.formatCursorPaginatedResponse)(localizedPosts);
@@ -51,6 +52,12 @@ let PostsService = class PostsService {
     }
     async createPost(dto, authorId) {
         return this.postModel.create({ ...dto, authorId });
+    }
+    async updatePost(id, dto) {
+        return this.postModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+    }
+    async deletePost(id) {
+        return this.postModel.findByIdAndDelete(id).exec();
     }
 };
 exports.PostsService = PostsService;

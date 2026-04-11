@@ -10,11 +10,13 @@ exports.MediaModule = void 0;
 const common_1 = require("@nestjs/common");
 const media_service_1 = require("./media.service");
 const cloudinary_provider_1 = require("./cloudinary.provider");
+const media_controller_1 = require("./media.controller");
 let MediaModule = class MediaModule {
 };
 exports.MediaModule = MediaModule;
 exports.MediaModule = MediaModule = __decorate([
     (0, common_1.Module)({
+        controllers: [media_controller_1.MediaController],
         providers: [cloudinary_provider_1.CloudinaryProvider, media_service_1.MediaService],
         exports: [media_service_1.MediaService],
     })

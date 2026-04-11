@@ -19,6 +19,7 @@ const mail_module_1 = require("./modules/mail/mail.module");
 const events_module_1 = require("./modules/events/events.module");
 const memberships_module_1 = require("./modules/memberships/memberships.module");
 const reports_module_1 = require("./modules/reports/reports.module");
+const media_module_1 = require("./modules/media/media.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -41,6 +42,7 @@ exports.AppModule = AppModule = __decorate([
             mail_module_1.MailModule,
             memberships_module_1.MembershipsModule,
             reports_module_1.ReportsModule,
+            media_module_1.MediaModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

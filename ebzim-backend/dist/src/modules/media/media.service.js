@@ -45,8 +45,8 @@ const cloudinary_1 = require("cloudinary");
 const streamifier = __importStar(require("streamifier"));
 let MediaService = class MediaService {
     async uploadImage(file, folder = 'ebzim/uploads') {
-        if (!file.mimetype.match(/^image\/(jpeg|png|gif|webp)$/)) {
-            throw new common_1.BadRequestException('Invalid file type. Only jpeg, png, gif, and webp are allowed.');
+        if (!file.mimetype.match(/^(image\/(jpeg|png|gif|webp)|video\/(mp4|webm))$/)) {
+            throw new common_1.BadRequestException('Invalid file type. Only jpeg, png, gif, webp imagery or mp4, webm videos are allowed.');
         }
         const MAX_MB = 5;
         if (file.size > MAX_MB * 1024 * 1024) {

@@ -303,7 +303,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navDashboard => 'الرئيسية';
 
   @override
-  String get navDirectory => 'مجلس الجمعية';
+  String get navDirectory => 'أعضاء الجمعية';
 
   @override
   String get navActivities => 'الأنشطة';
@@ -345,77 +345,77 @@ class AppLocalizationsAr extends AppLocalizations {
   String get eventRegister => 'تسجيل الحضور';
 
   @override
-  String get aboutHeroTitle => 'الحفاظ على التراث من خلال الابتكار الثقافي';
+  String get aboutHeroTitle => 'صون الموروث وتنمية الوعي الثقافي والوطني';
 
   @override
   String get aboutHeroSubtitle =>
-      'تعتبر جمعية إبزيم جسراً بين حكمة الماضي وإمكانيات المستقبل.';
+      'جمعية إبزيم هي المساحة الولائية لتسخير المعارف والوسائل في سبيل حماية الهوية الجزائرية.';
 
   @override
-  String get aboutStoryBadge => 'قصتنا';
+  String get aboutStoryBadge => 'عن الجمعية';
 
   @override
-  String get aboutStoryTitle => 'إرث متجذر في أرض الجزائر';
+  String get aboutStoryTitle => 'إرث سطيف، هوية وطن';
 
   @override
   String get aboutStoryText1 =>
-      'تأسست جمعية إبزيم في قلب مدينة سطيف التاريخية، وانبثقت من رغبة جماعية في حماية الكنوز غير الملموسة لمنطقتنا.';
+      'تأسست جمعية إبزيم بقرار من الجمعية العامة وحرصاً على حماية الكنوز المادية وغير الملموسة لولاية سطيف، لتعمل كجسر مؤسسي بين الأصالة والحداثة.';
 
   @override
   String get aboutStoryQuote =>
-      '\"إبزيم ليست مجرد جمعية، بل هي ميثاق بين الأجيال لصون الهوية الجزائرية العريقة وبعثها في روح العصر.\"';
+      '\"إبزيم ليست مجرد هيئة ثقافية، بل ميثاق تطوعي لصون الذاكرة والنهوض بالفعل الثقافي الهادف.\"';
 
   @override
-  String get aboutMission => 'مهمتنا';
+  String get aboutMission => 'مهمتنا في القانون الأساسي';
 
   @override
   String get aboutMissionText =>
-      'تمكين المجتمعات المحلية من خلال توثيق التقنيات القديمة وتعزيز اقتصاد ثقافي مستدام.';
+      'العمل على حماية المعالم التاريخية، توثيق التقنيات التراثية، وإدماج مفاهيم المواطنة من خلال العمل الثقافي الميداني.';
 
   @override
-  String get aboutVision => 'رؤيتنا';
+  String get aboutVision => 'رؤيتنا الإستراتيجية';
 
   @override
   String get aboutVisionText =>
-      'أن نصبح المعيار العالمي للحفاظ على الثقافة في شمال إفريقيا.';
+      'أن تكون إبزيم النموذج المرجعي في حماية الموروث الثقافي والذاكرة الوطنية في شمال افريقيا.';
 
   @override
-  String get aboutValues => 'قيمنا';
+  String get aboutValues => 'مبادئنا الأساسية';
 
   @override
-  String get aboutValue1 => 'الأصالة';
+  String get aboutValue1 => 'التطوع الواعي';
 
   @override
-  String get aboutValue2 => 'الشمولية';
+  String get aboutValue2 => 'النزاهة المؤسسية';
 
   @override
-  String get aboutValue3 => 'الاستدامة';
+  String get aboutValue3 => 'الأصالة والهوية';
 
   @override
-  String get aboutValue4 => 'النزاهة';
+  String get aboutValue4 => 'المواطنة الرقمية';
 
   @override
-  String get aboutHqBadge => 'المقر الرئيسي';
+  String get aboutHqBadge => 'المقر الإداري';
 
   @override
   String get aboutHqTitle => 'قلب مدينة سطيف، الجزائر';
 
   @override
   String get aboutHqText =>
-      'يقع مكتبنا المركزي في النبض التاريخي لمدينة سطيف، المدينة المشهورة بأسسها القديمة وصمودها الثقافي.';
+      'يقع المركز العملياتي للجمعية في النبض التاريخي لولاية سطيف، حيث يدار الفعل الثقافي ومبادرات حماية الذاكرة.';
 
   @override
-  String get aboutHqAction1 => 'زيارة الأرشيف';
+  String get aboutHqAction1 => 'خرائط الموقع';
 
   @override
-  String get aboutHqAction2 => 'اتصل بنا';
+  String get aboutHqAction2 => 'تواصل معنا';
 
   @override
   String get aboutQuote =>
-      'الثقافة ليست ترفاً؛ بل هي البنية التحتية الأساسية لهويتنا الجماعية. في خيط كل ثوب وفي سطور كل قصيدة نجد خارطة طريقنا للمستقبل.';
+      'الفعل الثقافي هو البنية التحتية لهويتنا الوطنية. في كل رمز وفي كل تفصيل تاريخي نجد خارطة طريقنا نحو المستقبل.';
 
   @override
-  String get aboutQuoteAuthor => 'مجلس أمناء جمعية إبزيم';
+  String get aboutQuoteAuthor => 'المكتب التنفيذي لجمعية إبزيم';
 
   @override
   String get actTitle => 'التقويم الثقافي';
@@ -753,6 +753,27 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get settingsDeleteAcc => 'حذف الحساب';
+
+  @override
+  String get supportSubtitle => 'كيف يمكننا خدمتك اليوم؟';
+
+  @override
+  String get supportFaqTitle => 'الأسئلة الشائعة';
+
+  @override
+  String get supportContactTitle => 'قنوات التواصل الرسمية';
+
+  @override
+  String get supportEmailLabel => 'راسلنا بريدياً';
+
+  @override
+  String get supportLocationLabel => 'مقر الجمعية';
+
+  @override
+  String get supportPhoneLabel => 'التواصل الهاتفي';
+
+  @override
+  String get supportHqValue => 'ولاية سطيف، الجزائر';
 
   @override
   String get search => 'بحث';

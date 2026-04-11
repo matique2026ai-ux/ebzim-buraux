@@ -80,3 +80,25 @@
     - **Frontend Deployment**: Switched to a **Production Release Build** served via `serve_static.js` to fix the 660+ script loading hang in development.
     - **Arabic Localization**: Updated all generated and source files to the institutional error string standard: `"بيانات الدخول غير صحيحة"`.
     - **Status**: Backend (Atlas-backed) and Frontend (Release build) are 100% connected and verified.
+- E2E Content Seeding & Image Safety (RP-031):
+    - **Data Integrity**: Seeded the MongoDB Atlas cluster with realistic institutional content: 2 news posts ("افتتاح المنصة" and "ندوة التراث") and 1 active event ("ورشة الفنون الجميلة").
+    - **Backend Sync**: Fixed a critical payload mismatch in `PostsService` and `EventsService`. Updated both to return full multi-language objects for titles, summaries, and descriptions to ensure the Flutter frontend can correctly render and switch between AR/FR/EN without data loss.
+    - **Image Safety**: Replaced all unstable `via.placeholder.com` links in `EventService` and `UserProfileService` with localized, branded placeholders (`placehold.co`) using the association's "Midnight Green" and "Gold" colors.
+    - **Visual Audit**: Verified 100% correct rendering of seeded content. Confirmed that the "Dark Glass" dashboard and news tabs are now "alive" with professional typography and consistent RTL layout.
+    - **Stability**: Confirmed backend (port 3000) and frontend (port 5000) are fully operational and connected after the fix.
+
+## [1.0.1] - 2026-04-10
+### RP-032: Profile & Membership Premium Upgrade
+- **Discovery Experience**: Overhauled `MembershipDiscoverScreen` from a "dead ID card" to a guided discovery journey for PUBLIC users.
+- **Value Proposition**: Added explicit benefit cards (Cultural Heritage, Arts, Citizenship) to the discovery flow.
+- **Action Hierarchy**: Restructured `ProfileScreen` into logical groups (Personal Info, Security/Security, Support, Danger Zone).
+- **Loading Polish**: Implemented high-fidelity animated shimmer/skeleton loading states for Profile and Membership sections.
+- **Visual Consistency**: Unified typography (Aref Ruqaa for headings) and spacing across profile and discovery screens.
+- **Public User UX**: Fixed the "logic gap" by providing a clear membership application CTA for non-members.
+
+## [1.0.2] - 2026-04-10
+### RP-033: About Page Institutional Overhaul
+- **Institutional Alignment**: Replaced unofficial governance terms (Board of Trustees) with audited bylaws terminology (Executive Office / المكتب التنفيذي).
+- **Premium Design**: Redesigned `AboutScreen` using the "Dark Glass" system, `EbzimBackground`, and institutional typography (`Aref Ruqaa`).
+- **Official Copy**: Rewrote mission, vision, and thematic pillars in AR, EN, and FR using the official `EBZIM_ASSOCIATION_REFERENCE.md`.
+- **Media Stability**: Replaced unreliable HQ imagery with branded placeholders and improved information density via `GlassCard` layouts.

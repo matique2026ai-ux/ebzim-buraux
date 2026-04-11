@@ -22,15 +22,27 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final defaultColor = isDark 
+        ? const Color(0x99000000) 
+        : Colors.white.withValues(alpha: 0.7); // Pearl Silk in light mode
+    
+    final defaultBorder = Border.all(
+        color: isDark 
+            ? AppTheme.borderGlass 
+            : Colors.black.withValues(alpha: 0.05)
+    );
+
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.circular(24),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: Container(
           decoration: BoxDecoration(
-            color: color ?? AppTheme.surfaceGlass,
+            color: color ?? defaultColor,
             borderRadius: borderRadius ?? BorderRadius.circular(24),
-            border: border ?? Border.all(color: AppTheme.borderGlass),
+            border: border ?? defaultBorder,
           ),
           padding: padding,
           child: child,

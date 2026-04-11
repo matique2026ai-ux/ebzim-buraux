@@ -1,0 +1,39 @@
+﻿Analyzing ebzim-app...
+
+warning - lib\core\common_widgets\ebzim_app_bar.dart:4:8 - Unused import: 'package:ebzim_app/core/theme/app_theme.dart'. Try removing the import directive. - unused_import
+warning - lib\core\widgets\main_shell_screen.dart:8:7 - The declaration '_kNavBg' isn't referenced. Try removing the declaration of '_kNavBg'. - unused_element
+warning - lib\screens\about_screen.dart:4:8 - Unused import: 'package:go_router/go_router.dart'. Try removing the import directive. - unused_import
+warning - lib\screens\activities_screen.dart:8:8 - Unused import: 'package:ebzim_app/core/common_widgets/ebzim_app_bar.dart'. Try removing the import directive. - unused_import
+warning - lib\screens\dashboard_screen.dart:4:8 - Unused import: 'package:ebzim_app/core/theme/app_theme.dart'. Try removing the import directive. - unused_import
+warning - lib\screens\membership_flow_screen.dart:57:11 - The value of the local variable 'isDark' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib\screens\news_screen.dart:6:8 - Unused import: 'package:ebzim_app/core/common_widgets/ebzim_app_bar.dart'. Try removing the import directive. - unused_import
+warning - lib\screens\notifications_screen.dart:6:8 - Unused import: 'package:ebzim_app/core/theme/app_theme.dart'. Try removing the import directive. - unused_import
+warning - lib\screens\profile_screen.dart:14:8 - Unused import: 'package:ebzim_app/core/providers/theme_provider.dart'. Try removing the import directive. - unused_import
+warning - lib\widgets\digital_id_card.dart:3:8 - Unused import: 'package:ebzim_app/core/theme/app_theme.dart'. Try removing the import directive. - unused_import
+   info - lib\core\services\auth_service.dart:32:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:35:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:37:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:39:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:42:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:46:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:55:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:56:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:57:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:68:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:78:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:80:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:84:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:85:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:86:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:87:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:88:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\services\auth_service.dart:100:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\screens\admin_create_event_screen.dart:8:1 - 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\screens\admin_create_event_screen.dart:339:25 - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\screens\admin_create_news_screen.dart:9:1 - 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\screens\forgot_password_screen.dart:21:8 - The private field _isSubmitted could be 'final'. Try making the field 'final'. - prefer_final_fields
+   info - lib\screens\notifications_screen.dart:81:41 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\screens\profile_screen.dart:136:38 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\screens\settings_screen.dart:70:29 - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+
+35 issues found.

@@ -303,7 +303,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navDashboard => 'Home';
 
   @override
-  String get navDirectory => 'Council';
+  String get navDirectory => 'Association Members';
 
   @override
   String get navActivities => 'Activities';
@@ -346,77 +346,77 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutHeroTitle =>
-      'Preserving Heritage through Cultural Innovation';
+      'Preserving Heritage & Developing Cultural Awareness';
 
   @override
   String get aboutHeroSubtitle =>
-      'Association Ebzim serves as a bridge between the wisdom of the past and the possibilities of the future.';
+      'EBZIM is a provincial space for mobilizing knowledge and resources to protect the Algerian identity.';
 
   @override
-  String get aboutStoryBadge => 'Our Story';
+  String get aboutStoryBadge => 'ABOUT THE ASSOCIATION';
 
   @override
-  String get aboutStoryTitle => 'A Legacy Rooted in the Soil of Algeria';
+  String get aboutStoryTitle => 'Sétif’s Legacy, A Nation’s Identity';
 
   @override
   String get aboutStoryText1 =>
-      'Founded in the historic heart of Sétif, Association Ebzim emerged from a collective desire to safeguard the intangible treasures of our region.';
+      'Founded by decision of the General Assembly, EBZIM works to protect the tangible and intangible treasures of Sétif, serving as an institutional bridge between authenticity and modernity.';
 
   @override
   String get aboutStoryQuote =>
-      '\"Ebzim is not just an association, but a pact between generations to preserve our ancient identity and breathe it into the spirit of our time.\"';
+      '\"EBZIM is not just a cultural entity, but a voluntary covenant to preserve memory and promote meaningful cultural action.\"';
 
   @override
-  String get aboutMission => 'Our Mission';
+  String get aboutMission => 'Our Mission (By-laws)';
 
   @override
   String get aboutMissionText =>
-      'To empower local communities by documenting ancestral techniques and fostering a sustainable cultural economy.';
+      'Protecting historical landmarks, documenting heritage techniques, and integrating citizenship concepts through field-based cultural action.';
 
   @override
-  String get aboutVision => 'Our Vision';
+  String get aboutVision => 'Strategic Vision';
 
   @override
   String get aboutVisionText =>
-      'Becoming the global benchmark for North African cultural preservation.';
+      'To make EBZIM the reference model for protecting cultural heritage and national memory in North Africa.';
 
   @override
-  String get aboutValues => 'Our Values';
+  String get aboutValues => 'Core Principles';
 
   @override
-  String get aboutValue1 => 'Authenticity';
+  String get aboutValue1 => 'Conscious Volunteering';
 
   @override
-  String get aboutValue2 => 'Inclusivity';
+  String get aboutValue2 => 'Institutional Integrity';
 
   @override
-  String get aboutValue3 => 'Sustainability';
+  String get aboutValue3 => 'Authenticity & Identity';
 
   @override
-  String get aboutValue4 => 'Integrity';
+  String get aboutValue4 => 'Digital Citizenship';
 
   @override
-  String get aboutHqBadge => 'The Headquarters';
+  String get aboutHqBadge => 'Administrative HQ';
 
   @override
   String get aboutHqTitle => 'Heart of Sétif, Algeria';
 
   @override
   String get aboutHqText =>
-      'Our central office is located within the historic pulse of Sétif, a city renowned for its ancient foundations.';
+      'The operative center of the association is located in the historical pulse of Sétif, where cultural actions and memory protection initiatives are managed.';
 
   @override
-  String get aboutHqAction1 => 'Visit the Archive';
+  String get aboutHqAction1 => 'View Map';
 
   @override
   String get aboutHqAction2 => 'Contact Us';
 
   @override
   String get aboutQuote =>
-      'Culture is not a luxury; it is the fundamental infrastructure of our collective identity. In every stitch of a garment and every line of a poem, we find the map of our future.';
+      'Cultural action is the infrastructure of our national identity. In every symbol and historical detail, we find our roadmap to the future.';
 
   @override
-  String get aboutQuoteAuthor => 'Board of Trustees, Association Ebzim';
+  String get aboutQuoteAuthor => 'EBZIM EXECUTIVE OFFICE';
 
   @override
   String get actTitle => 'Cultural Calendar';
@@ -509,29 +509,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memSuccessTitle => 'Welcome to the Journey';
 
   @override
-  String get memSuccessSub => 'Your application has been received.';
+  String get memSuccessSub =>
+      'Your application has been received and is under review.';
 
   @override
   String get memSuccessHome => 'Return to Home';
 
   @override
-  String get memStatusNone => 'لا يوجد طلب انضمام مسجل حالياً';
+  String get memStatusNone => 'No membership application registered';
 
   @override
-  String get memStatusSubmitted =>
-      'طلبك قيد المراجعة من طرف المكتب التنفيذي للجمعية';
+  String get memStatusSubmitted => 'Under review by the Executive Office';
 
   @override
-  String get memStatusNeedsInfo =>
-      'طلب الانضمام يحتاج إلى معلومات إضافية من جانبكم';
+  String get memStatusNeedsInfo => 'Requires additional information';
 
   @override
-  String get memStatusApproved =>
-      'تم قبول طلب الانضمام - أهلاً بك كأحد أعضاء الجمعية';
+  String get memStatusApproved => 'Approved - Welcome to Ebzim';
 
   @override
-  String get memStatusRejected =>
-      'عذراً، لم يتم قبول طلب الانضمام في الوقت الحالي';
+  String get memStatusRejected => 'Not accepted at this time';
 
   @override
   String get leadHeroBadge => 'Leadership & Governance';
@@ -755,6 +752,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsDeleteAcc => 'Delete Account';
+
+  @override
+  String get supportSubtitle => 'How can we assist you today?';
+
+  @override
+  String get supportFaqTitle => 'General Questions';
+
+  @override
+  String get supportContactTitle => 'Official Channels';
+
+  @override
+  String get supportEmailLabel => 'Email Us';
+
+  @override
+  String get supportLocationLabel => 'Our Office';
+
+  @override
+  String get supportPhoneLabel => 'Call Support';
+
+  @override
+  String get supportHqValue => 'Sétif, Algeria';
 
   @override
   String get search => 'SEARCH';

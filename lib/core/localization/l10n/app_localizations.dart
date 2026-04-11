@@ -667,7 +667,7 @@ abstract class AppLocalizations {
   /// No description provided for @navDirectory.
   ///
   /// In ar, this message translates to:
-  /// **'مجلس الجمعية'**
+  /// **'أعضاء الجمعية'**
   String get navDirectory;
 
   /// No description provided for @navActivities.
@@ -751,97 +751,97 @@ abstract class AppLocalizations {
   /// No description provided for @aboutHeroTitle.
   ///
   /// In ar, this message translates to:
-  /// **'الحفاظ على التراث من خلال الابتكار الثقافي'**
+  /// **'صون الموروث وتنمية الوعي الثقافي والوطني'**
   String get aboutHeroTitle;
 
   /// No description provided for @aboutHeroSubtitle.
   ///
   /// In ar, this message translates to:
-  /// **'تعتبر جمعية إبزيم جسراً بين حكمة الماضي وإمكانيات المستقبل.'**
+  /// **'جمعية إبزيم هي المساحة الولائية لتسخير المعارف والوسائل في سبيل حماية الهوية الجزائرية.'**
   String get aboutHeroSubtitle;
 
   /// No description provided for @aboutStoryBadge.
   ///
   /// In ar, this message translates to:
-  /// **'قصتنا'**
+  /// **'عن الجمعية'**
   String get aboutStoryBadge;
 
   /// No description provided for @aboutStoryTitle.
   ///
   /// In ar, this message translates to:
-  /// **'إرث متجذر في أرض الجزائر'**
+  /// **'إرث سطيف، هوية وطن'**
   String get aboutStoryTitle;
 
   /// No description provided for @aboutStoryText1.
   ///
   /// In ar, this message translates to:
-  /// **'تأسست جمعية إبزيم في قلب مدينة سطيف التاريخية، وانبثقت من رغبة جماعية في حماية الكنوز غير الملموسة لمنطقتنا.'**
+  /// **'تأسست جمعية إبزيم بقرار من الجمعية العامة وحرصاً على حماية الكنوز المادية وغير الملموسة لولاية سطيف، لتعمل كجسر مؤسسي بين الأصالة والحداثة.'**
   String get aboutStoryText1;
 
   /// No description provided for @aboutStoryQuote.
   ///
   /// In ar, this message translates to:
-  /// **'\"إبزيم ليست مجرد جمعية، بل هي ميثاق بين الأجيال لصون الهوية الجزائرية العريقة وبعثها في روح العصر.\"'**
+  /// **'\"إبزيم ليست مجرد هيئة ثقافية، بل ميثاق تطوعي لصون الذاكرة والنهوض بالفعل الثقافي الهادف.\"'**
   String get aboutStoryQuote;
 
   /// No description provided for @aboutMission.
   ///
   /// In ar, this message translates to:
-  /// **'مهمتنا'**
+  /// **'مهمتنا في القانون الأساسي'**
   String get aboutMission;
 
   /// No description provided for @aboutMissionText.
   ///
   /// In ar, this message translates to:
-  /// **'تمكين المجتمعات المحلية من خلال توثيق التقنيات القديمة وتعزيز اقتصاد ثقافي مستدام.'**
+  /// **'العمل على حماية المعالم التاريخية، توثيق التقنيات التراثية، وإدماج مفاهيم المواطنة من خلال العمل الثقافي الميداني.'**
   String get aboutMissionText;
 
   /// No description provided for @aboutVision.
   ///
   /// In ar, this message translates to:
-  /// **'رؤيتنا'**
+  /// **'رؤيتنا الإستراتيجية'**
   String get aboutVision;
 
   /// No description provided for @aboutVisionText.
   ///
   /// In ar, this message translates to:
-  /// **'أن نصبح المعيار العالمي للحفاظ على الثقافة في شمال إفريقيا.'**
+  /// **'أن تكون إبزيم النموذج المرجعي في حماية الموروث الثقافي والذاكرة الوطنية في شمال افريقيا.'**
   String get aboutVisionText;
 
   /// No description provided for @aboutValues.
   ///
   /// In ar, this message translates to:
-  /// **'قيمنا'**
+  /// **'مبادئنا الأساسية'**
   String get aboutValues;
 
   /// No description provided for @aboutValue1.
   ///
   /// In ar, this message translates to:
-  /// **'الأصالة'**
+  /// **'التطوع الواعي'**
   String get aboutValue1;
 
   /// No description provided for @aboutValue2.
   ///
   /// In ar, this message translates to:
-  /// **'الشمولية'**
+  /// **'النزاهة المؤسسية'**
   String get aboutValue2;
 
   /// No description provided for @aboutValue3.
   ///
   /// In ar, this message translates to:
-  /// **'الاستدامة'**
+  /// **'الأصالة والهوية'**
   String get aboutValue3;
 
   /// No description provided for @aboutValue4.
   ///
   /// In ar, this message translates to:
-  /// **'النزاهة'**
+  /// **'المواطنة الرقمية'**
   String get aboutValue4;
 
   /// No description provided for @aboutHqBadge.
   ///
   /// In ar, this message translates to:
-  /// **'المقر الرئيسي'**
+  /// **'المقر الإداري'**
   String get aboutHqBadge;
 
   /// No description provided for @aboutHqTitle.
@@ -853,31 +853,31 @@ abstract class AppLocalizations {
   /// No description provided for @aboutHqText.
   ///
   /// In ar, this message translates to:
-  /// **'يقع مكتبنا المركزي في النبض التاريخي لمدينة سطيف، المدينة المشهورة بأسسها القديمة وصمودها الثقافي.'**
+  /// **'يقع المركز العملياتي للجمعية في النبض التاريخي لولاية سطيف، حيث يدار الفعل الثقافي ومبادرات حماية الذاكرة.'**
   String get aboutHqText;
 
   /// No description provided for @aboutHqAction1.
   ///
   /// In ar, this message translates to:
-  /// **'زيارة الأرشيف'**
+  /// **'خرائط الموقع'**
   String get aboutHqAction1;
 
   /// No description provided for @aboutHqAction2.
   ///
   /// In ar, this message translates to:
-  /// **'اتصل بنا'**
+  /// **'تواصل معنا'**
   String get aboutHqAction2;
 
   /// No description provided for @aboutQuote.
   ///
   /// In ar, this message translates to:
-  /// **'الثقافة ليست ترفاً؛ بل هي البنية التحتية الأساسية لهويتنا الجماعية. في خيط كل ثوب وفي سطور كل قصيدة نجد خارطة طريقنا للمستقبل.'**
+  /// **'الفعل الثقافي هو البنية التحتية لهويتنا الوطنية. في كل رمز وفي كل تفصيل تاريخي نجد خارطة طريقنا نحو المستقبل.'**
   String get aboutQuote;
 
   /// No description provided for @aboutQuoteAuthor.
   ///
   /// In ar, this message translates to:
-  /// **'مجلس أمناء جمعية إبزيم'**
+  /// **'المكتب التنفيذي لجمعية إبزيم'**
   String get aboutQuoteAuthor;
 
   /// No description provided for @actTitle.
@@ -1521,6 +1521,48 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'حذف الحساب'**
   String get settingsDeleteAcc;
+
+  /// No description provided for @supportSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف يمكننا خدمتك اليوم؟'**
+  String get supportSubtitle;
+
+  /// No description provided for @supportFaqTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسئلة الشائعة'**
+  String get supportFaqTitle;
+
+  /// No description provided for @supportContactTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'قنوات التواصل الرسمية'**
+  String get supportContactTitle;
+
+  /// No description provided for @supportEmailLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'راسلنا بريدياً'**
+  String get supportEmailLabel;
+
+  /// No description provided for @supportLocationLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقر الجمعية'**
+  String get supportLocationLabel;
+
+  /// No description provided for @supportPhoneLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'التواصل الهاتفي'**
+  String get supportPhoneLabel;
+
+  /// No description provided for @supportHqValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'ولاية سطيف، الجزائر'**
+  String get supportHqValue;
 
   /// No description provided for @search.
   ///

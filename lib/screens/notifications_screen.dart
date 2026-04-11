@@ -20,27 +20,40 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   Widget build(BuildContext context) {
     final notifsAsync = ref.watch(notificationsProvider);
     final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor ?? theme.scaffoldBackgroundColor,
         elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.arrow_back, color: AppTheme.primaryColor), onPressed: () => context.pop()),
-        title: Text(loc.notifTitle, style: TextStyle(fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily, color: AppTheme.primaryColor, fontWeight: FontWeight.bold, fontSize: 24)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          loc.notifTitle,
+          style: TextStyle(
+            fontFamily: theme.textTheme.headlineMedium?.fontFamily,
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
       ),
       body: Column(
         children: [
           Container(
-            color: Colors.white,
+            color: theme.scaffoldBackgroundColor,
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Row(
               children: [
-                _buildFilter('All'),
+                _buildFilter('All', theme, isDark),
                 const SizedBox(width: 8),
-                _buildFilter('Unread'),
+                _buildFilter('Unread', theme, isDark),
                 const SizedBox(width: 8),
-                _buildFilter('Updates'),
+                _buildFilter('Updates', theme, isDark),
               ],
             ),
           ),
@@ -54,22 +67,40 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 }).toList();
 
                 if (filtered.isEmpty) {
-                  return Center(child: Text(loc.noNotifs, style: const TextStyle(color: Colors.grey)));
+                  return Center(
+                    child: Text(
+                      loc.noNotifs,
+                      style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                    ),
+                  );
                 }
 
                 return ListView.separated(
                   padding: const EdgeInsets.all(24),
                   itemCount: filtered.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 16),
+                  separatorBuilder: (_, __) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final n = filtered[index];
                     return Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: n.isRead ? Colors.transparent : Colors.white,
+                        color: n.isRead
+                            ? theme.colorScheme.surface
+                            : theme.cardColor,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: n.isRead ? Colors.grey.shade300 : Colors.white),
-                        boxShadow: n.isRead ? [] : [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
+                        border: Border.all(
+                          color: n.isRead
+                              ? theme.colorScheme.outlineVariant
+                              : theme.colorScheme.primary.withValues(alpha: 0.2),
+                        ),
+                        boxShadow: n.isRead
+                            ? []
+                            : [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.05),
+                                  blurRadius: 10,
+                                )
+                              ],
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,10 +108,21 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: n.isRead ? Colors.grey.shade100 : AppTheme.primaryColor.withValues(alpha: 0.05),
-                              borderRadius: BorderRadius.circular(16)
+                              color: n.isRead
+                                  ? theme.colorScheme.surfaceContainerHighest
+                                  : theme.colorScheme.primary.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                            child: Icon(n.type == 'event' ? Icons.event : (n.type == 'membership' ? Icons.badge : Icons.notifications), color: n.isRead ? Colors.grey : AppTheme.primaryColor),
+                            child: Icon(
+                              n.type == 'event'
+                                  ? Icons.event
+                                  : (n.type == 'membership'
+                                      ? Icons.badge
+                                      : Icons.notifications),
+                              color: n.isRead
+                                  ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
+                                  : theme.colorScheme.primary,
+                            ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -90,12 +132,35 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Expanded(child: Text(n.title, style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryColor, fontSize: 16))),
-                                    Text(DateFormat('MMM d').format(n.timestamp), style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                                    Expanded(
+                                      child: Text(
+                                        n.title,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.colorScheme.onSurface,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat('MMM d').format(n.timestamp),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(height: 8),
-                                Text(n.description, style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: n.isRead ? 0.6 : 0.8), height: 1.4)),
+                                Text(
+                                  n.description,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.colorScheme.onSurface.withValues(alpha: n.isRead ? 0.5 : 0.75),
+                                    height: 1.4,
+                                  ),
+                                ),
                               ],
                             ),
                           )
@@ -105,8 +170,15 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   },
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e,s) => Center(child: Text(e.toString())), 
+              loading: () => Center(
+                child: CircularProgressIndicator(color: theme.colorScheme.primary),
+              ),
+              error: (e, s) => Center(
+                child: Text(
+                  e.toString(),
+                  style: TextStyle(color: theme.colorScheme.error),
+                ),
+              ),
             ),
           )
         ],
@@ -114,17 +186,29 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     );
   }
 
-  Widget _buildFilter(String title) {
+  Widget _buildFilter(String title, ThemeData theme, bool isDark) {
     final isSelected = _filter == title;
     return GestureDetector(
       onTap: () => setState(() => _filter = title),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryColor : Colors.grey.shade200,
+          color: isSelected
+              ? theme.colorScheme.primary
+              : (isDark ? Colors.white.withValues(alpha: 0.07) : Colors.black.withValues(alpha: 0.05)),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Text(title.toUpperCase(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: isSelected ? Colors.white : Colors.grey.shade600)),
+        child: Text(
+          title.toUpperCase(),
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
+            color: isSelected
+                ? Colors.white
+                : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+        ),
       ),
     );
   }

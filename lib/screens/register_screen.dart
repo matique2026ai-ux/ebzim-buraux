@@ -52,6 +52,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authState = ref.watch(authProvider);
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     String getErrorMessage(String key) {
       if (key.toLowerCase().contains('email already exists') || key.toLowerCase().contains('duplicate')) {
@@ -69,14 +70,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       if (next.isAuthenticated && previous?.isAuthenticated != true) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(loc.authAccountCreated),
-          backgroundColor: AppTheme.heritageGreenDeep,
+          backgroundColor: AppTheme.primaryColor,
         ));
         context.go('/dashboard');
       }
     });
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -113,7 +114,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.05),
+                          color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.02),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -130,7 +131,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         style: theme.textTheme.displayLarge?.copyWith(
                           fontSize: 32,
                           height: 1.1,
-                          color: Colors.white,
+                          color: theme.colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
                           fontFamily: isRtl ? 'Aref Ruqaa' : null,
                         ),
@@ -141,7 +142,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         loc.regSubtitle, // "أنشئ حسابك للوصول إلى خدمات المنصة ومتابعة أنشطتك بكل سهولة."
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           height: 1.5,
                         ),
                       ).animate().fadeIn(delay: 400.ms),
@@ -175,10 +176,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(32),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.05),
+                              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
                               borderRadius: BorderRadius.circular(32),
                               border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.1),
+                                color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                                 width: 1.5,
                               ),
                             ),
@@ -315,7 +316,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     children: [
                                       Text(
                                         '${loc.regAlreadyHaveAccount} ',
-                                        style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 13),
+                                        style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13),
                                       ),
                                       GestureDetector(
                                         onTap: () => context.go('/login'),
@@ -375,21 +376,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.03),
+            color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
           ),
           child: TextFormField(
             controller: controller,
             obscureText: obscureText,
             keyboardType: keyboardType,
             textDirection: textDirection,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
             validator: validator,
             inputFormatters: inputFormatters,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.15), fontSize: 14),
+              hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), fontSize: 14),
               prefixIcon: Icon(icon, color: Colors.white38, size: 20),
               suffixIcon: onToggleObscure != null
                   ? IconButton(

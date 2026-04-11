@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
-import 'package:ebzim_app/core/services/member_service.dart';
+import 'package:google_fonts/google_fonts.dart';import 'package:ebzim_app/core/services/member_service.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -19,12 +19,12 @@ class LeadershipScreen extends ConsumerWidget {
     final leadersAsync = ref.watch(leadershipProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         leading: IconButton(
           icon: Icon(isRtl ? Icons.arrow_forward : Icons.arrow_back, color: AppTheme.accentColor),
           onPressed: () => context.pop(),
@@ -46,12 +46,12 @@ class LeadershipScreen extends ConsumerWidget {
                     const SizedBox(height: 12),
                     Text(
                       loc.leadHeroTitle,
-                      style: const TextStyle(fontFamily: 'Aref Ruqaa', fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white)
+                      style: GoogleFonts.tajawal(fontSize: 40, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)
                     ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
                     const SizedBox(height: 12),
                     Text(
                       loc.leadHeroSub,
-                      style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.8))
+                      style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8))
                     ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2),
                     const SizedBox(height: 48),
 
@@ -62,15 +62,15 @@ class LeadershipScreen extends ConsumerWidget {
                         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.03),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                            border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.1)),
                           ),
                           child: TextField(
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                             decoration: InputDecoration(
                               hintText: loc.leadSearchHint,
-                              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 14),
+                              hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14),
                               prefixIcon: const Icon(Icons.search, color: AppTheme.accentColor),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -103,9 +103,9 @@ class LeadershipScreen extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: Row(
                         children: [
-                          Text('أعضاء اللجان', style: const TextStyle(fontFamily: 'Aref Ruqaa', fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                          Text('أعضاء اللجان', style: GoogleFonts.tajawal(fontSize: 24, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
                           const SizedBox(width: 16),
-                          Expanded(child: Container(height: 1, color: Colors.white.withValues(alpha: 0.2))),
+                          Expanded(child: Container(height: 1, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
                         ],
                       ),
                     ).animate().fadeIn(delay: 1000.ms),
@@ -135,7 +135,7 @@ class LeadershipScreen extends ConsumerWidget {
                 );
               },
               loading: () => const SliverFillRemaining(child: Center(child: CircularProgressIndicator(color: AppTheme.accentColor))),
-              error: (e, s) => SliverFillRemaining(child: Center(child: Text(e.toString(), style: const TextStyle(color: Colors.white)))),
+              error: (e, s) => SliverFillRemaining(child: Center(child: Text(e.toString(), style: TextStyle(color: Theme.of(context).colorScheme.onSurface)))),
             ),
           ],
         ),
@@ -161,9 +161,9 @@ class _SpotlightMemberCard extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.2),
@@ -189,11 +189,11 @@ class _SpotlightMemberCard extends StatelessWidget {
                       child: Text(member.category.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: AppTheme.accentColor)),
                     ),
                     const SizedBox(height: 16),
-                    Text(name, style: const TextStyle(fontFamily: 'Aref Ruqaa', fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text(name, style: GoogleFonts.tajawal(fontSize: 32, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
                     const SizedBox(height: 8),
                     Text(role, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.accentColor)),
                     const SizedBox(height: 16),
-                    Text('"$bio"', style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.white.withValues(alpha: 0.8), height: 1.5)),
+                    Text('"$bio"', style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8), height: 1.5)),
                   ],
                 ),
               )
@@ -222,9 +222,9 @@ class _BoardMemberCard extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -244,11 +244,11 @@ class _BoardMemberCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'Aref Ruqaa', fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                      Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
                       const SizedBox(height: 4),
                       Text(role.toUpperCase(), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: AppTheme.accentColor)),
                       const SizedBox(height: 8),
-                      Text(bio, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.6))),
+                      Text(bio, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
                     ],
                   ),
                 ),

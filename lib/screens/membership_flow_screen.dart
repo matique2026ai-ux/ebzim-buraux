@@ -53,15 +53,26 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.95),
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: _currentStep == 0
-            ? IconButton(icon: const Icon(Icons.close, color: AppTheme.primaryColor), onPressed: () => context.pop())
-            : IconButton(icon: const Icon(Icons.arrow_back, color: AppTheme.primaryColor), onPressed: _prevStep),
-        title: Text('Ebzim | إبزيم', style: TextStyle(fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily, color: AppTheme.primaryColor, fontWeight: FontWeight.bold, fontSize: 18)),
+            ? IconButton(icon: Icon(Icons.close, color: theme.colorScheme.onSurface), onPressed: () => context.pop())
+            : IconButton(icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface), onPressed: _prevStep),
+        title: Text(
+          'Ebzim | إبزيم', 
+          style: TextStyle(
+            fontFamily: theme.textTheme.headlineMedium?.fontFamily, 
+            color: theme.colorScheme.onSurface, 
+            fontWeight: FontWeight.bold, 
+            fontSize: 18
+          )
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -102,12 +113,15 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(color: Colors.white, border: Border(top: BorderSide(color: Colors.grey.shade200))),
+        decoration: BoxDecoration(
+          color: theme.cardColor, 
+          border: Border(top: BorderSide(color: theme.dividerColor))
+        ),
         child: ElevatedButton(
           onPressed: _nextStep,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.primaryColor,
-            foregroundColor: Colors.white,
+            backgroundColor: AppTheme.accentColor,
+            foregroundColor: AppTheme.primaryColor,
             minimumSize: const Size(double.infinity, 60),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
@@ -121,6 +135,7 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
   }
 
   Widget _buildStep(int stepIndex, String title) {
+    final theme = Theme.of(context);
     final isActive = stepIndex - 1 <= _currentStep;
     return Column(
       children: [
@@ -128,29 +143,30 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: isActive ? AppTheme.primaryColor : Colors.grey.shade200,
+            color: isActive ? AppTheme.accentColor : theme.colorScheme.surfaceContainerHighest,
             shape: BoxShape.circle,
-            border: Border.all(color: isActive ? AppTheme.primaryColor : Colors.transparent, width: 2),
+            border: Border.all(color: isActive ? AppTheme.accentColor : Colors.transparent, width: 2),
           ),
           child: Center(
             child: Text(
               stepIndex.toString(),
-              style: TextStyle(color: isActive ? Colors.white : Colors.grey.shade500, fontWeight: FontWeight.bold, fontSize: 12),
+              style: TextStyle(color: isActive ? AppTheme.primaryColor : theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.bold, fontSize: 12),
             ),
           ),
         ),
         const SizedBox(height: 8),
-        Text(title.toUpperCase(), style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 1, color: isActive ? AppTheme.primaryColor : Colors.grey)),
+        Text(title.toUpperCase(), style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 1, color: isActive ? AppTheme.accentColor : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6))),
       ],
     );
   }
 
   Widget _buildDivider(int stepIndex) {
+    final theme = Theme.of(context);
     return Expanded(
       child: Container(
         height: 2,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-        color: stepIndex - 1 < _currentStep ? AppTheme.primaryColor : Colors.grey.shade200,
+        color: stepIndex - 1 < _currentStep ? AppTheme.accentColor : theme.colorScheme.surfaceContainerHighest,
       ),
     );
   }
@@ -168,14 +184,16 @@ class _Step1IdentityForm extends ConsumerWidget {
     final state = ref.watch(membershipProvider);
     final notifier = ref.read(membershipProvider.notifier);
 
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(loc.memStepper1, style: TextStyle(fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily, fontSize: 32, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+          Text(loc.memStepper1, style: TextStyle(fontFamily: theme.textTheme.headlineMedium?.fontFamily, fontSize: 32, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
           const SizedBox(height: 32),
-          _buildInput(loc.memFullName, state.fullName, (v) => notifier.updateField('fullName', v)),
+          _buildInput(context, loc.memFullName, state.fullName, (v) => notifier.updateField('fullName', v)),
           const SizedBox(height: 24),
           _buildDatePicker(context, loc.memDOB, state.dob, (v) => notifier.updateField('dob', v)),
           const SizedBox(height: 24),
@@ -193,7 +211,7 @@ class _Step1IdentityForm extends ConsumerWidget {
     );
   }
 
-  Widget _buildInput(String label, String value, Function(String) onChanged) {
+  Widget _buildInput(BuildContext context, String label, String value, Function(String) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -202,8 +220,8 @@ class _Step1IdentityForm extends ConsumerWidget {
           initialValue: value,
           onChanged: onChanged,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-          decoration: const InputDecoration(
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primaryColor, width: 2)),
+          decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2)),
           ),
         ),
       ],
@@ -267,26 +285,28 @@ class _Step2ContactForm extends ConsumerWidget {
     final wilayas = ref.read(wilayaServiceProvider).getWilayas();
     final communes = ref.read(wilayaServiceProvider).getCommunes(state.wilayaId);
 
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(loc.memStepper2, style: TextStyle(fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily, fontSize: 32, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+          Text(loc.memStepper2, style: TextStyle(fontFamily: theme.textTheme.headlineMedium?.fontFamily, fontSize: 32, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
           const SizedBox(height: 32),
-          _buildDropdown(loc.memWilaya, state.wilayaId, wilayas.map((w) => DropdownMenuItem(value: w.id, child: Text(w.nameEn))).toList(), (v) => notifier.updateField('wilayaId', v)),
+          _buildDropdown(context, loc.memWilaya, state.wilayaId, wilayas.map((w) => DropdownMenuItem(value: w.id, child: Text(w.nameEn))).toList(), (v) => notifier.updateField('wilayaId', v)),
           const SizedBox(height: 24),
-          _buildDropdown(loc.memCommune, state.communeId, communes.map((c) => DropdownMenuItem(value: c.id, child: Text(c.nameEn))).toList(), (v) => notifier.updateField('communeId', v)),
+          _buildDropdown(context, loc.memCommune, state.communeId, communes.map((c) => DropdownMenuItem(value: c.id, child: Text(c.nameEn))).toList(), (v) => notifier.updateField('communeId', v)),
           const SizedBox(height: 24),
-          _buildInput(loc.memPhone, state.phone, (v) => notifier.updateField('phone', v), hint: loc.memPhoneHint),
+          _buildInput(context, loc.memPhone, state.phone, (v) => notifier.updateField('phone', v), hint: loc.memPhoneHint),
           const SizedBox(height: 24),
-          _buildInput('Email', state.email, (v) => notifier.updateField('email', v)),
+          _buildInput(context, 'Email', state.email, (v) => notifier.updateField('email', v)),
         ],
       ),
     );
   }
 
-  Widget _buildDropdown(String label, String value, List<DropdownMenuItem<String>> items, Function(String) onChanged) {
+  Widget _buildDropdown(BuildContext context, String label, String value, List<DropdownMenuItem<String>> items, Function(String) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -296,15 +316,15 @@ class _Step2ContactForm extends ConsumerWidget {
           items: items,
           onChanged: (v) { if(v != null) onChanged(v); },
           icon: const Icon(Icons.expand_more),
-          decoration: const InputDecoration(
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primaryColor, width: 2)),
+          decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2)),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildInput(String label, String value, Function(String) onChanged, {String? hint}) {
+  Widget _buildInput(BuildContext context, String label, String value, Function(String) onChanged, {String? hint}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -316,7 +336,7 @@ class _Step2ContactForm extends ConsumerWidget {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.normal),
-            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primaryColor, width: 2)),
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2)),
           ),
         ),
       ],
@@ -338,12 +358,14 @@ class _Step3CredentialsForm extends ConsumerWidget {
 
     final mockInterests = ['Heritage', 'Digital Archiving', 'Event Management', 'History', 'Technology', 'Art'];
 
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(loc.memStepper3, style: TextStyle(fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily, fontSize: 32, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+          Text(loc.memStepper3, style: TextStyle(fontFamily: theme.textTheme.headlineMedium?.fontFamily, fontSize: 32, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
           const SizedBox(height: 32),
           Text(loc.memInterests.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: Colors.grey)),
           const SizedBox(height: 16),
@@ -393,12 +415,14 @@ class _Step4ReviewForm extends ConsumerWidget {
     final state = ref.watch(membershipProvider);
     final notifier = ref.read(membershipProvider.notifier);
 
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(loc.memStepper4, style: TextStyle(fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily, fontSize: 32, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+          Text(loc.memStepper4, style: TextStyle(fontFamily: theme.textTheme.headlineMedium?.fontFamily, fontSize: 32, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
           const SizedBox(height: 32),
           // Checkbox for Consent
           Row(
@@ -409,7 +433,7 @@ class _Step4ReviewForm extends ConsumerWidget {
                 child: Checkbox(
                   value: state.hasConsented,
                   onChanged: (v) => notifier.updateField('hasConsented', v),
-                  activeColor: AppTheme.primaryColor,
+                  activeColor: theme.colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 16),
@@ -447,18 +471,20 @@ class _Step0Conditions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'شروط الانضمام',
             style: TextStyle(
-              fontFamily: 'Aref Ruqaa',
+              fontFamily: theme.textTheme.displayMedium?.fontFamily,
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: AppTheme.primaryColor,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),

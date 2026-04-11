@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
@@ -22,12 +23,21 @@ class EbzimAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-
-    final activeColor = color ?? AppTheme.primaryColor;
+    final activeColor = color ?? Theme.of(context).primaryColor;
 
     return AppBar(
       leading: leading,
       centerTitle: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      flexibleSpace: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            color: (backgroundColor ?? Theme.of(context).primaryColor).withValues(alpha: 0.8),
+          ),
+        ),
+      ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -45,8 +55,6 @@ class EbzimAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: actions,
-      backgroundColor: backgroundColor ?? Colors.transparent,
-      elevation: 0,
       iconTheme: IconThemeData(color: activeColor),
       bottom: bottom,
     );

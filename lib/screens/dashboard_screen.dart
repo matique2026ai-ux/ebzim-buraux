@@ -16,13 +16,14 @@ import 'package:google_fonts/google_fonts.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 // Design tokens for the dashboard surface layer
 // ─────────────────────────────────────────────────────────────────────────────
-const _kCardBg = Color(0x0CFFFFFF);       // 5% white — subtle surface lift
-const _kCardBorder = Color(0x22FFFFFF);   // 13% white — crisp premium border
-const _kCardBgStrong = Color(0x12FFFFFF); // 7% white — stronger first-level surface
 const _kGold = Color(0xFFC5A059);
-const _kTextPrimary = Colors.white;
-const _kTextSecondary = Color(0xCCFFFFFF); // 80% white — improved readability
-const _kTextMuted = Color(0x73FFFFFF);     // 45% white — slightly more visible
+
+Color _cardBg(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x0CFFFFFF) : Colors.white.withValues(alpha: 0.4);
+Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withValues(alpha: 0.05);
+Color _cardBgStrong(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x12FFFFFF) : Colors.white.withValues(alpha: 0.7);
+Color _textPrimary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1C1A);
+Color _textSecondary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0xCCFFFFFF) : Colors.black87;
+Color _textMuted(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x73FFFFFF) : Colors.black54;
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -45,7 +46,7 @@ class DashboardScreen extends ConsumerWidget {
 
     if (authState.isInitializing) {
       return Scaffold(
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         extendBodyBehindAppBar: true,
         appBar: const EbzimAppBar(backgroundColor: Colors.transparent, color: _kGold),
         body: EbzimBackground(child: _DashboardSkeleton()),
@@ -53,7 +54,7 @@ class DashboardScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       extendBodyBehindAppBar: true,
       appBar: EbzimAppBar(
         backgroundColor: Colors.transparent,
@@ -65,22 +66,38 @@ class DashboardScreen extends ConsumerWidget {
         ),
         actions: [
           userAsync.when(
-            data: (user) => Padding(
-              padding: const EdgeInsetsDirectional.only(end: 16.0),
-              child: GestureDetector(
-                onTap: () => context.push('/profile'),
-                child: CircleAvatar(
-                  backgroundColor: _kGold.withValues(alpha: 0.14),
-                  backgroundImage: user.imageUrl.startsWith('http')
-                      ? NetworkImage(user.imageUrl)
-                      : null,
-                  radius: 19,
-                  child: !user.imageUrl.startsWith('http')
-                      ? const Icon(Icons.person_outline_rounded, color: _kGold, size: 20)
-                      : null,
-                ),
-              ),
-            ),
+            data: (user) {
+              final isAdmin = user.membershipLevel == 'ADMIN' || user.membershipLevel == 'SUPER_ADMIN';
+              return Row(
+                children: [
+                  if (isAdmin)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 8.0),
+                      child: IconButton(
+                        icon: const Icon(Icons.admin_panel_settings_rounded, color: _kGold, size: 24),
+                        tooltip: 'لوحة الإدارة',
+                        onPressed: () => context.go('/admin'),
+                      ),
+                    ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 16.0),
+                    child: GestureDetector(
+                      onTap: () => context.push('/profile'),
+                      child: CircleAvatar(
+                        backgroundColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.14),
+                        backgroundImage: user.imageUrl.startsWith('http')
+                            ? NetworkImage(user.imageUrl)
+                            : null,
+                        radius: 19,
+                        child: !user.imageUrl.startsWith('http')
+                            ? const Icon(Icons.person_outline_rounded, color: _kGold, size: 20)
+                            : null,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
             loading: () => const SizedBox(width: 38),
             error: (e, _) => const SizedBox(width: 38),
           ),
@@ -215,8 +232,8 @@ class _HeroSection extends StatelessWidget {
           firstName.isNotEmpty
               ? loc.dashboardWelcome(firstName)
               : loc.dashboardWelcomePublic,
-          style: GoogleFonts.arefRuqaa(
-            color: _kTextPrimary,
+          style: GoogleFonts.tajawal(
+            color: _textPrimary(context),
             fontSize: 34,
             fontWeight: FontWeight.bold,
             height: 1.2,
@@ -248,7 +265,7 @@ class _HeroSection extends StatelessWidget {
             loc.dashAccountNote,
             style: GoogleFonts.cairo(
               fontSize: 10.5,
-              color: _kTextMuted,
+              color: _textMuted(context),
               fontStyle: FontStyle.italic,
               height: 1.5,
             ),
@@ -269,7 +286,7 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isPublic ? _kTextSecondary : _kGold;
+    final color = isPublic ? _textSecondary(context) : _kGold;
     final icon = isPublic ? Icons.person_outline_rounded : Icons.verified_outlined;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -356,9 +373,9 @@ class _PublicPlatformCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: _kCardBgStrong,
+        color: _cardBgStrong(context),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: _kCardBorder, width: 1.5),
+        border: Border.all(color: _cardBorder(context), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.15),
@@ -375,7 +392,7 @@ class _PublicPlatformCard extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: _kCardBorder),
+                bottom: BorderSide(color: _cardBorder(context)),
               ),
             ),
             child: Row(
@@ -392,10 +409,10 @@ class _PublicPlatformCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     loc.dashPublicIntroTitle,
-                    style: GoogleFonts.arefRuqaa(
+                    style: GoogleFonts.tajawal(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: _kTextPrimary,
+                      color: _textPrimary(context),
                     ),
                   ),
                 ),
@@ -421,12 +438,12 @@ class _PublicPlatformCard extends StatelessWidget {
                   loc.dashPublicIntroDesc,
                   style: GoogleFonts.cairo(
                     fontSize: 14,
-                    color: _kTextSecondary,
+                    color: _textSecondary(context),
                     height: 1.65,
                   ),
                 ),
                 const SizedBox(height: 22),
-                Container(height: 1, color: _kCardBorder),
+                Container(height: 1, color: _cardBorder(context)),
                 const SizedBox(height: 18),
                 _PillarRow(icon: Icons.palette_outlined, label: loc.dashPillar1),
                 const SizedBox(height: 12),
@@ -468,7 +485,7 @@ class _PillarRow extends StatelessWidget {
           label,
           style: GoogleFonts.cairo(
             fontSize: 13,
-            color: _kTextSecondary,
+            color: _textSecondary(context),
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -530,9 +547,9 @@ class _QuickActionTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 10),
           decoration: BoxDecoration(
-            color: _kCardBg,
+            color: _cardBg(context),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _kCardBorder, width: 1.5),
+            border: Border.all(color: _cardBorder(context), width: 1.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.12),
@@ -565,7 +582,7 @@ class _QuickActionTile extends StatelessWidget {
                 style: GoogleFonts.cairo(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: _kTextPrimary,
+                  color: _textPrimary(context),
                   height: 1.35,
                 ),
               ),
@@ -602,10 +619,10 @@ class _EventsSection extends StatelessWidget {
                 children: [
                   Text(
                     loc.dashboardUpcoming,
-                    style: GoogleFonts.arefRuqaa(
+                    style: GoogleFonts.tajawal(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: _kTextPrimary,
+                      color: _textPrimary(context),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -687,7 +704,7 @@ class _MembershipEntryTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           decoration: BoxDecoration(
-            color: _kCardBg,
+            color: _cardBg(context),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _kGold.withValues(alpha: 0.20), width: 1.5),
             boxShadow: [
@@ -718,7 +735,7 @@ class _MembershipEntryTile extends StatelessWidget {
                       style: GoogleFonts.cairo(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: _kTextPrimary,
+                        color: _textPrimary(context),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -755,20 +772,20 @@ class _EmptyEventsPlaceholder extends StatelessWidget {
       height: 100,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: _kCardBg,
+        color: _cardBg(context),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _kCardBorder),
+        border: Border.all(color: _cardBorder(context)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.event_busy_outlined,
-              color: _kTextMuted, size: 18),
+              color: _textMuted(context), size: 18),
           const SizedBox(width: 10),
           Text(
             loc.dashNoEvents,
             style: GoogleFonts.cairo(
-              color: _kTextMuted,
+              color: _textMuted(context),
               fontSize: 13,
             ),
           ),
@@ -839,7 +856,7 @@ class _S extends StatelessWidget {
       height: h,
       width: w,
       decoration: BoxDecoration(
-        color: _kCardBg,
+        color: _cardBg(context),
         borderRadius: BorderRadius.circular(r),
       ),
     ).animate(onPlay: (c) => c.repeat(reverse: true))

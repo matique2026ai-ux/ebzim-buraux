@@ -8,19 +8,21 @@ class EbzimBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Stack(
       fit: StackFit.expand,
       children: [
         // Premium Mesh Gradient Background
         Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: RadialGradient(
-              center: Alignment(-0.8, -0.6),
+              center: const Alignment(-0.8, -0.6),
               radius: 1.2,
-              colors: [
-                Color(0xFF005A00), // Lighter green highlight
-                AppTheme.primaryColor,
-              ],
+              colors: isDark 
+                ? [const Color(0xFF005A00), AppTheme.primaryColor]
+                : [const Color(0xFFF2F7F2), const Color(0xFFF9F9F7)], // Silk Ivory Gradient
             ),
           ),
         ),
@@ -29,10 +31,12 @@ class EbzimBackground extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             gradient: RadialGradient(
-              center: Alignment(0.7, 0.8),
+              center: const Alignment(0.7, 0.8),
               radius: 1.0,
               colors: [
-                const Color(0xFF003300).withValues(alpha: 0.5),
+                isDark 
+                  ? const Color(0xFF003300).withValues(alpha: 0.5)
+                  : theme.primaryColor.withValues(alpha: 0.05),
                 Colors.transparent,
               ],
             ),

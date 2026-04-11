@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/services/storage_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -128,16 +129,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       // ── Arabic Title ──
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: const Text(
+                        child: Text(
                           'جمعية إبزيم للثقافة والمواطنة',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Aref Ruqaa',
+                          style: GoogleFonts.tajawal(
                             fontSize: 52,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                             height: 1.2,
-                            shadows: [
+                            shadows: const [
                               Shadow(color: Color(0x66000000), blurRadius: 12, offset: Offset(0, 6)),
                             ],
                           ),
@@ -191,19 +191,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           onTap: _redirect,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Text(
                                 'استكشف',
-                                style: TextStyle(
-                                  // Arabic text but uses western numerals if present, according to rule
-                                  fontFamily: 'Aref Ruqaa',
+                                style: GoogleFonts.tajawal(
                                   fontSize: 22,
-                                  color: Color(0xFFF0E0C8),
+                                  color: const Color(0xFFF0E0C8),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(width: 12),
-                              Icon(Icons.arrow_forward_rounded, color: Color(0xFFF0E0C8), size: 20),
+                              const SizedBox(width: 12),
+                              const Icon(Icons.arrow_forward_rounded, color: Color(0xFFF0E0C8), size: 20),
                             ],
                           ),
                         ),
@@ -234,7 +232,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     children: [
                       Icon(Icons.translate, color: Colors.white, size: 14),
                       SizedBox(width: 6),
-                      Text('FR | AR', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 2)),
+                      Text('EN | FR | AR', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 2)),
                     ],
                   ),
                 ),

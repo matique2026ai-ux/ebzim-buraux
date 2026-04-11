@@ -86,8 +86,8 @@ class ActivityEvent {
       locationFr: location.toString(),
       imageUrl: (json['coverImage'] is Map)
           ? (json['coverImage']['url']?.toString() ??
-                'https://via.placeholder.com/400')
-          : 'https://via.placeholder.com/400',
+                'https://placehold.co/600x400/020F08/F7C04A/png?text=EBZIM')
+          : 'https://placehold.co/600x400/020F08/F7C04A/png?text=EBZIM',
       categoryEn: 'General',
       categoryAr: 'عام',
       categoryFr: 'Général',
@@ -220,6 +220,58 @@ class EventService {
     return ActivityEvent.fromJson(
       Map<String, dynamic>.from(data is Map ? data : {}),
     );
+  }
+
+  // Category ID for Events (hardcoded based on DB check)
+  static const String eventCategoryId = '69d97497b964b974fd6ba1f3';
+
+  Future<void> createEvent({
+    required String title,
+    required String description,
+    required String startDate,
+    required String endDate,
+    required String location,
+    required bool isOnline,
+    String? imageUrl,
+  }) async {
+    final Map<String, dynamic> data = {
+      'categoryId': eventCategoryId,
+      'title': {
+        'ar': title,
+        'fr': title,
+        'en': title,
+      },
+      'description': {
+        'ar': description,
+        'fr': description,
+        'en': description,
+      },
+      'startDate': startDate,
+      'endDate': endDate,
+      'location': {
+        'formattedAddress': location,
+      },
+      'isOnline': isOnline,
+      'publicationStatus': 'PUBLISHED',
+      'eventStatus': 'UPCOMING',
+    };
+
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      data['coverImage'] = {
+        'url': imageUrl,
+        'publicId': imageUrl.split('/').last.split('.').first,
+      };
+    }
+
+    await _ref.read(apiClientProvider).dio.post('/events', data: data);
+  }
+
+  Future<void> updateEvent(String id, Map<String, dynamic> data) async {
+    await _ref.read(apiClientProvider).dio.patch('/events/$id', data: data);
+  }
+
+  Future<void> deleteEvent(String id) async {
+    await _ref.read(apiClientProvider).dio.delete('/events/$id');
   }
 }
 

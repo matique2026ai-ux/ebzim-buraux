@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
@@ -18,7 +19,7 @@ class MainShellScreen extends StatelessWidget {
     if (loc.startsWith('/dashboard')) return 0;
     if (loc.startsWith('/activities')) return 1;
     if (loc.startsWith('/news')) return 2;
-    if (loc.startsWith('/leadership')) return 3;
+    if (loc.startsWith('/about')) return 3;
     if (loc.startsWith('/profile')) return 4;
     return 0;
   }
@@ -28,7 +29,7 @@ class MainShellScreen extends StatelessWidget {
       case 0: context.go('/dashboard'); break;
       case 1: context.go('/activities'); break;
       case 2: context.go('/news'); break;
-      case 3: context.go('/leadership'); break;
+      case 3: context.go('/about'); break;
       case 4: context.go('/profile'); break;
     }
   }
@@ -84,47 +85,49 @@ class _NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF010C06), // Slightly darker at the very top edge
-            _kNavBg,
-          ],
-        ),
+        color: isDark ? const Color(0xFF010C06) : Colors.white.withValues(alpha: 0.85),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.30),
+            color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.08),
             blurRadius: 20,
             offset: const Offset(0, -6),
           ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 6,
-            offset: const Offset(0, -2),
-          ),
+          if (!isDark)
+            BoxShadow(
+              color: Colors.white.withValues(alpha: 0.5),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
         ],
-        border: const Border(
-          top: BorderSide(color: _kNavBorder, width: 1.0),
+        border: Border(
+          top: BorderSide(color: isDark ? _kNavBorder : Colors.black.withValues(alpha: 0.05), width: 1.0),
         ),
       ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 68,
-          child: Row(
-            children: items.asMap().entries.map((e) {
-              return Expanded(
-                child: _NavTile(
-                  item: e.value,
-                  index: e.key,
-                  isSelected: currentIndex == e.key,
-                  onTap: () => onTap(e.key),
-                ),
-              );
-            }).toList(),
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: 68,
+              child: Row(
+                children: items.asMap().entries.map((e) {
+                  return Expanded(
+                    child: _NavTile(
+                      item: e.value,
+                      index: e.key,
+                      isSelected: currentIndex == e.key,
+                      onTap: () => onTap(e.key),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
         ),
       ),
@@ -150,7 +153,11 @@ class _NavTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? _kActiveColor : _kInactiveColor;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final activeColor = isDark ? _kActiveColor : theme.primaryColor;
+    final inactiveColor = isDark ? _kInactiveColor : Colors.black38;
+    final color = isSelected ? activeColor : inactiveColor;
 
     return GestureDetector(
       onTap: onTap,
@@ -167,12 +174,12 @@ class _NavTile extends StatelessWidget {
               height: 3,
               width: isSelected ? 36 : 0,
               decoration: BoxDecoration(
-                color: _kActiveColor,
+                color: activeColor,
                 borderRadius: const BorderRadius.vertical(bottom: Radius.circular(3)),
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: _kActiveColor.withValues(alpha: 0.45),
+                          color: activeColor.withValues(alpha: 0.45),
                           blurRadius: 8,
                           spreadRadius: 1,
                           offset: const Offset(0, 2),

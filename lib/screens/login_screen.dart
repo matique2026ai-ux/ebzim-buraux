@@ -8,6 +8,7 @@ import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -36,12 +37,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final loc = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final isRtl = ref.watch(localeProvider).languageCode == 'ar';
 
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.isAuthenticated) {
         final role = next.user?.membershipLevel ?? 'USER';
-        if (role == 'ADMIN') {
+        if (role == 'ADMIN' || role == 'SUPER_ADMIN') {
           context.go('/admin');
         } else {
           context.go('/dashboard');
@@ -50,7 +52,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      extendBodyBehindAppBar: true,
       body: EbzimBackground(
         child: Stack(
           children: [
@@ -61,7 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: 400, height: 400,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppTheme.accentColor.withValues(alpha: 0.03),
+                  color: AppTheme.accentColor.withValues(alpha: isDark ? 0.03 : 0.05),
                 ),
               ),
             ),
@@ -69,178 +72,283 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             SafeArea(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 60.0),
                   child: Column(
                     children: [
                       // Branding Section
                       Hero(
                         tag: 'app_logo',
-                        child: Container(
-                          height: 120, width: 120,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withValues(alpha: 0.05),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-                            boxShadow: [
-                              BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 25, offset: const Offset(0, 10)),
-                            ],
-                          ),
-                          child: ClipOval(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              child: Center(child: Image.asset('assets/images/logo.png', height: 70)),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          clipBehavior: Clip.none,
+                          children: [
+                            // Luminous Halo
+                            Container(
+                              width: 180,
+                              height: 180,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: RadialGradient(
+                                  colors: [
+                                    AppTheme.accentColor.withValues(alpha: isDark ? 0.3 : 0.4),
+                                    AppTheme.accentColor.withValues(alpha: 0),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
+                            Container(
+                              height: 140, width: 140,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isDark ? Colors.white.withValues(alpha: 0.2) : Colors.white,
+                                border: Border.all(
+                                  color: AppTheme.accentColor.withValues(alpha: 0.6),
+                                  width: 2.5,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppTheme.accentColor.withValues(alpha: 0.4),
+                                    blurRadius: 40,
+                                    spreadRadius: 8,
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.4),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 10),
+                                  ),
+                                ],
+                              ),
+                              child: ClipOval(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(18.0),
+                                      child: Image.asset(
+                                        'assets/images/logo.png', 
+                                        fit: BoxFit.contain,
+                                        filterQuality: FilterQuality.high,
+                                        errorBuilder: (context, error, stackTrace) => Icon(Icons.business, color: AppTheme.accentColor, size: 60),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ).animate().fadeIn(duration: 800.ms).scale(begin: const Offset(0.8, 0.8)),
                       
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 32),
                       Text(
                         loc.authAssocName,
-                        style: TextStyle(
-                          fontFamily: 'Aref Ruqaa',
+                        style: GoogleFonts.tajawal(
                           color: AppTheme.accentColor,
-                          fontSize: 26,
+                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                           letterSpacing: isRtl ? 0 : 2,
+                          shadows: [
+                            Shadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                          ],
                         ),
-                      ).animate().fadeIn(delay: 200.ms),
+                      ),
                       
-                      const SizedBox(height: 48),
+                      const SizedBox(height: 60),
 
-                      // Glass Card
+                      // Luminous Glass Card
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(32),
+                        borderRadius: BorderRadius.circular(40),
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                           child: Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 36),
+                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 40),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.03),
-                              borderRadius: BorderRadius.circular(32),
-                              border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  isDark ? Colors.white.withValues(alpha: 0.22) : Colors.white.withValues(alpha: 0.98),
+                                  isDark ? Colors.white.withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.85),
+                                ],
+                                stops: const [0.0, 1.0],
+                              ),
+                              borderRadius: BorderRadius.circular(40),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1.5,
+                              ),
                               boxShadow: [
-                                BoxShadow(color: Colors.black.withValues(alpha: 0.4), blurRadius: 40, offset: const Offset(0, 15)),
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: isDark ? 0.6 : 0.1),
+                                  blurRadius: 50,
+                                  spreadRadius: -5,
+                                  offset: const Offset(0, 30),
+                                ),
+                                BoxShadow(
+                                  color: AppTheme.accentColor.withValues(alpha: isDark ? 0.05 : 0),
+                                  blurRadius: 20,
+                                  spreadRadius: 2,
+                                ),
                               ],
                             ),
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text(
-                                    loc.authWelcome,
-                                    textAlign: TextAlign.center,
-                                    style: theme.textTheme.headlineMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: isRtl ? 'Aref Ruqaa' : null,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: -50, right: -50,
+                                  child: Container(
+                                    width: 150, height: 150,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withValues(alpha: 0.03),
                                     ),
                                   ),
-                                  const SizedBox(height: 40),
-
-                                  // Identity Field
-                                  _buildInputField(
-                                    controller: _emailController,
-                                    label: loc.authIdentity,
-                                    hint: loc.authIdentityHint,
-                                    icon: Icons.person_outline,
-                                    validator: (val) => val!.isEmpty ? loc.valRequired : null,
-                                  ).animate().fadeIn(delay: 400.ms).slideX(begin: 0.1),
-                                  
-                                  const SizedBox(height: 24),
-
-                                  // Secret Field
-                                  _buildInputField(
-                                    controller: _passwordController,
-                                    label: loc.authSecret,
-                                    hint: '••••••••',
-                                    icon: Icons.lock_outline,
-                                    isPassword: true,
-                                    isPasswordVisible: _isPasswordVisible,
-                                    onTogglePassword: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
-                                    validator: (val) => val!.isEmpty ? loc.valRequired : null,
-                                  ).animate().fadeIn(delay: 500.ms).slideX(begin: 0.1),
-                                  
-                                  const SizedBox(height: 12),
-                                  
-                                  // Forgot Password link
-                                  Align(
-                                    alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
-                                    child: TextButton(
-                                      onPressed: () => context.push('/auth/forgot-password'),
-                                      child: Text(
-                                        loc.authLostCredentials,
-                                        style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 11, fontWeight: FontWeight.w500),
+                                ),
+                                Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        loc.authWelcome,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.cairo(
+                                          color: isDark ? Colors.white : AppTheme.primaryColor,
+                                          fontSize: 34,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1,
+                                          shadows: [
+                                            Shadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 2)),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ).animate().fadeIn(delay: 600.ms),
+                                      const SizedBox(height: 40),
 
-                                  // Error Callout
-                                  if (authState.error != null)
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 16),
-                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                                      decoration: BoxDecoration(
-                                        color: AppTheme.heritageRed.withValues(alpha: 0.06),
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(color: AppTheme.heritageRed.withValues(alpha: 0.2)),
+                                      _buildInputField(
+                                        controller: _emailController,
+                                        label: loc.authIdentity,
+                                        hint: loc.authIdentityHint,
+                                        icon: Icons.person_outline,
+                                        validator: (val) => val!.isEmpty ? loc.valRequired : null,
                                       ),
-                                      child: Row(
-                                        children: [
-                                          const Icon(Icons.error_outline, color: AppTheme.heritageRed, size: 20),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: Text(
-                                              authState.error == 'authErrorInvalid' ? loc.authErrorInvalid : loc.authErrorUnknown,
-                                              style: const TextStyle(color: AppTheme.heritageRed, fontSize: 13, height: 1.4),
+                                      
+                                      const SizedBox(height: 24),
+
+                                      _buildInputField(
+                                        controller: _passwordController,
+                                        label: loc.authSecret,
+                                        hint: '••••••••',
+                                        icon: Icons.lock_outline,
+                                        isPassword: true,
+                                        isPasswordVisible: _isPasswordVisible,
+                                        onTogglePassword: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                                        validator: (val) => val!.isEmpty ? loc.valRequired : null,
+                                      ),
+                                      
+                                      const SizedBox(height: 12),
+                                      
+                                      Align(
+                                        alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+                                        child: TextButton(
+                                          onPressed: () => context.push('/auth/forgot-password'),
+                                          child: Text(
+                                            loc.authLostCredentials,
+                                            style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 11, fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                      ),
+
+                                      if (authState.error != null)
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 16),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(16),
+                                            child: BackdropFilter(
+                                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFF8B2F2F).withValues(alpha: 0.15),
+                                                  borderRadius: BorderRadius.circular(16),
+                                                  border: Border.all(color: const Color(0xFF8B2F2F).withValues(alpha: 0.4), width: 1.5),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(Icons.gpp_bad_rounded, color: Color(0xFFE89A9A), size: 24),
+                                                    const SizedBox(width: 14),
+                                                    Expanded(
+                                                      child: Text(
+                                                        authState.error == 'authErrorInvalid' ? loc.authErrorInvalid : loc.authErrorUnknown,
+                                                        style: GoogleFonts.cairo(
+                                                          color: Colors.white, 
+                                                          fontSize: 13, 
+                                                          fontWeight: FontWeight.w600,
+                                                          height: 1.4
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ).animate().fadeIn().shake(),
+                                        ),
 
-                                  Container(
-                                    height: 50,
-                                    margin: const EdgeInsets.only(top: 24),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14),
-                                      color: AppTheme.accentColor,
-                                      boxShadow: [
-                                        BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 4)),
-                                      ],
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: authState.isLoading ? null : _submit,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        foregroundColor: AppTheme.heritageGreenDeep,
-                                        shadowColor: Colors.transparent,
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                                      ),
-                                      child: authState.isLoading 
-                                        ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(color: AppTheme.heritageGreenDeep, strokeWidth: 2))
-                                        : Text(
-                                            loc.authAccessButton,
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, letterSpacing: 0.5),
+                                      const SizedBox(height: 8),
+                                      
+                                      Container(
+                                        height: 56,
+                                        margin: const EdgeInsets.only(top: 24),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(16),
+                                          gradient: const LinearGradient(
+                                            colors: [AppTheme.accentColor, Color(0xFF8E7139)],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
                                           ),
-                                    ),
-                                  ).animate().fadeIn(delay: 700.ms).scale(),
-                                ],
-                              ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppTheme.accentColor.withValues(alpha: 0.3),
+                                              blurRadius: 15,
+                                              offset: const Offset(0, 6),
+                                            ),
+                                          ],
+                                        ),
+                                        child: ElevatedButton(
+                                          onPressed: authState.isLoading ? null : _submit,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            foregroundColor: Colors.white,
+                                            shadowColor: Colors.transparent,
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                          ),
+                                          child: authState.isLoading 
+                                            ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                                            : Text(
+                                                loc.authAccessButton,
+                                                style: GoogleFonts.cairo(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  letterSpacing: 0.5,
+                                                ),
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
+                      ),
                       
                       const SizedBox(height: 48),
 
-                      // Footer Actions
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(loc.authNewHere, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 14)),
+                          Text(loc.authNewHere, style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14)),
                           TextButton(
                             onPressed: () => context.go('/register'),
                             child: Text(
@@ -249,7 +357,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                         ],
-                      ).animate().fadeIn(delay: 800.ms),
+                      ),
                       
                       const SizedBox(height: 12),
                       
@@ -257,9 +365,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         onPressed: () => context.go('/home'),
                         child: Text(
                           loc.authGuestBrowse,
-                          style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 12),
+                          style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 12),
                         ),
-                      ).animate().fadeIn(delay: 900.ms),
+                      ),
 
                       const SizedBox(height: 12),
 
@@ -271,16 +379,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: Text(
                               loc.authPrivacyTitle,
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.25), 
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6), 
                                 fontSize: 11, 
                                 decoration: TextDecoration.underline,
-                                decorationColor: Colors.white.withValues(alpha: 0.25),
                               ),
                             ),
                           ),
                           Text(
                             ' • ',
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.25), fontSize: 11),
+                            style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13),
                           ),
                           TextButton(
                             onPressed: () => context.push('/auth/terms'),
@@ -295,7 +402,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                         ],
-                      ).animate().fadeIn(delay: 1000.ms),
+                      ),
                     ],
                   ),
                 ),
@@ -321,32 +428,68 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          child: Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.75), fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          child: Text(
+            label, 
+            style: GoogleFonts.cairo(
+              color: Theme.of(context).brightness == Brightness.dark 
+                  ? Colors.white.withValues(alpha: 0.8) 
+                  : AppTheme.primaryColor.withValues(alpha: 0.8), 
+              fontSize: 13, 
+              fontWeight: FontWeight.bold, 
+              letterSpacing: 0.5
+            )
+          ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+            color: Theme.of(context).brightness == Brightness.dark 
+                ? Colors.white.withValues(alpha: 0.05) 
+                : Colors.white.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark 
+                  ? Colors.white.withValues(alpha: 0.1) 
+                  : AppTheme.primaryColor.withValues(alpha: 0.1)
+            ),
           ),
           child: TextFormField(
             controller: controller,
             obscureText: isPassword && !isPasswordVisible,
-            style: const TextStyle(color: Colors.white),
+            style: GoogleFonts.tajawal(
+              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppTheme.primaryColor, 
+              fontSize: 16,
+              fontWeight: FontWeight.w500
+            ),
             validator: validator,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.2), fontSize: 14),
-              prefixIcon: Icon(icon, color: Colors.white38, size: 20),
+              hintStyle: GoogleFonts.cairo(
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.white.withValues(alpha: 0.25) 
+                    : Colors.black.withValues(alpha: 0.3), 
+                fontSize: 14
+              ),
+              prefixIcon: Icon(
+                icon, 
+                color: AppTheme.accentColor.withValues(alpha: 0.8), 
+                size: 22
+              ),
               suffixIcon: isPassword ? IconButton(
-                icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off, color: Colors.white24, size: 18),
+                icon: Icon(
+                  isPasswordVisible ? Icons.visibility : Icons.visibility_off, 
+                  color: AppTheme.accentColor.withValues(alpha: 0.6), 
+                  size: 20
+                ),
                 onPressed: onTogglePassword,
               ) : null,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: AppTheme.accentColor.withValues(alpha: 0.6), width: 1)),
-              contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16), 
+                borderSide: BorderSide(color: AppTheme.accentColor, width: 2)
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
             ),
           ),
         ),

@@ -6,8 +6,9 @@ import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/widgets/event_card.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_app_bar.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 class ActivitiesScreen extends ConsumerStatefulWidget {
   const ActivitiesScreen({super.key});
 
@@ -43,167 +44,179 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
-      appBar: EbzimAppBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ── Header ──
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          const EbzimSliverAppBar(),
+          
+          // ── Header & Filters ──
+          SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  loc.actTitle,
-                  style: TextStyle(
-                    fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  loc.actSubtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white.withValues(alpha: 0.5),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // ── Search ──
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.grey.shade200),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 12, offset: const Offset(0, 4)),
+                const SizedBox(height: 100), // Safe zone for pinned app bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        loc.actTitle,
+                        style: GoogleFonts.tajawal(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        loc.actSubtitle,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: (val) => setState(() => _searchQuery = val),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                          decoration: InputDecoration(
+                            hintText: loc.actSearchHint,
+                            hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 14),
+                            prefixIcon: const Icon(Icons.search, color: AppTheme.accentColor),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                            suffixIcon: _searchQuery.isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.close, size: 18, color: Colors.white38),
+                                    onPressed: () {
+                                      _searchController.clear();
+                                      setState(() => _searchQuery = '');
+                                    },
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: (val) => setState(() => _searchQuery = val),
-                    decoration: InputDecoration(
-                      hintText: loc.actSearchHint,
-                      hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                      prefixIcon: const Icon(Icons.search, color: AppTheme.primaryColor),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                      suffixIcon: _searchQuery.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.close, size: 18, color: Colors.grey),
-                              onPressed: () {
-                                _searchController.clear();
-                                setState(() => _searchQuery = '');
-                              },
-                            )
-                          : null,
-                    ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // ── Category Chips ──
+                SizedBox(
+                  height: 44,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      final isSelected = _selectedCategoryIndex == index;
+                      final isPartnership = index == categories.length - 1;
+                      return Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 8.0),
+                        child: FilterChip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (isPartnership)
+                                const Padding(
+                                  padding: EdgeInsetsDirectional.only(end: 4),
+                                  child: Icon(Icons.handshake, size: 12, color: AppTheme.accentColor),
+                                ),
+                              Text(
+                                categories[index].toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  color: isSelected ? Theme.of(context).colorScheme.onPrimary : (Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.6) : Colors.black45),
+                                ),
+                              ),
+                            ],
+                          ),
+                          selected: isSelected,
+                          onSelected: (_) => setState(() => _selectedCategoryIndex = index),
+                          backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                          selectedColor: AppTheme.accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(
+                              color: isSelected ? AppTheme.accentColor.withValues(alpha: 0.3) : Colors.transparent,
+                            ),
+                          ),
+                          showCheckmark: false,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                        ),
+                      );
+                    },
                   ),
                 ),
+                
+                const SizedBox(height: 24),
               ],
             ),
           ),
 
-          const SizedBox(height: 16),
-
-          // ── Category Chips ──
-          SizedBox(
-            height: 44,
-            child: ListView.builder(
-              padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final isSelected = _selectedCategoryIndex == index;
-                final isPartnership = index == categories.length - 1;
-                return Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 8.0),
-                  child: FilterChip(
-                    label: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (isPartnership)
-                          const Padding(
-                            padding: EdgeInsetsDirectional.only(end: 4),
-                            child: Icon(Icons.handshake, size: 12, color: AppTheme.primaryColor),
-                          ),
-                        Text(
-                          categories[index].toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
-                          ),
-                        ),
-                      ],
-                    ),
-                    selected: isSelected,
-                    onSelected: (_) => setState(() => _selectedCategoryIndex = index),
-                    backgroundColor: Colors.grey.shade100,
-                    selectedColor: AppTheme.accentColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        color: isSelected ? AppTheme.secondaryColor.withValues(alpha: 0.3) : Colors.transparent,
-                      ),
-                    ),
-                    showCheckmark: false,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
           // ── Events Grid ──
-          Expanded(
-            child: eventsAsync.when(
-              data: (events) {
-                // Filter by search query
-                final filtered = _searchQuery.isEmpty
-                    ? events
-                    : events.where((e) {
-                        final title = e.getTitle(lang).toLowerCase();
-                        return title.contains(_searchQuery.toLowerCase());
-                      }).toList();
+          eventsAsync.when(
+            data: (events) {
+              final filtered = _searchQuery.isEmpty
+                  ? events
+                  : events.where((e) {
+                      final title = e.getTitle(lang).toLowerCase();
+                      return title.contains(_searchQuery.toLowerCase());
+                    }).toList();
 
-                if (filtered.isEmpty) {
-                  return _EmptyState(isSearch: _searchQuery.isNotEmpty);
-                }
+              if (filtered.isEmpty) {
+                return SliverFillRemaining(
+                  child: _EmptyState(isSearch: _searchQuery.isNotEmpty),
+                );
+              }
 
-                return GridView.builder(
-                  padding: const EdgeInsets.all(24),
+              return SliverPadding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
+                sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 0.65,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                   ),
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) {
-                    final event = filtered[index];
-                    return EventCard(
-                      event: event,
-                      width: double.infinity,
-                      onTap: () => context.push('/event/${event.id}'),
-                    );
-                  },
-                );
-              },
-              loading: () => const Center(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final event = filtered[index];
+                      return EventCard(
+                        event: event,
+                        width: double.infinity,
+                        onTap: () => context.push('/event/${event.id}'),
+                      );
+                    },
+                    childCount: filtered.length,
+                  ),
+                ),
+              );
+            },
+            loading: () => const SliverFillRemaining(
+              child: Center(
                 child: CircularProgressIndicator(
-                  color: AppTheme.primaryColor,
+                  color: AppTheme.accentColor,
                   strokeWidth: 2,
                 ),
               ),
-              error: (e, _) => _ErrorState(onRetry: () => ref.invalidate(upcomingEventsProvider)),
+            ),
+            error: (e, _) => SliverFillRemaining(
+              child: _ErrorState(onRetry: () => ref.invalidate(upcomingEventsProvider)),
             ),
           ),
         ],

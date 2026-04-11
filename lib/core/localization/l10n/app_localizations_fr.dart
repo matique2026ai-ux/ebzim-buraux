@@ -309,7 +309,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get navDashboard => 'Accueil';
 
   @override
-  String get navDirectory => 'Conseil';
+  String get navDirectory => 'Membres de l\'Association';
 
   @override
   String get navActivities => 'Activités';
@@ -352,78 +352,77 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get aboutHeroTitle =>
-      'Préserver le Patrimoine par l\'Innovation Culturelle';
+      'Préserver le Patrimoine & Développer la Conscience Culturelle';
 
   @override
   String get aboutHeroSubtitle =>
-      'L\'Association Ebzim sert de pont entre la sagesse du passé et les possibilités du futur.';
+      'EBZIM est un espace provincial pour mobiliser les connaissances et les moyens afin de protéger l\'identité Algérienne.';
 
   @override
-  String get aboutStoryBadge => 'Notre Histoire';
+  String get aboutStoryBadge => 'À PROPOS DE L\'ASSOCIATION';
 
   @override
-  String get aboutStoryTitle =>
-      'Un héritage enraciné dans le sol de l\'Algérie';
+  String get aboutStoryTitle => 'L\'Héritage de Sétif, une Identité de Nation';
 
   @override
   String get aboutStoryText1 =>
-      'Fondée dans le cœur historique de Sétif, l\'Association Ebzim est née d\'un désir collectif de sauvegarder les trésors immatériels de notre région.';
+      'Fondée par décision de l\'Assemblée Générale, l\'association EBZIM œuvre pour la protection des trésors matériels et immatériels de Sétif, servant de pont institutionnel entre authenticité et modernité.';
 
   @override
   String get aboutStoryQuote =>
-      '\"Ebzim n\'est pas seulement une association, mais un pacte entre les générations pour préserver notre identité ancienne et l\'insuffler dans l\'esprit de notre temps.\"';
+      '\"EBZIM n\'est pas seulement une entité culturelle, mais un pacte volontaire pour préserver la mémoire et promouvoir une action culturelle significative.\"';
 
   @override
-  String get aboutMission => 'Notre Mission';
+  String get aboutMission => 'Notre Mission (Statuts)';
 
   @override
   String get aboutMissionText =>
-      'Donner aux communautés locales les moyens d\'agir en documentant les techniques ancestrales et en favorisant une économie culturelle durable.';
+      'Protéger les monuments historiques, documenter les techniques patrimoniales et intégrer les concepts de citoyenneté par l\'action culturelle sur le terrain.';
 
   @override
-  String get aboutVision => 'Notre Vision';
+  String get aboutVision => 'Vision Stratégique';
 
   @override
   String get aboutVisionText =>
-      'Devenir la référence mondiale pour la préservation culturelle en Afrique du Nord.';
+      'Faire d\'EBZIM le modèle de référence pour la protection du patrimoine culturel et de la mémoire nationale en Afrique du Nord.';
 
   @override
-  String get aboutValues => 'Nos Valeurs';
+  String get aboutValues => 'Principes Fondamentaux';
 
   @override
-  String get aboutValue1 => 'Authenticité';
+  String get aboutValue1 => 'Bénévolat Conscient';
 
   @override
-  String get aboutValue2 => 'Inclusivité';
+  String get aboutValue2 => 'Intégrité Institutionnelle';
 
   @override
-  String get aboutValue3 => 'Durabilité';
+  String get aboutValue3 => 'Authenticité & Identité';
 
   @override
-  String get aboutValue4 => 'Intégrité';
+  String get aboutValue4 => 'Citoyenneté Numérique';
 
   @override
-  String get aboutHqBadge => 'Le Siège';
+  String get aboutHqBadge => 'Siège Administratif';
 
   @override
   String get aboutHqTitle => 'Cœur de Sétif, Algérie';
 
   @override
   String get aboutHqText =>
-      'Notre bureau central est situé dans le pouls historique de Sétif, une ville réputée pour ses fondations anciennes.';
+      'Le centre opérationnel de l\'association est situé au pouls historique de Sétif, où sont gérées les actions culturelles et les initiatives de protection de la mémoire.';
 
   @override
-  String get aboutHqAction1 => 'Visiter les Archives';
+  String get aboutHqAction1 => 'Voir la Carte';
 
   @override
-  String get aboutHqAction2 => 'Nous Contacter';
+  String get aboutHqAction2 => 'Contactez-nous';
 
   @override
   String get aboutQuote =>
-      'La culture n\'est pas un luxe ; c\'est l\'infrastructure fondamentale de notre identité collective. Dans chaque fil d\'un vêtement et chaque ligne d\'un poème, nous trouvons la carte de notre avenir.';
+      'L\'action culturelle est l\'infrastructure de notre identité nationale. Dans chaque symbole et détail historique, nous trouvons notre feuille de route pour l\'avenir.';
 
   @override
-  String get aboutQuoteAuthor => 'Conseil d\'Administration, Association Ebzim';
+  String get aboutQuoteAuthor => 'BUREAU EXÉCUTIF DE L\'ASSOCIATION EBZIM';
 
   @override
   String get actTitle => 'Calendrier Culturel';
@@ -516,29 +515,26 @@ class AppLocalizationsFr extends AppLocalizations {
   String get memSuccessTitle => 'Bienvenue dans l\'Aventure';
 
   @override
-  String get memSuccessSub => 'Votre candidature a été reçue.';
+  String get memSuccessSub =>
+      'Votre candidature a été reçue et est en cours d\'examen.';
 
   @override
   String get memSuccessHome => 'Retour à l\'accueil';
 
   @override
-  String get memStatusNone => 'لا يوجد طلب انضمام مسجل حالياً';
+  String get memStatusNone => 'Aucune demande d\'adhésion enregistrée';
 
   @override
-  String get memStatusSubmitted =>
-      'طلبك قيد المراجعة من طرف المكتب التنفيذي للجمعية';
+  String get memStatusSubmitted => 'En cours d\'examen par le bureau exécutif';
 
   @override
-  String get memStatusNeedsInfo =>
-      'طلب الانضمام يحتاج إلى معلومات إضافية من جانبكم';
+  String get memStatusNeedsInfo => 'Nécessite des informations supplémentaires';
 
   @override
-  String get memStatusApproved =>
-      'تم قبول طلب الانضمام - أهلاً بك كأحد أعضاء الجمعية';
+  String get memStatusApproved => 'Approuvé - Bienvenue à Ebzim';
 
   @override
-  String get memStatusRejected =>
-      'عذراً، لم يتم قبول طلب الانضمام في الوقت الحالي';
+  String get memStatusRejected => 'Non acceptée pour le moment';
 
   @override
   String get leadHeroBadge => 'Direction & Gouvernance';
@@ -764,6 +760,27 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsDeleteAcc => 'Supprimer le compte';
+
+  @override
+  String get supportSubtitle => 'Comment pouvons-nous vous aider ?';
+
+  @override
+  String get supportFaqTitle => 'Questions Fréquentes';
+
+  @override
+  String get supportContactTitle => 'Canaux Officiels';
+
+  @override
+  String get supportEmailLabel => 'Écrivez-nous';
+
+  @override
+  String get supportLocationLabel => 'Notre Siège';
+
+  @override
+  String get supportPhoneLabel => 'Équipe de Support';
+
+  @override
+  String get supportHqValue => 'Sétif, Algérie';
 
   @override
   String get search => 'RECHERCHER';

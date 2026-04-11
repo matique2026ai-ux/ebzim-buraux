@@ -39,7 +39,7 @@ class UserProfile {
       nameAr: profile['firstNameAr'] ?? profile['firstName'] ?? '',
       email: json['email'] ?? '',
       phone: profile['phone'] ?? '',
-      imageUrl: profile['avatarUrl'] ?? 'https://via.placeholder.com/150',
+      imageUrl: profile['avatarUrl'] ?? 'https://placehold.co/150/020F08/F7C04A/png?text=User',
       membershipLevel: role,
       membershipStatus: json['status'] ?? 'ACTIVE',
       membershipExpiry: json['expiryDate'] != null ? DateTime.parse(json['expiryDate']) : null,

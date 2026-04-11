@@ -1,0 +1,82 @@
+﻿
+  error - lib\screens\activities_screen.dart:66:32 - Undefined name 'GoogleFonts'. Try correcting the name to one that 
+is defined, or defining the name. - undefined_identifier
+  error - lib\screens\dashboard_screen.dart:74:36 - The method '_accentColor' isn't defined for the type 
+'DashboardScreen'. Try correcting the name to the name of an existing method, or defining a method named 
+'_accentColor'. - undefined_method
+  error - lib\screens\leadership_screen.dart:49:30 - Undefined name 'GoogleFonts'. Try correcting the name to one that 
+is defined, or defining the name. - undefined_identifier
+  error - lib\screens\leadership_screen.dart:106:55 - Undefined name 'GoogleFonts'. Try correcting the name to one 
+that is defined, or defining the name. - undefined_identifier
+  error - lib\screens\leadership_screen.dart:192:39 - Undefined name 'GoogleFonts'. Try correcting the name to one 
+that is defined, or defining the name. - undefined_identifier
+  error - lib\screens\leadership_screen.dart:247:87 - Undefined name 'GoogleFonts'. Try correcting the name to one 
+that is defined, or defining the name. - undefined_identifier
+  error - lib\screens\login_screen.dart:66:65 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\login_screen.dart:84:36 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\login_screen.dart:85:55 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\login_screen.dart:121:38 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\login_screen.dart:123:57 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\login_screen.dart:125:81 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\membership_flow_screen.dart:224:88 - Undefined name 'context'. Try correcting the name to one 
+that is defined, or defining the name. - undefined_identifier
+  error - lib\screens\membership_flow_screen.dart:320:88 - Undefined name 'context'. Try correcting the name to one 
+that is defined, or defining the name. - undefined_identifier
+  error - lib\screens\news_screen.dart:60:25 - Undefined name 'lang'. Try correcting the name to one that is defined, 
+or defining the name. - undefined_identifier
+  error - lib\screens\news_screen.dart:61:32 - Undefined name 'GoogleFonts'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\news_screen.dart:69:25 - Undefined name 'lang'. Try correcting the name to one that is defined, 
+or defining the name. - undefined_identifier
+  error - lib\screens\news_screen.dart:98:29 - Undefined name 'lang'. Try correcting the name to one that is defined, 
+or defining the name. - undefined_identifier
+  error - lib\screens\news_screen.dart:130:11 - Undefined name 'newsAsync'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\news_screen.dart:147:27 - Undefined name 'lang'. Try correcting the name to one that is defined, 
+or defining the name. - undefined_identifier
+  error - lib\screens\news_screen.dart:164:60 - Undefined name 'lang'. Try correcting the name to one that is defined, 
+or defining the name. - undefined_identifier
+  error - lib\screens\news_screen.dart:194:35 - Undefined name 'lang'. Try correcting the name to one that is defined, 
+or defining the name. - undefined_identifier
+  error - lib\screens\notifications_screen.dart:25:24 - Undefined name 'theme'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:25:23 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:25:47 - Undefined name 'theme'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:29:24 - Undefined name 'theme'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:88:56 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:101:58 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:119:34 - Undefined name 'theme'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:151:46 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:158:48 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:202:52 - Undefined name 'theme'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:206:52 - Undefined name 'theme'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\profile_screen.dart:292:68 - Undefined name 'theme'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\register_screen.dart:116:34 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\register_screen.dart:178:38 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\register_screen.dart:181:40 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\register_screen.dart:378:20 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+  error - lib\screens\register_screen.dart:380:39 - Undefined name 'isDark'. Try correcting the name to one that is 
+defined, or defining the name. - undefined_identifier
+
+

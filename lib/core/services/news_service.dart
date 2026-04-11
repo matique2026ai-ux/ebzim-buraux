@@ -127,7 +127,56 @@ class NewsService {
     }
   }
 
-  // _localFallbackNews removed to fix unused element warning
+  // Category ID for News (hardcoded based on DB check)
+  static const String newsCategoryId = '69d97497b964b974fd6ba1f2';
+
+  Future<void> createPost({
+    required String title,
+    required String summary,
+    required String content,
+    String? imageUrl,
+  }) async {
+    final Map<String, dynamic> data = {
+      'categoryId': newsCategoryId,
+      'title': {
+        'ar': title,
+        'fr': title,
+        'en': title,
+      },
+      'summary': {
+        'ar': summary,
+        'fr': summary,
+        'en': summary,
+      },
+      'content': {
+        'ar': content,
+        'fr': content,
+        'en': content,
+      },
+      'status': 'PUBLISHED',
+      'isFeatured': false,
+    };
+
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      data['media'] = [
+        {
+          'type': 'IMAGE',
+          'cloudinaryUrl': imageUrl,
+          'publicId': imageUrl.split('/').last.split('.').first,
+        }
+      ];
+    }
+
+    await _ref.read(apiClientProvider).dio.post('/posts', data: data);
+  }
+
+  Future<void> updatePost(String id, Map<String, dynamic> data) async {
+    await _ref.read(apiClientProvider).dio.patch('/posts/$id', data: data);
+  }
+
+  Future<void> deletePost(String id) async {
+    await _ref.read(apiClientProvider).dio.delete('/posts/$id');
+  }
 }
 
 final newsServiceProvider = Provider((ref) => NewsService(ref));

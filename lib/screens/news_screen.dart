@@ -5,7 +5,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_app_bar.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NewsScreen extends ConsumerStatefulWidget {
   const NewsScreen({super.key});
@@ -35,147 +37,165 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final lang = ref.watch(localeProvider).languageCode;
     final newsAsync = ref.watch(newsProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
-      appBar: EbzimAppBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ── Header ──
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          const EbzimSliverAppBar(),
+          
+          // ── Header & Filters ──
+          SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  lang == 'ar' ? 'الأخبار والمستجدات' : 'Actualités',
-                  style: TextStyle(
-                    fontFamily: theme.textTheme.headlineMedium?.fontFamily,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
+                const SizedBox(height: 100), // Safe zone for pinned app bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        lang == 'ar' ? 'الأخبار والمستجدات' : 'Actualités',
+                        style: GoogleFonts.tajawal(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        lang == 'ar'
+                            ? 'آخر أخبار الجمعية والشراكات الرسمية'
+                            : 'Dernières nouvelles et partenariats officiels',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  lang == 'ar'
-                      ? 'آخر أخبار الجمعية والشراكات الرسمية'
-                      : 'Dernières nouvelles et partenariats officiels',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white.withValues(alpha: 0.5),
+
+                const SizedBox(height: 24),
+
+                // ── Category Filter ──
+                SizedBox(
+                  height: 44,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _categories.length,
+                    itemBuilder: (context, i) {
+                      final cat = _categories[i];
+                      final isSelected = _selectedCategory == cat.$1;
+                      return Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 8),
+                        child: FilterChip(
+                          label: Text(
+                            lang == 'ar' ? cat.$2 : cat.$3,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              color: isSelected
+                                  ? theme.colorScheme.onPrimary
+                                  : (isDark ? Colors.white.withValues(alpha: 0.6) : Colors.black54),
+                            ),
+                          ),
+                          selected: isSelected,
+                          onSelected: (_) =>
+                              setState(() => _selectedCategory = cat.$1),
+                          backgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                          selectedColor: AppTheme.accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          showCheckmark: false,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                        ),
+                      );
+                    },
                   ),
                 ),
+                
+                const SizedBox(height: 12),
               ],
             ),
           ),
 
-          const SizedBox(height: 16),
-
-          // ── Category Filter ──
-          SizedBox(
-            height: 44,
-            child: ListView.builder(
-              padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-              scrollDirection: Axis.horizontal,
-              itemCount: _categories.length,
-              itemBuilder: (context, i) {
-                final cat = _categories[i];
-                final isSelected = _selectedCategory == cat.$1;
-                return Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 8),
-                  child: FilterChip(
-                    label: Text(
-                      lang == 'ar' ? cat.$2 : cat.$3,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                        color: isSelected
-                            ? Colors.white
-                            : Colors.white.withValues(alpha: 0.6),
-                      ),
-                    ),
-                    selected: isSelected,
-                    onSelected: (_) =>
-                        setState(() => _selectedCategory = cat.$1),
-                    backgroundColor: Colors.grey.shade100,
-                    selectedColor: AppTheme.accentColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    showCheckmark: false,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
           // ── News List ──
-          Expanded(
-            child: newsAsync.when(
-              data: (posts) {
-                final filtered = _selectedCategory == 'ALL'
-                    ? posts
-                    : posts
-                        .where((p) => p.category == _selectedCategory)
-                        .toList();
+          newsAsync.when(
+            data: (posts) {
+              final filtered = _selectedCategory == 'ALL'
+                  ? posts
+                  : posts
+                      .where((p) => p.category == _selectedCategory)
+                      .toList();
 
-                if (filtered.isEmpty) {
-                  return Center(
+              if (filtered.isEmpty) {
+                return SliverFillRemaining(
+                  child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.newspaper, size: 64, color: Colors.grey.shade300),
+                        Icon(Icons.newspaper, size: 64, color: Colors.white.withValues(alpha: 0.1)),
                         const SizedBox(height: 12),
                         Text(
                           lang == 'ar' ? 'لا توجد أخبار في هذه الفئة' : 'Aucune actualité dans cette catégorie',
-                          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade500),
+                          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white38),
                         ),
                       ],
                     ),
-                  );
-                }
-
-                return ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) {
-                    final post = filtered[index];
-                    return _NewsCard(post: post, lang: lang)
-                        .animate()
-                        .fadeIn(delay: (index * 80).ms)
-                        .slideY(begin: 0.05);
-                  },
+                  ),
                 );
-              },
-              loading: () => const Center(
+              }
+
+              return SliverPadding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final post = filtered[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: _NewsCard(post: post, lang: lang)
+                            .animate()
+                            .fadeIn(delay: (index * 80).ms)
+                            .slideY(begin: 0.05),
+                      );
+                    },
+                    childCount: filtered.length,
+                  ),
+                ),
+              );
+            },
+            loading: () => const SliverFillRemaining(
+              child: Center(
                 child: CircularProgressIndicator(
-                  color: AppTheme.primaryColor,
+                  color: AppTheme.accentColor,
                   strokeWidth: 2,
                 ),
               ),
-              error: (_, _) => Center(
+            ),
+            error: (_, _) => SliverFillRemaining(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.wifi_off, size: 48, color: Colors.grey.shade300),
+                    Icon(Icons.wifi_off, size: 48, color: Colors.white.withValues(alpha: 0.1)),
+                    Icon(Icons.wifi_off, size: 48, color: theme.colorScheme.onSurface.withValues(alpha: 0.1)),
                     const SizedBox(height: 12),
                     ElevatedButton.icon(
                       onPressed: () => ref.invalidate(newsProvider),
                       icon: const Icon(Icons.refresh, size: 16),
                       label: Text(lang == 'ar' ? 'إعادة المحاولة' : 'Réessayer'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     ),
@@ -196,12 +216,13 @@ class _NewsCard extends StatelessWidget {
   final String lang;
   const _NewsCard({required this.post, required this.lang});
 
-  Color _categoryColor(String category) {
+  Color _categoryColor(String category, BuildContext context) {
+    final theme = Theme.of(context);
     switch (category) {
-      case 'PARTNERSHIP': return const Color(0xFF0369A1); // Blue for official partnerships
-      case 'ANNOUNCEMENT': return AppTheme.primaryColor;
-      case 'EVENT_REPORT': return const Color(0xFFB45309);
-      default: return Colors.grey.shade600;
+      case 'PARTNERSHIP': return theme.colorScheme.primary;
+      case 'ANNOUNCEMENT': return theme.colorScheme.secondary;
+      case 'EVENT_REPORT': return theme.colorScheme.tertiary;
+      default: return theme.colorScheme.outline;
     }
   }
 
@@ -217,16 +238,16 @@ class _NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final catColor = _categoryColor(post.category);
+    final catColor = _categoryColor(post.category, context);
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: theme.shadowColor.withValues(alpha: 0.04),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -248,9 +269,9 @@ class _NewsCard extends StatelessWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (_, _, _) => Container(
                       height: 180,
-                      color: AppTheme.primaryColor.withValues(alpha: 0.08),
-                      child: const Center(
-                        child: Icon(Icons.image_outlined, size: 48, color: AppTheme.primaryColor),
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      child: Center(
+                        child: Icon(Icons.image_outlined, size: 48, color: theme.colorScheme.primary),
                       ),
                     ),
                   ),
@@ -262,7 +283,7 @@ class _NewsCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppTheme.accentColor,
+                          color: theme.colorScheme.primary,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -319,7 +340,7 @@ class _NewsCard extends StatelessWidget {
                     const Spacer(),
                     Text(
                       '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
-                      style: theme.textTheme.labelSmall?.copyWith(color: Colors.grey.shade400),
+                      style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                     ),
                   ],
                 ),
@@ -331,7 +352,7 @@ class _NewsCard extends StatelessWidget {
                   post.getTitle(lang),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
+                    color: theme.colorScheme.onSurface,
                     height: 1.3,
                   ),
                 ),
@@ -342,7 +363,7 @@ class _NewsCard extends StatelessWidget {
                 Text(
                   post.getSummary(lang),
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.65),
+                    color: theme.colorScheme.onSurfaceVariant,
                     height: 1.5,
                   ),
                   maxLines: 3,
@@ -355,14 +376,14 @@ class _NewsCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEFF6FF),
+                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFBFDBFE)),
+                      border: Border.all(color: theme.colorScheme.primaryContainer),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.account_balance, size: 14, color: Color(0xFF0369A1)),
+                        Icon(Icons.account_balance, size: 14, color: theme.colorScheme.primary),
                         const SizedBox(width: 6),
                         Flexible(
                           child: Text(

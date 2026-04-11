@@ -23,8 +23,13 @@ import 'package:ebzim_app/screens/forgot_password_screen.dart';
 import 'package:ebzim_app/screens/otp_verification_screen.dart';
 import 'package:ebzim_app/screens/reset_password_screen.dart';
 import 'package:ebzim_app/screens/admin_dashboard_screen.dart';
+import 'package:ebzim_app/screens/admin_create_news_screen.dart';
+import 'package:ebzim_app/screens/admin_create_event_screen.dart';
 import 'package:ebzim_app/screens/news_screen.dart';
 import 'package:ebzim_app/screens/membership_discover_screen.dart';
+import 'package:ebzim_app/screens/help_support_screen.dart';
+import 'package:ebzim_app/core/services/event_service.dart';
+import 'package:ebzim_app/core/services/news_service.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/splash',
@@ -76,10 +81,6 @@ final appRouter = GoRouter(
       path: '/home',
       builder: (context, state) => const HomeScreen(),
     ),
-    GoRoute(
-      path: '/about',
-      builder: (context, state) => const AboutScreen(),
-    ),
     ShellRoute(
       builder: (context, state, child) => MainShellScreen(child: child),
       routes: [
@@ -96,6 +97,10 @@ final appRouter = GoRouter(
           builder: (context, state) => const ActivitiesScreen(),
         ),
         GoRoute(
+          path: '/about',
+          builder: (context, state) => const AboutScreen(),
+        ),
+        GoRoute(
           path: '/news',
           builder: (context, state) => const NewsScreen(),
         ),
@@ -108,6 +113,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/support',
+      builder: (context, state) => const HelpSupportScreen(),
     ),
     GoRoute(
       path: '/notifications',
@@ -139,6 +148,20 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/admin',
       builder: (context, state) => const AdminDashboardScreen(),
+    ),
+    GoRoute(
+      path: '/admin/news/create',
+      builder: (context, state) {
+        final existingPost = state.extra as NewsPost?;
+        return AdminCreateNewsScreen(existingPost: existingPost);
+      },
+    ),
+    GoRoute(
+      path: '/admin/events/create',
+      builder: (context, state) {
+        final existingEvent = state.extra as ActivityEvent?;
+        return AdminCreateEventScreen(existingEvent: existingEvent);
+      },
     ),
     GoRoute(
       path: '/language',

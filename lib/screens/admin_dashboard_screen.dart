@@ -210,7 +210,7 @@ class _EventsTab extends ConsumerWidget {
                     color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
-                onPressed: () {}, // Add event logic
+                onPressed: () => context.push('/admin/events/create'), 
                 icon: const Icon(Icons.add, size: 16),
                 label: const Text('نشاط جديد'),
                 style: ElevatedButton.styleFrom(
@@ -296,7 +296,7 @@ class _NewsTab extends ConsumerWidget {
                     color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
-                onPressed: () {}, // Add news logic
+                onPressed: () => context.push('/admin/news/create'), 
                 icon: const Icon(Icons.post_add, size: 16),
                 label: const Text('خبر جديد'),
                 style: ElevatedButton.styleFrom(
@@ -423,12 +423,12 @@ class _ErrorState extends StatelessWidget {
   }
 }
 
-class _AdminEventCard extends StatelessWidget {
+class _AdminEventCard extends ConsumerWidget {
   final ActivityEvent event;
   const _AdminEventCard({required this.event});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
@@ -454,19 +454,60 @@ class _AdminEventCard extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.edit_outlined, color: AppTheme.secondaryColor, size: 20),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.edit_outlined, color: AppTheme.secondaryColor, size: 20),
+                onPressed: () {
+                  context.push('/admin/events/create', extra: event);
+                },
+              ),
+              const SizedBox(width: 16),
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+                onPressed: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (c) => AlertDialog(
+                      title: const Text('حذف النشاط'),
+                      content: const Text('هل أنت متأكد من حذف هذا النشاط؟'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('إلغاء')),
+                        TextButton(
+                          onPressed: () => Navigator.pop(c, true),
+                          child: const Text('حذف', style: TextStyle(color: Colors.red)),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirm == true) {
+                    await ref.read(eventServiceProvider).deleteEvent(event.id);
+                    ref.invalidate(adminEventsProvider);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم حذف النشاط')));
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
-class _AdminNewsCard extends StatelessWidget {
+class _AdminNewsCard extends ConsumerWidget {
   final NewsPost post;
   const _AdminNewsCard({required this.post});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
@@ -489,7 +530,48 @@ class _AdminNewsCard extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.more_vert, color: Colors.grey, size: 20),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.edit_outlined, color: AppTheme.secondaryColor, size: 20),
+                onPressed: () {
+                  context.push('/admin/news/create', extra: post);
+                },
+              ),
+              const SizedBox(width: 16),
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+                onPressed: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (c) => AlertDialog(
+                      title: const Text('حذف الخبر'),
+                      content: const Text('هل أنت متأكد من حذف هذا الخبر؟'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('إلغاء')),
+                        TextButton(
+                          onPressed: () => Navigator.pop(c, true),
+                          child: const Text('حذف', style: TextStyle(color: Colors.red)),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirm == true) {
+                    await ref.read(newsServiceProvider).deletePost(post.id);
+                    ref.invalidate(adminNewsProvider);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم حذف الخبر')));
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );

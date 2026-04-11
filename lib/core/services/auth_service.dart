@@ -51,6 +51,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> login(String email, String password) async {
     state = AuthState(isLoading: true);
+    final baseUrl = _ref.read(apiClientProvider).dio.options.baseUrl;
+    print('[DEBUG AUTH] Attempting login...');
+    print('  URL: ${baseUrl}auth/login');
+    print('  Identity: $email');
     
     try {
       final response = await _ref.read(apiClientProvider).dio.post(
@@ -61,6 +65,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         },
       );
 
+      print('[DEBUG AUTH] Login Success! Status: ${response.statusCode}');
       final token = response.data['access_token'];
       final userData = response.data['user'];
       
@@ -70,7 +75,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
           isAuthenticated: true,
           user: UserProfile.fromJson(userData),
         );
+        print('[DEBUG AUTH] Session preserved and user profile loaded.');
       } else {
+        print('[DEBUG AUTH] Login response missing token or user data.');
         state = AuthState(error: "authErrorUnknown");
       }
     } on DioException catch (e) {
@@ -78,7 +85,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       print('  Type: ${e.type}');
       print('  Message: ${e.message}');
       print('  Status Code: ${e.response?.statusCode}');
-      print('  Data: ${e.response?.data}');
+      print('  Server Data: ${e.response?.data}');
       
       if (e.type == DioExceptionType.connectionTimeout || 
           e.type == DioExceptionType.receiveTimeout || 
@@ -90,7 +97,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = AuthState(error: "authErrorUnknown");
       }
     } catch (e) {
-      print('[DEBUG AUTH] Unknown exception in login: $e');
+      print('[DEBUG AUTH] Unexpected error during login: $e');
       state = AuthState(error: "authErrorUnknown");
     }
   }

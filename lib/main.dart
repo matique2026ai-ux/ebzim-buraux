@@ -5,6 +5,7 @@ import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/router/app_router.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
+import 'package:ebzim_app/core/providers/theme_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,14 +18,18 @@ class EbzimApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(localeProvider);
+    final themeMode = ref.watch(themeProvider);
     
-    // Select theme based on language
-    final activeTheme = AppTheme.getTheme(currentLocale);
+    // Select theme based on language and set both globally required defaults
+    final lightTheme = AppTheme.getTheme(currentLocale, ThemeMode.light);
+    final darkTheme = AppTheme.getTheme(currentLocale, ThemeMode.dark);
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'EBZIM APP',
-      theme: activeTheme,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeMode,
       locale: currentLocale,
       
       // Localization Setup

@@ -59,7 +59,7 @@ class DigitalIdCard extends StatelessWidget {
                     children: [
                       Text(
                         'EBZIM - جمعية إبزيم للثقافة والمواطنة',
-                        style: GoogleFonts.arefRuqaa(
+                        style: GoogleFonts.tajawal(
                           color: gold,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,

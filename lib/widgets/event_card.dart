@@ -85,7 +85,7 @@ class EventCard extends StatelessWidget {
                 fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF032211),
               ),
             ),
             const SizedBox(height: 8),
@@ -95,7 +95,9 @@ class EventCard extends StatelessWidget {
                 fontSize: 10,
                 letterSpacing: 1.5,
                 fontWeight: FontWeight.bold,
-                color: Colors.white.withValues(alpha: 0.5),
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.white.withValues(alpha: 0.5) 
+                    : Colors.black45,
               ),
             ),
           ],

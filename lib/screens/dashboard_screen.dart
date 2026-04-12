@@ -16,7 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 // Design tokens for the dashboard surface layer
 // ─────────────────────────────────────────────────────────────────────────────
-const _kGold = Color(0xFFC5A059);
+Color get _kGold => AppTheme.accentColor;
 
 Color _cardBg(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x0CFFFFFF) : Colors.white.withValues(alpha: 0.4);
 Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withValues(alpha: 0.05);
@@ -152,7 +152,7 @@ class DashboardScreen extends ConsumerWidget {
                   // ── EVENTS SECTION ─────────────────────────────────────
                   _EventsSection(upcomingEvents: upcomingEvents, loc: loc),
 
-                  // ── MEMBERSHIP ENTRY (secondary, bottom) ───────────────
+                  // ── MEMBERSHIP ENTRY (secondary, bottom) ────────────────────
                   if (isPublic) ...[
                     const SizedBox(height: 48),
                     Padding(
@@ -160,6 +160,13 @@ class DashboardScreen extends ConsumerWidget {
                       child: _MembershipEntryTile(loc: loc),
                     ),
                   ],
+
+                  // ── INSTITUTIONAL FEATURES SECTION ──────────────
+                  const SizedBox(height: 48),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: _InstitutionalSection(loc: loc),
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -756,6 +763,234 @@ class _MembershipEntryTile extends StatelessWidget {
         ),
       ),
     ).animate().fadeIn(delay: 500.ms);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INSTITUTIONAL SECTION — Heritage Projects + Civic Report
+// ─────────────────────────────────────────────────────────────────────────────
+class _InstitutionalSection extends StatelessWidget {
+  final AppLocalizations loc;
+  const _InstitutionalSection({required this.loc});
+
+  @override
+  Widget build(BuildContext context) {
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section header
+        Row(
+          children: [
+            Container(
+              width: 36, height: 3,
+              decoration: BoxDecoration(color: _kGold, borderRadius: BorderRadius.circular(2)),
+              margin: const EdgeInsetsDirectional.only(end: 12),
+            ),
+            Text(
+              (isAr ? 'ابزيم تعمل • مشاريع ميدانية' : 'Ebzim en action • Projets terrain').toUpperCase(),
+              style: GoogleFonts.inter(
+                color: _kGold,
+                fontSize: 10,
+                letterSpacing: 3,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ).animate().fadeIn(delay: 520.ms),
+        const SizedBox(height: 18),
+
+        // Heritage Projects Card
+        _InstitutionalCard(
+          icon: Icons.apartment_outlined,
+          iconColor: const Color(0xFFD4AF37),
+          tag: isAr ? 'شراكة • وزارة المجاهدين • اليونسكو' : 'Partenariat • Min. Moudjahidines • UNESCO',
+          title: isAr ? 'مشاريع الذاكرة والتراث' : 'Projets Mémoriels et Patrimoniaux',
+          subtitle: isAr
+              ? 'ترميم الثكنة العسكرية • شراكة المتحف الوطني • شبكة اليونسكو'
+              : 'Restauration caserne militaire • Partenariat Musée National • Réseau UNESCO',
+          buttonLabel: isAr ? 'استعراض المشاريع' : 'Voir les projets',
+          buttonIcon: Icons.arrow_outward_rounded,
+          isDark: isDark,
+          delay: 550,
+          onTap: () => context.push('/heritage'),
+        ),
+        const SizedBox(height: 14),
+
+        // Digital Library Card
+        _InstitutionalCard(
+          icon: Icons.auto_stories_outlined,
+          iconColor: const Color(0xFF8B5CF6),
+          tag: isAr ? 'معرفة • أرشيف • بحوث' : 'Savoir • Archives • Recherche',
+          title: isAr ? 'المكتبة الرقمية' : 'Bibliothèque Numérique',
+          subtitle: isAr
+              ? 'أرشيف الثكنة، بحوث علم الآثار، تقارير المواطنة...'
+              : 'Archives Caserne, recherche archéologique, rapports citoyenneté...',
+          buttonLabel: isAr ? 'تصفح المكتبة' : 'Explorer la bibliothèque',
+          buttonIcon: Icons.library_books_outlined,
+          isDark: isDark,
+          delay: 600,
+          onTap: () => context.push('/library'),
+        ),
+        const SizedBox(height: 14),
+
+        // Contributions Card
+        _InstitutionalCard(
+          icon: Icons.volunteer_activism_outlined,
+          iconColor: const Color(0xFFE11D48),
+          tag: isAr ? 'دعم • اشتراك • مساهمة' : 'Soutien • Adhésion • Appui',
+          title: isAr ? 'المساهمات والاشتراكات' : 'Contributions & Adhésions',
+          subtitle: isAr
+              ? 'تجديد العضوية السنوية، دعم مشاريع الترميم...'
+              : 'Renouvellement annuel, soutien aux projets de restauration...',
+          buttonLabel: isAr ? 'المساهمة الآن' : 'Contribuer maintenant',
+          buttonIcon: Icons.favorite_border_rounded,
+          isDark: isDark,
+          delay: 650,
+          onTap: () => context.push('/contributions'),
+        ),
+        const SizedBox(height: 14),
+
+        // Civic Report Card
+        _InstitutionalCard(
+          icon: Icons.shield_outlined,
+          iconColor: const Color(0xFF22C55E),
+          tag: isAr ? 'مجتمع مدني • إبلاغ مدني' : 'Société civile • Signalement civique',
+          title: isAr ? 'بلّغ عن انتهاك' : 'Signaler une violation',
+          subtitle: isAr
+              ? 'تراث عمراني، سرقة أثرية، تشويه الفضاء العام…'
+              : 'Patrimoine urbain, vol archéologique, dégradation de l\'espace public…',
+          buttonLabel: isAr ? 'إرسال بلاغ' : 'Envoyer un signalement',
+          buttonIcon: Icons.send_rounded,
+          isDark: isDark,
+          delay: 640,
+          onTap: () => context.push('/report'),
+        ),
+      ],
+    );
+  }
+}
+
+class _InstitutionalCard extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String tag;
+  final String title;
+  final String subtitle;
+  final String buttonLabel;
+  final IconData buttonIcon;
+  final bool isDark;
+  final int delay;
+  final VoidCallback onTap;
+
+  const _InstitutionalCard({
+    required this.icon,
+    required this.iconColor,
+    required this.tag,
+    required this.title,
+    required this.subtitle,
+    required this.buttonLabel,
+    required this.buttonIcon,
+    required this.isDark,
+    required this.delay,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        splashColor: iconColor.withValues(alpha: 0.06),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: _cardBgStrong(context),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isDark ? iconColor.withValues(alpha: 0.15) : iconColor.withValues(alpha: 0.2),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.12),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: isDark ? 0.1 : 0.08),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Icon(icon, color: iconColor, size: 26),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tag,
+                      style: GoogleFonts.inter(
+                        color: iconColor.withValues(alpha: 0.8),
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      title,
+                      style: GoogleFonts.tajawal(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: _textPrimary(context),
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.cairo(
+                        fontSize: 11,
+                        color: _textMuted(context),
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          buttonLabel,
+                          style: GoogleFonts.cairo(
+                            color: iconColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(buttonIcon, color: iconColor, size: 14),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).animate().fadeIn(delay: Duration(milliseconds: delay)).slideY(begin: 0.05);
   }
 }
 

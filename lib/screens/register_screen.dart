@@ -128,12 +128,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       Text(
                         loc.regTitle, // "إنشاء حساب جديد"
                         textAlign: TextAlign.center,
-                        style: theme.textTheme.displayLarge?.copyWith(
+                        style: theme.textTheme.headlineMedium?.copyWith(
                           fontSize: 32,
-                          height: 1.1,
                           color: theme.colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
-                          fontFamily: isRtl ? 'Aref Ruqaa' : null,
                         ),
                       ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
                       const SizedBox(height: 12),
@@ -290,8 +288,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     child: ElevatedButton(
                                       onPressed: authState.isLoading ? null : _submit,
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFFF0E0C8), // Accent Gold
-                                        foregroundColor: AppTheme.primaryColor,
+                                        backgroundColor: AppTheme.accentColor, // Premium Unified Gold
+                                        foregroundColor: Colors.white,
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                       ),
@@ -299,7 +297,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                         ? const SizedBox(
                                             height: 24, 
                                             width: 24, 
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primaryColor)
+                                            child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white)
                                           )
                                         : Text(
                                             loc.regAction.toUpperCase(),

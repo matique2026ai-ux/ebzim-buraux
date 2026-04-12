@@ -4,10 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 
-// Design tokens
-const _kNavBg = Color(0xFF020F08);         // Midnight Green / Deepest dark
+import 'package:ebzim_app/core/theme/app_theme.dart';
+
+// Design tokens — inherited from global theme
+Color get _kNavBg => AppTheme.backgroundDark;
 const _kNavBorder = Color(0x1AFFFFFF);     // 10% white top border
-const _kActiveColor = Color(0xFFC5A059);   // Heritage Gold
+Color get _kActiveColor => AppTheme.accentColor;   // Muted Gold from theme
 const _kInactiveColor = Color(0x80FFFFFF); // 50% white
 
 class MainShellScreen extends StatelessWidget {
@@ -90,7 +92,7 @@ class _NavBar extends StatelessWidget {
     
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF010C06) : Colors.white.withValues(alpha: 0.85),
+        color: isDark ? AppTheme.backgroundDark.withValues(alpha: 0.97) : Colors.white.withValues(alpha: 0.85),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.08),

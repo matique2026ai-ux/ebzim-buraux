@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ReportDocument } from './schemas/report.schema';
 import { ReportWorkflowUtil } from './utils/report-workflow.util';
 import { buildOffsetPagination, formatOffsetPaginatedResponse } from '../../common/utils/pagination.util';
@@ -11,11 +11,19 @@ export class ReportsService {
   constructor(@InjectModel('Report') private reportModel: Model<ReportDocument>) {}
 
   async createReport(dto: any, reporterId: string | null) {
+    const reportData = { ...dto };
+    
+    // Auto-generate title if missing
+    if (!reportData.title) {
+      const categoryLabel = reportData.incidentCategory?.toLowerCase().replace('_', ' ') || 'incident';
+      reportData.title = `${categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1)} Report`;
+    }
+
     return this.reportModel.create({
-      ...dto,
+      ...reportData,
       reporterId,
       status: 'SUBMITTED',
-      timeline: [{ actorId: reporterId, action: 'SUBMITTED', timestamp: new Date() }],
+      timeline: [{ actorId: reporterId ? new Types.ObjectId(reporterId) : null, action: 'SUBMITTED', timestamp: new Date() }],
     });
   }
 

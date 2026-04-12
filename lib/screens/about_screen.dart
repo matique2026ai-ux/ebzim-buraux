@@ -1,24 +1,30 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
-import 'package:ebzim_app/core/theme/app_theme.dart';
-import 'package:ebzim_app/core/widgets/ebzim_background.dart';
-import 'package:ebzim_app/core/common_widgets/glass_card.dart';
-import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ebzim_app/core/theme/app_theme.dart';
+import 'package:ebzim_app/core/services/statute_service.dart';
+import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 
-Color _textPr(BuildContext c) => Theme.of(c).brightness == Brightness.dark ? Colors.white : const Color(0xFF0A2B1D); // Deep Emerald
-Color _textSec(BuildContext c) => Theme.of(c).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.7) : const Color(0xFF1C4D35).withValues(alpha: 0.8);
-Color _textHighlight(BuildContext c) => Theme.of(c).brightness == Brightness.dark ? Colors.white : const Color(0xFF8B2F2F); // Brick Red Highlight
+// ─────────────────────────────────────────────────────────────────────────────
+// About Screen — Ebzim pour la Culture et la Citoyenneté
+// Members from statute (Art. 14 — Bureau Exécutif, ratified 14/12/2024)
+// ─────────────────────────────────────────────────────────────────────────────
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AboutScreen extends ConsumerWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loc = AppLocalizations.of(context)!;
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final isFr = Localizations.localeOf(context).languageCode == 'fr';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+    final boardNames = ref.watch(statuteServiceProvider).getExecutiveBoardNames();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -26,243 +32,501 @@ class AboutScreen extends ConsumerWidget {
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            const EbzimSliverAppBar(),
-            // ── HERO SECTION ─────────────────────────────────────────────────
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 160, 24, 40),
-                child: Column(
-                  children: [
-                    const Icon(Icons.account_balance, color: AppTheme.accentColor, size: 48)
-                        .animate().fadeIn().scale(delay: 200.ms),
-                    const SizedBox(height: 24),
-                    Text(
-                      loc.aboutHeroTitle,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.tajawal(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: _textPr(context),
-                        height: 1.2,
+
+            // ── Transparent AppBar with back navigation ────────────────────
+            SliverAppBar(
+              pinned: true,
+              floating: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              expandedHeight: 0,
+              leading: Padding(
+                padding: const EdgeInsets.all(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.black.withValues(alpha: 0.35) : Colors.white.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                       ),
-                    ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2),
-                    const SizedBox(height: 16),
-                    Text(
-                      loc.aboutHeroSubtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: _textSec(context),
-                        fontSize: 16,
-                        height: 1.5,
+                      child: IconButton(
+                        icon: Icon(
+                          isAr ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_rounded,
+                          color: AppTheme.accentColor,
+                          size: 18,
+                        ),
+                        onPressed: () => context.pop(),
                       ),
-                    ).animate().fadeIn(delay: 600.ms),
-                  ],
+                    ),
+                  ),
                 ),
+              ),
+              flexibleSpace: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                  child: Container(color: Colors.transparent),
+                ),
+              ),
+              iconTheme: IconThemeData(color: AppTheme.accentColor),
+            ),
+
+            // ── HERO — Photo + Cinematic Overlay ──────────────────────────
+            SliverToBoxAdapter(
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: size.height * 0.52,
+                    width: double.infinity,
+                    child: Image.asset(
+                      'assets/images/about_hero.png',
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        color: AppTheme.backgroundDark,
+                        child: const Icon(Icons.account_balance, size: 80, color: AppTheme.accentColor),
+                      ),
+                    ),
+                  ),
+                  // Multi-layer gradient for cinematic look
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: const [0.0, 0.35, 0.75, 1.0],
+                          colors: [
+                            Colors.black.withValues(alpha: 0.3),
+                            Colors.transparent,
+                            AppTheme.backgroundDark.withValues(alpha: 0.7),
+                            isDark ? AppTheme.backgroundDark : const Color(0xFFF3EFE6),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // UNESCO Badge top-right
+                  Positioned(
+                    top: 70,
+                    right: 20,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.55),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFF009FDA).withValues(alpha: 0.5), width: 1.5),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.public_rounded, color: Color(0xFF009FDA), size: 16),
+                              const SizedBox(width: 6),
+                              Text(
+                                'UNESCO',
+                                style: GoogleFonts.inter(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.1),
+                  ),
+                  // Hero text overlay
+                  Positioned(
+                    bottom: 32,
+                    left: 24,
+                    right: 24,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _GoldPill(
+                          label: isAr
+                              ? 'جمعية ولائية • سطيف'
+                              : isFr
+                                  ? 'Association Wilayale • Sétif'
+                                  : 'Wilaya Association • Sétif',
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          isAr
+                              ? 'جمعية إبزيم\nللثقافة والمواطنة'
+                              : isFr
+                                  ? 'Association Ebzim\npour la Culture et la Citoyenneté'
+                                  : 'Ebzim Association\nfor Culture & Citizenship',
+                          style: GoogleFonts.tajawal(
+                            fontSize: 34,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            height: 1.15,
+                            shadows: [
+                              Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 20),
+                            ],
+                          ),
+                        ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.15),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
 
-            // ── OUR STORY ────────────────────────────────────────────────────
+            const SliverToBoxAdapter(child: SizedBox(height: 32)),
+
+            // ── OUR STORY ──────────────────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: GlassCard(
-                  padding: const EdgeInsets.all(24),
+                child: _GlassSection(
+                  isDark: isDark,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _Badge(label: loc.aboutStoryBadge),
-                      const SizedBox(height: 16),
-                      Text(
-                        loc.aboutStoryTitle,
-                        style: GoogleFonts.tajawal(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: _textPr(context),
-                        ),
+                      _SectionHeader(
+                        icon: Icons.auto_stories_outlined,
+                        label: isAr ? 'قصتنا' : isFr ? 'Notre Histoire' : 'Our Story',
+                        isDark: isDark,
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        loc.aboutStoryText1,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: _textSec(context),
-                          height: 1.6,
-                        ),
+                        isAr
+                            ? 'تأسست جمعية إبزيم للثقافة والمواطنة في ولاية سطيف، لتُشكّل فضاءً مدنياً راقياً يجمع بين الفعل الثقافي والمواطنة الفاعلة. نشأت من رحم التزام عميق بصون الذاكرة الجزائرية وتعزيز الهوية الحضارية لمنطقة سطيف ذات الإرث الحضاري العريق.'
+                            : isFr
+                                ? 'Fondée à Sétif, l\'association Ebzim pour la Culture et la Citoyenneté incarne un espace civique d\'excellence, alliant l\'action culturelle à une citoyenneté active. Elle est née d\'un engagement profond pour la sauvegarde de la mémoire algérienne et la valorisation de l\'identité civilisationnelle de la région de Sétif.'
+                                : 'Founded in Sétif, the Ebzim Association for Culture and Citizenship embodies a civic space of excellence, combining cultural action with active citizenship. Born from a deep commitment to safeguarding Algerian memory and enhancing the civilizational identity of the Sétif region.',
+                        style: theme.textTheme.bodyMedium?.copyWith(height: 1.75),
                       ),
                       const SizedBox(height: 24),
+                      // Quote
                       Container(
-                        padding: const EdgeInsetsDirectional.only(start: 16),
-                        decoration: const BoxDecoration(
+                        padding: const EdgeInsetsDirectional.only(start: 18, top: 12, bottom: 12),
+                        decoration: BoxDecoration(
                           border: BorderDirectional(
                             start: BorderSide(color: AppTheme.accentColor, width: 3),
                           ),
                         ),
-                        child: Text(
-                          loc.aboutStoryQuote,
-                          style: GoogleFonts.cairo(
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic,
-                            color: AppTheme.accentColor.withValues(alpha: 0.9),
-                            fontWeight: FontWeight.w600,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isAr
+                                  ? '"الثقافة ليست ترفاً، بل هي السلاح الأبقى لصون الهوية وبناء المواطن."'
+                                  : isFr
+                                      ? '"La culture n\'est pas un luxe, c\'est l\'arme la plus durable pour préserver l\'identité et former le citoyen."'
+                                      : '"Culture is not a luxury — it is the most enduring weapon for preserving identity and building the citizen."',
+                              style: GoogleFonts.cairo(
+                                fontSize: 13,
+                                fontStyle: FontStyle.italic,
+                                color: AppTheme.accentColor,
+                                height: 1.6,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextButton.icon(
+                              onPressed: () => context.push('/statute'),
+                              icon: const Icon(Icons.gavel_rounded, size: 14),
+                              label: Text(
+                                isAr ? 'اقرأ القانون الأساسي' : isFr ? 'Lire les statuts' : 'Read Founding Charter',
+                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                              ),
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppTheme.accentColor,
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ).animate().fadeIn(delay: 800.ms).slideY(begin: 0.05),
+              ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.06),
             ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-            // ── MISSION & VISION ─────────────────────────────────────────────
+            // ── MISSION & VISION ───────────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Row(
                   children: [
                     Expanded(
-                      child: _SmallInfoCard(
-                        icon: Icons.track_changes,
-                        title: loc.aboutMission,
-                        desc: loc.aboutMissionText,
+                      child: _MiniCard(
+                        icon: Icons.track_changes_rounded,
+                        title: isAr ? 'الرسالة' : isFr ? 'Mission' : 'Mission',
+                        body: isAr
+                            ? 'نشر الثقافة وتعزيز المواطنة وصون تراث ولاية سطيف الحضاري.'
+                            : isFr
+                                ? 'Diffuser la culture, renforcer la citoyenneté et préserver le patrimoine de Sétif.'
+                                : 'Spread culture, strengthen citizenship, and preserve the heritage of Sétif.',
+                        isDark: isDark,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 14),
                     Expanded(
-                      child: _SmallInfoCard(
-                        icon: Icons.auto_graph,
-                        title: loc.aboutVision,
-                        desc: loc.aboutVisionText,
+                      child: _MiniCard(
+                        icon: Icons.visibility_outlined,
+                        title: isAr ? 'الرؤية' : isFr ? 'Vision' : 'Vision',
+                        body: isAr
+                            ? 'جمعية رائدة تُجسّد نموذج المجتمع المدني الجزائري الفاعل وطنياً ودولياً.'
+                            : isFr
+                                ? 'Une association pionnière incarnant le modèle de la société civile algérienne active.'
+                                : 'A pioneering association embodying the model of active Algerian civil society nationally and internationally.',
+                        isDark: isDark,
                       ),
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 1000.ms).slideY(begin: 0.05),
+              ).animate().fadeIn(delay: 350.ms).slideY(begin: 0.06),
             ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-            // ── VALUES ───────────────────────────────────────────────────────
+            // ── STRATEGIC PARTNERSHIPS ─────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: GlassCard(
-                  padding: const EdgeInsets.all(24),
+                child: _GlassSection(
+                  isDark: isDark,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _Badge(label: loc.aboutValues),
+                      _SectionHeader(
+                        icon: Icons.handshake_outlined,
+                        label: isAr ? 'شراكاتنا الاستراتيجية' : isFr ? 'Partenariats Stratégiques' : 'Strategic Partnerships',
+                        isDark: isDark,
+                      ),
                       const SizedBox(height: 20),
-                      Wrap(
-                        spacing: 12,
-                        runSpacing: 12,
-                        children: [
-                          _ValueTag(label: loc.aboutValue1),
-                          _ValueTag(label: loc.aboutValue2),
-                          _ValueTag(label: loc.aboutValue3),
-                          _ValueTag(label: loc.aboutValue4),
-                        ],
+                      _PartnerRow(
+                        color: const Color(0xFF009FDA),
+                        icon: Icons.public_rounded,
+                        title: 'UNESCO Algeria Network',
+                        subtitle: isAr ? 'عضوية فاعلة في شبكة اليونسكو بالجزائر' : isFr ? 'Membre actif du réseau UNESCO en Algérie' : 'Active member of UNESCO network in Algeria',
+                        isDark: isDark,
+                      ),
+                      const Divider(height: 24),
+                      _PartnerRow(
+                        color: AppTheme.accentColor,
+                        icon: Icons.account_balance_rounded,
+                        title: isAr ? 'المتحف الوطني للآثار' : isFr ? 'Musée National des Antiquités' : 'National Museum of Antiquities',
+                        subtitle: isAr ? 'اتفاقية شراكة — سطيف' : isFr ? 'Convention de partenariat — Sétif' : 'Partnership agreement — Sétif',
+                        isDark: isDark,
+                      ),
+                      const Divider(height: 24),
+                      _PartnerRow(
+                        color: const Color(0xFF22C55E),
+                        icon: Icons.military_tech_rounded,
+                        title: isAr ? 'وزارة المجاهدين وذوي الحقوق' : isFr ? 'Ministère des Moudjahidines' : 'Ministry of Mujahideen & Rights Holders',
+                        subtitle: isAr ? 'عقد ترميم الثكنة العسكرية — الحامة' : isFr ? 'Contrat de restauration — Caserne El Hamman' : 'Restoration contract — El Hamman Military Barracks',
+                        isDark: isDark,
                       ),
                     ],
                   ),
                 ),
-              ).animate().fadeIn(delay: 1200.ms).slideY(begin: 0.05),
+              ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.06),
             ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-            // ── HEADQUARTERS ─────────────────────────────────────────────────
+            // ── RESTORATION PROJECT SHOWCASE ───────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: GlassCard(
-                  padding: EdgeInsets.zero,
+                child: _ProjectShowcaseCard(isDark: isDark, isAr: isAr, isFr: isFr),
+              ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.06),
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
+            // ── EXECUTIVE BOARD ────────────────────────────────────────────
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: _GlassSection(
+                  isDark: isDark,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _Badge(label: loc.aboutHqBadge),
-                            const SizedBox(height: 16),
-                            Text(
-                              loc.aboutHqTitle,
-                              style: GoogleFonts.tajawal(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: _textPr(context),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              loc.aboutHqText,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: _textSec(context),
-                                height: 1.5,
-                              ),
-                            ),
-                          ],
+                      _SectionHeader(
+                        icon: Icons.people_alt_outlined,
+                        label: isAr ? 'المكتب التنفيذي' : isFr ? 'Bureau Exécutif' : 'Executive Board',
+                        isDark: isDark,
+                      ),
+                      Text(
+                        isAr
+                            ? 'المُصادق عليه في 14 ديسمبر 2024'
+                            : isFr
+                                ? 'Ratifié le 14 décembre 2024'
+                                : 'Ratified December 14, 2024',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: AppTheme.accentColor,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Container(
-                        height: 200,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: const NetworkImage(
-                              'https://placehold.co/600x400/020f08/c5a059?text=Setif+Algeria+HQ',
-                            ),
-                            fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(
-                              Colors.black.withValues(alpha: 0.2),
-                              BlendMode.multiply,
-                            ),
+                      const SizedBox(height: 20),
+                      ...boardNames.take(5).map((member) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _BoardMemberCard(
+                          name: isAr ? (member['nameAr'] ?? '') : (member['nameEn'] ?? ''),
+                          role: isAr ? (member['roleAr'] ?? '') : isFr ? (member['roleFr'] ?? '') : (member['roleEn'] ?? ''),
+                          isDark: isDark,
+                        ),
+                      )),
+                      const SizedBox(height: 12),
+                      Center(
+                        child: TextButton(
+                          onPressed: () => context.push('/leadership'),
+                          child: Text(
+                            isAr ? 'عرض المكتب الكامل' : isFr ? 'Voir tout le bureau' : 'View Full Board',
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ).animate().fadeIn(delay: 1400.ms).slideY(begin: 0.05),
+              ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.06),
             ),
 
-            // ── QUOTE ────────────────────────────────────────────────────────
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
+            // ── VALUES ─────────────────────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
-                child: Column(
-                  children: [
-                    const Icon(Icons.format_quote, color: AppTheme.accentColor, size: 40),
-                    const SizedBox(height: 16),
-                    Text(
-                      loc.aboutQuote,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.tajawal(
-                        fontSize: 22,
-                        color: _textHighlight(context),
-                        fontStyle: FontStyle.italic,
-                        height: 1.4,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: _GlassSection(
+                  isDark: isDark,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _SectionHeader(
+                        icon: Icons.diamond_outlined,
+                        label: isAr ? 'قيمنا' : isFr ? 'Nos Valeurs' : 'Our Values',
+                        isDark: isDark,
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    Container(width: 40, height: 1, color: AppTheme.accentColor.withValues(alpha: 0.4)),
-                    const SizedBox(height: 16),
-                    Text(
-                      loc.aboutQuoteAuthor.toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: AppTheme.accentColor,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
+                      const SizedBox(height: 16),
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: _values(isAr, isFr).map((v) => _ValueChip(label: v, isDark: isDark)).toList(),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ).animate().fadeIn(delay: 1600.ms),
+              ).animate().fadeIn(delay: 800.ms).slideY(begin: 0.06),
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
+            // ── INSTITUTIONAL RESOURCES ────────────────────────────────────
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: _GlassSection(
+                  isDark: isDark,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _SectionHeader(
+                        icon: Icons.auto_stories_outlined,
+                        label: isAr ? 'الموارد المؤسساتية' : isFr ? 'Ressources Institutionnelles' : 'Institutional Resources',
+                        isDark: isDark,
+                      ),
+                      const SizedBox(height: 16),
+                      _ResourceButton(
+                        label: isAr ? 'المكتبة الرقمية والبحوث' : isFr ? 'Bibliothèque et Recherches' : 'Library & Research',
+                        icon: Icons.library_books_outlined,
+                        onTap: () => context.push('/library'),
+                        isDark: isDark,
+                      ),
+                      const SizedBox(height: 12),
+                      _ResourceButton(
+                        label: isAr ? 'القانون الأساسي للجمعية' : isFr ? 'Statut de l\'Association' : 'Association Statute',
+                        icon: Icons.gavel_outlined,
+                        onTap: () => context.push('/statute'),
+                        isDark: isDark,
+                      ),
+                    ],
+                  ),
+                ),
+              ).animate().fadeIn(delay: 850.ms).slideY(begin: 0.06),
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
+            // ── CTA — JOIN US ──────────────────────────────────────────────
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  padding: const EdgeInsets.all(28),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    gradient: LinearGradient(
+                      colors: [
+                        AppTheme.accentColor.withValues(alpha: 0.15),
+                        AppTheme.accentColor.withValues(alpha: 0.05),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1.5),
+                  ),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.workspace_premium_rounded, color: AppTheme.accentColor, size: 42),
+                      const SizedBox(height: 14),
+                      Text(
+                        isAr
+                            ? 'انضم إلى إبزيم'
+                            : isFr
+                                ? 'Rejoignez Ebzim'
+                                : 'Join Ebzim',
+                        style: theme.textTheme.headlineMedium?.copyWith(fontSize: 24),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        isAr
+                            ? 'كن جزءاً من مجتمع يصنع الفارق في الحفاظ على الهوية الجزائرية'
+                            : isFr
+                                ? 'Faites partie d\'une communauté qui fait la différence dans la préservation de l\'identité algérienne'
+                                : 'Be part of a community making a difference in preserving Algerian identity',
+                        style: theme.textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () => context.push('/membership/discover'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.accentColor,
+                          foregroundColor: AppTheme.backgroundDark,
+                          minimumSize: const Size(double.infinity, 52),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        ),
+                        child: Text(
+                          isAr ? 'قدّم طلب الانخراط' : isFr ? 'Déposer une adhésion' : 'Apply for Membership',
+                          style: GoogleFonts.tajawal(fontWeight: FontWeight.w800, fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ).animate().fadeIn(delay: 900.ms).scale(begin: const Offset(0.97, 0.97)),
             ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 120)),
@@ -273,64 +537,84 @@ class AboutScreen extends ConsumerWidget {
   }
 }
 
-class _Badge extends StatelessWidget {
-  final String label;
-  const _Badge({required this.label});
+// ─────────────────────────────────────────────────────────────────────────────
+// Data
+// ─────────────────────────────────────────────────────────────────────────────
+
+// (Mock classes removed)
+
+// (Board data moved to StatuteService)
+
+List<String> _values(bool isAr, bool isFr) => isAr
+    ? ['النزاهة', 'المواطنة الفاعلة', 'صون التراث', 'الإبداع', 'التطوع', 'الشفافية', 'الانفتاح']
+    : isFr
+        ? ['Intégrité', 'Citoyenneté Active', 'Patrimoine', 'Créativité', 'Bénévolat', 'Transparence', 'Ouverture']
+        : ['Integrity', 'Active Citizenship', 'Heritage', 'Creativity', 'Volunteerism', 'Transparency', 'Openness'];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Reusable Widgets
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _GlassSection extends StatelessWidget {
+  final Widget child;
+  final bool isDark;
+  const _GlassSection({required this.child, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: AppTheme.accentColor.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1),
-      ),
-      child: Text(
-        label.toUpperCase(),
-        style: const TextStyle(
-          color: AppTheme.accentColor,
-          fontSize: 9,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.5,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.04)
+                : Colors.white.withValues(alpha: 0.72),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : AppTheme.accentColor.withValues(alpha: 0.12),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: child,
         ),
       ),
     );
   }
 }
 
-class _SmallInfoCard extends StatelessWidget {
+class _SectionHeader extends StatelessWidget {
   final IconData icon;
-  final String title;
-  final String desc;
-  const _SmallInfoCard({required this.icon, required this.title, required this.desc});
+  final String label;
+  final bool isDark;
+  const _SectionHeader({required this.icon, required this.label, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
         children: [
-          Icon(icon, color: AppTheme.accentColor, size: 28),
-          const SizedBox(height: 16),
+          Icon(icon, color: AppTheme.accentColor, size: 20),
+          const SizedBox(width: 10),
           Text(
-            title,
-            style: TextStyle(
-              color: _textPr(context),
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            desc,
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: _textSec(context),
-              fontSize: 12,
-              height: 1.4,
+            label.toUpperCase(),
+            style: GoogleFonts.inter(
+              color: AppTheme.accentColor,
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 2,
             ),
           ),
         ],
@@ -339,30 +623,199 @@ class _SmallInfoCard extends StatelessWidget {
   }
 }
 
-class _ValueTag extends StatelessWidget {
+class _GoldPill extends StatelessWidget {
   final String label;
-  const _ValueTag({required this.label});
+  const _GoldPill({required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFF8B2F2F).withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : const Color(0xFF8B2F2F).withValues(alpha: 0.2)),
+        color: AppTheme.accentColor.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5)),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Text(
+        label,
+        style: GoogleFonts.cairo(
+          color: AppTheme.accentColor,
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+}
+
+class _MiniCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String body;
+  final bool isDark;
+  const _MiniCard({required this.icon, required this.title, required this.body, required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.7),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppTheme.accentColor.withValues(alpha: isDark ? 0.1 : 0.15)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: AppTheme.accentColor, size: 26),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 15, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                body,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.5),
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PartnerRow extends StatelessWidget {
+  final Color color;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool isDark;
+  const _PartnerRow({required this.color, required this.icon, required this.title, required this.subtitle, required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color.withValues(alpha: 0.12),
+            border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
+              const SizedBox(height: 2),
+              Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(Icons.verified_rounded, color: color, size: 14),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProjectShowcaseCard extends StatelessWidget {
+  final bool isDark;
+  final bool isAr;
+  final bool isFr;
+  const _ProjectShowcaseCard({required this.isDark, required this.isAr, required this.isFr});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: Stack(
         children: [
-          const Icon(Icons.check_circle_outline, color: AppTheme.accentColor, size: 14),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(
-              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF8B2F2F), 
-              fontSize: 13, 
-              fontWeight: FontWeight.w500
+          Image.asset(
+            'assets/images/caserne_restoration.png',
+            height: 220,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              height: 220,
+              color: AppTheme.primaryColor,
+              child: const Icon(Icons.apartment_outlined, size: 60, color: AppTheme.accentColor),
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [Colors.transparent, Colors.black.withValues(alpha: 0.75)],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF22C55E).withValues(alpha: 0.9),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    isAr ? 'جارٍ التنفيذ' : isFr ? 'En cours' : 'In Progress',
+                    style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w800, letterSpacing: 1),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  isAr
+                      ? 'ترميم الثكنة العسكرية — الحامة، سطيف'
+                      : isFr
+                          ? 'Restauration de la Caserne — El Hamman, Sétif'
+                          : 'Military Barracks Restoration — El Hamman, Sétif',
+                  style: GoogleFonts.tajawal(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    shadows: [Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 10)],
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    const Icon(Icons.military_tech_outlined, color: Colors.white60, size: 14),
+                    const SizedBox(width: 4),
+                    Text(
+                      isAr ? 'وزارة المجاهدين وذوي الحقوق' : isFr ? 'Min. des Moudjahidines' : 'Ministry of Mujahideen',
+                      style: const TextStyle(color: Colors.white60, fontSize: 11),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],
@@ -370,3 +823,141 @@ class _ValueTag extends StatelessWidget {
     );
   }
 }
+
+class _BoardMemberTile extends StatelessWidget {
+  final _BoardMember member;
+  final bool isDark;
+  const _BoardMemberTile({required this.member, required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final isFr = Localizations.localeOf(context).languageCode == 'fr';
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppTheme.accentColor.withValues(alpha: isDark ? 0.1 : 0.08),
+              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.25), width: 1.5),
+            ),
+            child: Icon(member.icon, color: AppTheme.accentColor, size: 18),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isAr ? member.roleAr : isFr ? member.roleFr : member.role,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 13),
+                ),
+                Text(
+                  isAr ? 'المكتب التنفيذي — سطيف' : isFr ? 'Bureau Exécutif — Sétif' : 'Executive Board — Sétif',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ValueChip extends StatelessWidget {
+  final String label;
+  final bool isDark;
+  const _ValueChip({required this.label, required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppTheme.accentColor.withValues(alpha: isDark ? 0.07 : 0.06),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: AppTheme.accentColor.withValues(alpha: isDark ? 0.2 : 0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.check_circle_outline_rounded, color: AppTheme.accentColor, size: 13),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: GoogleFonts.cairo(
+              color: isDark ? Colors.white70 : AppTheme.primaryColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ResourceButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+  final bool isDark;
+
+  const _ResourceButton({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppTheme.accentColor.withValues(alpha: isDark ? 0.2 : 0.1),
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppTheme.accentColor.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: AppTheme.accentColor, size: 18),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  label,
+                  style: GoogleFonts.tajawal(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios_rounded, color: AppTheme.accentColor, size: 14),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

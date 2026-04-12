@@ -1,10 +1,10 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ReportDocument } from './schemas/report.schema';
 export declare class ReportsService {
     private reportModel;
     constructor(reportModel: Model<ReportDocument>);
-    createReport(dto: any, reporterId: string | null): Promise<import("mongoose").Document<unknown, {}, ReportDocument, {}, import("mongoose").DefaultSchemaOptions> & import("./schemas/report.schema").Report & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
-        _id: import("mongoose").Types.ObjectId;
+    createReport(dto: any, reporterId: string | null): Promise<import("mongoose").Document<unknown, {}, ReportDocument, {}, import("mongoose").DefaultSchemaOptions> & import("./schemas/report.schema").Report & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: Types.ObjectId;
     }> & {
         __v: number;
     } & {
@@ -20,8 +20,8 @@ export declare class ReportsService {
             hasNextPage: boolean;
         };
     }>;
-    updateStatus(id: string, newStatus: string, user: any): Promise<import("mongoose").Document<unknown, {}, ReportDocument, {}, import("mongoose").DefaultSchemaOptions> & import("./schemas/report.schema").Report & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
-        _id: import("mongoose").Types.ObjectId;
+    updateStatus(id: string, newStatus: string, user: any): Promise<import("mongoose").Document<unknown, {}, ReportDocument, {}, import("mongoose").DefaultSchemaOptions> & import("./schemas/report.schema").Report & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: Types.ObjectId;
     }> & {
         __v: number;
     } & {

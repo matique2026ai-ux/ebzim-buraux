@@ -41,7 +41,7 @@ export class Report {
 
   @Prop({ 
     type: String, 
-    enum: ['VANDALISM', 'DEGRADATION', 'ILLEGAL_INTERVENTION', 'URGENT_OBSERVATION', 'OTHER'],
+    enum: ['VANDALISM', 'THEFT', 'ILLEGAL_CONSTRUCTION', 'NEGLECT', 'PUBLIC_SPACE', 'OTHER'],
     required: true 
   })
   incidentCategory: string;

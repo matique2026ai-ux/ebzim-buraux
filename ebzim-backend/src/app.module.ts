@@ -12,6 +12,8 @@ import { EventsModule } from './modules/events/events.module';
 import { MembershipsModule } from './modules/memberships/memberships.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { MediaModule } from './modules/media/media.module';
+import { SettingsModule } from './modules/settings/settings.module';
+import { ContributionsModule } from './modules/contributions/contributions.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { MediaModule } from './modules/media/media.module';
     MembershipsModule,
     ReportsModule,
     MediaModule,
+    SettingsModule,
+    ContributionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

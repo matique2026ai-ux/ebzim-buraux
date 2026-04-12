@@ -4,23 +4,23 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   
   // ── Brand Colors ─────────────────────────────────────────────────────────
-  static const Color primaryColor   = Color(0xFF004900);     // Heritage Emerald
-  static const Color accentColor    = Color(0xFFC5A059);     // Restrained Gold
+  static const Color primaryColor   = Color(0xFF052011);     // Deep Emerald / Midnight
+  static const Color accentColor    = Color(0xFFD4AF37);     // Muted Gold
   static const Color heritageRed    = Color(0xFF9E1F1F);     // Heritage Crimson
   static const Color secondaryColor = Color(0xFF685D4A);     // Earthy Bronze
 
   // ── Dark mode surfaces ────────────────────────────────────────────────────
-  static const Color backgroundDark = Color(0xFF020F08);     // Midnight Green
+  static const Color backgroundDark = Color(0xFF020704);     // Midnight
   static const Color borderGlass    = Color(0x1AFFFFFF);     // Muted white border
 
-  // ── Light mode tokens ─────────────────────────────────────────────────────
-  // NOT plain white. Warm parchment / aged ivory system.
-  static const Color _lightBg       = Color(0xFFF3EFE6);    // Warm Parchment
-  static const Color _lightSurface  = Color(0xFFFAF7F2);    // Ivory Card
-  static const Color _lightCard     = Color(0xFFFEFCF8);    // Off-white card
-  static const Color _lightBorder   = Color(0xFFE3D9C8);    // Warm sand border
-  static const Color _lightText     = Color(0xFF1A2E1E);    // Deep forest text
-  static const Color _lightSubtext  = Color(0xFF5A6E5E);    // Muted sage
+  // ── Light mode tokens — Warm Editorial Sage (NOT plain white) ────────────
+  // Inspired by premium cultural institutions: Louvre, UNESCO publications
+  static const Color _lightBg       = Color(0xFFF0EDE6);    // Warm Parchment (cultural paper)
+  static const Color _lightSurface  = Color(0xFFF8F5EF);    // Ivory Surface
+  static const Color _lightCard     = Color(0xFFFFFCF7);    // Cream Card
+  static const Color _lightBorder   = Color(0xFFD8CEBC);    // Warm Sand Border
+  static const Color _lightText     = Color(0xFF12251A);    // Deep Forest (not harsh black)
+  static const Color _lightSubtext  = Color(0xFF4A6155);    // Muted Sage
 
   /// Unified theme generator based on locale and mode.
   static ThemeData getTheme(Locale locale, ThemeMode mode) {
@@ -36,10 +36,10 @@ class AppTheme {
       headlineMedium:GoogleFonts.tajawal(fontSize: 28, fontWeight: FontWeight.bold,   color: textColor),
       titleLarge:    GoogleFonts.tajawal(fontSize: 22, fontWeight: FontWeight.w600,   color: isDark ? accentColor : primaryColor),
       titleMedium:   GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.w600,   color: textColor),
-      bodyLarge:     GoogleFonts.tajawal(fontSize: 16,                                color: textColor.withValues(alpha: 0.9)),
-      bodyMedium:    GoogleFonts.tajawal(fontSize: 14,                                color: isDark ? textColor.withValues(alpha: 0.8) : _lightSubtext),
-      bodySmall:     GoogleFonts.tajawal(fontSize: 12,                                color: isDark ? textColor.withValues(alpha: 0.5) : _lightSubtext.withValues(alpha: 0.7)),
-      labelSmall:    GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold,   color: isDark ? accentColor : accentColor.withValues(alpha: 0.85), letterSpacing: 1.5),
+      bodyLarge:     GoogleFonts.cairo(fontSize: 16,                                color: textColor.withValues(alpha: 0.9)),
+      bodyMedium:    GoogleFonts.cairo(fontSize: 14,                                color: isDark ? textColor.withValues(alpha: 0.8) : _lightSubtext),
+      bodySmall:     GoogleFonts.cairo(fontSize: 12,                                color: isDark ? textColor.withValues(alpha: 0.5) : _lightSubtext.withValues(alpha: 0.75)),
+      labelSmall:    GoogleFonts.cairo(fontSize: 10, fontWeight: FontWeight.bold,   color: isDark ? accentColor : accentColor.withValues(alpha: 0.9), letterSpacing: 1.5),
     );
 
     return ThemeData(
@@ -50,32 +50,46 @@ class AppTheme {
       textTheme: textTheme,
       fontFamily: isAr ? GoogleFonts.tajawal().fontFamily : 'Inter',
 
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
-        secondary: accentColor,
+      colorScheme: ColorScheme(
+        brightness: isDark ? Brightness.dark : Brightness.light,
+        primary: isDark ? accentColor : primaryColor,
+        onPrimary: Colors.white,
+        primaryContainer: isDark ? primaryColor.withValues(alpha: 0.3) : const Color(0xFFD6EDD9),
+        onPrimaryContainer: isDark ? Colors.white : primaryColor,
+        secondary: isDark ? accentColor : const Color(0xFF5A7A5E),
+        onSecondary: Colors.white,
+        secondaryContainer: isDark ? accentColor.withValues(alpha: 0.2) : const Color(0xFFE8F0E9),
+        onSecondaryContainer: isDark ? Colors.white : primaryColor,
         error: heritageRed,
+        onError: Colors.white,
         surface: isDark ? const Color(0xFF0A140F) : _lightSurface,
         onSurface: textColor,
-        brightness: isDark ? Brightness.dark : Brightness.light,
-      ).copyWith(
-        // Manually override warm light palette entries ColorScheme misses
-        surfaceContainerHighest: isDark ? Colors.white10 : const Color(0xFFEDE6D8),
+        surfaceContainerHighest: isDark ? Colors.white10 : const Color(0xFFE8E2D8),
         outlineVariant: isDark ? Colors.white12 : _lightBorder,
-        primaryContainer: isDark ? primaryColor.withValues(alpha: 0.3) : const Color(0xFFDFF2E5),
-        onPrimary: Colors.white,
+        outline: isDark ? Colors.white24 : _lightBorder,
+        inverseSurface: isDark ? Colors.white : primaryColor,
+        onInverseSurface: isDark ? primaryColor : Colors.white,
+        inversePrimary: isDark ? primaryColor : accentColor,
+        shadow: Colors.black.withValues(alpha: 0.12),
+        scrim: Colors.black.withValues(alpha: 0.35),
+        primaryFixed: isDark ? const Color(0xFF0A2B1A) : const Color(0xFFDFF2E5),
+        onPrimaryFixed: isDark ? Colors.white : primaryColor,
+        tertiaryFixed: isDark ? accentColor.withValues(alpha: 0.1) : const Color(0xFFF5EDD4),
+        onTertiaryFixed: isDark ? Colors.white : const Color(0xFF6E5A1E),
       ),
 
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
-        foregroundColor: textColor,
+        backgroundColor: isDark ? Colors.transparent : _lightBg.withValues(alpha: 0.92),
+        foregroundColor: isDark ? Colors.white : _lightText,
         elevation: 0,
+        shadowColor: isDark ? Colors.transparent : Colors.black.withValues(alpha: 0.05),
         centerTitle: true,
         titleTextStyle: GoogleFonts.tajawal(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: textColor,
+          color: isDark ? Colors.white : _lightText,
         ).copyWith(inherit: kInherit),
-        iconTheme: IconThemeData(color: textColor),
+        iconTheme: IconThemeData(color: isDark ? Colors.white : _lightText),
       ),
 
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -88,9 +102,10 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: isDark ? accentColor : primaryColor,
           foregroundColor: Colors.white,
-          elevation: 0,
+          elevation: isDark ? 0 : 2,
+          shadowColor: isDark ? Colors.transparent : primaryColor.withValues(alpha: 0.25),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           textStyle: GoogleFonts.tajawal(
             fontWeight: FontWeight.bold,
             letterSpacing: 1,
@@ -105,19 +120,19 @@ class AppTheme {
 
       cardTheme: CardThemeData(
         color: isDark ? const Color(0xFF0A140F) : _lightCard,
-        elevation: isDark ? 0 : 1,
-        shadowColor: isDark ? Colors.transparent : Colors.black.withValues(alpha: 0.06),
+        elevation: isDark ? 0 : 3,
+        shadowColor: isDark ? Colors.transparent : Colors.black.withValues(alpha: 0.08),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(
-            color: isDark ? borderGlass : _lightBorder,
+            color: isDark ? borderGlass : _lightBorder.withValues(alpha: 0.7),
           ),
         ),
       ),
 
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF0EBE0),
+        fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : const Color(0xFFEDE7DB),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: isDark ? Colors.white12 : _lightBorder),
@@ -133,6 +148,30 @@ class AppTheme {
         hintStyle: TextStyle(
           color: isDark ? Colors.white30 : _lightSubtext.withValues(alpha: 0.5),
         ),
+        labelStyle: TextStyle(
+          color: isDark ? Colors.white54 : _lightSubtext,
+        ),
+      ),
+
+      chipTheme: ChipThemeData(
+        backgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFE8E2D5),
+        selectedColor: isDark ? accentColor.withValues(alpha: 0.2) : primaryColor.withValues(alpha: 0.12),
+        side: BorderSide(color: isDark ? Colors.white12 : _lightBorder),
+        labelStyle: GoogleFonts.cairo(
+          color: isDark ? Colors.white70 : _lightText,
+          fontSize: 12,
+        ),
+      ),
+
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return isDark ? accentColor : primaryColor;
+          }
+          return Colors.transparent;
+        }),
+        side: BorderSide(color: isDark ? Colors.white38 : _lightSubtext, width: 1.5),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
     );
   }

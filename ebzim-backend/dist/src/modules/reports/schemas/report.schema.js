@@ -84,7 +84,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({
         type: String,
-        enum: ['VANDALISM', 'DEGRADATION', 'ILLEGAL_INTERVENTION', 'URGENT_OBSERVATION', 'OTHER'],
+        enum: ['VANDALISM', 'THEFT', 'ILLEGAL_CONSTRUCTION', 'NEGLECT', 'PUBLIC_SPACE', 'OTHER'],
         required: true
     }),
     __metadata("design:type", String)

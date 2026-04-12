@@ -21,7 +21,7 @@ class EbzimBackground extends StatelessWidget {
               center: const Alignment(-0.8, -0.6),
               radius: 1.2,
               colors: isDark 
-                ? [const Color(0xFF005A00), AppTheme.primaryColor]
+                ? [const Color(0xFF081C10), AppTheme.backgroundDark] // Very deep sophisticated dark emerald to midnight
                 : [const Color(0xFFF2F7F2), const Color(0xFFF9F9F7)], // Silk Ivory Gradient
             ),
           ),
@@ -35,7 +35,7 @@ class EbzimBackground extends StatelessWidget {
               radius: 1.0,
               colors: [
                 isDark 
-                  ? const Color(0xFF003300).withValues(alpha: 0.5)
+                  ? AppTheme.accentColor.withValues(alpha: 0.05) // Subtle gold ambient glow
                   : theme.primaryColor.withValues(alpha: 0.05),
                 Colors.transparent,
               ],
@@ -45,7 +45,7 @@ class EbzimBackground extends StatelessWidget {
 
         // Pattern Texture (Muted for premium feel)
         Opacity(
-          opacity: 0.05,
+          opacity: isDark ? 0.02 : 0.05,
           child: Image.network(
             'https://www.transparenttextures.com/patterns/cubes.png',
             repeat: ImageRepeat.repeat,

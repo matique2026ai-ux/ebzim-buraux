@@ -25,11 +25,16 @@ let ReportsService = class ReportsService {
         this.reportModel = reportModel;
     }
     async createReport(dto, reporterId) {
+        const reportData = { ...dto };
+        if (!reportData.title) {
+            const categoryLabel = reportData.incidentCategory?.toLowerCase().replace('_', ' ') || 'incident';
+            reportData.title = `${categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1)} Report`;
+        }
         return this.reportModel.create({
-            ...dto,
+            ...reportData,
             reporterId,
             status: 'SUBMITTED',
-            timeline: [{ actorId: reporterId, action: 'SUBMITTED', timestamp: new Date() }],
+            timeline: [{ actorId: reporterId ? new mongoose_2.Types.ObjectId(reporterId) : null, action: 'SUBMITTED', timestamp: new Date() }],
         });
     }
     async getReports(user, options) {

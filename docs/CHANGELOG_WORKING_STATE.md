@@ -102,3 +102,153 @@
 - **Premium Design**: Redesigned `AboutScreen` using the "Dark Glass" system, `EbzimBackground`, and institutional typography (`Aref Ruqaa`).
 - **Official Copy**: Rewrote mission, vision, and thematic pillars in AR, EN, and FR using the official `EBZIM_ASSOCIATION_REFERENCE.md`.
 - **Media Stability**: Replaced unreliable HQ imagery with branded placeholders and improved information density via `GlassCard` layouts.
+
+## [1.0.3] - 2026-04-11
+### RP-034: Mobile Distribution Build & Live Verification
+- **Build Success**: Successfully generated the Android distribution build (APK/AAB).
+- **Physical Device Testing**: Installed and verified the application on a real mobile device.
+- **Live Performance**: Confirmed that the "Dark Glass" UI, navigation, and API connectivity (Atlas Cloud) perform smoothly at native speed.
+- **Milestone**: The project has officially moved from "Development/Web Testing" to "Live Distribution Ready" for the mobile platform.
+
+## [1.0.4] - 2026-04-12
+### RP-035: Admin Dashboard Verification & System Synchronization
+- **System Audit**: Programmatically verified the full implementation of the Admin Dashboard on both Flutter (Screens/Router) and NestJS (Controllers/Guards).
+- **Core Admin Features**: Confirmed working CRUD for News and Events, and the workflow for Membership Review (Approve/Reject).
+- **Data Integrity**: Verified that the backend correctly handles localized content and role-based security.
+- **Documentation Sync**: Synchronized all project tracking files to reflect the "Complete" status of the Admin module.
+
+## [1.0.5] - 2026-04-12
+### RP-036: Workstation Environment Setup
+- **Environment Bootstrapping**: Identified that Node.js was missing on the work device. Automatically installed Node.js via `winget` to support backend processes.
+- **Dependency Restoration**: Found the MongoDB Atlas `MONGODB_URI` connection string embedded in a legacy migration script (`makeAdmin.js`).
+- **Secret Recovery**: Fully reconstructed the missing `.env` file (including `JWT_SECRET` and `JWT_EXPIRES_IN`) that was intentionally omitted from GitHub.
+- **Horizontal Startup**: Successfully launched both the Flutter static release frontend (port 5000) and the NestJS backend (port 3000) natively on the work machine. Both successfully connected to the cloud Atlas database with zero code modifications needed.
+
+## [1.1.0] - 2026-04-12
+### RP-037: Global Premium Design Overhaul — "Dark Glass" Identity System
+- **Design Tokens**: Updated `app_theme.dart` with a unified premium palette: `primaryColor` → Deep Midnight Emerald `#052011`, `accentColor` → Muted Gold `#D4AF37`, `backgroundDark` → Absolute Midnight `#020704`.
+- **Typography Unification**: Body text and labels now use `Cairo` (legibility), while headings use `Tajawal` (authority). All hardcoded `GoogleFonts.*` calls in screens replaced with `theme.textTheme.*` calls for strict consistency.
+- **Background Overhaul**: `ebzim_background.dart` updated — replaced harsh green gradient with a subtle deep emerald-to-midnight radial gradient and a soft ambient gold glow (alpha 5%).
+- **LoginScreen Dark Glass**: Glass card opacity reduced to 5%/2% white (from 22%/8%), border opacity to 8%, and box-shadow softened for a true dark-glass institutional premium look.
+- **RegisterScreen**: Unified CTA button color to `AppTheme.accentColor` with white foreground (dropped the old pale-gold `#F0E0C8`). Title now uses `theme.textTheme.headlineMedium`.
+- **DashboardScreen**: Local `_kGold` constant replaced with a getter pointing to `AppTheme.accentColor` to ensure it tracks the global token.
+- **Navigation Bar**: `main_shell_screen.dart` synced — nav bg/active-color now derived from `AppTheme.backgroundDark` and `AppTheme.accentColor`.
+- **SliverAppBar**: Icon theme color unified with `AppTheme.accentColor` (removed hardcoded `#C5A059`).
+
+## [1.1.1] - 2026-04-12
+### RP-038: Institutional Features — Heritage Projects & Civic Report
+**Context**: The association "Ebzim for Culture & Citizenship" (Sétif) holds three strategic partnerships: (1) UNESCO Algeria Network member, (2) Partnership with the National Museum of Antiquities of Sétif, (3) Official restoration contract with the Ministry of Mujahideen for the El-Hamman Military Barracks. These partnerships elevate the platform beyond a simple cultural app into a national civil-society institutional hub.
+
+- **[NEW] `heritage_projects_screen.dart`**: A rich, multilingual (AR/FR) premium screen showcasing all three institutional projects with: animated project cards, partnership banner (UNESCO/Museum/Ministry chips), milestone timelines (done/pending), progress bars, and location badges.
+- **[NEW] `civic_report_screen.dart`**: A 4-step civil reporting flow allowing citizens to report heritage violations (vandalism, theft, illegal construction, neglect, public space degradation). Features: animated violation type selector with color-coded chips, location text input, description field, haptic feedback on selection, success confirmation screen, and Riverpod state management (auto-dispose).
+- **Router**: Added `/heritage` and `/report` routes to `app_router.dart`.
+- **DashboardScreen**: Added `_InstitutionalSection` widget with two premium clickable cards (Heritage Projects + Civic Report) visible on the dashboard for all users, below the events section. Cards display partnership labels (UNESCO, Ministry of Mujahideen, Museum).
+
+## [1.1.2] - 2026-04-12
+### RP-039: UI Polish — About Screen, Light Theme, Page Transitions, Membership Redesign
+
+#### About Screen (`about_screen.dart`) — Full Rebuild
+- **Hero Section**: Cinematic photo (`about_hero.png`) with multi-layer gradient, UNESCO badge overlay, and association title.
+- **Story Section**: Institutional narrative in AR/EN/FR with gold quotation block.
+- **Mission & Vision**: Side-by-side glass mini-cards.
+- **Partnerships**: Three verified partner rows (UNESCO, National Museum of Antiquities, Ministry of Mujahideen) with colored icons and verified badge.
+- **Restoration Showcase**: `caserne_restoration.png` with status chip and partner credit overlaid.
+- **Executive Board**: 5 board roles from Art. 14 (President, Secretary General, Treasurer, 2 VPs).
+- **Values**: Animated chip grid (7 values in 3 languages).
+- **CTA**: Gold gradient full-width button → `/membership/discover`.
+
+#### Light Theme — Complete Overhaul (`app_theme.dart`)
+- **Background**: Warm Parchment `#F0EDE6` (cultural paper inspiration, vs. plain white before).
+- **Text**: Deep Forest `#12251A` (vs. harsh `#000000`).
+- **Subtext**: Muted Sage `#4A6155`.
+- **ColorScheme**: Replaced `ColorScheme.fromSeed` with fully explicit 11-color scheme for precise light mode control.
+- **Cards**: Elevation 3 with warm `#08` shadow, cream `#FFFCF7` background.
+- **Buttons**: Subtle drop shadow `primaryColor @ 25%`, `borderRadius` 14.
+- **Added**: `chipTheme` (warm sand bg) + `checkboxTheme` (themed fill + rounded corners).
+
+#### Page Transitions (`app_router.dart`) — All Routes
+- 4 builder functions: `_slidePage` (slide-up+fade), `_slideHoriz` (horizontal for auth), `_fadePage` (tabs), `_scalePage` (success).
+- All `builder:` calls converted to `pageBuilder:` with appropriate transition type.
+
+#### Membership Screens — Full Redesign
+- **`membership_discover_screen.dart`**: Rebuilt from scratch — hero section with stats chips, trilingual pillar cards (glassmorphism), conditions list, green legal notice, gradient gold CTA.
+- **`membership_flow_screen.dart`**: Replaced flat stepper with animated dot-connector stepper, replaced plain bottom bar with blur glass backdrop + gradient gold button, added `EbzimBackground` for dark glass aesthetic.
+
+## [1.1.3] - 2026-04-12
+### RP-040: Institutional Core — Digital Statute & Real Leadership Sync
+
+#### Statute Screen (`statute_screen.dart`) — NEW
+- **Feature**: Professional document viewer for the Association's Basic Law (Charter).
+- **Trilingualism**: Full Arabic text + Professional summaries in English and French.
+- **Categorization**: Grouped into 5 strategic sections (Foundations, Goals, Membership, Structure, Leadership).
+- **Design**: Premium "Warm Sage Scroll" layout with sticky tabs and article-number badges (ART. X).
+
+#### Leadership Sync (`leadership_screen.dart` & `AboutScreen`)
+- **Data Integration**: Synced `MemberService` with the official 14 Dec 2024 Statute appendix.
+- **Real Members**: 9 board members added with accurate trilingual roles (Osmâni Souad, Bouâzam Salah Eddine, etc.).
+- **About Link**: Added "Read Founding Charter" action in About screen Story section.
+- **Leadership Link**: Added "View Full Board" button in About screen Board section.
+
+#### Infrastructure
+- **Model**: Created `StatuteArticle` for structured trilingual legal text.
+- **Router**: Registered `/statute` with slide-up premium transition.
+
+### RP-041: Civic Reporting Integration (E2E)
+
+#### Backend (NestJS)
+- **Schema**: Updated `ReportSchema` with heritage-specific categories (`VANDALISM`, `THEFT`, `ILLEGAL_CONSTRUCTION`, `NEGLECT`, `PUBLIC_SPACE`).
+- **DTO**: Updated `CreateReportDto` to allow optional titles and validated categories.
+- **Service**: Implemented `ReportsService.createReport` with auto-titling logic (e.g., "[Category] Report").
+
+#### Frontend (Flutter)
+- **Service**: Created `report_service.dart` using `apiClient` for authenticated and guest reporting.
+- **Integration**: Linked `CivicReportScreen` to real API via `_CivicReportNotifier`.
+- **UI alignment**: Updated enum mapping to match backend uppercase standards.
+
+### RP-042: Digital Library (Institutional Knowledge Base)
+
+#### Core Infrastructure
+- **Model**: Created `Publication` model supporting trilingual text (AR/EN/FR), category enums, and dates.
+- **Service**: Implemented `PublicationService` with curated mock data covering Archaeology, Civic Research, and Annual Reports.
+- **Dependencies**: Integrated `url_launcher` for PDF delivery and `cached_network_image` for cover assets.
+
+#### UI & Routing
+- **Screen**: Developed `DigitalLibraryScreen` with real-time search, category chips, and a premium document grid.
+- **Details**: Built a modal details sheet for depth summaries and PDF access.
+- **Navigation**:
+  - Registered `/library` route.
+  - Added "Institutional Resources" section to `AboutScreen`.
+  - Added "Digital Library" high-visibility card to the `DashboardScreen`.
+
+### RP-043: Contributions & Subscriptions (Financial Sustainability)
+
+#### Backend (NestJS)
+- **Settings Module**: Added global system configuration schema. Admins can now adjust the `annualMembershipFee` dynamically.
+- **Contributions Module**: Implemented a transaction tracking system for membership renewals and donations (General vs Project-based).
+
+#### Frontend (Flutter)
+- **Service**: Developed `FinancialService` with support for dynamic fee fetching and contribution submission.
+- **Member UI**:
+  - `ContributionsScreen`: Features a premium membership card and a dual-choice donation selector (General/Project).
+  - Added "Annual Contributions" entry point to the Dashboard.
+- **Admin UI**:
+  - Overhauled Admin Dashboard to include a dedicated **Financials** tab for verifying payments and **Settings** for dynamic fee management.
+
+### RP-044: Admin Mission Control & Institutional Polish (Final Phase)
+
+#### Admin Overhaul
+- **4-Tab System**: Rebuilt `AdminDashboardScreen` as a "Mission Control" hub with four quadrants:
+  - **Membership**: Reviewing and approving official association members.
+  - **Civic Reports**: Investigation queue for heritage violation reports.
+  - **Financials**: Verifying subscription and donation transactions.
+  - **Resources**: Management of Activities, News, and Global Settings.
+
+#### Trilingual Localization (AR/EN/FR)
+- **Platform-Wide Polish**: 100% localization coverage for all new sections (Digital Library, Contributions, Reporting).
+- **ARB Expansion**: Updated `app_ar.arb`, `app_en.arb`, and `app_fr.arb` with audited institutional terminology.
+- **Screen Logic**: Updated all Dart screens to use `AppLocalizations` instead of hardcoded strings.
+
+#### Philosophical Alignment
+- **User Freedom**: Ensured membership remains explicitly optional. Guest users see donation projects as primary actions, while membership is a secondary "Discovery" path, complying with the association's 2024 revised statutes.
+
+**FINAL STATUS**: The platform is technically, legally, and linguistically complete for the current phase.

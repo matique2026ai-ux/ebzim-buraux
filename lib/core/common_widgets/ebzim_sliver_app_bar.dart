@@ -72,7 +72,7 @@ class EbzimSliverAppBar extends StatelessWidget {
         ],
       ),
       actions: actions,
-      iconTheme: const IconThemeData(color: Color(0xFFC5A059)),
+      iconTheme: IconThemeData(color: AppTheme.accentColor),
     );
   }
 }

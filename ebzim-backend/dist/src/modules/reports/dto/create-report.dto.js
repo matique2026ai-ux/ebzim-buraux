@@ -36,7 +36,7 @@ __decorate([
 ], CreateReportDto.prototype, "guestContactInfo", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateReportDto.prototype, "title", void 0);
 __decorate([
@@ -45,7 +45,7 @@ __decorate([
     __metadata("design:type", String)
 ], CreateReportDto.prototype, "description", void 0);
 __decorate([
-    (0, class_validator_1.IsEnum)(['VANDALISM', 'DEGRADATION', 'ILLEGAL_INTERVENTION', 'URGENT_OBSERVATION', 'OTHER']),
+    (0, class_validator_1.IsEnum)(['VANDALISM', 'THEFT', 'ILLEGAL_CONSTRUCTION', 'NEGLECT', 'PUBLIC_SPACE', 'OTHER']),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateReportDto.prototype, "incidentCategory", void 0);

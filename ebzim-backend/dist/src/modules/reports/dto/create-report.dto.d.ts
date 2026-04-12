@@ -6,7 +6,7 @@ export declare class CreateReportDto {
         email?: string;
         phone?: string;
     };
-    title: string;
+    title?: string;
     description: string;
     incidentCategory: string;
     severity?: string;

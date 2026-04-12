@@ -269,5 +269,34 @@
     "notifUnread": "Non lus",
     "notifUpdates": "Mises à jour",
     "authAccountCreated": "Compte créé !",
-    "authLoginSuccess": "Connexion réussie !"
+    "authLoginSuccess": "Connexion réussie !",
+
+    "libTitle": "Bibliothèque Numérique",
+    "libSearchHint": "Rechercher des publications et recherches...",
+    "libCatArt": "Arts & Archéologie",
+    "libCatResearch": "Recherches & Études",
+    "libCatReports": "Rapports Institutionnels",
+    "libOpenPdf": "Ouvrir le fichier PDF",
+    "libSummary": "Résumé du travail",
+
+    "finTitle": "Contributions & Adhésions",
+    "finJoinOptional": "Rejoindre en tant que membre officiel (Optionnel)",
+    "finMembershipFee": "Montant de l'adhésion",
+    "finNeedsRenewal": "Renouvellement requis",
+    "finApplyJoin": "Demander l'adhésion",
+    "finRenewNow": "Renouveler l'adhésion maintenant",
+    "finSupportProjects": "Soutenir les projets de l'association",
+    "finChooseType": "Choisissez le type de contribution :",
+    "finGeneral": "Don général",
+    "finProject": "Soutien de projet",
+    "finAmountLabel": "Montant (DZD)",
+    "finSend": "Envoyer la contribution",
+    "finJoinInvite": "Souhaitez-vous obtenir une carte de membre officielle et participer aux décisions ?",
+
+    "repTitle": "Signalements Citoyens",
+    "repIncidentCat": "Catégorie de l'incident",
+    "repDescription": "Description de l'observation",
+    "repLocation": "Localisation géographique",
+    "repSubmit": "Soumettre le signalement",
+    "repSuccess": "Merci d'aider à protéger notre patrimoine. Votre signalement sera examiné immédiatement."
 }

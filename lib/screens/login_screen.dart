@@ -142,10 +142,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: 32),
                       Text(
                         loc.authAssocName,
-                        style: GoogleFonts.tajawal(
+                        style: theme.textTheme.headlineMedium?.copyWith(
                           color: AppTheme.accentColor,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
                           letterSpacing: isRtl ? 0 : 2,
                           shadows: [
                             Shadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
@@ -168,25 +166,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  isDark ? Colors.white.withValues(alpha: 0.22) : Colors.white.withValues(alpha: 0.98),
-                                  isDark ? Colors.white.withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.85),
+                                  isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.98),
+                                  isDark ? Colors.white.withValues(alpha: 0.02) : Colors.white.withValues(alpha: 0.85),
                                 ],
                                 stops: const [0.0, 1.0],
                               ),
                               borderRadius: BorderRadius.circular(40),
                               border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.3),
+                                color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.3),
                                 width: 1.5,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: isDark ? 0.6 : 0.1),
+                                  color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.1),
                                   blurRadius: 50,
                                   spreadRadius: -5,
                                   offset: const Offset(0, 30),
                                 ),
                                 BoxShadow(
-                                  color: AppTheme.accentColor.withValues(alpha: isDark ? 0.05 : 0),
+                                  color: AppTheme.accentColor.withValues(alpha: isDark ? 0.03 : 0),
                                   blurRadius: 20,
                                   spreadRadius: 2,
                                 ),
@@ -212,10 +210,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       Text(
                                         loc.authWelcome,
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.cairo(
+                                        style: theme.textTheme.headlineMedium?.copyWith(
                                           color: isDark ? Colors.white : AppTheme.primaryColor,
-                                          fontSize: 34,
-                                          fontWeight: FontWeight.bold,
                                           letterSpacing: 1,
                                           shadows: [
                                             Shadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 2)),
@@ -279,11 +275,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                     Expanded(
                                                       child: Text(
                                                         authState.error == 'authErrorInvalid' ? loc.authErrorInvalid : loc.authErrorUnknown,
-                                                        style: GoogleFonts.cairo(
+                                                        style: theme.textTheme.bodyMedium?.copyWith(
                                                           color: Colors.white, 
-                                                          fontSize: 13, 
                                                           fontWeight: FontWeight.w600,
-                                                          height: 1.4
                                                         ),
                                                       ),
                                                     ),
@@ -301,14 +295,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         margin: const EdgeInsets.only(top: 24),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(16),
-                                          gradient: const LinearGradient(
-                                            colors: [AppTheme.accentColor, Color(0xFF8E7139)],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ),
+                                          color: AppTheme.accentColor,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: AppTheme.accentColor.withValues(alpha: 0.3),
+                                              color: AppTheme.accentColor.withValues(alpha: isDark ? 0.15 : 0.3),
                                               blurRadius: 15,
                                               offset: const Offset(0, 6),
                                             ),
@@ -326,10 +316,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
                                             : Text(
                                                 loc.authAccessButton,
-                                                style: GoogleFonts.cairo(
+                                                style: theme.textTheme.titleMedium?.copyWith(
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                  letterSpacing: 0.5,
                                                 ),
                                               ),
                                         ),
@@ -431,11 +420,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
           child: Text(
             label, 
-            style: GoogleFonts.cairo(
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).brightness == Brightness.dark 
                   ? Colors.white.withValues(alpha: 0.8) 
                   : AppTheme.primaryColor.withValues(alpha: 0.8), 
-              fontSize: 13, 
               fontWeight: FontWeight.bold, 
               letterSpacing: 0.5
             )
@@ -444,31 +432,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark 
-                ? Colors.white.withValues(alpha: 0.05) 
+                ? Colors.black.withValues(alpha: 0.25) 
                 : Colors.white.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: Theme.of(context).brightness == Brightness.dark 
-                  ? Colors.white.withValues(alpha: 0.1) 
+                  ? Colors.white.withValues(alpha: 0.08) 
                   : AppTheme.primaryColor.withValues(alpha: 0.1)
             ),
           ),
           child: TextFormField(
             controller: controller,
             obscureText: isPassword && !isPasswordVisible,
-            style: GoogleFonts.tajawal(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppTheme.primaryColor, 
-              fontSize: 16,
               fontWeight: FontWeight.w500
             ),
             validator: validator,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: GoogleFonts.cairo(
+              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).brightness == Brightness.dark 
                     ? Colors.white.withValues(alpha: 0.25) 
                     : Colors.black.withValues(alpha: 0.3), 
-                fontSize: 14
               ),
               prefixIcon: Icon(
                 icon, 

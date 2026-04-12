@@ -1,40 +1,44 @@
-# NEXT AGENT START HERE
+# Ebzim App Development — Next Agent Briefing
 
-> [!IMPORTANT]
-> **DO NOT START CODING OR DEBUGGING UNTIL YOU READ THIS FIL**E.
+## Current Project Context (RP-039 Update)
+We have successfully transitioned the Ebzim Association Platform from a basic cultural app to a **Premium Institutional Platform**. The app now reflects its partnership with **UNESCO**, the **National Museum of Antiquities**, and the **Ministry of Mujahideen**.
 
-## 1. Safety First
-- **X** Do **NOT** open Swagger (`/api/docs`).
-- **X** Do **NOT** re-investigate MongoDB Atlas connectivity. It is fully operational and the IP allowlisting issue has been resolved.
-- **X** Do **NOT** use Memory Fallback (Mock DB). We are on **REAL RUNTIME**.
-- **X** Do **NOT** drift into Admin Dashboard tasks until explicit user request.
-- **Note on UI/UX:** The Visual Polish, Dashboard, About Page, and Profile flows have been successfully completed in previous sessions (RP-024 to RP-033). **Only redesign or modify these components if the user explicitly asks you to change their mind.**
+### 🎨 Visual Identity (Phase 1 & 3 Complete)
+- **Dark Mode**: "Midnight Emerald" & "Muted Gold" glassmorphism.
+- **Light Mode**: "Warm Editorial Sage" (Louvre/UNESCO style). No plain white.
+- **Typography**: Tajawal (Headlines) / Cairo (Body).
+- **Transitions**: Slide/Fade/Scale transitions implemented in `app_router.dart`.
+- **Assets**: `about_hero.png`, `caserne_restoration.png`, and `membership_bg.png` have been generated and placed in `assets/images/`.
 
-## 2. Current Mission
-The project is in a **Manual Testing Phase**. The user successfully connected to the cloud DB today.
-Your goal is to support the user in manually testing the Application UI, specifically:
-1. Review the **About Page** redesign (Institutional look).
-2. Validate Terminology ("Executive Office").
-3. Verify the **Profile & Membership** hierarchy.
+### 🏛️ Institutional Features (Phase 2 & 3 Complete)
+- **`heritage_projects_screen.dart`**: Memorial projects timeline.
+- **`civic_report_screen.dart`**: 4-step civic violation reporting flow.
+- **`about_screen.dart`**: Professional institutional profile with partnerships and board info.
+- **Membership**: Fully redesigned `membership_discover_screen.dart` and `membership_flow_screen.dart` with institutional professionalism.
 
-## 3. Credentials for Troubleshooting
-- **User**: `matique2025@gmail.com`
-- **Password**: `12345678`
-- **Role**: Normal Public User.
+---
 
-## 4. Operational Setup
-The system is currently running on:
-- **Backend**: Port 3000 (NestJS)
-- **Frontend**: Port 5000 (Flutter Web Static Release)
+## 🚀 Immediate Next Steps (Phase 4)
 
-## 5. Mandatory Reading Order
-1. [AGENT_HANDOFF.md](file:///c:/Users/PCIB/Desktop/ebzim-app/docs/AGENT_HANDOFF.md) - The full Master Truth.
-2. [PROJECT_ARCHITECTURE.md](file:///c:/Users/PCIB/Desktop/ebzim-app/docs/PROJECT_ARCHITECTURE.md) - How the servers talk.
-3. [LOCALIZATION_POLICY.md](file:///c:/Users/PCIB/Desktop/ebzim-app/docs/LOCALIZATION_POLICY.md) - Language rules.
+### 1. `statute_screen.dart` (High Priority)
+The user has emphasized the "Basic Law" (Statute) governing the association (ratified 14 Dec 2024).
+- **Design**: Needs to look like an official document viewer (parchment style in Light mode, glass-scroll in Dark).
+- **Content**: Use Articles 10 (Membership) and 14 (Board) as cues. We need a readable hierarchy of Articles.
+- **Route**: Register `/statute` in `app_router.dart`.
 
-## 6. Where We Left Off
-- The backend successfully overcame the SSL/TLS IP block after the user authorized their new IP address in MongoDB Atlas.
-- Real user login works normally with real data.
-- The next step is to continue evaluating the UI (Profile screen and About screen).
+### 2. Digital Library (`digital_library_screen.dart`)
+- A space for PDFs/Articles/Bulletins released by Ebzim.
+- Use the same "Dark Glass" card style for publications.
 
-**Now, stand by and wait for the user to initiate the next test or code request.**
+### 3. Backend Integration (NestJS)
+- Implement `civic-reports` module to receive data from the 4-step flow.
+- Ensure authentication headers are sent from the Flutter side.
+
+---
+
+## 🛠️ Tech Reminders
+- **Theme**: Always use `AppTheme.getTheme()` tokens. DO NOT hardcode colors like `Colors.white` or `Colors.black`.
+- **Anims**: Use `flutter_animate` for scroll reveal and state changes.
+- **Routing**: Use `pageBuilder` with the private transition helpers in `app_router.dart` for all new routes.
+
+**The user is very sensitive to the "Life" of the app — ensure animations are smooth and the UI never feels "dead".**

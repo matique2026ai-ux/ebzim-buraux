@@ -270,5 +270,34 @@
     "notifUnread": "Unread",
     "notifUpdates": "Updates",
     "authAccountCreated": "Account Created!",
-    "authLoginSuccess": "Logged in successfully!"
+    "authLoginSuccess": "Logged in successfully!",
+
+    "libTitle": "Digital Library",
+    "libSearchHint": "Search publications and research...",
+    "libCatArt": "Arts & Archaeology",
+    "libCatResearch": "Research & Studies",
+    "libCatReports": "Institutional Reports",
+    "libOpenPdf": "Open PDF File",
+    "libSummary": "Work Summary",
+
+    "finTitle": "Contributions & Subscriptions",
+    "finJoinOptional": "Join as Official Member (Optional)",
+    "finMembershipFee": "Membership Fee",
+    "finNeedsRenewal": "Needs Renewal",
+    "finApplyJoin": "Apply to Join",
+    "finRenewNow": "Renew Membership Now",
+    "finSupportProjects": "Support Association Projects",
+    "finChooseType": "Choose contribution type:",
+    "finGeneral": "General Donation",
+    "finProject": "Project Support",
+    "finAmountLabel": "Amount (DZD)",
+    "finSend": "Send Contribution",
+    "finJoinInvite": "Would you like to get an official membership card and participate in decisions?",
+
+    "repTitle": "Civic Reporting",
+    "repIncidentCat": "Incident Category",
+    "repDescription": "Observation Description",
+    "repLocation": "Geographic Location",
+    "repSubmit": "Submit Report",
+    "repSuccess": "Thank you for helping protect our heritage. Your report will be reviewed immediately."
 }

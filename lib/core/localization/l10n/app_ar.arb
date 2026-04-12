@@ -270,5 +270,34 @@
     "notifUnread": "غير مقروءة",
     "notifUpdates": "تحديثات",
     "authAccountCreated": "تم إنشاء الحساب بنجاح!",
-    "authLoginSuccess": "تم تسجيل الدخول بنجاح!"
+    "authLoginSuccess": "تم تسجيل الدخول بنجاح!",
+
+    "libTitle": "المكتبة الرقمية",
+    "libSearchHint": "بحث في المنشورات والبحوث...",
+    "libCatArt": "فنون وآثار",
+    "libCatResearch": "بحوث ودراسات",
+    "libCatReports": "تقارير مؤسساتية",
+    "libOpenPdf": "فتح ملف PDF",
+    "libSummary": "ملخص العمل",
+
+    "finTitle": "المساهمات والاشتراكات",
+    "finJoinOptional": "الانضمام كعضو رسمي (اختياري)",
+    "finMembershipFee": "قيمة الاشتراك",
+    "finNeedsRenewal": "لم يتم التجديد",
+    "finApplyJoin": "تقديم طلب انضمام",
+    "finRenewNow": "تجديد الاشتراك الآن",
+    "finSupportProjects": "دعم مشاريع الجمعية",
+    "finChooseType": "اختر نوع المساهمة:",
+    "finGeneral": "تبرع عام",
+    "finProject": "دعم مشروع",
+    "finAmountLabel": "المبلغ (دج)",
+    "finSend": "إرسال المساهمة",
+    "finJoinInvite": "هل ترغب في الحصول على بطاقة انخراط رسمية والمشاركة في القرارات؟",
+
+    "repTitle": "البلاغات المدنية",
+    "repIncidentCat": "صنف الحادثة",
+    "repDescription": "وصف الوضع الملاحظ",
+    "repLocation": "الموقع الجغرافي",
+    "repSubmit": "إرسال البلاغ",
+    "repSuccess": "شكراً لمساهمتك في حماية الموروث. سيتم مراجعة بلاغك فوراً."
 }

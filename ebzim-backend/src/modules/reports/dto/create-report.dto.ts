@@ -12,14 +12,14 @@ export class CreateReportDto {
   guestContactInfo?: { name?: string; email?: string; phone?: string };
 
   @IsString()
-  @IsNotEmpty()
-  title: string;
+  @IsOptional()
+  title?: string;
 
   @IsString()
   @IsNotEmpty()
   description: string;
 
-  @IsEnum(['VANDALISM', 'DEGRADATION', 'ILLEGAL_INTERVENTION', 'URGENT_OBSERVATION', 'OTHER'])
+  @IsEnum(['VANDALISM', 'THEFT', 'ILLEGAL_CONSTRUCTION', 'NEGLECT', 'PUBLIC_SPACE', 'OTHER'])
   @IsNotEmpty()
   incidentCategory: string;
 

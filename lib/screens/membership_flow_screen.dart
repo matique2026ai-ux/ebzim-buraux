@@ -1,10 +1,15 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
+import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 
 class MembershipFlowScreen extends ConsumerStatefulWidget {
   const MembershipFlowScreen({super.key});
@@ -52,124 +57,215 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+
+    final stepLabels = [
+      isAr ? 'الشروط' : 'Éligibilité',
+      isAr ? 'الهوية' : 'Identité',
+      isAr ? 'الاتصال' : 'Contact',
+      isAr ? 'الدوافع' : 'Motivation',
+      isAr ? 'التأكيد' : 'Confirm',
+    ];
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: _currentStep == 0
-            ? IconButton(icon: Icon(Icons.close, color: theme.colorScheme.onSurface), onPressed: () => context.pop())
-            : IconButton(icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface), onPressed: _prevStep),
+        leading: Padding(
+          padding: const EdgeInsets.all(8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.black.withValues(alpha: 0.4) : Colors.white.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    _currentStep == 0
+                        ? Icons.close_rounded
+                        : (isAr ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_rounded),
+                    color: AppTheme.accentColor,
+                    size: 18,
+                  ),
+                  onPressed: _currentStep == 0 ? () => context.pop() : _prevStep,
+                ),
+              ),
+            ),
+          ),
+        ),
         title: Text(
-          'Ebzim | إبزيم', 
-          style: TextStyle(
-            fontFamily: theme.textTheme.headlineMedium?.fontFamily, 
-            color: theme.colorScheme.onSurface, 
-            fontWeight: FontWeight.bold, 
-            fontSize: 18
-          )
+          'Ebzim • إبزيم',
+          style: GoogleFonts.tajawal(
+            color: AppTheme.accentColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          // Stepper
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildStep(1, 'الشروط'),
-                _buildDivider(1),
-                _buildStep(2, loc.memStepper1),
-                _buildDivider(2),
-                _buildStep(3, loc.memStepper2),
-                _buildDivider(3),
-                _buildStep(4, loc.memStepper3),
-                _buildDivider(4),
-                _buildStep(5, loc.memStepper4),
-              ],
+      body: EbzimBackground(
+        child: Column(
+          children: [
+            // ── Stepper ──────────────────────────────────────
+            Container(
+              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 72),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                children: List.generate(_totalSteps * 2 - 1, (i) {
+                  if (i.isOdd) {
+                    // Connector
+                    final stepIdx = i ~/ 2;
+                    return Expanded(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 400),
+                        height: 2,
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          color: stepIdx < _currentStep
+                              ? AppTheme.accentColor
+                              : isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.08),
+                        ),
+                      ),
+                    );
+                  }
+                  // Step dot
+                  final stepIdx = i ~/ 2;
+                  final isActive = stepIdx == _currentStep;
+                  final isDone = stepIdx < _currentStep;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: isActive ? 36 : 28,
+                    height: isActive ? 36 : 28,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isDone
+                          ? AppTheme.accentColor
+                          : isActive
+                              ? AppTheme.accentColor.withValues(alpha: 0.15)
+                              : isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                      border: Border.all(
+                        color: (isDone || isActive)
+                            ? AppTheme.accentColor
+                            : isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.1),
+                        width: isActive ? 2 : 1.5,
+                      ),
+                    ),
+                    child: Center(
+                      child: isDone
+                          ? const Icon(Icons.check_rounded, color: Colors.white, size: 14)
+                          : Text(
+                              '${stepIdx + 1}',
+                              style: TextStyle(
+                                color: isActive ? AppTheme.accentColor : (isDark ? Colors.white30 : Colors.black38),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                    ),
+                  );
+                }),
+              ),
             ),
-          ),
-          
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                _Step0Conditions(),
-                _Step1IdentityForm(),
-                _Step2ContactForm(),
-                _Step3CredentialsForm(),
-                _Step4ReviewForm(),
-              ],
+
+            // Step label
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  stepLabels[_currentStep],
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppTheme.accentColor,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.5,
+                    fontSize: 10,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: theme.cardColor, 
-          border: Border(top: BorderSide(color: theme.dividerColor))
+            const SizedBox(height: 8),
+
+            // ── Page view ─────────────────────────────────
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: const [
+                  _Step0Conditions(),
+                  _Step1IdentityForm(),
+                  _Step2ContactForm(),
+                  _Step3CredentialsForm(),
+                  _Step4ReviewForm(),
+                ],
+              ),
+            ),
+          ],
         ),
-        child: ElevatedButton(
-          onPressed: _nextStep,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.accentColor,
-            foregroundColor: AppTheme.primaryColor,
-            minimumSize: const Size(double.infinity, 60),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-          child: Text(
-            (_currentStep == _totalSteps - 1 ? loc.memSubmit : loc.memNext).toUpperCase(),
-            style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2),
+      ),
+      bottomNavigationBar: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(24, 16, 24, MediaQuery.of(context).padding.bottom + 16),
+            decoration: BoxDecoration(
+              color: isDark ? Colors.black.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.85),
+              border: Border(top: BorderSide(color: isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.06))),
+            ),
+            child: Container(
+              height: 58,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  colors: [AppTheme.accentColor, const Color(0xFFB8941E)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.accentColor.withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    _nextStep();
+                  },
+                  borderRadius: BorderRadius.circular(16),
+                  child: Center(
+                    child: Text(
+                      (_currentStep == _totalSteps - 1 ? loc.memSubmit : loc.memNext).toUpperCase(),
+                      style: GoogleFonts.tajawal(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildStep(int stepIndex, String title) {
-    final theme = Theme.of(context);
-    final isActive = stepIndex - 1 <= _currentStep;
-    return Column(
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: isActive ? AppTheme.accentColor : theme.colorScheme.surfaceContainerHighest,
-            shape: BoxShape.circle,
-            border: Border.all(color: isActive ? AppTheme.accentColor : Colors.transparent, width: 2),
-          ),
-          child: Center(
-            child: Text(
-              stepIndex.toString(),
-              style: TextStyle(color: isActive ? AppTheme.primaryColor : theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(title.toUpperCase(), style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 1, color: isActive ? AppTheme.accentColor : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6))),
-      ],
-    );
-  }
-
-  Widget _buildDivider(int stepIndex) {
-    final theme = Theme.of(context);
-    return Expanded(
-      child: Container(
-        height: 2,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-        color: stepIndex - 1 < _currentStep ? AppTheme.accentColor : theme.colorScheme.surfaceContainerHighest,
-      ),
-    );
-  }
+// (Old _buildStep and _buildDivider removed — replaced by inline stepper)
 }
 
 // --------------------------------------------------------------------------

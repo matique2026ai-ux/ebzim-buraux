@@ -19,8 +19,8 @@ export class MediaService {
       throw new BadRequestException('Invalid file type. Only jpeg, png, gif, webp imagery or mp4, webm videos are allowed.');
     }
 
-    // Typical MVP size restriction (e.g. 5MB)
-    const MAX_MB = 5;
+    // Increased limit for institutional media content (images/videos)
+    const MAX_MB = 20;
     if (file.size > MAX_MB * 1024 * 1024) {
       throw new BadRequestException(`File size exceeds strict ${MAX_MB}MB limit.`);
     }

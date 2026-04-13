@@ -1,559 +1,973 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
-import 'package:ebzim_app/core/common_widgets/ebzim_app_bar.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/services/report_service.dart';
 import 'package:ebzim_app/core/services/financial_service.dart';
-import 'package:intl/intl.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// ADMIN DASHBOARD SCREEN
+// ─────────────────────────────────────────────────────────────────────────────
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Moved logic to TabBarView children
-
     return DefaultTabController(
       length: 6,
       child: Scaffold(
-        backgroundColor: AppTheme.primaryColor,
-        appBar: EbzimAppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.menu, color: AppTheme.primaryColor),
-            onPressed: () => context.push('/settings'),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout, color: AppTheme.primaryColor),
-              tooltip: 'DÃ©connexion / ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬',
-              onPressed: () async {
-                await ref.read(authProvider.notifier).logout();
-                if (context.mounted) context.go('/login');
-              },
+        backgroundColor: const Color(0xFFF4F6F9),
+        body: NestedScrollView(
+          headerSliverBuilder: (_, __) => [
+            SliverAppBar(
+              expandedHeight: 140,
+              floating: false,
+              pinned: true,
+              backgroundColor: AppTheme.primaryColor,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+                onPressed: () => context.pop(),
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.logout_rounded, color: Colors.white70),
+                  tooltip: 'تسجيل الخروج',
+                  onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('تسجيل الخروج'),
+                        content: const Text('هل تريد الخروج من لوحة الإدارة؟'),
+                        actions: [
+                          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('إلغاء')),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                            child: const Text('خروج'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirm == true) {
+                      await ref.read(authProvider.notifier).logout();
+                      if (context.mounted) context.go('/login');
+                    }
+                  },
+                ),
+                const SizedBox(width: 8),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                background: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF052011), Color(0xFF0A3D21), Color(0xFF1A6B3A)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 60),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.accentColor.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5)),
+                                ),
+                                child: const Icon(Icons.admin_panel_settings_rounded, color: AppTheme.accentColor, size: 24),
+                              ),
+                              const SizedBox(width: 14),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'لوحة الإدارة',
+                                    style: GoogleFonts.tajawal(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    'جمعية إبزيم للتراث والفنون',
+                                    style: GoogleFonts.tajawal(
+                                      fontSize: 12,
+                                      color: Colors.white.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(54),
+                child: Container(
+                  color: AppTheme.primaryColor,
+                  child: TabBar(
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    indicatorColor: AppTheme.accentColor,
+                    indicatorWeight: 3,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.white54,
+                    labelStyle: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 12),
+                    unselectedLabelStyle: GoogleFonts.tajawal(fontSize: 12),
+                    tabs: const [
+                      Tab(icon: Icon(Icons.group_add_rounded, size: 18), text: 'العضوية'),
+                      Tab(icon: Icon(Icons.event_rounded, size: 18), text: 'الأنشطة'),
+                      Tab(icon: Icon(Icons.newspaper_rounded, size: 18), text: 'الأخبار'),
+                      Tab(icon: Icon(Icons.flag_rounded, size: 18), text: 'البلاغات'),
+                      Tab(icon: Icon(Icons.account_balance_wallet_rounded, size: 18), text: 'المساهمات'),
+                      Tab(icon: Icon(Icons.settings_rounded, size: 18), text: 'الإعدادات'),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
-          bottom: const TabBar(
-            isScrollable: true,
-            tabs: [
-              Tab(icon: Icon(Icons.group_add), text: 'Ø§Ù„Ø¹Ø¶ÙˆÙŠØ©'),
-              Tab(icon: Icon(Icons.event), text: 'Ø§Ù„Ø£Ù†Ø´Ø·Ø©'),
-              Tab(icon: Icon(Icons.newspaper), text: 'Ø§Ù„Ø£Ø®Ø¨Ø§Ø±'),
-              Tab(icon: Icon(Icons.report_problem), text: 'Ø§Ù„Ø¨Ù„Ø§ØºØ§Øª'),
-              Tab(icon: Icon(Icons.attach_money), text: 'Ø§Ù„Ù…Ø³Ø§Ù‡Ù…Ø§Øª'),
-              Tab(icon: Icon(Icons.settings), text: 'Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª'),
+          body: const TabBarView(
+            children: [
+              _MembershipTab(),
+              _EventsTab(),
+              _NewsTab(),
+              _ReportsTab(),
+              _FinancialsTab(),
+              _SettingsTab(),
             ],
-            labelColor: AppTheme.primaryColor,
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: AppTheme.primaryColor,
-            indicatorWeight: 3,
-            labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
-        ),
-        body: const TabBarView(
-          children: [
-            _MembershipTab(),
-            _EventsTab(),
-            _NewsTab(),
-            _ReportsTab(),
-            _FinancialsTab(),
-            _SettingsTab(),
-          ],
         ),
       ),
     );
   }
 }
 
-// â”€â”€ Membership Tab â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 1: MEMBERSHIP
+// ─────────────────────────────────────────────────────────────────────────────
 class _MembershipTab extends ConsumerWidget {
   const _MembershipTab();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final pendingAsync = ref.watch(pendingMembershipsProvider);
     final adminService = ref.read(membershipAdminProvider);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TabHeader(
-            title: 'Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø¹Ø¶ÙˆÙŠØ©',
-            subtitle: 'Ù…Ø±Ø§Ø¬Ø¹Ø© Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø§Ù†Ø¶Ù…Ø§Ù… Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø© Ù„Ù„Ø¬Ù…Ø¹ÙŠØ©',
-            icon: Icons.person_add_alt_1,
-          ),
-          const SizedBox(height: 24),
-          pendingAsync.when(
-            data: (requests) => Row(
+    return RefreshIndicator(
+      color: AppTheme.primaryColor,
+      onRefresh: () async => ref.invalidate(pendingMembershipsProvider),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SectionHeader(
+              title: 'طلبات العضوية',
+              subtitle: 'مراجعة طلبات الانضمام الجديدة للجمعية',
+              icon: Icons.person_add_alt_1_rounded,
+            ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
+            const SizedBox(height: 20),
+            pendingAsync.when(
+              data: (requests) => Row(
+                children: [
+                  _StatCard(
+                    label: 'إجمالي الطلبات',
+                    value: '${requests.length}',
+                    icon: Icons.analytics_rounded,
+                    gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                  ),
+                  const SizedBox(width: 12),
+                  _StatCard(
+                    label: 'بانتظار المراجعة',
+                    value: requests.where((r) => r.status == 'SUBMITTED').length.toString(),
+                    icon: Icons.hourglass_top_rounded,
+                    gradient: const LinearGradient(colors: [Color(0xFFB45309), Color(0xFFD97706)]),
+                  ),
+                ],
+              ).animate().fadeIn(delay: 200.ms),
+              loading: () => const _LoadingShimmer(),
+              error: (_, __) => const SizedBox(),
+            ),
+            const SizedBox(height: 28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _StatCard(
-                  label: 'Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ',
-                  value: '${requests.length}',
-                  icon: Icons.analytics,
-                  color: AppTheme.primaryColor,
+                Text(
+                  'الطلبات الأخيرة',
+                  style: GoogleFonts.tajawal(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1A1A2E),
+                  ),
                 ),
-                const SizedBox(width: 12),
-                _StatCard(
-                  label: 'Ø¨Ø§Ù†ØªØ¸Ø§Ø± Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
-                  value: requests.where((r) => r.status == 'SUBMITTED').length.toString(),
-                  icon: Icons.hourglass_top,
-                  color: const Color(0xFFB45309),
+                GestureDetector(
+                  onTap: () => ref.invalidate(pendingMembershipsProvider),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(Icons.refresh_rounded, size: 18, color: AppTheme.primaryColor),
+                  ),
                 ),
               ],
             ),
-            loading: () => const LinearProgressIndicator(),
-            error: (_, index) => const SizedBox(),
-          ),
-          const SizedBox(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Ø§Ù„Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø£Ø®ÙŠØ±Ø©',
-                style: theme.textTheme.titleMedium?.copyWith(
-                    color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                onPressed: () => ref.invalidate(pendingMembershipsProvider),
-                icon: const Icon(Icons.refresh, size: 20, color: AppTheme.secondaryColor),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          pendingAsync.when(
-            data: (requests) {
-              if (requests.isEmpty) return _EmptyState(message: 'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø·Ù„Ø¨Ø§Øª Ø¹Ø¶ÙˆÙŠØ© Ø­Ø§Ù„ÙŠØ§Ù‹');
-              return ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: requests.length,
-                separatorBuilder: (_, index) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final req = requests[index];
-                  return _MembershipRequestCard(
-                    request: req,
-                    onApprove: () async {
-                      await adminService.reviewRequest(req.id, 'APPROVED');
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('âœ… ØªÙ… Ù‚Ø¨ÙˆÙ„ Ø§Ù„Ø·Ù„Ø¨'), backgroundColor: Color(0xFF15803D)),
-                        );
-                      }
-                    },
-                    onReject: () async {
-                      await adminService.reviewRequest(req.id, 'REJECTED');
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('âŒ ØªÙ… Ø±ÙØ¶ Ø§Ù„Ø·Ù„Ø¨'), backgroundColor: Color(0xFFB91C1C)),
-                        );
-                      }
-                    },
+            const SizedBox(height: 16),
+            pendingAsync.when(
+              data: (requests) {
+                if (requests.isEmpty) {
+                  return const _EmptyState(
+                    message: 'لا توجد طلبات عضوية حالياً',
+                    icon: Icons.inbox_rounded,
                   );
-                },
-              );
-            },
-            loading: () => const Center(child: Padding(padding: EdgeInsets.all(40), child: CircularProgressIndicator())),
-            error: (e, _) => _ErrorState(),
-          ),
-        ],
+                }
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: requests.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final req = requests[index];
+                    return _MembershipRequestCard(
+                      request: req,
+                      onApprove: () async {
+                        await adminService.reviewRequest(req.id, 'APPROVED');
+                        ref.invalidate(pendingMembershipsProvider);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            _successSnack('✅ تم قبول الطلب بنجاح'),
+                          );
+                        }
+                      },
+                      onReject: () async {
+                        await adminService.reviewRequest(req.id, 'REJECTED');
+                        ref.invalidate(pendingMembershipsProvider);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            _errorSnack('❌ تم رفض الطلب'),
+                          );
+                        }
+                      },
+                    ).animate(delay: (index * 80).ms).fadeIn().slideY(begin: 0.05);
+                  },
+                );
+              },
+              loading: () => const _LoadingShimmer(),
+              error: (e, _) => _ErrorState(error: e.toString()),
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
 }
 
-// â”€â”€ Events Tab â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 2: EVENTS
+// ─────────────────────────────────────────────────────────────────────────────
 class _EventsTab extends ConsumerWidget {
   const _EventsTab();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final eventsAsync = ref.watch(adminEventsProvider);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TabHeader(
-            title: 'Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ù†Ø´Ø·Ø©',
-            subtitle: 'ØªÙ†Ø¸ÙŠÙ… Ø§Ù„ÙØ¹Ø§Ù„ÙŠØ§Øª ÙˆØ§Ù„ÙˆØ±Ø´Ø§Øª Ø§Ù„Ù…ÙŠØ¯Ø§Ù†ÙŠØ©',
-            icon: Icons.event_available,
-          ),
-          const SizedBox(height: 24),
-          eventsAsync.when(
-            data: (events) => Row(
+    return RefreshIndicator(
+      color: AppTheme.primaryColor,
+      onRefresh: () async => ref.invalidate(adminEventsProvider),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SectionHeader(
+              title: 'إدارة الأنشطة',
+              subtitle: 'تنظيم الفعاليات والورشات الميدانية',
+              icon: Icons.event_available_rounded,
+            ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
+            const SizedBox(height: 20),
+            eventsAsync.when(
+              data: (events) => Row(
+                children: [
+                  _StatCard(
+                    label: 'أنشطة مجدولة',
+                    value: '${events.length}',
+                    icon: Icons.calendar_month_rounded,
+                    gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                  ),
+                  const SizedBox(width: 12),
+                  _StatCard(
+                    label: 'فعاليات مميزة',
+                    value: events.where((e) => e.isFeatured).length.toString(),
+                    icon: Icons.star_rounded,
+                    gradient: const LinearGradient(colors: [Color(0xFFD4AF37), Color(0xFFB8960C)]),
+                  ),
+                ],
+              ).animate().fadeIn(delay: 200.ms),
+              loading: () => const _LoadingShimmer(),
+              error: (_, __) => const SizedBox(),
+            ),
+            const SizedBox(height: 28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _StatCard(
-                  label: 'Ø£Ù†Ø´Ø·Ø© Ù…Ø¬Ø¯ÙˆÙ„Ø©',
-                  value: '${events.length}',
-                  icon: Icons.calendar_month,
-                  color: AppTheme.primaryColor,
+                Text(
+                  'قائمة الأنشطة',
+                  style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
                 ),
-                const SizedBox(width: 12),
-                _StatCard(
-                  label: 'ÙØ¹Ø§Ù„ÙŠØ§Øª Ù…Ù…ÙŠØ²Ø©',
-                  value: events.where((e) => e.isFeatured).length.toString(),
-                  icon: Icons.star_border,
-                  color: const Color(0xFFB45309),
+                GestureDetector(
+                  onTap: () => context.push('/admin/events/create'),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add_rounded, color: Colors.white, size: 16),
+                        const SizedBox(width: 6),
+                        Text('نشاط جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-            loading: () => const LinearProgressIndicator(),
-            error: (_, index) => const SizedBox(),
-          ),
-          const SizedBox(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø£Ù†Ø´Ø·Ø©',
-                style: theme.textTheme.titleMedium?.copyWith(
-                    color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
-              ),
-              ElevatedButton.icon(
-                onPressed: () => context.push('/admin/events/create'),
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Ù†Ø´Ø§Ø· Ø¬Ø¯ÙŠØ¯'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          eventsAsync.when(
-            data: (events) {
-              if (events.isEmpty) return _EmptyState(message: 'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø£Ù†Ø´Ø·Ø© Ø­Ø§Ù„ÙŠØ§Ù‹');
-              return ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: events.length,
-                separatorBuilder: (_, index) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final event = events[index];
-                  return _AdminEventCard(event: event);
-                },
-              );
-            },
-            loading: () => const Center(child: Padding(padding: EdgeInsets.all(40), child: CircularProgressIndicator())),
-            error: (e, _) => _ErrorState(),
-          ),
-        ],
+            const SizedBox(height: 16),
+            eventsAsync.when(
+              data: (events) {
+                if (events.isEmpty) {
+                  return const _EmptyState(message: 'لا توجد أنشطة حالياً — أضف نشاطاً جديداً!', icon: Icons.event_busy_rounded);
+                }
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: events.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    return _AdminEventCard(event: events[index])
+                        .animate(delay: (index * 80).ms)
+                        .fadeIn()
+                        .slideY(begin: 0.05);
+                  },
+                );
+              },
+              loading: () => const _LoadingShimmer(),
+              error: (e, _) => _ErrorState(error: e.toString()),
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
 }
 
-// â”€â”€ News Tab â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 3: NEWS
+// ─────────────────────────────────────────────────────────────────────────────
 class _NewsTab extends ConsumerWidget {
   const _NewsTab();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final newsAsync = ref.watch(adminNewsProvider);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TabHeader(
-            title: 'Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ø®Ø¨Ø§Ø±',
-            subtitle: 'Ù†Ø´Ø± Ø§Ù„Ù…Ø³ØªØ¬Ø¯Ø§Øª ÙˆØ§Ù„Ø´Ø±Ø§ÙƒØ§Øª Ø§Ù„Ø±Ø³Ù…ÙŠØ©',
-            icon: Icons.newspaper,
-          ),
-          const SizedBox(height: 24),
-          newsAsync.when(
-            data: (posts) => Row(
+    return RefreshIndicator(
+      color: AppTheme.primaryColor,
+      onRefresh: () async => ref.invalidate(adminNewsProvider),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SectionHeader(
+              title: 'إدارة الأخبار',
+              subtitle: 'نشر المستجدات والشراكات الرسمية',
+              icon: Icons.newspaper_rounded,
+            ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
+            const SizedBox(height: 20),
+            newsAsync.when(
+              data: (posts) => Row(
+                children: [
+                  _StatCard(
+                    label: 'إجمالي المقالات',
+                    value: '${posts.length}',
+                    icon: Icons.article_outlined,
+                    gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                  ),
+                  const SizedBox(width: 12),
+                  _StatCard(
+                    label: 'مقالات مثبتة',
+                    value: posts.where((p) => p.isPinned).length.toString(),
+                    icon: Icons.push_pin_rounded,
+                    gradient: const LinearGradient(colors: [Color(0xFF6D28D9), Color(0xFF7C3AED)]),
+                  ),
+                ],
+              ).animate().fadeIn(delay: 200.ms),
+              loading: () => const _LoadingShimmer(),
+              error: (_, __) => const SizedBox(),
+            ),
+            const SizedBox(height: 28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _StatCard(
-                  label: 'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…Ù‚Ø§Ù„Ø§Øª',
-                  value: '${posts.length}',
-                  icon: Icons.article_outlined,
-                  color: AppTheme.primaryColor,
+                Text(
+                  'آخر المنشورات',
+                  style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
                 ),
-                const SizedBox(width: 12),
-                _StatCard(
-                  label: 'Ù…Ù‚Ø§Ù„Ø§Øª Ù…Ø«Ø¨ØªØ©',
-                  value: posts.where((p) => p.isPinned).length.toString(),
-                  icon: Icons.push_pin_outlined,
-                  color: const Color(0xFFB45309),
+                GestureDetector(
+                  onTap: () => context.push('/admin/news/create'),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.post_add_rounded, color: Colors.white, size: 16),
+                        const SizedBox(width: 6),
+                        Text('خبر جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-            loading: () => const LinearProgressIndicator(),
-            error: (_, index) => const SizedBox(),
-          ),
-          const SizedBox(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Ø¢Ø®Ø± Ø§Ù„Ù…Ù†Ø´ÙˆØ±Ø§Øª',
-                style: theme.textTheme.titleMedium?.copyWith(
-                    color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
-              ),
-              ElevatedButton.icon(
-                onPressed: () => context.push('/admin/news/create'),
-                icon: const Icon(Icons.post_add, size: 16),
-                label: const Text('Ø®Ø¨Ø± Ø¬Ø¯ÙŠØ¯'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          newsAsync.when(
-            data: (posts) {
-              if (posts.isEmpty) return _EmptyState(message: 'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø£Ø®Ø¨Ø§Ø± Ø­Ø§Ù„ÙŠØ§Ù‹');
-              return ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: posts.length,
-                separatorBuilder: (_, index) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final post = posts[index];
-                  return _AdminNewsCard(post: post);
-                },
-              );
-            },
-            loading: () => const Center(child: Padding(padding: EdgeInsets.all(40), child: CircularProgressIndicator())),
-            error: (e, _) => _ErrorState(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// â”€â”€ Shared UI Components â”€â”€
-
-class _TabHeader extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-
-  const _TabHeader({required this.title, required this.subtitle, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppTheme.primaryColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Icon(icon, color: AppTheme.primaryColor, size: 28),
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+            const SizedBox(height: 16),
+            newsAsync.when(
+              data: (posts) {
+                if (posts.isEmpty) {
+                  return const _EmptyState(message: 'لا توجد أخبار حالياً — انشر أول خبر!', icon: Icons.newspaper_rounded);
+                }
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: posts.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    return _AdminNewsCard(post: posts[index])
+                        .animate(delay: (index * 80).ms)
+                        .fadeIn()
+                        .slideY(begin: 0.05);
+                  },
+                );
+              },
+              loading: () => const _LoadingShimmer(),
+              error: (e, _) => _ErrorState(error: e.toString()),
             ),
-            Text(
-              subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade600),
-            ),
+            const SizedBox(height: 40),
           ],
         ),
-      ],
-    );
-  }
-}
-
-class _EmptyState extends StatelessWidget {
-  final String message;
-  const _EmptyState({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(40),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        children: [
-          Icon(Icons.inbox_outlined, size: 48, color: Colors.grey.shade400),
-          const SizedBox(height: 16),
-          Text(message, style: TextStyle(color: Colors.grey.shade600)),
-        ],
       ),
     );
   }
 }
 
-class _ErrorState extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 4: REPORTS
+// ─────────────────────────────────────────────────────────────────────────────
+class _ReportsTab extends ConsumerWidget {
+  const _ReportsTab();
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFEF2F2),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: const Row(
-        children: [
-          Icon(Icons.error_outline, color: Color(0xFFB91C1C)),
-          SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'ØªØ¹Ø°Ù‘Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø®Ø§Ø¯Ù…. ØªØ£ÙƒØ¯ Ù…Ù† ØªØ´ØºÙŠÙ„ NestJS.',
-              style: TextStyle(color: Color(0xFFB91C1C), fontSize: 12),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reportsAsync = ref.watch(adminReportsProvider);
+
+    return RefreshIndicator(
+      color: AppTheme.primaryColor,
+      onRefresh: () async => ref.invalidate(adminReportsProvider),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SectionHeader(
+              title: 'البلاغات المدنية',
+              subtitle: 'متابعة بلاغات التخريب أو الإهمال للمواقع التراثية',
+              icon: Icons.flag_rounded,
+            ).animate().fadeIn(delay: 100.ms),
+            const SizedBox(height: 24),
+            reportsAsync.when(
+              data: (reports) {
+                if (reports.isEmpty) {
+                  return const _EmptyState(message: 'لا توجد بلاغات حالياً', icon: Icons.flag_outlined);
+                }
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: reports.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, i) => _ReportCard(
+                    title: reports[i]['incidentCategory']?.toString() ?? 'بلاغ عام',
+                    description: reports[i]['description']?.toString() ?? '',
+                    status: reports[i]['status']?.toString() ?? 'PENDING',
+                  ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05),
+                );
+              },
+              loading: () => const _LoadingShimmer(),
+              error: (e, _) => _ErrorState(error: e.toString()),
             ),
-          ),
+            const SizedBox(height: 40),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 5: FINANCIALS
+// ─────────────────────────────────────────────────────────────────────────────
+class _FinancialsTab extends ConsumerWidget {
+  const _FinancialsTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contributionsAsync = ref.watch(adminContributionsProvider);
+    final finService = ref.read(financialServiceProvider);
+
+    return RefreshIndicator(
+      color: AppTheme.primaryColor,
+      onRefresh: () async => ref.invalidate(adminContributionsProvider),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SectionHeader(
+              title: 'المساهمات المالية',
+              subtitle: 'التحقق من وصول اشتراكات العضوية والتبرعات',
+              icon: Icons.account_balance_wallet_rounded,
+            ).animate().fadeIn(delay: 100.ms),
+            const SizedBox(height: 24),
+            contributionsAsync.when(
+              data: (items) {
+                if (items.isEmpty) {
+                  return const _EmptyState(message: 'لا توجد مساهمات حالياً', icon: Icons.payments_outlined);
+                }
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: items.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, i) => _ContributionCard(
+                    amount: '${items[i]['amount']} DZD',
+                    type: items[i]['type']?.toString() ?? '',
+                    status: items[i]['status']?.toString() ?? 'PENDING',
+                    onApprove: () async {
+                      await finService.reviewContribution(items[i]['_id'], 'VERIFIED');
+                      ref.invalidate(adminContributionsProvider);
+                      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم التحقق من المساهمة'));
+                    },
+                    onReject: () async {
+                      await finService.reviewContribution(items[i]['_id'], 'REJECTED');
+                      ref.invalidate(adminContributionsProvider);
+                      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('❌ تم رفض المساهمة'));
+                    },
+                  ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05),
+                );
+              },
+              loading: () => const _LoadingShimmer(),
+              error: (e, _) => _ErrorState(error: e.toString()),
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 6: SETTINGS
+// ─────────────────────────────────────────────────────────────────────────────
+class _SettingsTab extends ConsumerStatefulWidget {
+  const _SettingsTab();
+
+  @override
+  ConsumerState<_SettingsTab> createState() => _SettingsTabState();
+}
+
+class _SettingsTabState extends ConsumerState<_SettingsTab> {
+  final _feeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(financialServiceProvider).getSettings().then((s) {
+      if (mounted) _feeController.text = (s['annualMembershipFee'] ?? 2000).toString();
+    });
+  }
+
+  @override
+  void dispose() {
+    _feeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SectionHeader(
+            title: 'إعدادات المنصة',
+            subtitle: 'التحكم في الرسوم والمحتوى الإخباري والأنشطة',
+            icon: Icons.settings_rounded,
+          ).animate().fadeIn(delay: 100.ms),
+          const SizedBox(height: 24),
+
+          // Fee settings card
+          _SettingsItemCard(
+            title: 'الاشتراك السنوي الوطني',
+            icon: Icons.payments_rounded,
+            iconColor: const Color(0xFF15803D),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _feeController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      suffixText: 'DZD',
+                      suffixStyle: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: () async {
+                    final fee = int.tryParse(_feeController.text) ?? 2000;
+                    await ref.read(financialServiceProvider).updateMembershipFee(fee);
+                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم حفظ الرسوم'));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryColor,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text('حفظ'),
+                ),
+              ],
+            ),
+          ).animate().fadeIn(delay: 200.ms),
+
+          const SizedBox(height: 16),
+
+          // Quick links card
+          _SettingsItemCard(
+            title: 'روابط سريعة',
+            icon: Icons.link_rounded,
+            iconColor: const Color(0xFF6D28D9),
+            child: Column(
+              children: [
+                _QuickLinkTile(
+                  icon: Icons.event_note_rounded,
+                  label: 'إنشاء نشاط جديد',
+                  onTap: () => context.push('/admin/events/create'),
+                ),
+                const Divider(height: 1),
+                _QuickLinkTile(
+                  icon: Icons.post_add_rounded,
+                  label: 'نشر خبر جديد',
+                  onTap: () => context.push('/admin/news/create'),
+                ),
+                const Divider(height: 1),
+                _QuickLinkTile(
+                  icon: Icons.people_rounded,
+                  label: 'طلبات العضوية',
+                  onTap: () => DefaultTabController.of(context).animateTo(0),
+                ),
+              ],
+            ),
+          ).animate().fadeIn(delay: 300.ms),
+
+          const SizedBox(height: 40),
         ],
       ),
     );
   }
 }
 
-class _AdminEventCard extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────────────────────
+// PREMIUM ADMIN EVENT CARD — with PopupMenu
+// ─────────────────────────────────────────────────────────────────────────────
+class _AdminEventCard extends ConsumerWidget {
   final ActivityEvent event;
   const _AdminEventCard({required this.event});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(event.imageUrl, width: 60, height: 60, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) => Container(width: 60, height: 60, color: Colors.grey.shade200)),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(event.titleAr, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
-                const SizedBox(height: 4),
-                Text(DateFormat('dd MMMM yyyy', 'ar').format(event.date), style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
-              ],
+            borderRadius: const BorderRadius.only(topRight: Radius.circular(18), bottomRight: Radius.circular(18)),
+            child: Image.network(
+              event.imageUrl,
+              width: 80, height: 80,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                width: 80, height: 80,
+                color: AppTheme.primaryColor.withValues(alpha: 0.08),
+                child: const Icon(Icons.event_rounded, color: AppTheme.primaryColor, size: 32),
+              ),
             ),
           ),
-          const Icon(Icons.edit_outlined, color: AppTheme.secondaryColor, size: 20),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    event.titleAr,
+                    style: GoogleFonts.tajawal(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: const Color(0xFF1A1A2E),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today_rounded, size: 12, color: AppTheme.secondaryColor),
+                      const SizedBox(width: 4),
+                      Text(
+                        DateFormat('dd MMM yyyy', 'ar').format(event.date),
+                        style: GoogleFonts.tajawal(fontSize: 11, color: AppTheme.secondaryColor),
+                      ),
+                      if (event.isFeatured) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppTheme.accentColor.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text('مميّزة', style: GoogleFonts.tajawal(fontSize: 9, color: AppTheme.accentColor, fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert_rounded, color: Color(0xFF94A3B8), size: 22),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            elevation: 8,
+            onSelected: (value) async {
+              if (value == 'edit') {
+                context.push('/admin/events/create', extra: event);
+              } else if (value == 'delete') {
+                final confirmed = await _confirmDelete(context, 'حذف النشاط', event.titleAr);
+                if (confirmed == true) {
+                  await ref.read(eventServiceProvider).deleteEvent(event.id);
+                  ref.invalidate(adminEventsProvider);
+                  ref.invalidate(upcomingEventsProvider);
+                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('🗑️ تم حذف النشاط'));
+                }
+              }
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: 'edit',
+                child: Row(children: [
+                  Icon(Icons.edit_outlined, size: 18, color: AppTheme.primaryColor),
+                  const SizedBox(width: 10),
+                  Text('تعديل', style: GoogleFonts.tajawal(fontWeight: FontWeight.w600)),
+                ]),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(children: [
+                  const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
+                  const SizedBox(width: 10),
+                  Text('حذف', style: GoogleFonts.tajawal(fontWeight: FontWeight.w600, color: Colors.red)),
+                ]),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
-class _AdminNewsCard extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────────────────────
+// PREMIUM ADMIN NEWS CARD — with PopupMenu
+// ─────────────────────────────────────────────────────────────────────────────
+class _AdminNewsCard extends ConsumerWidget {
   final NewsPost post;
   const _AdminNewsCard({required this.post});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Icon(post.isPinned ? Icons.push_pin : Icons.article, color: AppTheme.primaryColor.withValues(alpha: 0.5), size: 24),
-          const SizedBox(width: 16),
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryColor.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              post.isPinned ? Icons.push_pin_rounded : Icons.article_rounded,
+              color: AppTheme.primaryColor,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(post.titleAr, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.primaryColor), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(
+                  post.titleAr,
+                  style: GoogleFonts.tajawal(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: const Color(0xFF1A1A2E),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 4),
-                Text(post.category, style: TextStyle(fontSize: 10, color: AppTheme.secondaryColor, fontWeight: FontWeight.bold)),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _categoryLabel(post.category),
+                    style: GoogleFonts.tajawal(fontSize: 10, color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ],
             ),
           ),
-          const Icon(Icons.more_vert, color: Colors.grey, size: 20),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert_rounded, color: Color(0xFF94A3B8), size: 22),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            elevation: 8,
+            onSelected: (value) async {
+              if (value == 'edit') {
+                context.push('/admin/news/create', extra: post);
+              } else if (value == 'delete') {
+                final confirmed = await _confirmDelete(context, 'حذف الخبر', post.titleAr);
+                if (confirmed == true) {
+                  await ref.read(newsServiceProvider).deletePost(post.id);
+                  ref.invalidate(adminNewsProvider);
+                  ref.invalidate(newsProvider);
+                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('🗑️ تم حذف الخبر'));
+                }
+              }
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: 'edit',
+                child: Row(children: [
+                  Icon(Icons.edit_outlined, size: 18, color: AppTheme.primaryColor),
+                  const SizedBox(width: 10),
+                  Text('تعديل', style: GoogleFonts.tajawal(fontWeight: FontWeight.w600)),
+                ]),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(children: [
+                  const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
+                  const SizedBox(width: 10),
+                  Text('حذف', style: GoogleFonts.tajawal(fontWeight: FontWeight.w600, color: Colors.red)),
+                ]),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
-}
 
-// â”€â”€ Stat Card Widget â”€â”€
-class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  const _StatCard({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: color, size: 22),
-            const SizedBox(height: 12),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: color, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Colors.grey.shade600, fontSize: 9),
-            ),
-          ],
-        ),
-      ),
-    );
+  String _categoryLabel(String cat) {
+    const map = {
+      'ANNOUNCEMENT': 'إعلان',
+      'PARTNERSHIP': 'شراكة رسمية',
+      'EVENT_REPORT': 'تقرير نشاط',
+    };
+    return map[cat] ?? 'عام';
   }
 }
 
-// â”€â”€ Membership Request Card â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
+// MEMBERSHIP REQUEST CARD
+// ─────────────────────────────────────────────────────────────────────────────
 class _MembershipRequestCard extends StatelessWidget {
   final MembershipRequest request;
   final VoidCallback onApprove;
@@ -565,43 +979,48 @@ class _MembershipRequestCard extends StatelessWidget {
     required this.onReject,
   });
 
-  Color _statusColor(String status) {
-    switch (status) {
-      case 'APPROVED': return const Color(0xFF15803D);
-      case 'REJECTED': return const Color(0xFFB91C1C);
-      default: return const Color(0xFFB45309);
-    }
+  Color _statusColor(String s) {
+    if (s == 'APPROVED') return const Color(0xFF15803D);
+    if (s == 'REJECTED') return const Color(0xFFB91C1C);
+    return const Color(0xFFB45309);
   }
 
-  String _statusLabel(String status) {
-    switch (status) {
-      case 'APPROVED': return 'Ù…Ù‚Ø¨ÙˆÙ„';
-      case 'REJECTED': return 'Ù…Ø±ÙÙˆØ¶';
-      default: return 'Ù‚ÙŠØ¯ Ø§Ù„Ø¯Ø±Ø§Ø³Ø©';
-    }
+  String _statusLabel(String s) {
+    if (s == 'APPROVED') return 'مقبول';
+    if (s == 'REJECTED') return 'مرفوض';
+    return 'قيد الدراسة';
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final statusColor = _statusColor(request.status);
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4)),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-                child: const Icon(Icons.person, color: AppTheme.primaryColor),
+              Container(
+                width: 46, height: 46,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    request.fullName.isNotEmpty ? request.fullName[0] : 'م',
+                    style: GoogleFonts.tajawal(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -610,14 +1029,11 @@ class _MembershipRequestCard extends StatelessWidget {
                   children: [
                     Text(
                       request.fullName,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryColor),
+                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14, color: const Color(0xFF1A1A2E)),
                     ),
                     Text(
                       '${request.submissionDate.day}/${request.submissionDate.month}/${request.submissionDate.year}',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                          color: Colors.grey.shade500),
+                      style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade500),
                     ),
                   ],
                 ),
@@ -626,31 +1042,32 @@ class _MembershipRequestCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: statusColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: statusColor.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   _statusLabel(request.status),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                      color: statusColor, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.tajawal(fontSize: 11, color: statusColor, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
           ),
           if (request.status == 'SUBMITTED') ...[
             const SizedBox(height: 16),
-            const Divider(height: 1),
+            const Divider(height: 1, color: Color(0xFFF1F5F9)),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: onReject,
-                    icon: const Icon(Icons.close, size: 16),
-                    label: const Text('Ø±ÙØ¶'),
+                    icon: const Icon(Icons.close_rounded, size: 16),
+                    label: Text('رفض', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFFB91C1C),
                       side: const BorderSide(color: Color(0xFFB91C1C)),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                   ),
                 ),
@@ -658,12 +1075,13 @@ class _MembershipRequestCard extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: onApprove,
-                    icon: const Icon(Icons.check, size: 16),
-                    label: const Text('Ù‚Ø¨ÙˆÙ„'),
+                    icon: const Icon(Icons.check_rounded, size: 16),
+                    label: Text('قبول', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF15803D),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                   ),
                 ),
@@ -675,131 +1093,218 @@ class _MembershipRequestCard extends StatelessWidget {
     );
   }
 }
-class _ReportsTab extends ConsumerWidget {
-  const _ReportsTab();
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final reportsAsync = ref.watch(adminReportsProvider);
 
-    return _TabWrapper(
-      title: 'Ø§Ù„Ø¨Ù„Ø§ØºØ§Øª Ø§Ù„Ù…Ø¯Ù†ÙŠØ©',
-      subtitle: 'Ù…ØªØ§Ø¨Ø¹Ø© Ø¨Ù„Ø§ØºØ§Øª Ø§Ù„ØªØ®Ø±ÙŠØ¨ Ø£Ùˆ Ø§Ù„Ø¥Ù‡Ù…Ø§Ù„ Ù„Ù„Ù…ÙˆØ§Ù‚Ø¹ Ø§Ù„ØªØ±Ø§Ø«ÙŠØ©',
-      child: reportsAsync.when(
-        data: (reports) => ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          itemCount: reports.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
-          itemBuilder: (context, i) => _RequestCard(
-            title: reports[i]['incidentCategory'] ?? 'Report',
-            subtitle: reports[i]['description'] ?? '',
-            tag: reports[i]['status'] ?? 'PENDING',
-            color: Colors.green,
-            onApprove: null, // Logic to "Mark as Resolved" could go here
-            onReject: null,
-          ),
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-      ),
-    );
-  }
-}
-
-// â”€â”€ Tab 3: Financials â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-class _FinancialsTab extends ConsumerWidget {
-  const _FinancialsTab();
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final contributionsAsync = ref.watch(adminContributionsProvider);
-    final finService = ref.read(financialServiceProvider);
-
-    return _TabWrapper(
-      title: 'Ø§Ù„Ù…Ø³Ø§Ù‡Ù…Ø§Øª Ø§Ù„Ù…Ø§Ù„ÙŠØ©',
-      subtitle: 'Ø§Ù„ØªØ­Ù‚Ù‚ Ù…Ù† ÙˆØµÙˆÙ„ Ø§Ø´ØªØ±Ø§ÙƒØ§Øª Ø§Ù„Ø¹Ø¶ÙˆÙŠØ© ÙˆØ§Ù„ØªØ¨Ø±Ø¹Ø§Øª Ø§Ù„Ø®Ø§ØµØ© Ø¨Ø§Ù„Ù…Ø´Ø§Ø±ÙŠØ¹',
-      child: contributionsAsync.when(
-        data: (items) => ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          itemCount: items.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
-          itemBuilder: (context, i) => _RequestCard(
-                title: '${items[i]['amount']} DZD',
-                subtitle: items[i]['type'],
-                tag: items[i]['status'],
-                color: Colors.deepPurple,
-                onApprove: () => finService.reviewContribution(items[i]['_id'], 'VERIFIED'),
-                onReject: () => finService.reviewContribution(items[i]['_id'], 'REJECTED'),
-              ),
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-      ),
-    );
-  }
-}
-class _SettingsTab extends ConsumerStatefulWidget {
-  const _SettingsTab();
-  @override
-  ConsumerState<_SettingsTab> createState() => _SettingsTabState();
-}
-
-class _SettingsTabState extends ConsumerState<_SettingsTab> {
-  final _feeController = TextEditingController();
-  
-  @override
-  void initState() {
-    super.initState();
-    ref.read(financialServiceProvider).getSettings().then((s) {
-      _feeController.text = (s['annualMembershipFee'] ?? 2000).toString();
-    });
-  }
+// ─────────────────────────────────────────────────────────────────────────────
+// REPORT CARD
+// ─────────────────────────────────────────────────────────────────────────────
+class _ReportCard extends StatelessWidget {
+  final String title, description, status;
+  const _ReportCard({required this.title, required this.description, required this.status});
 
   @override
   Widget build(BuildContext context) {
-    return _TabWrapper(
-      title: 'Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ù…Ù†ØµØ©',
-      subtitle: 'Ø§Ù„ØªØ­ÙƒÙ… ÙÙŠ Ø§Ù„Ø±Ø³ÙˆÙ… ÙˆØ§Ù„Ù…Ø­ØªÙˆÙ‰ Ø§Ù„Ø¥Ø®Ø¨Ø§Ø±ÙŠ ÙˆØ§Ù„Ø£Ù†Ø´Ø·Ø©',
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 24),
-        child: Column(
-          children: [
-            _SettingsCard(
-              title: 'Ø§Ù„Ø§Ø´ØªØ±Ø§Ùƒ Ø§Ù„Ø³Ù†ÙˆÙŠ Ø§Ù„ÙˆØ·Ù†ÙŠ',
-              child: Row(
-                children: [
-                  Expanded(child: TextField(controller: _feeController, keyboardType: TextInputType.number)),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: () {
-                      final fee = int.tryParse(_feeController.text) ?? 2000;
-                      ref.read(financialServiceProvider).updateMembershipFee(fee);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Fee Updated')));
-                    },
-                    child: const Text('Update'),
-                  ),
-                ],
-              ),
+    final isResolved = status == 'RESOLVED';
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 3))],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42, height: 42,
+            decoration: BoxDecoration(
+              color: isResolved ? const Color(0xFF15803D).withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-            const SizedBox(height: 20),
-            _SettingsCard(
-              title: 'Ø§Ù„Ù…Ø­ØªÙˆÙ‰ Ø§Ù„Ø¹Ø§Ù…',
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.event_note),
-                    title: const Text('Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ù†Ø´Ø·Ø©'),
-                    onTap: () {
-                      context.push('/admin/events/create');
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.newspaper),
-                    title: const Text('Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ø®Ø¨Ø§Ø±'),
-                    onTap: () {
-                      context.push('/admin/news/create');
-                    },
-                  ),
-                ],
+            child: Icon(
+              isResolved ? Icons.check_circle_rounded : Icons.flag_rounded,
+              color: isResolved ? const Color(0xFF15803D) : Colors.red,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13)),
+                if (description.isNotEmpty)
+                  Text(description, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade500), maxLines: 2, overflow: TextOverflow.ellipsis),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: isResolved ? const Color(0xFFDCFCE7) : const Color(0xFFFEE2E2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              isResolved ? 'محلول' : 'معلّق',
+              style: GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold, color: isResolved ? const Color(0xFF15803D) : Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CONTRIBUTION CARD
+// ─────────────────────────────────────────────────────────────────────────────
+class _ContributionCard extends StatelessWidget {
+  final String amount, type, status;
+  final VoidCallback onApprove, onReject;
+  const _ContributionCard({required this.amount, required this.type, required this.status, required this.onApprove, required this.onReject});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 46, height: 46,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [Color(0xFF6D28D9), Color(0xFF7C3AED)]),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.payments_rounded, color: Colors.white, size: 22),
               ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(amount, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 16, color: const Color(0xFF6D28D9))),
+                    Text(type, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade500)),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: status == 'VERIFIED' ? const Color(0xFFDCFCE7) : const Color(0xFFFFF7ED),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  status == 'VERIFIED' ? 'مُتحقق' : 'انتظار',
+                  style: GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold, color: status == 'VERIFIED' ? const Color(0xFF15803D) : const Color(0xFFB45309)),
+                ),
+              ),
+            ],
+          ),
+          if (status == 'PENDING') ...[
+            const SizedBox(height: 14),
+            const Divider(height: 1),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: onReject,
+                    style: OutlinedButton.styleFrom(foregroundColor: Colors.red, side: const BorderSide(color: Colors.red), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                    child: Text('رفض', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: onApprove,
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF15803D), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                    child: Text('تحقق', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SHARED UI WIDGETS
+// ─────────────────────────────────────────────────────────────────────────────
+class _SectionHeader extends StatelessWidget {
+  final String title, subtitle;
+  final IconData icon;
+  const _SectionHeader({required this.title, required this.subtitle, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF052011), Color(0xFF1A6B3A)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Icon(icon, color: Colors.white, size: 24),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E))),
+              Text(subtitle, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade500)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String label, value;
+  final IconData icon;
+  final Gradient gradient;
+  const _StatCard({required this.label, required this.value, required this.icon, required this.gradient});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withValues(alpha: 0.12), blurRadius: 12, offset: const Offset(0, 4)),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: Colors.white.withValues(alpha: 0.8), size: 22),
+            const SizedBox(height: 12),
+            Text(
+              value,
+              style: GoogleFonts.tajawal(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white, height: 1),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: GoogleFonts.tajawal(fontSize: 10, color: Colors.white.withValues(alpha: 0.75), letterSpacing: 0.5),
             ),
           ],
         ),
@@ -807,21 +1312,116 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
     );
   }
 }
-class _SettingsCard extends StatelessWidget {
-  final String title;
-  final Widget child;
-  const _SettingsCard({required this.title, required this.child});
+
+class _EmptyState extends StatelessWidget {
+  final String message;
+  final IconData icon;
+  const _EmptyState({required this.message, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(48),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFF1F5F9)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 56, color: const Color(0xFFCBD5E1)),
+          const SizedBox(height: 16),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.tajawal(color: const Color(0xFF94A3B8), fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ErrorState extends StatelessWidget {
+  final String error;
+  const _ErrorState({required this.error});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFEF2F2),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFFECACA)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline_rounded, color: Color(0xFFB91C1C), size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'تعذّر الاتصال بالخادم. تأكد من تشغيل NestJS.\n$error',
+              style: GoogleFonts.tajawal(color: const Color(0xFFB91C1C), fontSize: 12),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoadingShimmer extends StatelessWidget {
+  const _LoadingShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+        3,
+        (i) => Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1200.ms, color: Colors.white.withValues(alpha: 0.6)),
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsItemCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color iconColor;
+  final Widget child;
+  const _SettingsItemCard({required this.title, required this.icon, required this.iconColor, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
+          Row(
+            children: [
+              Icon(icon, color: iconColor, size: 20),
+              const SizedBox(width: 8),
+              Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14, color: const Color(0xFF1A1A2E))),
+            ],
+          ),
+          const SizedBox(height: 16),
           child,
         ],
       ),
@@ -829,79 +1429,65 @@ class _SettingsCard extends StatelessWidget {
   }
 }
 
-class _TabWrapper extends StatelessWidget {
-  final String title, subtitle;
-  final Widget child;
-  const _TabWrapper({required this.title, required this.subtitle, required this.child});
+class _QuickLinkTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _QuickLinkTile({required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(24),
-          color: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
-              Text(subtitle, style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey)),
-            ],
-          ),
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(icon, color: AppTheme.primaryColor, size: 20),
+      title: Text(label, style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.w500)),
+      trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Color(0xFFCBD5E1)),
+      onTap: onTap,
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+SnackBar _successSnack(String msg) => SnackBar(
+  content: Text(msg, style: GoogleFonts.tajawal()),
+  backgroundColor: const Color(0xFF15803D),
+  behavior: SnackBarBehavior.floating,
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  margin: const EdgeInsets.all(12),
+);
+
+SnackBar _errorSnack(String msg) => SnackBar(
+  content: Text(msg, style: GoogleFonts.tajawal()),
+  backgroundColor: const Color(0xFFB91C1C),
+  behavior: SnackBarBehavior.floating,
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  margin: const EdgeInsets.all(12),
+);
+
+Future<bool?> _confirmDelete(BuildContext context, String title, String name) {
+  return showDialog<bool>(
+    context: context,
+    builder: (_) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      title: Row(children: [
+        const Icon(Icons.warning_amber_rounded, color: Colors.deepOrange),
+        const SizedBox(width: 8),
+        Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+      ]),
+      content: Text('هل تريد حذف "$name" نهائياً؟ لا يمكن التراجع.', style: GoogleFonts.tajawal()),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text('إلغاء', style: GoogleFonts.tajawal()),
         ),
-        Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 24), child: child)),
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+          child: Text('حذف نهائياً', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+        ),
       ],
-    );
-  }
+    ),
+  );
 }
-
-class _RequestCard extends StatelessWidget {
-  final String title, subtitle, tag;
-  final VoidCallback? onApprove, onReject;
-  final Color color;
-
-  const _RequestCard({
-    required this.title, 
-    required this.subtitle, 
-    required this.tag, 
-    this.onApprove, 
-    this.onReject,
-    this.color = AppTheme.primaryColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
-              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Text(tag, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: color))),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.grey)),
-          if (onApprove != null) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(child: OutlinedButton(onPressed: onApprove, child: const Text('Approve'))),
-                const SizedBox(width: 8),
-                Expanded(child: OutlinedButton(onPressed: onReject, child: const Text('Reject'))),
-              ],
-            ),
-          ]
-        ],
-      ),
-    );
-  }
-}
-
-
-

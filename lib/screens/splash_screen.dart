@@ -122,7 +122,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                             ),
                           ],
                         ),
-                      ).animate().fadeIn(duration: 900.ms).scale(curve: Curves.easeOutBack),
+                      ).animate()
+                          .fadeIn(duration: 900.ms)
+                          .scale(curve: Curves.easeOutBack)
+                          .rotate(begin: -0.05, end: 0, duration: 1200.ms, curve: Curves.easeOut),
 
                       const SizedBox(height: 56),
 

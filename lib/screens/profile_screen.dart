@@ -11,7 +11,6 @@ import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
-import 'package:ebzim_app/core/providers/theme_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -133,7 +132,7 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                           ),
                           loading: () => const SizedBox(height: 16),
-                          error: (_, __) => const SizedBox(height: 16),
+                          error: (err, stack) => const SizedBox(height: 16),
                         ),
 
                         const SizedBox(height: 40),

@@ -16,7 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 // Design tokens for the dashboard surface layer
 // ─────────────────────────────────────────────────────────────────────────────
-Color get _kGold => AppTheme.accentColor;
+const Color _kGold = AppTheme.accentColor;
 
 Color _cardBg(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x0CFFFFFF) : Colors.white.withValues(alpha: 0.4);
 Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withValues(alpha: 0.05);

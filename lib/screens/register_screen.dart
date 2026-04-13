@@ -297,7 +297,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                         ? const SizedBox(
                                             height: 24, 
                                             width: 24, 
-                                            child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white)
+                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)
                                           )
                                         : Text(
                                             loc.regAction.toUpperCase(),

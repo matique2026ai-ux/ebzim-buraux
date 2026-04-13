@@ -824,10 +824,11 @@ class _ProjectShowcaseCard extends StatelessWidget {
   }
 }
 
-class _BoardMemberTile extends StatelessWidget {
-  final _BoardMember member;
+class _BoardMemberCard extends StatelessWidget {
+  final String name;
+  final String role;
   final bool isDark;
-  const _BoardMemberTile({required this.member, required this.isDark});
+  const _BoardMemberCard({required this.name, required this.role, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -845,7 +846,7 @@ class _BoardMemberTile extends StatelessWidget {
               color: AppTheme.accentColor.withValues(alpha: isDark ? 0.1 : 0.08),
               border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.25), width: 1.5),
             ),
-            child: Icon(member.icon, color: AppTheme.accentColor, size: 18),
+            child: const Icon(Icons.person_outline_rounded, color: AppTheme.accentColor, size: 18),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -853,11 +854,11 @@ class _BoardMemberTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isAr ? member.roleAr : isFr ? member.roleFr : member.role,
+                  name,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 13),
                 ),
                 Text(
-                  isAr ? 'المكتب التنفيذي — سطيف' : isFr ? 'Bureau Exécutif — Sétif' : 'Executive Board — Sétif',
+                  '$role — ${isAr ? 'سطيف' : 'Sétif'}',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],

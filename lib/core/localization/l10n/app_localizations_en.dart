@@ -806,4 +806,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authLoginSuccess => 'Logged in successfully!';
+
+  @override
+  String get libTitle => 'Digital Library';
+
+  @override
+  String get libSearchHint => 'Search publications and research...';
+
+  @override
+  String get libCatArt => 'Arts & Archaeology';
+
+  @override
+  String get libCatResearch => 'Research & Studies';
+
+  @override
+  String get libCatReports => 'Institutional Reports';
+
+  @override
+  String get libOpenPdf => 'Open PDF File';
+
+  @override
+  String get libSummary => 'Work Summary';
+
+  @override
+  String get finTitle => 'Contributions & Subscriptions';
+
+  @override
+  String get finJoinOptional => 'Join as Official Member (Optional)';
+
+  @override
+  String get finMembershipFee => 'Membership Fee';
+
+  @override
+  String get finNeedsRenewal => 'Needs Renewal';
+
+  @override
+  String get finApplyJoin => 'Apply to Join';
+
+  @override
+  String get finRenewNow => 'Renew Membership Now';
+
+  @override
+  String get finSupportProjects => 'Support Association Projects';
+
+  @override
+  String get finChooseType => 'Choose contribution type:';
+
+  @override
+  String get finGeneral => 'General Donation';
+
+  @override
+  String get finProject => 'Project Support';
+
+  @override
+  String get finAmountLabel => 'Amount (DZD)';
+
+  @override
+  String get finSend => 'Send Contribution';
+
+  @override
+  String get finJoinInvite =>
+      'Would you like to get an official membership card and participate in decisions?';
+
+  @override
+  String get repTitle => 'Civic Reporting';
+
+  @override
+  String get repIncidentCat => 'Incident Category';
+
+  @override
+  String get repDescription => 'Observation Description';
+
+  @override
+  String get repLocation => 'Geographic Location';
+
+  @override
+  String get repSubmit => 'Submit Report';
+
+  @override
+  String get repSuccess =>
+      'Thank you for helping protect our heritage. Your report will be reviewed immediately.';
 }

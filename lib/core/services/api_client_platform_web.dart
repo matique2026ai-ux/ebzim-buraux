@@ -9,6 +9,6 @@ void configurePlatformProxy(Dio dio) {
 }
 
 String getPlatformBaseUrl(bool isTest) {
-  // Use localhost on web for local development.
-  return 'http://localhost:3000/api/v1/';
+  // Use the production Render URL for web and admin panel
+  return 'https://ebzim-api.onrender.com/api/v1/';
 }

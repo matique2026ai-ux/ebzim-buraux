@@ -19,6 +19,7 @@ class ReportService {
       final response = await _apiClient.dio.post(
         '/reports',
         data: {
+          'title': '${category.toUpperCase()} Report',
           'incidentCategory': category.toUpperCase(),
           'description': description,
           'locationData': {

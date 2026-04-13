@@ -1629,6 +1629,162 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تم تسجيل الدخول بنجاح!'**
   String get authLoginSuccess;
+
+  /// No description provided for @libTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المكتبة الرقمية'**
+  String get libTitle;
+
+  /// No description provided for @libSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'بحث في المنشورات والبحوث...'**
+  String get libSearchHint;
+
+  /// No description provided for @libCatArt.
+  ///
+  /// In ar, this message translates to:
+  /// **'فنون وآثار'**
+  String get libCatArt;
+
+  /// No description provided for @libCatResearch.
+  ///
+  /// In ar, this message translates to:
+  /// **'بحوث ودراسات'**
+  String get libCatResearch;
+
+  /// No description provided for @libCatReports.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقارير مؤسساتية'**
+  String get libCatReports;
+
+  /// No description provided for @libOpenPdf.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح ملف PDF'**
+  String get libOpenPdf;
+
+  /// No description provided for @libSummary.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخص العمل'**
+  String get libSummary;
+
+  /// No description provided for @finTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المساهمات والاشتراكات'**
+  String get finTitle;
+
+  /// No description provided for @finJoinOptional.
+  ///
+  /// In ar, this message translates to:
+  /// **'الانضمام كعضو رسمي (اختياري)'**
+  String get finJoinOptional;
+
+  /// No description provided for @finMembershipFee.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيمة الاشتراك'**
+  String get finMembershipFee;
+
+  /// No description provided for @finNeedsRenewal.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يتم التجديد'**
+  String get finNeedsRenewal;
+
+  /// No description provided for @finApplyJoin.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقديم طلب انضمام'**
+  String get finApplyJoin;
+
+  /// No description provided for @finRenewNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'تجديد الاشتراك الآن'**
+  String get finRenewNow;
+
+  /// No description provided for @finSupportProjects.
+  ///
+  /// In ar, this message translates to:
+  /// **'دعم مشاريع الجمعية'**
+  String get finSupportProjects;
+
+  /// No description provided for @finChooseType.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر نوع المساهمة:'**
+  String get finChooseType;
+
+  /// No description provided for @finGeneral.
+  ///
+  /// In ar, this message translates to:
+  /// **'تبرع عام'**
+  String get finGeneral;
+
+  /// No description provided for @finProject.
+  ///
+  /// In ar, this message translates to:
+  /// **'دعم مشروع'**
+  String get finProject;
+
+  /// No description provided for @finAmountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ (دج)'**
+  String get finAmountLabel;
+
+  /// No description provided for @finSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال المساهمة'**
+  String get finSend;
+
+  /// No description provided for @finJoinInvite.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل ترغب في الحصول على بطاقة انخراط رسمية والمشاركة في القرارات؟'**
+  String get finJoinInvite;
+
+  /// No description provided for @repTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'البلاغات المدنية'**
+  String get repTitle;
+
+  /// No description provided for @repIncidentCat.
+  ///
+  /// In ar, this message translates to:
+  /// **'صنف الحادثة'**
+  String get repIncidentCat;
+
+  /// No description provided for @repDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصف الوضع الملاحظ'**
+  String get repDescription;
+
+  /// No description provided for @repLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع الجغرافي'**
+  String get repLocation;
+
+  /// No description provided for @repSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال البلاغ'**
+  String get repSubmit;
+
+  /// No description provided for @repSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'شكراً لمساهمتك في حماية الموروث. سيتم مراجعة بلاغك فوراً.'**
+  String get repSuccess;
 }
 
 class _AppLocalizationsDelegate

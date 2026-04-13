@@ -387,7 +387,7 @@ class _ProjectCard extends StatelessWidget {
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorBuilder: (context, error, stackTrace) => Container(
                     height: 180,
                     width: double.infinity,
                     color: const Color(0xFF081C10),
@@ -512,7 +512,7 @@ class _ProjectCard extends StatelessWidget {
                       Text(
                         isAr ? 'نسبة الإنجاز' : 'Avancement',
                         style: TextStyle(
-                          color: isDark ? Colors.white40 : Colors.black38,
+                          color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black38,
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                         ),
@@ -545,7 +545,7 @@ class _ProjectCard extends StatelessWidget {
                 Text(
                   isAr ? 'محطات المشروع' : 'Étapes du Projet',
                   style: GoogleFonts.tajawal(
-                    color: isDark ? Colors.white40 : Colors.black38,
+                    color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black38,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.5,
@@ -594,7 +594,7 @@ class _MilestoneTile extends StatelessWidget {
                   ? AppTheme.accentColor.withValues(alpha: 0.15)
                   : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.04)),
               border: Border.all(
-                color: done ? AppTheme.accentColor : (isDark ? Colors.white20 : Colors.black12),
+                color: done ? AppTheme.accentColor : (isDark ? Colors.white.withValues(alpha: 0.2) : Colors.black12),
                 width: 1.5,
               ),
             ),
@@ -608,7 +608,7 @@ class _MilestoneTile extends StatelessWidget {
               label,
               style: TextStyle(
                 color: done
-                    ? (isDark ? Colors.white87 : Colors.black87)
+                    ? (isDark ? Colors.white.withValues(alpha: 0.87) : Colors.black87)
                     : (isDark ? Colors.white38 : Colors.black38),
                 fontSize: 13,
                 decoration: done ? null : null,

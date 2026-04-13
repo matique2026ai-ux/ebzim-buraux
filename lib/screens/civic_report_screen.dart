@@ -9,6 +9,7 @@ import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:ebzim_app/core/services/report_service.dart';
+import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Report Type model
@@ -317,7 +318,7 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                                 ? 'بلاغك يُحوَّل لفريق جمعية إبزيم للمتابعة والإحالة'
                                 : 'Votre signalement est traité par l\'équipe Ebzim',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: isDark ? Colors.white50 : Colors.black45,
+                              color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black45,
                             ),
                           ),
                         ],
@@ -492,7 +493,7 @@ class _StepLabel extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.tajawal(
-            color: isDark ? Colors.white70 : Colors.black72,
+            color: isDark ? Colors.white70 : Colors.black.withValues(alpha: 0.72),
             fontSize: 14,
             fontWeight: FontWeight.w700,
           ),
@@ -555,7 +556,7 @@ class _TypeTile extends StatelessWidget {
                   Text(
                     isAr ? type.descAr : type.descFr,
                     style: TextStyle(
-                      color: isDark ? Colors.white40 : Colors.black45,
+                      color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black45,
                       fontSize: 11,
                     ),
                     maxLines: 1,
@@ -611,7 +612,7 @@ class _FieldBox extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(
-            color: isDark ? Colors.white25 : Colors.black26,
+            color: isDark ? Colors.white.withValues(alpha: 0.25) : Colors.black26,
             fontSize: 13,
           ),
           prefixIcon: Padding(

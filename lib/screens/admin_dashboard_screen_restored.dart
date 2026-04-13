@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
@@ -38,7 +38,6 @@ class AdminDashboardScreen extends ConsumerWidget {
               },
             ),
           ],
-          bottom: const TabBar(
             isScrollable: true,
             tabs: [
               Tab(icon: Icon(Icons.group_add), text: 'العضوية'),
@@ -807,7 +806,6 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
     );
   }
 }
-class _SettingsCard extends StatelessWidget {
   final String title;
   final Widget child;
   const _SettingsCard({required this.title, required this.child});
@@ -823,80 +821,6 @@ class _SettingsCard extends StatelessWidget {
           Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           child,
-        ],
-      ),
-    );
-  }
-}
-
-class _TabWrapper extends StatelessWidget {
-  final String title, subtitle;
-  final Widget child;
-  const _TabWrapper({required this.title, required this.subtitle, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(24),
-          color: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
-              Text(subtitle, style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey)),
-            ],
-          ),
-        ),
-        Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 24), child: child)),
-      ],
-    );
-  }
-}
-
-class _RequestCard extends StatelessWidget {
-  final String title, subtitle, tag;
-  final VoidCallback? onApprove, onReject;
-  final Color color;
-
-  const _RequestCard({
-    required this.title, 
-    required this.subtitle, 
-    required this.tag, 
-    this.onApprove, 
-    this.onReject,
-    this.color = AppTheme.primaryColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.black.withValues(alpha: 0.05))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
-              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Text(tag, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: color))),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.grey)),
-          if (onApprove != null) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(child: OutlinedButton(onPressed: onApprove, child: const Text('Approve'))),
-                const SizedBox(width: 8),
-                Expanded(child: OutlinedButton(onPressed: onReject, child: const Text('Reject'))),
-              ],
-            ),
-          ]
         ],
       ),
     );

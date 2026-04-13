@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
+import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:ebzim_app/core/models/statute_article.dart';
 import 'package:ebzim_app/core/services/statute_service.dart';
 
@@ -40,7 +40,6 @@ class _StatuteScreenState extends ConsumerState<StatuteScreen> with TickerProvid
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final theme = Theme.of(context);
     final statutes = ref.watch(statuteServiceProvider).getStatutes();
 
     return Scaffold(
@@ -194,14 +193,17 @@ class _ArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.75),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.1)),
+    return GlassCard(
+      padding: const EdgeInsets.all(24),
+      border: Border.all(
+        color: isDark 
+            ? AppTheme.accentColor.withValues(alpha: 0.15)
+            : AppTheme.accentColor.withValues(alpha: 0.1),
+        width: 1.5,
       ),
+      color: isDark 
+          ? Colors.white.withValues(alpha: 0.02)
+          : Colors.white.withValues(alpha: 0.65),
       child: Column(
         crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
@@ -209,30 +211,33 @@ class _ArticleCard extends StatelessWidget {
             mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               if (!isAr) _NumberBadge(number: articleNumber),
-              if (!isAr) const SizedBox(width: 12),
+              if (!isAr) const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   title,
                   textAlign: isAr ? TextAlign.end : TextAlign.start,
                   style: GoogleFonts.tajawal(
                     fontWeight: FontWeight.w800,
-                    fontSize: 15,
-                    color: isDark ? Colors.white : AppTheme.primaryColor,
+                    fontSize: 16,
+                    color: isDark ? const Color(0xFFF0EDE6) : AppTheme.primaryColor,
+                    letterSpacing: 0.2,
                   ),
                 ),
               ),
-              if (isAr) const SizedBox(width: 12),
+              if (isAr) const SizedBox(width: 16),
               if (isAr) _NumberBadge(number: articleNumber),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             content,
             textAlign: isAr ? TextAlign.end : TextAlign.start,
             style: GoogleFonts.cairo(
-              fontSize: 13,
-              height: 1.6,
-              color: isDark ? Colors.white70 : AppTheme.primaryColor.withValues(alpha: 0.8),
+              fontSize: 14,
+              height: 1.8, // Enhanced reading height for institutional text
+              color: isDark 
+                  ? Colors.white.withValues(alpha: 0.85) 
+                  : AppTheme.primaryColor.withValues(alpha: 0.8),
             ),
           ),
         ],

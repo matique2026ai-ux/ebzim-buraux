@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
+import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/models/publication.dart';
 import 'package:ebzim_app/core/services/publication_service.dart';
@@ -208,17 +209,18 @@ class _PublicationCard extends StatelessWidget {
         crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+            child: GlassCard(
+              padding: EdgeInsets.zero,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isDark 
+                    ? AppTheme.accentColor.withValues(alpha: 0.15)
+                    : AppTheme.accentColor.withValues(alpha: 0.1),
+                width: 1.5,
               ),
+              color: isDark 
+                  ? Colors.white.withValues(alpha: 0.02)
+                  : Colors.white.withValues(alpha: 0.65),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Stack(

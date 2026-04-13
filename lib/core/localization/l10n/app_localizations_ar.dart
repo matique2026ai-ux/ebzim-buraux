@@ -807,4 +807,84 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get authLoginSuccess => 'تم تسجيل الدخول بنجاح!';
+
+  @override
+  String get libTitle => 'المكتبة الرقمية';
+
+  @override
+  String get libSearchHint => 'بحث في المنشورات والبحوث...';
+
+  @override
+  String get libCatArt => 'فنون وآثار';
+
+  @override
+  String get libCatResearch => 'بحوث ودراسات';
+
+  @override
+  String get libCatReports => 'تقارير مؤسساتية';
+
+  @override
+  String get libOpenPdf => 'فتح ملف PDF';
+
+  @override
+  String get libSummary => 'ملخص العمل';
+
+  @override
+  String get finTitle => 'المساهمات والاشتراكات';
+
+  @override
+  String get finJoinOptional => 'الانضمام كعضو رسمي (اختياري)';
+
+  @override
+  String get finMembershipFee => 'قيمة الاشتراك';
+
+  @override
+  String get finNeedsRenewal => 'لم يتم التجديد';
+
+  @override
+  String get finApplyJoin => 'تقديم طلب انضمام';
+
+  @override
+  String get finRenewNow => 'تجديد الاشتراك الآن';
+
+  @override
+  String get finSupportProjects => 'دعم مشاريع الجمعية';
+
+  @override
+  String get finChooseType => 'اختر نوع المساهمة:';
+
+  @override
+  String get finGeneral => 'تبرع عام';
+
+  @override
+  String get finProject => 'دعم مشروع';
+
+  @override
+  String get finAmountLabel => 'المبلغ (دج)';
+
+  @override
+  String get finSend => 'إرسال المساهمة';
+
+  @override
+  String get finJoinInvite =>
+      'هل ترغب في الحصول على بطاقة انخراط رسمية والمشاركة في القرارات؟';
+
+  @override
+  String get repTitle => 'البلاغات المدنية';
+
+  @override
+  String get repIncidentCat => 'صنف الحادثة';
+
+  @override
+  String get repDescription => 'وصف الوضع الملاحظ';
+
+  @override
+  String get repLocation => 'الموقع الجغرافي';
+
+  @override
+  String get repSubmit => 'إرسال البلاغ';
+
+  @override
+  String get repSuccess =>
+      'شكراً لمساهمتك في حماية الموروث. سيتم مراجعة بلاغك فوراً.';
 }

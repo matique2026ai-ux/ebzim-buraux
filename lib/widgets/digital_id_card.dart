@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';

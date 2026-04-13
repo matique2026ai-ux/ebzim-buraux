@@ -814,4 +814,85 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get authLoginSuccess => 'Connexion réussie !';
+
+  @override
+  String get libTitle => 'Bibliothèque Numérique';
+
+  @override
+  String get libSearchHint => 'Rechercher des publications et recherches...';
+
+  @override
+  String get libCatArt => 'Arts & Archéologie';
+
+  @override
+  String get libCatResearch => 'Recherches & Études';
+
+  @override
+  String get libCatReports => 'Rapports Institutionnels';
+
+  @override
+  String get libOpenPdf => 'Ouvrir le fichier PDF';
+
+  @override
+  String get libSummary => 'Résumé du travail';
+
+  @override
+  String get finTitle => 'Contributions & Adhésions';
+
+  @override
+  String get finJoinOptional =>
+      'Rejoindre en tant que membre officiel (Optionnel)';
+
+  @override
+  String get finMembershipFee => 'Montant de l\'adhésion';
+
+  @override
+  String get finNeedsRenewal => 'Renouvellement requis';
+
+  @override
+  String get finApplyJoin => 'Demander l\'adhésion';
+
+  @override
+  String get finRenewNow => 'Renouveler l\'adhésion maintenant';
+
+  @override
+  String get finSupportProjects => 'Soutenir les projets de l\'association';
+
+  @override
+  String get finChooseType => 'Choisissez le type de contribution :';
+
+  @override
+  String get finGeneral => 'Don général';
+
+  @override
+  String get finProject => 'Soutien de projet';
+
+  @override
+  String get finAmountLabel => 'Montant (DZD)';
+
+  @override
+  String get finSend => 'Envoyer la contribution';
+
+  @override
+  String get finJoinInvite =>
+      'Souhaitez-vous obtenir une carte de membre officielle et participer aux décisions ?';
+
+  @override
+  String get repTitle => 'Signalements Citoyens';
+
+  @override
+  String get repIncidentCat => 'Catégorie de l\'incident';
+
+  @override
+  String get repDescription => 'Description de l\'observation';
+
+  @override
+  String get repLocation => 'Localisation géographique';
+
+  @override
+  String get repSubmit => 'Soumettre le signalement';
+
+  @override
+  String get repSuccess =>
+      'Merci d\'aider à protéger notre patrimoine. Votre signalement sera examiné immédiatement.';
 }

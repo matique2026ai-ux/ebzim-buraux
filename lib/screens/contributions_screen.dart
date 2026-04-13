@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +9,7 @@ import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:ebzim_app/core/services/financial_service.dart';
+import 'package:ebzim_app/core/services/user_profile_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Contributions & Subscriptions Screen
@@ -103,7 +103,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                               children: [
                                 Text(
                                   loc.finMembershipFee,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: isDark ? Colors.white50 : Colors.black45),
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black45),
                                 ),
                                 _isLoadingFee 
                                   ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))

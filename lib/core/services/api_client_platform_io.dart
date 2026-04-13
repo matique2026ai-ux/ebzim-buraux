@@ -24,12 +24,6 @@ void configurePlatformProxy(Dio dio) {
 }
 
 String getPlatformBaseUrl(bool isTest) {
-  // On Android emulators, localhost is 10.0.2.2
-  const androidBaseUrl = 'http://10.0.2.2:3000/api/v1/';
-  const localBaseUrl = 'http://localhost:3000/api/v1/';
-  
-  if (defaultTargetPlatform == TargetPlatform.android && !isTest) {
-    return androidBaseUrl;
-  }
-  return localBaseUrl;
+  // Use the production Render URL for all platforms
+  return 'https://ebzim-api.onrender.com/api/v1/';
 }

@@ -35,6 +35,7 @@ import 'package:ebzim_app/screens/civic_report_screen.dart';
 import 'package:ebzim_app/screens/statute_screen.dart';
 import 'package:ebzim_app/screens/digital_library_screen.dart';
 import 'package:ebzim_app/screens/contributions_screen.dart';
+import 'package:ebzim_app/screens/news_detail_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Premium Page Transition Builders
@@ -281,6 +282,13 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/onboarding',
       pageBuilder: (context, state) => _fadePage(state, const OnboardingSliderScreen()),
+    ),
+    GoRoute(
+      path: '/news/:id',
+      pageBuilder: (context, state) {
+        final post = state.extra as NewsPost;
+        return _slidePage(state, NewsDetailScreen(post: post));
+      },
     ),
   ],
 );

@@ -171,7 +171,27 @@ class EventDetailsScreen extends ConsumerWidget {
       floatingActionButton: eventAsync.hasValue ? Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: ElevatedButton.icon(
-          onPressed: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.eventRegister))),
+          onPressed: () => showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text('تسجيل في الفعالية'),
+              content: const Text('للتسجيل في هذه الفعالية، يرجى التواصل مع الجمعية عبر صفحة المساهمات أو الاتصال المباشر.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('إغلاق'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.push('/contributions');
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor, foregroundColor: Colors.white),
+                  child: const Text('المساهمات'),
+                ),
+              ],
+            ),
+          ),
           icon: const Icon(Icons.check_circle_outline),
           label: Text(loc.eventRegister.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           style: ElevatedButton.styleFrom(

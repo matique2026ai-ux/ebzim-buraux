@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
@@ -31,7 +31,7 @@ class AdminDashboardScreen extends ConsumerWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.logout, color: AppTheme.primaryColor),
-              tooltip: 'Déconnexion / تسجيل الخروج',
+              tooltip: 'DÃ©connexion / ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬',
               onPressed: () async {
                 await ref.read(authProvider.notifier).logout();
                 if (context.mounted) context.go('/login');
@@ -41,12 +41,12 @@ class AdminDashboardScreen extends ConsumerWidget {
           bottom: const TabBar(
             isScrollable: true,
             tabs: [
-              Tab(icon: Icon(Icons.group_add), text: 'العضوية'),
-              Tab(icon: Icon(Icons.event), text: 'الأنشطة'),
-              Tab(icon: Icon(Icons.newspaper), text: 'الأخبار'),
-              Tab(icon: Icon(Icons.report_problem), text: 'البلاغات'),
-              Tab(icon: Icon(Icons.attach_money), text: 'المساهمات'),
-              Tab(icon: Icon(Icons.settings), text: 'الإعدادات'),
+              Tab(icon: Icon(Icons.group_add), text: 'Ø§Ù„Ø¹Ø¶ÙˆÙŠØ©'),
+              Tab(icon: Icon(Icons.event), text: 'Ø§Ù„Ø£Ù†Ø´Ø·Ø©'),
+              Tab(icon: Icon(Icons.newspaper), text: 'Ø§Ù„Ø£Ø®Ø¨Ø§Ø±'),
+              Tab(icon: Icon(Icons.report_problem), text: 'Ø§Ù„Ø¨Ù„Ø§ØºØ§Øª'),
+              Tab(icon: Icon(Icons.attach_money), text: 'Ø§Ù„Ù…Ø³Ø§Ù‡Ù…Ø§Øª'),
+              Tab(icon: Icon(Icons.settings), text: 'Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª'),
             ],
             labelColor: AppTheme.primaryColor,
             unselectedLabelColor: Colors.grey,
@@ -70,7 +70,7 @@ class AdminDashboardScreen extends ConsumerWidget {
   }
 }
 
-// ── Membership Tab ──
+// â”€â”€ Membership Tab â”€â”€
 class _MembershipTab extends ConsumerWidget {
   const _MembershipTab();
 
@@ -86,8 +86,8 @@ class _MembershipTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _TabHeader(
-            title: 'طلبات العضوية',
-            subtitle: 'مراجعة طلبات الانضمام الجديدة للجمعية',
+            title: 'Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø¹Ø¶ÙˆÙŠØ©',
+            subtitle: 'Ù…Ø±Ø§Ø¬Ø¹Ø© Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø§Ù†Ø¶Ù…Ø§Ù… Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø© Ù„Ù„Ø¬Ù…Ø¹ÙŠØ©',
             icon: Icons.person_add_alt_1,
           ),
           const SizedBox(height: 24),
@@ -95,14 +95,14 @@ class _MembershipTab extends ConsumerWidget {
             data: (requests) => Row(
               children: [
                 _StatCard(
-                  label: 'الإجمالي',
+                  label: 'Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ',
                   value: '${requests.length}',
                   icon: Icons.analytics,
                   color: AppTheme.primaryColor,
                 ),
                 const SizedBox(width: 12),
                 _StatCard(
-                  label: 'بانتظار المراجعة',
+                  label: 'Ø¨Ø§Ù†ØªØ¸Ø§Ø± Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
                   value: requests.where((r) => r.status == 'SUBMITTED').length.toString(),
                   icon: Icons.hourglass_top,
                   color: const Color(0xFFB45309),
@@ -117,7 +117,7 @@ class _MembershipTab extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'الطلبات الأخيرة',
+                'Ø§Ù„Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø£Ø®ÙŠØ±Ø©',
                 style: theme.textTheme.titleMedium?.copyWith(
                     color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
               ),
@@ -130,7 +130,7 @@ class _MembershipTab extends ConsumerWidget {
           const SizedBox(height: 16),
           pendingAsync.when(
             data: (requests) {
-              if (requests.isEmpty) return _EmptyState(message: 'لا توجد طلبات عضوية حالياً');
+              if (requests.isEmpty) return _EmptyState(message: 'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø·Ù„Ø¨Ø§Øª Ø¹Ø¶ÙˆÙŠØ© Ø­Ø§Ù„ÙŠØ§Ù‹');
               return ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -144,7 +144,7 @@ class _MembershipTab extends ConsumerWidget {
                       await adminService.reviewRequest(req.id, 'APPROVED');
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('✅ تم قبول الطلب'), backgroundColor: Color(0xFF15803D)),
+                          const SnackBar(content: Text('âœ… ØªÙ… Ù‚Ø¨ÙˆÙ„ Ø§Ù„Ø·Ù„Ø¨'), backgroundColor: Color(0xFF15803D)),
                         );
                       }
                     },
@@ -152,7 +152,7 @@ class _MembershipTab extends ConsumerWidget {
                       await adminService.reviewRequest(req.id, 'REJECTED');
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('❌ تم رفض الطلب'), backgroundColor: Color(0xFFB91C1C)),
+                          const SnackBar(content: Text('âŒ ØªÙ… Ø±ÙØ¶ Ø§Ù„Ø·Ù„Ø¨'), backgroundColor: Color(0xFFB91C1C)),
                         );
                       }
                     },
@@ -169,7 +169,7 @@ class _MembershipTab extends ConsumerWidget {
   }
 }
 
-// ── Events Tab ──
+// â”€â”€ Events Tab â”€â”€
 class _EventsTab extends ConsumerWidget {
   const _EventsTab();
 
@@ -184,8 +184,8 @@ class _EventsTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _TabHeader(
-            title: 'إدارة الأنشطة',
-            subtitle: 'تنظيم الفعاليات والورشات الميدانية',
+            title: 'Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ù†Ø´Ø·Ø©',
+            subtitle: 'ØªÙ†Ø¸ÙŠÙ… Ø§Ù„ÙØ¹Ø§Ù„ÙŠØ§Øª ÙˆØ§Ù„ÙˆØ±Ø´Ø§Øª Ø§Ù„Ù…ÙŠØ¯Ø§Ù†ÙŠØ©',
             icon: Icons.event_available,
           ),
           const SizedBox(height: 24),
@@ -193,14 +193,14 @@ class _EventsTab extends ConsumerWidget {
             data: (events) => Row(
               children: [
                 _StatCard(
-                  label: 'أنشطة مجدولة',
+                  label: 'Ø£Ù†Ø´Ø·Ø© Ù…Ø¬Ø¯ÙˆÙ„Ø©',
                   value: '${events.length}',
                   icon: Icons.calendar_month,
                   color: AppTheme.primaryColor,
                 ),
                 const SizedBox(width: 12),
                 _StatCard(
-                  label: 'فعاليات مميزة',
+                  label: 'ÙØ¹Ø§Ù„ÙŠØ§Øª Ù…Ù…ÙŠØ²Ø©',
                   value: events.where((e) => e.isFeatured).length.toString(),
                   icon: Icons.star_border,
                   color: const Color(0xFFB45309),
@@ -215,14 +215,14 @@ class _EventsTab extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'قائمة الأنشطة',
+                'Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø£Ù†Ø´Ø·Ø©',
                 style: theme.textTheme.titleMedium?.copyWith(
                     color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
                 onPressed: () => context.push('/admin/events/create'),
                 icon: const Icon(Icons.add, size: 16),
-                label: const Text('نشاط جديد'),
+                label: const Text('Ù†Ø´Ø§Ø· Ø¬Ø¯ÙŠØ¯'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryColor,
                   foregroundColor: Colors.white,
@@ -234,7 +234,7 @@ class _EventsTab extends ConsumerWidget {
           const SizedBox(height: 16),
           eventsAsync.when(
             data: (events) {
-              if (events.isEmpty) return _EmptyState(message: 'لا توجد أنشطة حالياً');
+              if (events.isEmpty) return _EmptyState(message: 'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø£Ù†Ø´Ø·Ø© Ø­Ø§Ù„ÙŠØ§Ù‹');
               return ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -255,7 +255,7 @@ class _EventsTab extends ConsumerWidget {
   }
 }
 
-// ── News Tab ──
+// â”€â”€ News Tab â”€â”€
 class _NewsTab extends ConsumerWidget {
   const _NewsTab();
 
@@ -270,8 +270,8 @@ class _NewsTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _TabHeader(
-            title: 'إدارة الأخبار',
-            subtitle: 'نشر المستجدات والشراكات الرسمية',
+            title: 'Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ø®Ø¨Ø§Ø±',
+            subtitle: 'Ù†Ø´Ø± Ø§Ù„Ù…Ø³ØªØ¬Ø¯Ø§Øª ÙˆØ§Ù„Ø´Ø±Ø§ÙƒØ§Øª Ø§Ù„Ø±Ø³Ù…ÙŠØ©',
             icon: Icons.newspaper,
           ),
           const SizedBox(height: 24),
@@ -279,14 +279,14 @@ class _NewsTab extends ConsumerWidget {
             data: (posts) => Row(
               children: [
                 _StatCard(
-                  label: 'إجمالي المقالات',
+                  label: 'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…Ù‚Ø§Ù„Ø§Øª',
                   value: '${posts.length}',
                   icon: Icons.article_outlined,
                   color: AppTheme.primaryColor,
                 ),
                 const SizedBox(width: 12),
                 _StatCard(
-                  label: 'مقالات مثبتة',
+                  label: 'Ù…Ù‚Ø§Ù„Ø§Øª Ù…Ø«Ø¨ØªØ©',
                   value: posts.where((p) => p.isPinned).length.toString(),
                   icon: Icons.push_pin_outlined,
                   color: const Color(0xFFB45309),
@@ -301,14 +301,14 @@ class _NewsTab extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'آخر المنشورات',
+                'Ø¢Ø®Ø± Ø§Ù„Ù…Ù†Ø´ÙˆØ±Ø§Øª',
                 style: theme.textTheme.titleMedium?.copyWith(
                     color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
                 onPressed: () => context.push('/admin/news/create'),
                 icon: const Icon(Icons.post_add, size: 16),
-                label: const Text('خبر جديد'),
+                label: const Text('Ø®Ø¨Ø± Ø¬Ø¯ÙŠØ¯'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryColor,
                   foregroundColor: Colors.white,
@@ -320,7 +320,7 @@ class _NewsTab extends ConsumerWidget {
           const SizedBox(height: 16),
           newsAsync.when(
             data: (posts) {
-              if (posts.isEmpty) return _EmptyState(message: 'لا توجد أخبار حالياً');
+              if (posts.isEmpty) return _EmptyState(message: 'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø£Ø®Ø¨Ø§Ø± Ø­Ø§Ù„ÙŠØ§Ù‹');
               return ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -341,7 +341,7 @@ class _NewsTab extends ConsumerWidget {
   }
 }
 
-// ── Shared UI Components ──
+// â”€â”€ Shared UI Components â”€â”€
 
 class _TabHeader extends StatelessWidget {
   final String title;
@@ -423,7 +423,7 @@ class _ErrorState extends StatelessWidget {
           SizedBox(width: 12),
           Expanded(
             child: Text(
-              'تعذّر الاتصال بالخادم. تأكد من تشغيل NestJS.',
+              'ØªØ¹Ø°Ù‘Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø®Ø§Ø¯Ù…. ØªØ£ÙƒØ¯ Ù…Ù† ØªØ´ØºÙŠÙ„ NestJS.',
               style: TextStyle(color: Color(0xFFB91C1C), fontSize: 12),
             ),
           ),
@@ -506,7 +506,7 @@ class _AdminNewsCard extends StatelessWidget {
   }
 }
 
-// ── Stat Card Widget ──
+// â”€â”€ Stat Card Widget â”€â”€
 class _StatCard extends StatelessWidget {
   final String label;
   final String value;
@@ -553,7 +553,7 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-// ── Membership Request Card ──
+// â”€â”€ Membership Request Card â”€â”€
 class _MembershipRequestCard extends StatelessWidget {
   final MembershipRequest request;
   final VoidCallback onApprove;
@@ -575,9 +575,9 @@ class _MembershipRequestCard extends StatelessWidget {
 
   String _statusLabel(String status) {
     switch (status) {
-      case 'APPROVED': return 'مقبول';
-      case 'REJECTED': return 'مرفوض';
-      default: return 'قيد الدراسة';
+      case 'APPROVED': return 'Ù…Ù‚Ø¨ÙˆÙ„';
+      case 'REJECTED': return 'Ù…Ø±ÙÙˆØ¶';
+      default: return 'Ù‚ÙŠØ¯ Ø§Ù„Ø¯Ø±Ø§Ø³Ø©';
     }
   }
 
@@ -646,7 +646,7 @@ class _MembershipRequestCard extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: onReject,
                     icon: const Icon(Icons.close, size: 16),
-                    label: const Text('رفض'),
+                    label: const Text('Ø±ÙØ¶'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFFB91C1C),
                       side: const BorderSide(color: Color(0xFFB91C1C)),
@@ -659,7 +659,7 @@ class _MembershipRequestCard extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onApprove,
                     icon: const Icon(Icons.check, size: 16),
-                    label: const Text('قبول'),
+                    label: const Text('Ù‚Ø¨ÙˆÙ„'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF15803D),
                       foregroundColor: Colors.white,
@@ -682,8 +682,8 @@ class _ReportsTab extends ConsumerWidget {
     final reportsAsync = ref.watch(adminReportsProvider);
 
     return _TabWrapper(
-      title: 'البلاغات المدنية',
-      subtitle: 'متابعة بلاغات التخريب أو الإهمال للمواقع التراثية',
+      title: 'Ø§Ù„Ø¨Ù„Ø§ØºØ§Øª Ø§Ù„Ù…Ø¯Ù†ÙŠØ©',
+      subtitle: 'Ù…ØªØ§Ø¨Ø¹Ø© Ø¨Ù„Ø§ØºØ§Øª Ø§Ù„ØªØ®Ø±ÙŠØ¨ Ø£Ùˆ Ø§Ù„Ø¥Ù‡Ù…Ø§Ù„ Ù„Ù„Ù…ÙˆØ§Ù‚Ø¹ Ø§Ù„ØªØ±Ø§Ø«ÙŠØ©',
       child: reportsAsync.when(
         data: (reports) => ListView.separated(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -705,7 +705,7 @@ class _ReportsTab extends ConsumerWidget {
   }
 }
 
-// ── Tab 3: Financials ───────────────────────────────────────────────────────
+// â”€â”€ Tab 3: Financials â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _FinancialsTab extends ConsumerWidget {
   const _FinancialsTab();
   @override
@@ -714,8 +714,8 @@ class _FinancialsTab extends ConsumerWidget {
     final finService = ref.read(financialServiceProvider);
 
     return _TabWrapper(
-      title: 'المساهمات المالية',
-      subtitle: 'التحقق من وصول اشتراكات العضوية والتبرعات الخاصة بالمشاريع',
+      title: 'Ø§Ù„Ù…Ø³Ø§Ù‡Ù…Ø§Øª Ø§Ù„Ù…Ø§Ù„ÙŠØ©',
+      subtitle: 'Ø§Ù„ØªØ­Ù‚Ù‚ Ù…Ù† ÙˆØµÙˆÙ„ Ø§Ø´ØªØ±Ø§ÙƒØ§Øª Ø§Ù„Ø¹Ø¶ÙˆÙŠØ© ÙˆØ§Ù„ØªØ¨Ø±Ø¹Ø§Øª Ø§Ù„Ø®Ø§ØµØ© Ø¨Ø§Ù„Ù…Ø´Ø§Ø±ÙŠØ¹',
       child: contributionsAsync.when(
         data: (items) => ListView.separated(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -756,14 +756,14 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
   @override
   Widget build(BuildContext context) {
     return _TabWrapper(
-      title: 'إعدادات المنصة',
-      subtitle: 'التحكم في الرسوم والمحتوى الإخباري والأنشطة',
+      title: 'Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ù…Ù†ØµØ©',
+      subtitle: 'Ø§Ù„ØªØ­ÙƒÙ… ÙÙŠ Ø§Ù„Ø±Ø³ÙˆÙ… ÙˆØ§Ù„Ù…Ø­ØªÙˆÙ‰ Ø§Ù„Ø¥Ø®Ø¨Ø§Ø±ÙŠ ÙˆØ§Ù„Ø£Ù†Ø´Ø·Ø©',
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Column(
           children: [
             _SettingsCard(
-              title: 'الاشتراك السنوي الوطني',
+              title: 'Ø§Ù„Ø§Ø´ØªØ±Ø§Ùƒ Ø§Ù„Ø³Ù†ÙˆÙŠ Ø§Ù„ÙˆØ·Ù†ÙŠ',
               child: Row(
                 children: [
                   Expanded(child: TextField(controller: _feeController, keyboardType: TextInputType.number)),
@@ -781,19 +781,19 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
             ),
             const SizedBox(height: 20),
             _SettingsCard(
-              title: 'المحتوى العام',
+              title: 'Ø§Ù„Ù…Ø­ØªÙˆÙ‰ Ø§Ù„Ø¹Ø§Ù…',
               child: Column(
                 children: [
                   ListTile(
                     leading: const Icon(Icons.event_note),
-                    title: const Text('إدارة الأنشطة'),
+                    title: const Text('Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ù†Ø´Ø·Ø©'),
                     onTap: () {
                       context.push('/admin/events/create');
                     },
                   ),
                   ListTile(
                     leading: const Icon(Icons.newspaper),
-                    title: const Text('إدارة الأخبار'),
+                    title: const Text('Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ø®Ø¨Ø§Ø±'),
                     onTap: () {
                       context.push('/admin/news/create');
                     },
@@ -902,3 +902,6 @@ class _RequestCard extends StatelessWidget {
     );
   }
 }
+
+
+

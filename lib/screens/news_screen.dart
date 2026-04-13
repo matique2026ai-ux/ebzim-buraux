@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-// import 'package:go_router/go_router.dart'; // Removed to fix unused import warning
+import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
-import 'package:ebzim_app/core/common_widgets/ebzim_app_bar.dart';
-import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
+import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -240,7 +239,9 @@ class _NewsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final catColor = _categoryColor(post.category, context);
 
-    return Container(
+    return GestureDetector(
+      onTap: () => context.push('/news/${post.id}', extra: post),
+      child: Container(
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(20),
@@ -404,6 +405,7 @@ class _NewsCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ),
+  );
   }
 }

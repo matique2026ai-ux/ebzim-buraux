@@ -293,16 +293,6 @@ class ProfileScreen extends ConsumerWidget {
           error: (e, s) => Center(child: Text(e.toString(), style: theme.textTheme.bodyMedium)),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        backgroundColor: AppTheme.accentColor,
-        elevation: 8,
-        icon: const Icon(Icons.edit_note, color: Colors.black),
-        label: Text(
-          loc.profileEdit, 
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, letterSpacing: 1)
-        ),
-      ),
     );
   }
 }

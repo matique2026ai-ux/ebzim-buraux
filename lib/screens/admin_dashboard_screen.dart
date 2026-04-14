@@ -33,7 +33,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               backgroundColor: AppTheme.primaryColor,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
-                onPressed: () => context.pop(),
+                onPressed: () => context.go('/dashboard'),
               ),
               actions: [
                 IconButton(
@@ -79,40 +79,44 @@ class AdminDashboardScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: AppTheme.accentColor.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5)),
+                          GestureDetector(
+                            onTap: () => context.go('/dashboard'),
+                            behavior: HitTestBehavior.opaque,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 44,
+                                  height: 44,
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.accentColor.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5)),
+                                  ),
+                                  child: const Icon(Icons.admin_panel_settings_rounded, color: AppTheme.accentColor, size: 24),
                                 ),
-                                child: const Icon(Icons.admin_panel_settings_rounded, color: AppTheme.accentColor, size: 24),
-                              ),
-                              const SizedBox(width: 14),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'لوحة الإدارة',
-                                    style: GoogleFonts.tajawal(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                const SizedBox(width: 14),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'لوحة الإدارة',
+                                      style: GoogleFonts.tajawal(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    'جمعية إبزيم للتراث والفنون',
-                                    style: GoogleFonts.tajawal(
-                                      fontSize: 12,
-                                      color: Colors.white.withValues(alpha: 0.6),
+                                    Text(
+                                      'جمعية إبزيم للتراث والفنون',
+                                      style: GoogleFonts.tajawal(
+                                        fontSize: 12,
+                                        color: Colors.white.withValues(alpha: 0.6),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -764,44 +768,48 @@ class _AdminEventCard extends ConsumerWidget {
           ),
           const SizedBox(width: 14),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    event.titleAr,
-                    style: GoogleFonts.tajawal(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: const Color(0xFF1A1A2E),
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(Icons.calendar_today_rounded, size: 12, color: AppTheme.secondaryColor),
-                      const SizedBox(width: 4),
-                      Text(
-                        DateFormat('dd MMM yyyy', 'ar').format(event.date),
-                        style: GoogleFonts.tajawal(fontSize: 11, color: AppTheme.secondaryColor),
+            child: InkWell(
+              onTap: () => context.push('/admin/events/create', extra: event),
+              borderRadius: const BorderRadius.only(topRight: Radius.circular(18), bottomRight: Radius.circular(18)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event.titleAr,
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: const Color(0xFF1A1A2E),
                       ),
-                      if (event.isFeatured) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: AppTheme.accentColor.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text('مميّزة', style: GoogleFonts.tajawal(fontSize: 9, color: AppTheme.accentColor, fontWeight: FontWeight.bold)),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(Icons.calendar_today_rounded, size: 12, color: AppTheme.secondaryColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          DateFormat('dd MMM yyyy', 'ar').format(event.date),
+                          style: GoogleFonts.tajawal(fontSize: 11, color: AppTheme.secondaryColor),
                         ),
+                        if (event.isFeatured) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppTheme.accentColor.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text('مميّزة', style: GoogleFonts.tajawal(fontSize: 9, color: AppTheme.accentColor, fontWeight: FontWeight.bold)),
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -886,32 +894,36 @@ class _AdminNewsCard extends ConsumerWidget {
           ),
           const SizedBox(width: 14),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  post.titleAr,
-                  style: GoogleFonts.tajawal(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                    color: const Color(0xFF1A1A2E),
+            child: InkWell(
+              onTap: () => context.push('/admin/news/create', extra: post),
+              borderRadius: BorderRadius.circular(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    post.titleAr,
+                    style: GoogleFonts.tajawal(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: const Color(0xFF1A1A2E),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(8),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      _categoryLabel(post.category),
+                      style: GoogleFonts.tajawal(fontSize: 10, color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  child: Text(
-                    _categoryLabel(post.category),
-                    style: GoogleFonts.tajawal(fontSize: 10, color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           PopupMenuButton<String>(

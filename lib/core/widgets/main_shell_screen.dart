@@ -167,30 +167,6 @@ class _NavTile extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Active Indicator Line
-          Positioned(
-            top: 0,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeOutCubic,
-              height: 3,
-              width: isSelected ? 36 : 0,
-              decoration: BoxDecoration(
-                color: activeColor,
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(3)),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: activeColor.withValues(alpha: 0.45),
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                    : [],
-              ),
-            ),
-          ),
           // Content
           Column(
             mainAxisAlignment: MainAxisAlignment.center,

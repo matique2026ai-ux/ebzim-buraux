@@ -51,3 +51,16 @@ node_modules/
 .env.*
 .DS_Store
 Thumbs.db
+
+# Project-specific logs
+*.txt
+*.log
+query
+analysis_result.txt
+analyze_output*.txt
+build_log.txt
+errors.txt
+true_errors.txt
+final_analysis*.txt
+fresh_analysis*.txt
+

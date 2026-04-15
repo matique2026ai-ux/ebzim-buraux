@@ -8,10 +8,10 @@ export class MultilingualText {
   @Prop({ required: true })
   ar: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: '' })
   fr: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: '' })
   en: string;
 }
 export const MultilingualTextSchema = SchemaFactory.createForClass(MultilingualText);

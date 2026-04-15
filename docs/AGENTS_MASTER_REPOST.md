@@ -26,10 +26,10 @@ The platform is technically, legally, and linguistically complete for the curren
 - **Serving**: Production builds served via `serve_static.js` on Port 8080.
 
 ### ⚙️ Backend (NestJS)
-- **Path**: `c:\ebzim-buraux\ebzim-backend`
+- **Path**: `c:\ebzim-buraux\backend`
 - **Database**: **MongoDB Atlas** (Cloud).
 - **IP Whitelisting**: If connection fails, the agent must ask the user to whitelist the current IP in the Atlas Dashboard.
-- **Environment**: Port 3000. Managed via `ebzim-backend/.env` (reconstructed in RP-036).
+- **Environment**: Port 3000. Managed via `backend/.env` (reconstructed in RP-036).
 - **NO DOCKER**: Run via `npm run start:dev` natively.
 
 ---
@@ -79,6 +79,7 @@ The platform is technically, legally, and linguistically complete for the curren
 | **RP-042** | **Digital Library** | Built searchable research/PDF repository with in-app category chips. |
 | **RP-043** | **Financials** | Added Subscription/Donation system with Dynamic Fee Management. |
 | **RP-044** | **Mission Control** | Final Admin Dashboard redesign (4-sector management system). |
+| **RP-045** | **Deep Cleanup** | Comprehensive project reorganization: Moved scripts/assets, renamed backend, and focused on mobile. |
 
 ---
 
@@ -114,12 +115,12 @@ flutter build web --release
 ### 3. Start the Servers
 - **Backend (Port 3000)**: 
   ```powershell
-  cd ebzim-backend
+  cd backend
   npm run start:dev
   ```
 - **Frontend (Port 8080)**:
   ```powershell
-  node serve_static.js
+  node scripts/serve_static.js
   ```
 
 ### 4. Access Credits

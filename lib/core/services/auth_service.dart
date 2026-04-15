@@ -91,9 +91,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
           e.type == DioExceptionType.receiveTimeout || 
           e.type == DioExceptionType.connectionError) {
         state = AuthState(error: "authErrorNoConnection");
-      } else if (e.response?.statusCode == 401 || e.response?.statusCode == 404 || e.response?.statusCode == 403) {
+      } else if (e.response?.statusCode == 400 || e.response?.statusCode == 401 || e.response?.statusCode == 404 || e.response?.statusCode == 403) {
+        // Handle 400 (Bad Request) as invalid credentials because validation failure often means wrong format/user
         state = AuthState(error: "authErrorInvalid");
       } else {
+        print('[DEBUG AUTH] Unhandled Status Code: ${e.response?.statusCode}');
         state = AuthState(error: "authErrorUnknown");
       }
     } catch (e) {

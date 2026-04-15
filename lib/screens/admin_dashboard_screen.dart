@@ -31,7 +31,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         body: NestedScrollView(
           headerSliverBuilder: (_, __) => [
             SliverAppBar(
-              expandedHeight: 140,
+              expandedHeight: 165,
               floating: false,
               pinned: true,
               backgroundColor: AppTheme.primaryColor,
@@ -71,56 +71,81 @@ class AdminDashboardScreen extends ConsumerWidget {
                 background: Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF052011), Color(0xFF0A3D21), Color(0xFF1A6B3A)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF03140A), Color(0xFF052011)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
                   ),
                   child: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 60),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center, // Centered horizontally
                         children: [
-                          GestureDetector(
-                            onTap: () => context.go('/dashboard'),
-                            behavior: HitTestBehavior.opaque,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 44,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.accentColor.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(14),
-                                    border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5)),
-                                  ),
-                                  child: const Icon(Icons.admin_panel_settings_rounded, color: AppTheme.accentColor, size: 24),
+                          const SizedBox(height: 52), // Space for AppBar leading/actions
+                          // Breadcrumb-style indicator (Centered)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'الرئيسية'.toUpperCase(),
+                                style: GoogleFonts.inter(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0,
                                 ),
-                                const SizedBox(width: 14),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'لوحة الإدارة',
-                                      style: GoogleFonts.tajawal(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Text(
-                                      'جمعية إبزيم للتراث والفنون',
-                                      style: GoogleFonts.tajawal(
-                                        fontSize: 12,
-                                        color: Colors.white.withValues(alpha: 0.6),
-                                      ),
-                                    ),
-                                  ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                child: Icon(Icons.chevron_left_rounded, size: 10, color: Colors.white.withValues(alpha: 0.2)),
+                              ),
+                              Text(
+                                'إدارة النظام'.toUpperCase(),
+                                style: GoogleFonts.inter(
+                                  color: AppTheme.accentColor.withValues(alpha: 0.6),
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0,
                                 ),
-                              ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          // Smaller, centered bold title
+                          Text(
+                            'لوحة الإدارة الشاملة',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.tajawal(
+                              fontSize: 22, // Decreased from 28 to 22
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              height: 1.1,
                             ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 5,
+                                height: 5,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF4ADE80),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'المركز الرئيسي للتحكم والعمليات',
+                                style: GoogleFonts.tajawal(
+                                  fontSize: 10,
+                                  color: Colors.white.withValues(alpha: 0.35),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -856,13 +881,17 @@ class _SettingsTab extends ConsumerStatefulWidget {
 
 class _SettingsTabState extends ConsumerState<_SettingsTab> {
   final _feeController = TextEditingController();
+  bool _isClearingCache = false;
 
   @override
   void initState() {
     super.initState();
-    ref.read(financialServiceProvider).getSettings().then((s) {
-      if (mounted) _feeController.text = (s['annualMembershipFee'] ?? 2000).toString();
-    });
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final s = await ref.read(financialServiceProvider).getSettings();
+    if (mounted) _feeController.text = (s['annualMembershipFee'] ?? 2000).toString();
   }
 
   @override
@@ -879,16 +908,18 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _SectionHeader(
-            title: 'إعدادات المنصة',
-            subtitle: 'التحكم في الرسوم والمحتوى الإخباري والأنشطة',
-            icon: Icons.settings_rounded,
+            title: 'مركز التحكم والإعدادات',
+            subtitle: 'إدارة المعايير المالية وأدوات النظام التقنية',
+            icon: Icons.admin_panel_settings_rounded,
           ).animate().fadeIn(delay: 100.ms),
           const SizedBox(height: 24),
 
-          // Fee settings card
+          // FINANCIAL SECTION
+          Text('الإدارة المالية', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade600)),
+          const SizedBox(height: 12),
           _SettingsItemCard(
-            title: 'الاشتراك السنوي الوطني',
-            icon: Icons.payments_rounded,
+            title: 'رسوم العضوية السنوية',
+            icon: Icons.currency_exchange_rounded,
             iconColor: const Color(0xFF15803D),
             child: Row(
               children: [
@@ -897,10 +928,13 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
                     controller: _feeController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
+                      hintText: '2000',
                       suffixText: 'DZD',
                       suffixStyle: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
+                      filled: true,
+                      fillColor: Colors.grey.shade50,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                     ),
                   ),
                 ),
@@ -909,52 +943,153 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
                   onPressed: () async {
                     final fee = int.tryParse(_feeController.text) ?? 2000;
                     await ref.read(financialServiceProvider).updateMembershipFee(fee);
-                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم حفظ الرسوم'));
+                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم تحديث الرسوم المالية للمنصة'));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
                     foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('حفظ'),
+                  child: Text('حفظ', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
           ).animate().fadeIn(delay: 200.ms),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
 
-          // Quick links card
+          // MAINTENANCE SECTION
+          Text('صيانة النظام', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade600)),
+          const SizedBox(height: 12),
           _SettingsItemCard(
-            title: 'روابط سريعة',
-            icon: Icons.link_rounded,
-            iconColor: const Color(0xFF6D28D9),
+            title: 'العمليات التقنية',
+            icon: Icons.settings_suggest_rounded,
+            iconColor: const Color(0xFFC2410C),
             child: Column(
               children: [
-                _QuickLinkTile(
-                  icon: Icons.event_note_rounded,
-                  label: 'إنشاء نشاط جديد',
-                  onTap: () => context.push('/admin/events/create'),
-                ),
-                const Divider(height: 1),
-                _QuickLinkTile(
-                  icon: Icons.post_add_rounded,
-                  label: 'نشر خبر جديد',
-                  onTap: () => context.push('/admin/news/create'),
-                ),
-                const Divider(height: 1),
-                _QuickLinkTile(
-                  icon: Icons.people_rounded,
-                  label: 'طلبات العضوية',
-                  onTap: () => DefaultTabController.of(context).animateTo(0),
+                _SystemActionTile(
+                  icon: Icons.auto_delete_rounded,
+                  label: 'تصفية التخزين المؤقت',
+                  description: 'إعادة مزامنة البيانات من السيرفر فوراً',
+                  isLoading: _isClearingCache,
+                  onTap: () async {
+                    setState(() => _isClearingCache = true);
+                    await Future.delayed(const Duration(seconds: 1)); // Visual feedback
+                    ref.invalidate(adminEventsProvider);
+                    ref.invalidate(adminNewsProvider);
+                    ref.invalidate(pendingMembershipsProvider);
+                    if (mounted) {
+                      setState(() => _isClearingCache = false);
+                      ScaffoldMessenger.of(context).showSnackBar(_successSnack('✨ تم مسح الذاكرة المؤقتة وتحديث البيانات'));
+                    }
+                  },
                 ),
               ],
             ),
           ).animate().fadeIn(delay: 300.ms),
 
+          const SizedBox(height: 24),
+
+          // EXTERNAL TOOLS SECTION
+          Text('روابط الإدارة الخارجية', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade600)),
+          const SizedBox(height: 12),
+          _SettingsItemCard(
+            title: 'مركز البيانات والاستضافة',
+            icon: Icons.hub_rounded,
+            iconColor: const Color(0xFF6D28D9),
+            child: Column(
+              children: [
+                _QuickLinkTile(
+                  icon: Icons.cloud_done_rounded,
+                  label: 'لوحة استضافة Render (API)',
+                  onTap: () => _launchURL('https://dashboard.render.com'),
+                ),
+                const Divider(height: 1),
+                _QuickLinkTile(
+                  icon: Icons.storage_rounded,
+                  label: 'لوحة MongoDB Atlas (Database)',
+                  onTap: () => _launchURL('https://cloud.mongodb.com'),
+                ),
+                const Divider(height: 1),
+                _QuickLinkTile(
+                  icon: Icons.code_rounded,
+                  label: 'مستودع الكود (GitHub)',
+                  onTap: () => _launchURL('https://github.com/matique2026ai-ux/ebzim-buraux'),
+                ),
+              ],
+            ),
+          ).animate().fadeIn(delay: 400.ms),
+
+          const SizedBox(height: 48),
+
+          // FOOTER INFO
+          Center(
+            child: Column(
+              children: [
+                Text(
+                  'إبزيم للتراث والفنون - نسخة المسؤول v1.2.0',
+                  style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade400),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'تم التطوير بواسطة Antigravity AI',
+                  style: GoogleFonts.inter(fontSize: 8, color: Colors.grey.shade300, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 40),
         ],
       ),
+    );
+  }
+
+  void _launchURL(String url) async {
+    // In a real Flutter app, we use url_launcher package.
+    // For this environment, we'll show a snackbar with the link.
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('فتح الرابط: $url', style: GoogleFonts.tajawal()),
+          action: SnackBarAction(label: 'إغلاق', textColor: Colors.yellow, onPressed: () {}),
+          backgroundColor: AppTheme.primaryColor,
+        ),
+      );
+    }
+  }
+}
+
+class _SystemActionTile extends StatelessWidget {
+  final IconData icon;
+  final String label, description;
+  final VoidCallback onTap;
+  final bool isLoading;
+
+  const _SystemActionTile({
+    required this.icon,
+    required this.label,
+    required this.description,
+    required this.onTap,
+    this.isLoading = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(10)),
+        child: Icon(icon, color: Colors.orange.shade700, size: 20),
+      ),
+      title: Text(label, style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.bold)),
+      subtitle: Text(description, style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade500)),
+      trailing: isLoading 
+        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+        : const Icon(Icons.flash_on_rounded, size: 18, color: Colors.orange),
+      onTap: isLoading ? null : onTap,
     );
   }
 }

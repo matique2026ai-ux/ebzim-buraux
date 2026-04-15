@@ -5,8 +5,8 @@ This document is the **Single Source of Truth** for the "Ebzim for Culture and C
 ---
 
 ## 📍 PHASE 8: MISSION CONTROL (CURRENT STATE)
-**Current Status**: **LAUNCH READY**.
-The platform is technically, legally, and linguistically complete for the current phase (v1.1.3).
+**Current Status**: **LAUNCH READY - V1.2.0 (ADMIN UI OVERHAUL)**.
+The platform is technically, legally, and linguistically complete for the current phase (v1.2.0).
 - **Core Stability**: 100% connected (Backend :3000 -> Atlas Cloud DB; Frontend :8080 Release).
 - **Security**: JWT-based Auth with 30-day session expiry.
 - **Institutional Alignment**: Fully synchronized with the Dec 2024 Association Statutes.
@@ -31,6 +31,12 @@ The platform is technically, legally, and linguistically complete for the curren
 - **IP Whitelisting**: If connection fails, the agent must ask the user to whitelist the current IP in the Atlas Dashboard.
 - **Environment**: Port 3000. Managed via `backend/.env` (reconstructed in RP-036).
 - **NO DOCKER**: Run via `npm run start:dev` natively.
+
+### 3. Admin UI Standard
+- **Header Clearance**: Always use at least 52px top padding in `SliverAppBar` flexible space to avoid overlapping with leading back arrows or logout actions.
+- **Aesthetic**: Use "Midnight Emerald" gradients and white breadcrumbs for administrative sections to maintain a premium "Command Center" feel.
+- **Network**: All production API calls MUST use `https://ebzim-api.onrender.com/api/v1/`.
+- **Permissions**: Every mobile release build MUST include `INTERNET` and `ACCESS_NETWORK_STATE` in `AndroidManifest.xml`.
 
 ---
 
@@ -79,12 +85,14 @@ The platform is technically, legally, and linguistically complete for the curren
 | **RP-042** | **Digital Library** | Built searchable research/PDF repository with in-app category chips. |
 | **RP-043** | **Financials** | Added Subscription/Donation system with Dynamic Fee Management. |
 | **RP-044** | **Mission Control** | Final Admin Dashboard redesign (4-sector management system). |
-| **RP-045** | **Deep Cleanup** | Comprehensive project reorganization: Moved scripts/assets, renamed backend, and focused on mobile. |
+| **RP-045** | **Deep Cleanup** | Major reorganization & cleanup. Moved scripts, assets, and design docs. Verified Backend connection and generated production APK. |
+| **RP-046** | **Admin UI** | Admin Dashboard Redesign. Shifted from legacy "Shield Icon" UI to a minimalist institutional layout. Fixed responsive spacing for mobile/tablet icons (52px top clearance). |
+| **RP-047** | **Live Mobile Launch** | **CRITICAL FIX**: Added `INTERNET` and `ACCESS_NETWORK_STATE` permissions to `AndroidManifest.xml` (Release mode). Redesigned `SettingsTab` into a functional Command Center. Extended Dio timeouts to 90s for Render cold-start stability. Synchronized production admin accounts in MongoDB Atlas. |
 
 ---
 
 ## 🚀 ROADMAP (NEXT STEPS)
-1. **Digital ID Card**: Implementation of the digital membership card generation for approved members.
+1. **Member Approval Flow**: Implement the logic and UI for the "Pending Memberships" approval system in `_MembershipsTab`.
 2. **Notification Engine**: Integration of real-time alerts for report status updates and event reminders.
 3. **Advanced Analytics**: Visual charts for administrative reporting on heritage violations and financial contributions.
 

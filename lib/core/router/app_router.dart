@@ -25,6 +25,7 @@ import 'package:ebzim_app/screens/reset_password_screen.dart';
 import 'package:ebzim_app/screens/admin_dashboard_screen.dart';
 import 'package:ebzim_app/screens/admin_create_news_screen.dart';
 import 'package:ebzim_app/screens/admin_create_event_screen.dart';
+import 'package:ebzim_app/screens/admin_cms_manage_screen.dart';
 import 'package:ebzim_app/screens/news_screen.dart';
 import 'package:ebzim_app/screens/membership_discover_screen.dart';
 import 'package:ebzim_app/screens/help_support_screen.dart';
@@ -125,7 +126,7 @@ CustomTransitionPage<T> _scalePage<T>(GoRouterState state, Widget child) {
 }
 
 final appRouter = GoRouter(
-  initialLocation: '/splash',
+  initialLocation: '/admin',
   routes: [
     GoRoute(
       path: '/',
@@ -253,6 +254,13 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) {
         final existingEvent = state.extra as ActivityEvent?;
         return _slidePage(state, AdminCreateEventScreen(existingEvent: existingEvent));
+      },
+    ),
+    GoRoute(
+      path: '/admin/cms/:type',
+      pageBuilder: (context, state) {
+        final type = state.pathParameters['type'] ?? 'hero';
+        return _slidePage(state, AdminCmsManageScreen(contentType: type));
       },
     ),
     GoRoute(

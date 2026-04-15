@@ -680,7 +680,7 @@ class _CMSTab extends ConsumerWidget {
             icon: Icons.view_carousel_rounded,
             color: const Color(0xFF6366F1),
             count: slidesAsync.when(data: (d) => '${d.length} شرائح', loading: () => '...', error: (_, __) => '0'),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCmsManageScreen(type: CMSManageType.hero))),
+            onTap: () => context.push('/admin/cms/hero'),
           ),
           const SizedBox(height: 16),
 
@@ -691,7 +691,7 @@ class _CMSTab extends ConsumerWidget {
             icon: Icons.handshake_rounded,
             color: const Color(0xFF10B981),
             count: partnersAsync.when(data: (d) => '${d.length} شركاء', loading: () => '...', error: (_, __) => '0'),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCmsManageScreen(type: CMSManageType.partner))),
+            onTap: () => context.push('/admin/cms/partner'),
           ),
           const SizedBox(height: 16),
 
@@ -702,7 +702,7 @@ class _CMSTab extends ConsumerWidget {
             icon: Icons.account_box_rounded,
             color: const Color(0xFFF59E0B),
             count: leadershipAsync.when(data: (d) => '${d.length} أعضاء', loading: () => '...', error: (_, __) => '0'),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCmsManageScreen(type: CMSManageType.leadership))),
+            onTap: () => context.push('/admin/cms/leadership'),
           ),
 
           const SizedBox(height: 32),

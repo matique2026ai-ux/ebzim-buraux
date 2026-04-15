@@ -28,13 +28,22 @@ class ApiClient {
             options.headers['Authorization'] = 'Bearer $token';
           }
           
-          if (options.method != 'GET' && options.method != 'HEAD') {
+          if (options.method != 'GET' && options.method != 'HEAD' && options.contentType == null) {
             options.contentType = 'application/json';
           }
           
+          print('[API REQUEST] ${options.method} ${options.baseUrl}${options.path}');
+          if (options.data != null) print('[API DATA] ${options.data}');
+          
           return handler.next(options);
         },
+        onResponse: (response, handler) {
+          print('[API RESPONSE] ${response.statusCode} from ${response.requestOptions.path}');
+          return handler.next(response);
+        },
         onError: (DioException e, handler) {
+          print('[API ERROR] ${e.response?.statusCode} for ${e.requestOptions.path}');
+          print('[API ERROR DATA] ${e.response?.data}');
           if (e.response?.statusCode == 401) {
             storageService.deleteToken();
           }

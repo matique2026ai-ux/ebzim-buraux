@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:ebzim_app/core/services/storage_service.dart';
 import 'package:flutter/foundation.dart';
@@ -7,24 +8,8 @@ import 'package:ebzim_app/core/services/api_client_platform.dart';
 import 'package:http_parser/http_parser.dart';
 
 final mediaServiceProvider = Provider<MediaService>((ref) {
-  final baseUrl = getPlatformBaseUrl(isPlatformTest);
-  final dioOptions = BaseOptions(
-    baseUrl: baseUrl,
-    connectTimeout: const Duration(seconds: 60),
-    receiveTimeout: const Duration(seconds: 60),
-  );
-  final dio = Dio(dioOptions);
-  dio.options.headers['Bypass-Tunnel-Reminder'] = 'true';
-
-  dio.interceptors.add(InterceptorsWrapper(
-    onRequest: (options, handler) async {
-      final token = await ref.read(storageServiceProvider).getToken();
-      options.headers['Authorization'] = 'Bearer $token';
-      return handler.next(options);
-    },
-  ));
-
-  return MediaService(dio);
+  final apiClient = ref.watch(apiClientProvider);
+  return MediaService(apiClient.dio);
 });
 
 class MediaService {

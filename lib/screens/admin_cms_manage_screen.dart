@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,8 +12,14 @@ import 'package:ebzim_app/core/services/media_service.dart';
 enum CMSManageType { hero, partner, leadership }
 
 class AdminCmsManageScreen extends ConsumerStatefulWidget {
-  final CMSManageType type;
-  const AdminCmsManageScreen({super.key, required this.type});
+  final String contentType; 
+  const AdminCmsManageScreen({super.key, required this.contentType});
+
+  CMSManageType get type {
+    if (contentType == 'partner') return CMSManageType.partner;
+    if (contentType == 'leadership') return CMSManageType.leadership;
+    return CMSManageType.hero;
+  }
 
   @override
   ConsumerState<AdminCmsManageScreen> createState() => _AdminCmsManageScreenState();
@@ -513,6 +520,16 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
     }
   }
 
+  void _updateData(String key, dynamic value) {
+    if (key.contains('.')) {
+      final parts = key.split('.');
+      if (_data[parts[0]] is! Map) _data[parts[0]] = <String, dynamic>{};
+      (_data[parts[0]] as Map)[parts[1]] = value;
+    } else {
+      _data[key] = value;
+    }
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
@@ -736,7 +753,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       builder: (context, setS) {
         final preview = ctrl.text.trim();
 
-        Future<void> pickAndUpload() async {
+        Future<void> _pickAndUpload() async {
           try {
             final result = await FilePicker.pickFiles(
               type: FileType.image,
@@ -748,19 +765,26 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
             if (file.bytes == null) return;
 
             setS(() => isUploading = true);
+            if (kDebugMode) print('[IMAGE PICKER] Starting upload for child file: ${file.name}');
+            
             final uploadedUrl = await ref.read(mediaServiceProvider).uploadMedia(
               file.bytes!,
               file.name,
             );
+            
+            if (kDebugMode) print('[IMAGE PICKER] Upload success: $uploadedUrl');
             ctrl.text = uploadedUrl;
-            _data[key] = uploadedUrl;
+            _updateData(key, uploadedUrl);
             setS(() => isUploading = false);
           } catch (e) {
+            if (kDebugMode) print('[IMAGE PICKER] ERROR: $e');
             setS(() => isUploading = false);
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('خطأ في رفع الصورة: $e', style: GoogleFonts.tajawal()),
                 backgroundColor: Colors.red.shade700,
+                duration: const Duration(seconds: 5),
+                action: SnackBarAction(label: 'حسناً', textColor: Colors.white, onPressed: () {}),
               ));
             }
           }
@@ -793,7 +817,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
                     )
                   : preview.isEmpty
                       ? GestureDetector(
-                          onTap: pickAndUpload,
+                          onTap: _pickAndUpload,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -839,7 +863,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
                             Positioned(
                               bottom: 8, right: 8,
                               child: GestureDetector(
-                                onTap: pickAndUpload,
+                                onTap: _pickAndUpload,
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                   decoration: BoxDecoration(
@@ -862,7 +886,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
             ),
             // ── Upload Button ────────────────────────────────────
             OutlinedButton.icon(
-              onPressed: isUploading ? null : pickAndUpload,
+              onPressed: isUploading ? null : _pickAndUpload,
               icon: const Icon(Icons.folder_open_rounded, size: 18),
               label: Text('اختيار من الجهاز', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
               style: OutlinedButton.styleFrom(
@@ -896,7 +920,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               ),
               onChanged: (val) => setS(() {}),
-              onSaved: (val) => _data[key] = ctrl.text.trim(),
+              onSaved: (val) => _updateData(key, ctrl.text.trim()),
             ),
           ],
         );
@@ -940,6 +964,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
       maxLines: maxLines,
       style: GoogleFonts.tajawal(color: const Color(0xFF1A1A2E), fontSize: 14),
+      onSaved: (val) => _updateData(key, val?.trim() ?? ''),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: GoogleFonts.tajawal(color: const Color(0xFF64748B), fontSize: 13),
@@ -960,15 +985,6 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       validator: required ? (v) => (v == null || v.isEmpty) ? 'هذا الحقل مطلوب' : null : null,
-      onSaved: (val) {
-        final keys = key.split('.');
-        if (keys.length == 2) {
-          _data[keys[0]] ??= {};
-          (_data[keys[0]] as Map)[keys[1]] = val ?? '';
-        } else {
-          _data[keys[0]] = val ?? '';
-        }
-      },
     );
   }
 }

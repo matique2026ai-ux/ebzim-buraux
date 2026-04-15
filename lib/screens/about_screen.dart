@@ -4,7 +4,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
-import 'package:ebzim_app/core/services/statute_service.dart';
+import 'package:ebzim_app/core/services/cms_content_service.dart';
+import 'package:ebzim_app/core/models/cms_models.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -24,7 +26,8 @@ class AboutScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
-    final boardNames = ref.watch(statuteServiceProvider).getExecutiveBoardNames();
+    final partnersAsync = ref.watch(partnersProvider);
+    final leadershipAsync = ref.watch(leadershipProvider);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -296,7 +299,7 @@ class AboutScreen extends ConsumerWidget {
 
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-            // ── STRATEGIC PARTNERSHIPS ─────────────────────────────────────
+            // ── STRATEGIC PARTNERSHIPS — Institutional Dossiers ─────────────
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -311,28 +314,15 @@ class AboutScreen extends ConsumerWidget {
                         isDark: isDark,
                       ),
                       const SizedBox(height: 20),
-                      _PartnerRow(
-                        color: const Color(0xFF009FDA),
-                        icon: Icons.public_rounded,
-                        title: 'UNESCO Algeria Network',
-                        subtitle: isAr ? 'عضوية فاعلة في شبكة اليونسكو بالجزائر' : isFr ? 'Membre actif du réseau UNESCO en Algérie' : 'Active member of UNESCO network in Algeria',
-                        isDark: isDark,
-                      ),
-                      const Divider(height: 24),
-                      _PartnerRow(
-                        color: AppTheme.accentColor,
-                        icon: Icons.account_balance_rounded,
-                        title: isAr ? 'المتحف الوطني للآثار' : isFr ? 'Musée National des Antiquités' : 'National Museum of Antiquities',
-                        subtitle: isAr ? 'اتفاقية شراكة — سطيف' : isFr ? 'Convention de partenariat — Sétif' : 'Partnership agreement — Sétif',
-                        isDark: isDark,
-                      ),
-                      const Divider(height: 24),
-                      _PartnerRow(
-                        color: const Color(0xFF22C55E),
-                        icon: Icons.military_tech_rounded,
-                        title: isAr ? 'وزارة المجاهدين وذوي الحقوق' : isFr ? 'Ministère des Moudjahidines' : 'Ministry of Mujahideen & Rights Holders',
-                        subtitle: isAr ? 'عقد ترميم الثكنة العسكرية — الحامة' : isFr ? 'Contrat de restauration — Caserne El Hamman' : 'Restoration contract — El Hamman Military Barracks',
-                        isDark: isDark,
+                      partnersAsync.when(
+                        data: (partners) {
+                          if (partners.isEmpty) return _NoDataPlaceholder(isAr: isAr);
+                          return Column(
+                            children: partners.map((p) => _PartnerDossier(partner: p, lang: isAr ? 'ar' : isFr ? 'fr' : 'en', isDark: isDark)).toList(),
+                          );
+                        },
+                        loading: () => const Center(child: CircularProgressIndicator()),
+                        error: (_, __) => _NoDataPlaceholder(isAr: isAr),
                       ),
                     ],
                   ),
@@ -352,7 +342,7 @@ class AboutScreen extends ConsumerWidget {
 
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-            // ── EXECUTIVE BOARD ────────────────────────────────────────────
+            // ── EXECUTIVE BOARD — Dynamic Leadership ───────────────────────
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -366,35 +356,23 @@ class AboutScreen extends ConsumerWidget {
                         label: isAr ? 'المكتب التنفيذي' : isFr ? 'Bureau Exécutif' : 'Executive Board',
                         isDark: isDark,
                       ),
-                      Text(
-                        isAr
-                            ? 'المُصادق عليه في 14 ديسمبر 2024'
-                            : isFr
-                                ? 'Ratifié le 14 décembre 2024'
-                                : 'Ratified December 14, 2024',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: AppTheme.accentColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
                       const SizedBox(height: 20),
-                      ...boardNames.take(5).map((member) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _BoardMemberCard(
-                          name: isAr ? (member['nameAr'] ?? '') : (member['nameEn'] ?? ''),
-                          role: isAr ? (member['roleAr'] ?? '') : isFr ? (member['roleFr'] ?? '') : (member['roleEn'] ?? ''),
-                          isDark: isDark,
-                        ),
-                      )),
-                      const SizedBox(height: 12),
-                      Center(
-                        child: TextButton(
-                          onPressed: () => context.push('/leadership'),
-                          child: Text(
-                            isAr ? 'عرض المكتب الكامل' : isFr ? 'Voir tout le bureau' : 'View Full Board',
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                          ),
-                        ),
+                      leadershipAsync.when(
+                        data: (leaders) {
+                          if (leaders.isEmpty) return _NoDataPlaceholder(isAr: isAr);
+                          return Column(
+                            children: leaders.map((leader) => Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: _DynamicLeaderCard(
+                                leader: leader,
+                                lang: isAr ? 'ar' : isFr ? 'fr' : 'en',
+                                isDark: isDark,
+                              ),
+                            )).toList(),
+                          );
+                        },
+                        loading: () => const Center(child: CircularProgressIndicator()),
+                        error: (_, __) => _NoDataPlaceholder(isAr: isAr),
                       ),
                     ],
                   ),
@@ -693,47 +671,71 @@ class _MiniCard extends StatelessWidget {
   }
 }
 
-class _PartnerRow extends StatelessWidget {
-  final Color color;
-  final IconData icon;
-  final String title;
-  final String subtitle;
+class _PartnerDossier extends StatelessWidget {
+  final Partner partner;
+  final String lang;
   final bool isDark;
-  const _PartnerRow({required this.color, required this.icon, required this.title, required this.subtitle, required this.isDark});
+  const _PartnerDossier({required this.partner, required this.lang, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color.withValues(alpha: 0.12),
-            border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
-          ),
-          child: Icon(icon, color: color, size: 20),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    final color = partner.color != null ? Color(int.parse(partner.color!.replaceFirst('#', '0xFF'))) : AppTheme.accentColor;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white.withValues(alpha: 0.03) : color.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Text(title, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
-              const SizedBox(height: 2),
-              Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+              Container(
+                width: 48,
+                height: 48,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: partner.logoUrl,
+                  fit: BoxFit.contain,
+                  errorWidget: (_, __, ___) => Icon(Icons.business, color: color),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      partner.getName(lang),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    Text(
+                      'شريك استراتيجي', // Fixed type or could be derived later
+                      style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.verified_rounded, color: color, size: 18),
             ],
           ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(Icons.verified_rounded, color: color, size: 14),
-        ),
-      ],
+          if (partner.getGoals(lang).isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              partner.getGoals(lang),
+              style: TextStyle(fontSize: 12, color: isDark ? Colors.white70 : Colors.black87, height: 1.5),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -824,50 +826,66 @@ class _ProjectShowcaseCard extends StatelessWidget {
   }
 }
 
-class _BoardMemberCard extends StatelessWidget {
-  final String name;
-  final String role;
+class _DynamicLeaderCard extends StatelessWidget {
+  final EbzimLeader leader;
+  final String lang;
   final bool isDark;
-  const _BoardMemberCard({required this.name, required this.role, required this.isDark});
+  const _DynamicLeaderCard({required this.leader, required this.lang, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    final isAr = Localizations.localeOf(context).languageCode == 'ar';
-    final isFr = Localizations.localeOf(context).languageCode == 'fr';
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppTheme.accentColor.withValues(alpha: isDark ? 0.1 : 0.08),
-              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.25), width: 1.5),
-            ),
-            child: const Icon(Icons.person_outline_rounded, color: AppTheme.accentColor, size: 18),
+    return Row(
+      children: [
+        Container(
+          width: 52,
+          height: 52,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppTheme.accentColor.withValues(alpha: 0.1),
+            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1),
           ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 13),
-                ),
-                Text(
-                  '$role — ${isAr ? 'سطيف' : 'Sétif'}',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-            ),
+          child: leader.photoUrl != null
+              ? ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: leader.photoUrl!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Icon(Icons.person, color: AppTheme.accentColor),
+                    errorWidget: (context, url, error) => const Icon(Icons.person, color: AppTheme.accentColor),
+                  ),
+                )
+              : const Icon(Icons.person_outline_rounded, color: AppTheme.accentColor, size: 24),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                leader.getName(lang),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              Text(
+                leader.getRole(lang),
+                style: TextStyle(color: AppTheme.accentColor, fontSize: 11, fontWeight: FontWeight.w600),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
+}
+
+class _NoDataPlaceholder extends StatelessWidget {
+  final bool isAr;
+  const _NoDataPlaceholder({required this.isAr});
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Center(
+            child: Text(isAr ? 'لا توجد بيانات متاحة حالياً' : 'Aucune donnée disponible',
+                style: const TextStyle(color: Colors.grey, fontSize: 12))),
+      );
 }
 
 class _ValueChip extends StatelessWidget {

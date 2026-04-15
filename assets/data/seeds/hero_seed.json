@@ -1,0 +1,14 @@
+[
+  {
+    "title": {"ar":"جمعية إبزيم للثقافة والمواطنة","en":"Ebzim Association for Culture","fr":"Association Ebzim Culture"},
+    "subtitle": {"ar":"نحو حفظ الذاكرة الجماعية وصون الهوية الثقافية في ولاية سطيف","en":"Preserving collective memory and cultural identity in Sétif","fr":"Préservation de la mémoire collective et de l'identité à Sétif"},
+    "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000&auto=format&fit=crop",
+    "order": 1
+  },
+  {
+    "title": {"ar":"الموروث الثقافي السطايفي","en":"Sétif Cultural Heritage","fr":"Patrimoine Culturel de Sétif"},
+    "subtitle": {"ar":"اكتشف المعالم التاريخية والكنوز الأثرية التي تزخر بها المنطقة","en":"Discover historical monuments and archaeological treasures","fr":"Découvrez les monuments historiques et les trésors archéologiques"},
+    "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bbaa?q=80&w=2000&auto=format&fit=crop",
+    "order": 2
+  }
+]

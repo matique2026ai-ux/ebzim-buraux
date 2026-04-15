@@ -1,0 +1,25 @@
+{
+  "partners": [
+    {
+      "name": {"ar":"المتحف العمومي الوطني بسطيف","en":"National Public Museum of Sétif","fr":"Musée Public National de Sétif"},
+      "logoUrl": "https://ebzim.dz/assets/partners/museum.png",
+      "goalsSummary": {"ar":"تعزيز الموروث المادي واللامادي","en":"Promoting tangible and intangible heritage","fr":"Promouvoir le patrimoine matériel et immatériel"},
+      "color": "#8E2424",
+      "order": 1
+    }
+  ],
+  "leaders": [
+    {
+      "name": {"ar":"عصماني سعاد","en":"Osmani Souad","fr":"Osmani Souad"},
+      "role": {"ar":"رئيس الجمعية","en":"President","fr":"Présidente"},
+      "photoUrl": "https://i.pravatar.cc/300?u=osmani",
+      "order": 1
+    },
+    {
+      "name": {"ar":"ادريس قديح","en":"Driss Guedih","fr":"Driss Guedih"},
+      "role": {"ar":"نائب أول للرئيس","en":"First Vice President","fr":"1er Vice-Président"},
+      "photoUrl": "https://i.pravatar.cc/300?u=driss",
+      "order": 2
+    }
+  ]
+}

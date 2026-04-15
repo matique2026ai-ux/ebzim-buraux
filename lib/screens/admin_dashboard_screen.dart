@@ -11,6 +11,10 @@ import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/services/report_service.dart';
 import 'package:ebzim_app/core/services/financial_service.dart';
+import 'package:ebzim_app/core/services/cms_content_service.dart';
+import 'package:ebzim_app/core/models/cms_models.dart';
+import 'package:ebzim_app/screens/admin_cms_manage_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ADMIN DASHBOARD SCREEN
@@ -21,7 +25,7 @@ class AdminDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 6,
+      length: 7,
       child: Scaffold(
         backgroundColor: const Color(0xFFF4F6F9),
         body: NestedScrollView(
@@ -140,6 +144,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                     unselectedLabelStyle: GoogleFonts.tajawal(fontSize: 12),
                     tabs: const [
                       Tab(icon: Icon(Icons.group_add_rounded, size: 18), text: 'العضوية'),
+                      Tab(icon: Icon(Icons.dashboard_customize_rounded, size: 18), text: 'المحتوى'),
                       Tab(icon: Icon(Icons.event_rounded, size: 18), text: 'الأنشطة'),
                       Tab(icon: Icon(Icons.newspaper_rounded, size: 18), text: 'الأخبار'),
                       Tab(icon: Icon(Icons.flag_rounded, size: 18), text: 'البلاغات'),
@@ -154,6 +159,7 @@ class AdminDashboardScreen extends ConsumerWidget {
           body: const TabBarView(
             children: [
               _MembershipTab(),
+              _CMSTab(),
               _EventsTab(),
               _NewsTab(),
               _ReportsTab(),
@@ -618,6 +624,229 @@ class _FinancialsTab extends ConsumerWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // TAB 6: SETTINGS
 // ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 6: CMS MANAGEMENT
+// ─────────────────────────────────────────────────────────────────────────────
+class _CMSTab extends ConsumerWidget {
+  const _CMSTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final slidesAsync = ref.watch(heroSlidesProvider);
+    final partnersAsync = ref.watch(partnersProvider);
+    final leadershipAsync = ref.watch(leadershipProvider);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SectionHeader(
+            title: 'إدارة المحتوى (CMS)',
+            subtitle: 'التحكم في الشاشة الرئيسية والشركاء والهيكل التنظيمي',
+            icon: Icons.dashboard_customize_rounded,
+          ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
+          const SizedBox(height: 24),
+
+          // Hero Management Card
+          _CMSManagementCard(
+            title: 'شريط الواجهة (Hero Carousel)',
+            description: 'تغيير صور العرض والنصوص الترويجية في الصفحة الرئيسية',
+            icon: Icons.view_carousel_rounded,
+            color: const Color(0xFF6366F1),
+            count: slidesAsync.when(data: (d) => '${d.length} شرائح', loading: () => '...', error: (_, __) => '0'),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCmsManageScreen(type: CMSManageType.hero))),
+          ),
+          const SizedBox(height: 16),
+
+          // Partners Management Card
+          _CMSManagementCard(
+            title: 'الشركاء والمؤسسات',
+            description: 'إضافة وتعديل ملفات الشركاء والاتفاقيات الاستراتيجية',
+            icon: Icons.handshake_rounded,
+            color: const Color(0xFF10B981),
+            count: partnersAsync.when(data: (d) => '${d.length} شركاء', loading: () => '...', error: (_, __) => '0'),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCmsManageScreen(type: CMSManageType.partner))),
+          ),
+          const SizedBox(height: 16),
+
+          // Leadership Management Card
+          _CMSManagementCard(
+            title: 'المكتب التنفيذي',
+            description: 'إدارة أعضاء مكتب الجمعية وتحديث بياناتهم وصورهم',
+            icon: Icons.account_box_rounded,
+            color: const Color(0xFFF59E0B),
+            count: leadershipAsync.when(data: (d) => '${d.length} أعضاء', loading: () => '...', error: (_, __) => '0'),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCmsManageScreen(type: CMSManageType.leadership))),
+          ),
+
+          const SizedBox(height: 32),
+          _GlassInfoCard(
+            title: 'تنبيه أمني',
+            message: 'جميع التغييرات هنا تظهر مباشرة لجميع مستخدمي التطبيق. يرجى التأكد من جودة الصور ودقة النصوص قبل الحفظ.',
+            icon: Icons.security_rounded,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CMSManagementCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final String count;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _CMSManagementCard({
+    required this.title,
+    required this.description,
+    required this.count,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(icon, color: color, size: 28),
+                ),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            title,
+                            style: GoogleFonts.tajawal(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primaryColor,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: color.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              count,
+                              style: TextStyle(
+                                color: color,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: GoogleFonts.tajawal(
+                          fontSize: 11,
+                          color: Colors.grey.shade500,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(Icons.chevron_left_rounded, color: Colors.grey.shade300),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GlassInfoCard extends StatelessWidget {
+  final String title;
+  final String message;
+  final IconData icon;
+
+  const _GlassInfoCard({required this.title, required this.message, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.primaryColor.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: AppTheme.primaryColor, size: 24),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.tajawal(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  message,
+                  style: GoogleFonts.tajawal(
+                    fontSize: 11,
+                    color: AppTheme.primaryColor.withValues(alpha: 0.7),
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _SettingsTab extends ConsumerStatefulWidget {
   const _SettingsTab();
 

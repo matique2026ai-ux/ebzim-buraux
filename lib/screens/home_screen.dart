@@ -6,8 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
+import 'package:ebzim_app/core/services/cms_content_service.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/widgets/event_card.dart';
+import 'package:ebzim_app/core/models/cms_models.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -18,6 +21,8 @@ class HomeScreen extends ConsumerWidget {
     final lang = ref.watch(localeProvider).languageCode;
     final eventsAsync = ref.watch(upcomingEventsProvider);
     final newsAsync = ref.watch(newsProvider);
+    final slidesAsync = ref.watch(heroSlidesProvider);
+    final partnersAsync = ref.watch(partnersProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -27,159 +32,16 @@ class HomeScreen extends ConsumerWidget {
         slivers: [
 
           // ════════════════════════════════════════
-          // HERO SECTION
+          // DYNAMIC HERO CAROUSEL
           // ════════════════════════════════════════
           SliverToBoxAdapter(
-            child: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppTheme.primaryColor, Color(0xFF003D30), Color(0xFF001A14)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: Stack(
-                children: [
-                  // Background geometric pattern
-                  Positioned.fill(
-                    child: Opacity(
-                      opacity: 0.04,
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.cover,
-                        filterQuality: FilterQuality.low,
-                      ),
-                    ),
-                  ),
-                  // Ambient glow
-                  Positioned(
-                    top: -80, right: -80,
-                    child: Container(
-                      width: 300, height: 300,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme.secondaryColor.withValues(alpha: 0.08),
-                      ),
-                    ),
-                  ),
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Top bar
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Logo
-                              Image.asset('assets/images/logo.png', height: 40,
-                                  color: Colors.white, colorBlendMode: BlendMode.srcIn),
-                              // Nav actions
-                              Row(
-                                children: [
-                                  _GlassIconButton(
-                                    icon: Icons.notifications_outlined,
-                                    onTap: () => context.push('/notifications'),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  _GlassIconButton(
-                                    icon: Icons.translate_outlined,
-                                    onTap: () => context.push('/language'),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  _GlassIconButton(
-                                    icon: Icons.person_outline,
-                                    onTap: () => context.go('/dashboard'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ).animate().fadeIn(duration: 600.ms),
-
-                          const SizedBox(height: 48),
-
-                          // Association label
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: AppTheme.accentColor.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
-                            ),
-                            child: Text(
-                              lang == 'ar'
-                                  ? 'جمعية ولائية • سطيف • الجزائر'
-                                  : 'Association Provinciale • Sétif • Algérie',
-                              style: const TextStyle(
-                                color: AppTheme.accentColor,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                          ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.1),
-
-                          const SizedBox(height: 20),
-
-                          // Main title
-                          Text(
-                            lang == 'ar'
-                                ? 'جمعية إبزيم\nللثقافة والمواطنة'
-                                : 'Association Ebzim\npour la Culture\net la Citoyenneté',
-                            style: TextStyle(
-                              fontFamily: theme.textTheme.headlineLarge?.fontFamily,
-                              fontSize: 38,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              height: 1.15,
-                            ),
-                          ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
-
-                          const SizedBox(height: 16),
-
-                          Text(
-                            lang == 'ar'
-                                ? 'نحو حفظ الذاكرة الجماعية وصون الهوية الثقافية\nفي ولاية سطيف'
-                                : 'Pour la préservation de la mémoire collective\net l\'identité culturelle de la wilaya de Sétif',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withValues(alpha: 0.7),
-                              height: 1.6,
-                            ),
-                          ).animate().fadeIn(delay: 400.ms),
-
-                          const SizedBox(height: 36),
-
-                          // CTA Buttons
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _HeroButton(
-                                  label: lang == 'ar' ? 'طلب عضوية' : 'Demander l\'adhésion',
-                                  isPrimary: true,
-                                  icon: Icons.card_membership,
-                                  onTap: () => context.push('/membership/apply'),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: _HeroButton(
-                                  label: lang == 'ar' ? 'اكتشف الجمعية' : 'Découvrir',
-                                  isPrimary: false,
-                                  icon: Icons.explore_outlined,
-                                  onTap: () => context.go('/dashboard'),
-                                ),
-                              ),
-                            ],
-                          ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.1),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            child: slidesAsync.when(
+              data: (slides) {
+                if (slides.isEmpty) return _FallbackHero(lang: lang);
+                return _SunriseCarousel(slides: slides, lang: lang);
+              },
+              loading: () => _HeroLoading(),
+              error: (_, __) => _FallbackHero(lang: lang),
             ),
           ),
 
@@ -258,28 +120,25 @@ class HomeScreen extends ConsumerWidget {
                     lang: lang,
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _PartnerCard(
-                          icon: Icons.museum_outlined,
-                          nameAr: 'المتحف الوطني للآثار',
-                          nameFr: 'Musée National des Antiquités',
-                          city: 'Sétif',
-                          color: AppTheme.heritageRed,
+                  partnersAsync.when(
+                    data: (partners) {
+                      if (partners.isEmpty) return const SizedBox.shrink();
+                      return SizedBox(
+                        height: 140,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: partners.length,
+                          separatorBuilder: (_, __) => const SizedBox(width: 12),
+                          itemBuilder: (ctx, index) {
+                            final p = partners[index];
+                            return _DynamicPartnerCard(partner: p, lang: lang);
+                          },
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _PartnerCard(
-                          icon: Icons.school_outlined,
-                          nameAr: 'جامعة سطيف',
-                          nameFr: 'Université de Sétif',
-                          city: 'Architecture',
-                          color: AppTheme.accentColor,
-                        ),
-                      ),
-                    ],
+                      );
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (_, __) => const SizedBox.shrink(),
                   ),
                 ],
               ),
@@ -630,57 +489,232 @@ class _NewsPreviewCard extends StatelessWidget {
   }
 }
 
-class _PartnerCard extends StatelessWidget {
-  final IconData icon;
-  final String nameAr;
-  final String nameFr;
-  final String city;
-  final Color color;
-  const _PartnerCard({
-    required this.icon,
-    required this.nameAr,
-    required this.nameFr,
-    required this.city,
-    required this.color,
-  });
+class _DynamicPartnerCard extends StatelessWidget {
+  final Partner partner;
+  final String lang;
+  const _DynamicPartnerCard({required this.partner, required this.lang});
 
   @override
   Widget build(BuildContext context) {
+    final color = partner.color != null ? Color(int.parse(partner.color!.replaceFirst('#', '0xFF'))) : AppTheme.primaryColor;
     return Container(
+      width: 160,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(10),
+          Expanded(
+            child: CachedNetworkImage(
+              imageUrl: partner.logoUrl,
+              placeholder: (context, url) => Container(color: Colors.grey.shade50),
+              errorWidget: (context, url, error) => const Icon(Icons.business, size: 40, color: Colors.grey),
+              fit: BoxFit.contain,
             ),
-            child: Icon(icon, color: color, size: 22),
           ),
           const SizedBox(height: 12),
           Text(
-            nameAr,
+            partner.getName(lang),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: color,
-              height: 1.3,
+              color: AppTheme.primaryColor,
+              height: 1.2,
             ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            city,
-            style: TextStyle(fontSize: 10, color: color.withValues(alpha: 0.6)),
           ),
         ],
       ),
     );
   }
 }
+
+class _SunriseCarousel extends StatefulWidget {
+  final List<HeroSlide> slides;
+  final String lang;
+  const _SunriseCarousel({required this.slides, required this.lang});
+
+  @override
+  State<_SunriseCarousel> createState() => _SunriseCarouselState();
+}
+
+class _SunriseCarouselState extends State<_SunriseCarousel> {
+  int _currentIndex = 0;
+  late final PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    Future.delayed(const Duration(seconds: 6), () {
+      if (!mounted) return;
+      final nextIndex = (_currentIndex + 1) % widget.slides.length;
+      _pageController.animateToPage(
+        nextIndex,
+        duration: const Duration(milliseconds: 1500),
+        curve: Curves.easeInOutQuart,
+      );
+      setState(() => _currentIndex = nextIndex);
+      _startTimer();
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 520,
+      width: double.infinity,
+      child: Stack(
+        children: [
+          // Background Image with Cross-fade (Sunrise effect)
+          PageView.builder(
+            controller: _pageController,
+            onPageChanged: (i) => setState(() => _currentIndex = i),
+            itemCount: widget.slides.length,
+            itemBuilder: (context, index) {
+              final slide = widget.slides[index];
+              return AnimatedBuilder(
+                animation: _pageController,
+                builder: (context, child) {
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl: slide.imageUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (ctx, url) => Container(color: AppTheme.primaryColor),
+                      ).animate().fadeIn(duration: 1200.ms),
+                      // Overlay Gradient
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withValues(alpha: 0.3),
+                              AppTheme.primaryColor.withValues(alpha: 0.8),
+                              AppTheme.primaryColor,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+
+          // Content Layer
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Logo & Top Actions
+                  _buildTopBar(context),
+                  const Spacer(),
+                  // Dynamic Slide Content
+                  _buildSlideContent(widget.slides[_currentIndex]),
+                  const SizedBox(height: 48),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTopBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Image.asset('assets/images/logo.png', height: 40, color: Colors.white, colorBlendMode: BlendMode.srcIn),
+        Row(
+          children: [
+            _GlassIconButton(icon: Icons.translate_outlined, onTap: () => context.push('/language')),
+            const SizedBox(width: 8),
+            _GlassIconButton(icon: Icons.person_outline, onTap: () => context.go('/dashboard')),
+          ],
+        ),
+      ],
+    ).animate().fadeIn(duration: 600.ms);
+  }
+
+  Widget _buildSlideContent(HeroSlide slide) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          slide.getTitle(widget.lang),
+          style: const TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white, height: 1.15),
+        ).animate(key: ValueKey('title_${slide.id}')).fadeIn(duration: 800.ms).slideY(begin: 0.1),
+        const SizedBox(height: 16),
+        Text(
+          slide.getSubtitle(widget.lang),
+          style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.8), height: 1.6),
+        ).animate(key: ValueKey('sub_${slide.id}')).fadeIn(delay: 200.ms).slideY(begin: 0.1),
+        const SizedBox(height: 36),
+        Row(
+          children: [
+            Expanded(
+              child: _HeroButton(
+                label: widget.lang == 'ar' ? 'طلب عضوية' : 'Devenir membre',
+                isPrimary: true,
+                icon: Icons.card_membership,
+                onTap: () => context.push('/membership/apply'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _HeroButton(
+                label: widget.lang == 'ar' ? 'تصفح النشاطات' : 'Activités',
+                isPrimary: false,
+                icon: Icons.explore_outlined,
+                onTap: () => context.go('/activities'),
+              ),
+            ),
+          ],
+        ).animate(key: ValueKey('btns_${slide.id}')).fadeIn(delay: 400.ms).slideY(begin: 0.1),
+      ],
+    );
+  }
+}
+
+class _FallbackHero extends StatelessWidget {
+  final String lang;
+  const _FallbackHero({required this.lang});
+  @override
+  Widget build(BuildContext context) => Container(height: 300, color: AppTheme.primaryColor, child: const Center(child: Text("EBZIM")));
+}
+
+class _HeroLoading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Container(height: 520, color: AppTheme.primaryColor.withValues(alpha: 0.1), child: const Center(child: CircularProgressIndicator()));
+}
+

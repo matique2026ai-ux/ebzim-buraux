@@ -55,7 +55,8 @@ flutter run -d chrome
 ## 📁 Project Structure | هيكلة المشروع
 - `lib/`: Flutter source code.
 - `ebzim-backend/`: NestJS backend source code.
-- `docs/`: Official documentation, statutes, and project history.
+- `docs/CURRENT_PROJECT_STATE.md`: 📌 The single source of truth regarding the completed features and current status of the project.
+- `docs/archive/`: Legacy fragmented documentation (Do not use as reference).
 - `assets/`: Images, fonts, and brand assets.
 
 ---

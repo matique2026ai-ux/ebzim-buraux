@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +11,7 @@ import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/widgets/event_card.dart';
 import 'package:ebzim_app/core/models/cms_models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -49,22 +50,36 @@ class HomeScreen extends ConsumerWidget {
           // STATS STRIP
           // ════════════════════════════════════════
           SliverToBoxAdapter(
-            child: Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _StatChip(value: '2024', label: lang == 'ar' ? 'تأسست سنة' : 'Fondée en'),
-                  _StatDivider(),
-                  _StatChip(value: '15+', label: lang == 'ar' ? 'عضو مؤسس' : 'Membres fondateurs'),
-                  _StatDivider(),
-                  _StatChip(value: '9', label: lang == 'ar' ? 'لجان متخصصة' : 'Comités spécialisés'),
-                  _StatDivider(),
-                  _StatChip(value: '2', label: lang == 'ar' ? 'شراكة رسمية' : 'Partenariats officiels'),
-                ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  borderRadius: BorderRadius.circular(32),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 30,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                  border: Border.all(color: theme.dividerTheme.color?.withValues(alpha: 0.5) ?? Colors.transparent),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _StatChip(value: '2024', label: lang == 'ar' ? 'تأسست سنة' : 'Fondée en'),
+                    _StatDivider(),
+                    _StatChip(value: '15+', label: lang == 'ar' ? 'عضو مؤسس' : 'Membres fondateurs'),
+                    _StatDivider(),
+                    _StatChip(value: '9', label: lang == 'ar' ? 'لجان متخصصة' : 'Comités spécialisés'),
+                    _StatDivider(),
+                    _StatChip(value: '2', label: lang == 'ar' ? 'شراكة رسمية' : 'Partenariats officiels'),
+                  ],
+                ),
               ),
-            ).animate().fadeIn(delay: 600.ms),
+            ).animate().fadeIn(delay: const Duration(milliseconds: 400)).slideY(begin: 0.05),
           ),
 
           // ════════════════════════════════════════
@@ -89,10 +104,15 @@ class HomeScreen extends ConsumerWidget {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
                   child: Column(
-                    children: toShow.map((post) {
+                    children: toShow.asMap().entries.map((entry) {
+                      final i = entry.key;
+                      final post = entry.value;
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
-                        child: _NewsPreviewCard(post: post, lang: lang),
+                        child: _NewsPreviewCard(post: post, lang: lang)
+                            .animate()
+                            .fadeIn(delay: Duration(milliseconds: i * 100), duration: const Duration(milliseconds: 600))
+                            .slideY(begin: 0.1),
                       );
                     }).toList(),
                   ),
@@ -179,7 +199,7 @@ class HomeScreen extends ConsumerWidget {
                     itemBuilder: (context, index) => EventCard(
                       event: events[index],
                       onTap: () => context.push('/event/${events[index].id}'),
-                    ),
+                    ).animate(delay: Duration(milliseconds: index * 150)).fadeIn(duration: const Duration(milliseconds: 600)).slideX(begin: 0.1),
                   );
                 },
                 loading: () => const Center(
@@ -194,62 +214,100 @@ class HomeScreen extends ConsumerWidget {
           // ABOUT TEASER
           // ════════════════════════════════════════
           SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(24, 32, 24, 0),
-              padding: const EdgeInsets.all(28),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppTheme.primaryColor, const Color(0xFF004B3E)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 48, 24, 0),
+              child: Container(
+                padding: const EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppTheme.primaryColor, const Color(0xFF003D32)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(32),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                      blurRadius: 30,
+                      offset: const Offset(0, 15),
+                    ),
+                  ],
                 ),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    lang == 'ar' ? 'من نحن؟' : 'Qui sommes-nous ?',
-                    style: const TextStyle(
-                      color: AppTheme.accentColor,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    lang == 'ar'
-                        ? 'جمعية إبزيم للثقافة والمواطنة جمعية ولائية مقرها سطيف، مصادق عليها وفق القانون 06/12 المؤرخ في 12 جانفي 2012.'
-                        : 'L\'association Ebzim est une association provinciale basée à Sétif, fondée conformément à la loi 06/12 du 12 janvier 2012.',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.85),
-                      fontSize: 14,
-                      height: 1.6,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () => context.push('/about'),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          lang == 'ar' ? 'اقرأ أكثر' : 'En savoir plus',
-                          style: const TextStyle(
-                            color: AppTheme.accentColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.accentColor.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        lang == 'ar' ? 'رسالتنا الثقافية' : 'NOTRE MISSION',
+                        style: const TextStyle(
+                          color: AppTheme.accentColor,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
                         ),
-                        const SizedBox(width: 6),
-                        const Icon(Icons.arrow_forward, color: AppTheme.accentColor, size: 16),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    Text(
+                      lang == 'ar' ? 'من نحن؟' : 'Qui sommes-nous ?',
+                      style: GoogleFonts.tajawal(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      lang == 'ar'
+                          ? 'جمعية إبزيم للثقافة والمواطنة جمعية ولائية مقرها سطيف، مصادق عليها وفق القانون 06/12 المؤرخ في 12 جانفي 2012.'
+                          : 'L\'association Ebzim est une association provinciale basée à Sétif, fondée conformément à la loi 06/12 du 12 janvier 2012.',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.8),
+                        fontSize: 15,
+                        height: 1.7,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    GestureDetector(
+                      onTap: () => context.push('/about'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              lang == 'ar' ? 'اكتشف المزيد' : 'Découvrir plus',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              lang == 'ar' ? Icons.arrow_back_rounded : Icons.arrow_forward_rounded,
+                              color: AppTheme.accentColor,
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ).animate().fadeIn(delay: 300.ms),
+            ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
           ),
 
           // Bottom padding
@@ -274,7 +332,7 @@ class _GlassIconButton extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
           child: Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
@@ -341,21 +399,30 @@ class _StatChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.primaryColor,
+          style: theme.textTheme.headlineMedium?.copyWith(
+            color: isDark ? AppTheme.accentColor : AppTheme.primaryColor,
+            fontWeight: FontWeight.w900,
+            fontSize: 26,
+            letterSpacing: -0.5,
           ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 6),
         Text(
-          label,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 9, color: Colors.grey.shade500, fontWeight: FontWeight.w500),
+          label.toUpperCase(),
+          style: theme.textTheme.bodySmall?.copyWith(
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.8),
+          ),
         ),
       ],
     );
@@ -365,7 +432,11 @@ class _StatChip extends StatelessWidget {
 class _StatDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 36, color: Colors.grey.shade200);
+    return Container(
+      width: 1, 
+      height: 32, 
+      color: Theme.of(context).dividerTheme.color?.withValues(alpha: 0.5) ?? Colors.grey.withValues(alpha: 0.2)
+    );
   }
 }
 
@@ -411,16 +482,19 @@ class _NewsPreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isAr = lang == 'ar';
     final isPartnership = post.category == 'PARTNERSHIP';
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isPartnership
-              ? const Color(0xFFBFDBFE)
-              : Colors.grey.shade100,
+              ? AppTheme.accentColor.withValues(alpha: 0.3)
+              : theme.dividerTheme.color ?? Colors.transparent,
         ),
         boxShadow: [
           BoxShadow(
@@ -432,57 +506,66 @@ class _NewsPreviewCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Icon or Category indicator
+          // Elegant Icon Box
           Container(
-            width: 48, height: 48,
+            width: 52, height: 52,
             decoration: BoxDecoration(
               color: isPartnership
-                  ? const Color(0xFFEFF6FF)
-                  : AppTheme.primaryColor.withValues(alpha: 0.07),
-              borderRadius: BorderRadius.circular(12),
+                  ? AppTheme.accentColor.withValues(alpha: 0.1)
+                  : AppTheme.primaryColor.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(
-              isPartnership ? Icons.handshake : Icons.campaign_outlined,
-              color: isPartnership ? const Color(0xFF0369A1) : AppTheme.primaryColor,
-              size: 22,
+              isPartnership ? Icons.handshake_outlined : Icons.newspaper_rounded,
+              color: isPartnership ? AppTheme.accentColor : AppTheme.primaryColor,
+              size: 24,
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (post.partnerName != null)
                   Text(
-                    post.partnerName!,
+                    post.partnerName!.toUpperCase(),
                     style: const TextStyle(
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF0369A1),
-                      letterSpacing: 0.5,
+                      color: AppTheme.accentColor,
+                      letterSpacing: 1.0,
                     ),
                   ),
-                if (post.partnerName != null) const SizedBox(height: 2),
+                if (post.partnerName != null) const SizedBox(height: 4),
                 Text(
                   post.getTitle(lang),
-                  style: const TextStyle(
-                    fontSize: 13,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
                     height: 1.3,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
-                  style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Icon(Icons.calendar_today_outlined, size: 10, color: theme.textTheme.bodySmall?.color),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          const Icon(Icons.chevron_right, color: Colors.grey, size: 18),
+          Icon(
+            isAr ? Icons.chevron_left : Icons.chevron_right, 
+            color: theme.textTheme.bodySmall?.color, 
+            size: 20
+          ),
         ],
       ),
     );
@@ -654,7 +737,10 @@ class _SunriseCarouselState extends State<_SunriseCarousel> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Image.asset('assets/images/logo.png', height: 40, color: Colors.white, colorBlendMode: BlendMode.srcIn),
+        Hero(
+          tag: 'app_logo',
+          child: Image.asset('assets/images/logo.png', height: 44, color: Colors.white, colorBlendMode: BlendMode.srcIn),
+        ),
         Row(
           children: [
             _GlassIconButton(icon: Icons.translate_outlined, onTap: () => context.push('/language')),
@@ -663,45 +749,92 @@ class _SunriseCarouselState extends State<_SunriseCarousel> {
           ],
         ),
       ],
-    ).animate().fadeIn(duration: 600.ms);
+    ).animate().fadeIn(duration: const Duration(milliseconds: 600)).slideY(begin: -0.2);
   }
 
   Widget _buildSlideContent(HeroSlide slide) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          slide.getTitle(widget.lang),
-          style: const TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white, height: 1.15),
-        ).animate(key: ValueKey('title_${slide.id}')).fadeIn(duration: 800.ms).slideY(begin: 0.1),
-        const SizedBox(height: 16),
-        Text(
-          slide.getSubtitle(widget.lang),
-          style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.8), height: 1.6),
-        ).animate(key: ValueKey('sub_${slide.id}')).fadeIn(delay: 200.ms).slideY(begin: 0.1),
-        const SizedBox(height: 36),
-        Row(
-          children: [
-            Expanded(
-              child: _HeroButton(
-                label: widget.lang == 'ar' ? 'طلب عضوية' : 'Devenir membre',
-                isPrimary: true,
-                icon: Icons.card_membership,
-                onTap: () => context.push('/membership/apply'),
-              ),
+    final theme = Theme.of(context);
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 600),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.25),
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _HeroButton(
-                label: widget.lang == 'ar' ? 'تصفح النشاطات' : 'Activités',
-                isPrimary: false,
-                icon: Icons.explore_outlined,
-                onTap: () => context.go('/activities'),
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
+                  ),
+                  child: Text(
+                    widget.lang == 'ar' ? 'اكتشف إرثنا' : 'DÉCOUVREZ NOTRE HÉRITAGE',
+                    style: const TextStyle(
+                      color: AppTheme.accentColor,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ).animate(key: ValueKey('chip_${slide.id}')).fadeIn(duration: const Duration(milliseconds: 600)).slideX(begin: -0.1),
+                const SizedBox(height: 20),
+                Text(
+                  slide.getTitle(widget.lang),
+                  style: theme.textTheme.headlineLarge?.copyWith(
+                    color: Colors.white,
+                    fontSize: 34,
+                    height: 1.1,
+                    letterSpacing: -0.5,
+                  ),
+                ).animate(key: ValueKey('title_${slide.id}')).fadeIn(delay: const Duration(milliseconds: 100), duration: const Duration(milliseconds: 800)).slideY(begin: 0.1),
+                const SizedBox(height: 16),
+                Text(
+                  slide.getSubtitle(widget.lang),
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white.withValues(alpha: 0.75),
+                    height: 1.6,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ).animate(key: ValueKey('sub_${slide.id}')).fadeIn(delay: const Duration(milliseconds: 300), duration: const Duration(milliseconds: 800)).slideY(begin: 0.1),
+                const SizedBox(height: 32),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _HeroButton(
+                        label: widget.lang == 'ar' ? 'طلب عضوية' : 'Devenir membre',
+                        isPrimary: true,
+                        icon: Icons.card_membership,
+                        onTap: () => context.push('/membership/apply'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _HeroButton(
+                        label: widget.lang == 'ar' ? 'تصفح النشاطات' : 'Activités',
+                        isPrimary: false,
+                        icon: Icons.explore_outlined,
+                        onTap: () => context.go('/activities'),
+                      ),
+                    ),
+                  ],
+                ).animate(key: ValueKey('btns_${slide.id}')).fadeIn(delay: const Duration(milliseconds: 500), duration: const Duration(milliseconds: 800)).slideY(begin: 0.1),
+              ],
             ),
-          ],
-        ).animate(key: ValueKey('btns_${slide.id}')).fadeIn(delay: 400.ms).slideY(begin: 0.1),
-      ],
+          ),
+        ),
+      ),
     );
   }
 }

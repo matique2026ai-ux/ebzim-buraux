@@ -6,7 +6,7 @@ final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
 });
 
 class ThemeNotifier extends StateNotifier<ThemeMode> {
-  ThemeNotifier() : super(ThemeMode.dark); // Default to Dark as per Ebzim premium look
+  ThemeNotifier() : super(ThemeMode.light); // Default to Light for professional institutional clarity
 
   void toggleTheme() {
     if (state == ThemeMode.dark) {

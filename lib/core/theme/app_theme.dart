@@ -10,17 +10,16 @@ class AppTheme {
   static const Color secondaryColor = Color(0xFF685D4A);     // Earthy Bronze
 
   // ── Dark mode surfaces ────────────────────────────────────────────────────
-  static const Color backgroundDark = Color(0xFF020704);     // Midnight
-  static const Color borderGlass    = Color(0x1AFFFFFF);     // Muted white border
+  static const Color backgroundDark = Color(0xFF030906);     // Deep Charcoal Emerald (Premium Pitch)
+  static const Color borderGlass    = Color(0x33FFFFFF);     // More visible glass border
 
-  // ── Light mode tokens — Warm Editorial Sage (NOT plain white) ────────────
-  // Inspired by premium cultural institutions: Louvre, UNESCO publications
-  static const Color _lightBg       = Color(0xFFF0EDE6);    // Warm Parchment (cultural paper)
-  static const Color _lightSurface  = Color(0xFFF8F5EF);    // Ivory Surface
-  static const Color _lightCard     = Color(0xFFFFFCF7);    // Cream Card
-  static const Color _lightBorder   = Color(0xFFD8CEBC);    // Warm Sand Border
-  static const Color _lightText     = Color(0xFF12251A);    // Deep Forest (not harsh black)
-  static const Color _lightSubtext  = Color(0xFF4A6155);    // Muted Sage
+  // ── Light mode tokens — Sovereign Sage & Aged Parchment (Museum Grade) ──
+  static const Color _lightBg       = Color(0xFFE2E9E5);    // Sovereign Sage (Definite colored feel, NOT white)
+  static const Color _lightSurface  = Color(0xFFD4DFD9);    // Deeper Mint-Sage for structure
+  static const Color _lightCard     = Color(0xFFFFFFFF);    // Pure White Cards (Pops against Sovereign Sage)
+  static const Color _lightBorder   = Color(0xFFC5D4CD);    // Muted Sage Border
+  static const Color _lightText     = Color(0xFF012411);    // Midnight Forest (Extreme contrast)
+  static const Color _lightSubtext  = Color(0xFF3E5A4D);    // Institutional Moss
 
   /// Unified theme generator based on locale and mode.
   static ThemeData getTheme(Locale locale, ThemeMode mode) {
@@ -32,14 +31,14 @@ class AppTheme {
     final Color textColor  = isDark ? Colors.white    : _lightText;
 
     final TextTheme textTheme = TextTheme(
-      headlineLarge: GoogleFonts.tajawal(fontSize: 40, fontWeight: FontWeight.bold,   color: textColor,                                       height: 1.2),
-      headlineMedium:GoogleFonts.tajawal(fontSize: 28, fontWeight: FontWeight.bold,   color: textColor),
+      headlineLarge: GoogleFonts.tajawal(fontSize: 40, fontWeight: FontWeight.bold,   color: isDark ? Colors.white : _lightText,             height: 1.2),
+      headlineMedium:GoogleFonts.tajawal(fontSize: 28, fontWeight: FontWeight.bold,   color: isDark ? Colors.white : _lightText),
       titleLarge:    GoogleFonts.tajawal(fontSize: 22, fontWeight: FontWeight.w600,   color: isDark ? accentColor : primaryColor),
-      titleMedium:   GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.w600,   color: textColor),
-      bodyLarge:     GoogleFonts.cairo(fontSize: 16,                                color: textColor.withValues(alpha: 0.9)),
-      bodyMedium:    GoogleFonts.cairo(fontSize: 14,                                color: isDark ? textColor.withValues(alpha: 0.8) : _lightSubtext),
-      bodySmall:     GoogleFonts.cairo(fontSize: 12,                                color: isDark ? textColor.withValues(alpha: 0.5) : _lightSubtext.withValues(alpha: 0.75)),
-      labelSmall:    GoogleFonts.cairo(fontSize: 10, fontWeight: FontWeight.bold,   color: isDark ? accentColor : accentColor.withValues(alpha: 0.9), letterSpacing: 1.5),
+      titleMedium:   GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.w600,   color: isDark ? Colors.white : _lightText),
+      bodyLarge:     GoogleFonts.cairo(fontSize: 16,                                color: isDark ? Colors.white.withValues(alpha: 0.9) : _lightText.withValues(alpha: 0.9)),
+      bodyMedium:    GoogleFonts.cairo(fontSize: 14,                                color: isDark ? Colors.white.withValues(alpha: 0.8) : _lightSubtext),
+      bodySmall:     GoogleFonts.cairo(fontSize: 12,                                color: isDark ? Colors.white.withValues(alpha: 0.5) : _lightSubtext.withValues(alpha: 0.75)),
+      labelSmall:    GoogleFonts.cairo(fontSize: 10, fontWeight: FontWeight.bold,   color: isDark ? accentColor : accentColor, letterSpacing: 1.5),
     );
 
     return ThemeData(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -82,6 +83,14 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
           Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white)),
         ],
       ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.home_rounded, color: Colors.white),
+          tooltip: 'العودة للموقع',
+          onPressed: () => context.go('/home'),
+        ),
+        const SizedBox(width: 8),
+      ],
       centerTitle: true,
       flexibleSpace: Container(
         decoration: const BoxDecoration(
@@ -498,6 +507,8 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         'title': {'ar': s.titleAr, 'en': s.titleEn, 'fr': s.titleFr},
         'subtitle': {'ar': s.subtitleAr, 'en': s.subtitleEn, 'fr': s.subtitleFr},
         'imageUrl': s.imageUrl,
+        'buttonText': s.buttonText ?? '',
+        'buttonLink': s.buttonLink ?? '',
         'order': s.order,
       };
     } else if (widget.type == CMSManageType.partner) {
@@ -534,10 +545,16 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
 
+    // Ensure numeric fields are correctly typed
+    if (_data['order'] != null && _data['order'] is String) {
+      _data['order'] = int.tryParse(_data['order']) ?? 0;
+    }
+
     setState(() => _isLoading = true);
     try {
       final service = ref.read(cmsContentServiceProvider);
       final id = widget.item?.id;
+      if (kDebugMode) print('[CMS_SAVE] Saving ${widget.type} with data: $_data');
 
       if (widget.type == CMSManageType.hero) {
         id == null ? await service.createHeroSlide(_data) : await service.updateHeroSlide(id, _data);
@@ -674,6 +691,14 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         ],
         tabKey: 'sub',
       ),
+      const SizedBox(height: 20),
+      _sectionLabel('إعدادات الزر (اختياري)', Icons.link_rounded),
+      _buildTextField('نص الزر', 'buttonText', _data['buttonText']),
+      const SizedBox(height: 12),
+      _buildTextField('رابط الزر (URL)', 'buttonLink', _data['buttonLink'], isAr: false),
+      const SizedBox(height: 20),
+      _sectionLabel('ترتيب العرض', Icons.sort_rounded),
+      _buildTextField('الترتيب (رقمي)', 'order', _data['order']?.toString(), isAr: false),
     ];
   }
 

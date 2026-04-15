@@ -24,6 +24,15 @@ class AdminDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Reactive Auth Guard: Redirect to login if session is lost/expired
+    final auth = ref.watch(authProvider);
+    if (!auth.isAuthenticated && !auth.isInitializing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) context.go('/login');
+      });
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return DefaultTabController(
       length: 7,
       child: Scaffold(
@@ -40,6 +49,11 @@ class AdminDashboardScreen extends ConsumerWidget {
                 onPressed: () => context.go('/dashboard'),
               ),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.home_rounded, color: Colors.white70),
+                  tooltip: 'العودة للموقع',
+                  onPressed: () => context.go('/home'),
+                ),
                 IconButton(
                   icon: const Icon(Icons.logout_rounded, color: Colors.white70),
                   tooltip: 'تسجيل الخروج',

@@ -6,7 +6,7 @@ final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
 });
 
 class ThemeNotifier extends StateNotifier<ThemeMode> {
-  ThemeNotifier() : super(ThemeMode.light); // Default to Light for professional institutional clarity
+  ThemeNotifier() : super(ThemeMode.dark); // Default to Dark as per user preference for premium feel
 
   void toggleTheme() {
     if (state == ThemeMode.dark) {

@@ -174,11 +174,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(32),
                             decoration: BoxDecoration(
-                              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  isDark ? const Color(0xFFE2E9E5).withValues(alpha: 0.18) : Colors.white.withValues(alpha: 0.98),
+                                  isDark ? const Color(0xFFC5D4CD).withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.90),
+                                ],
+                              ),
                               borderRadius: BorderRadius.circular(32),
                               border: Border.all(
-                                color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
-                                width: 1.5,
+                                color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.05),
+                                width: 1.2,
                               ),
                             ),
                             child: Form(
@@ -374,7 +381,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.03),
+            color: Theme.of(context).brightness == Brightness.dark 
+                ? Colors.white.withValues(alpha: 0.06) 
+                : Colors.black.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
           ),

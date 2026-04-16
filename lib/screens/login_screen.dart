@@ -167,15 +167,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.98),
-                                  isDark ? Colors.white.withValues(alpha: 0.02) : Colors.white.withValues(alpha: 0.85),
+                                  isDark ? const Color(0xFFE2E9E5).withValues(alpha: 0.18) : Colors.white.withValues(alpha: 0.98),
+                                  isDark ? const Color(0xFFC5D4CD).withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.90),
                                 ],
                                 stops: const [0.0, 1.0],
                               ),
                               borderRadius: BorderRadius.circular(40),
                               border: Border.all(
-                                color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.3),
-                                width: 1.5,
+                                color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.white.withValues(alpha: 0.4),
+                                width: 1.2,
                               ),
                               boxShadow: [
                                 BoxShadow(
@@ -433,7 +433,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark 
-                ? Colors.black.withValues(alpha: 0.25) 
+                ? Colors.white.withValues(alpha: 0.06) 
                 : Colors.white.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(

@@ -30,12 +30,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _redirect() async {
     if (!mounted) return;
-    final token = await ref.read(storageServiceProvider).getToken();
+    final storage = ref.read(storageServiceProvider);
+    final isFirstLaunch = await storage.isFirstLaunch();
+    final token = await storage.getToken();
+    
     if (!mounted) return;
-    if (token != null) {
+    
+    if (isFirstLaunch) {
+      context.go('/language');
+    } else if (token != null) {
       context.go('/dashboard');
     } else {
-      context.go('/login');
+      context.go('/home');
     }
   }
 

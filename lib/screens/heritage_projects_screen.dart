@@ -8,7 +8,12 @@ import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Data Models
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ebzim_app/core/services/news_service.dart';
+import 'package:go_router/go_router.dart';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Data Models (Unused but kept for reference)
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _RestorationProject {
@@ -134,17 +139,29 @@ final _projects = [
 // Screen
 // ─────────────────────────────────────────────────────────────────────────────
 
-class HeritageProjectsScreen extends StatelessWidget {
+final searchQueryProvider = StateProvider<String>((ref) => '');
+final projectFilterProvider = StateProvider<String>((ref) => 'all');
+
+class HeritageProjectsScreen extends ConsumerWidget {
   const HeritageProjectsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push('/heritage-map'),
+        backgroundColor: AppTheme.accentColor,
+        icon: const Icon(Icons.map_rounded, color: Colors.white),
+        label: Text(
+          isAr ? 'عرض الخريطة' : 'Voir la carte',
+          style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ).animate().fadeIn(delay: 500.ms).slideY(begin: 1.0, curve: Curves.easeOutBack),
       body: EbzimBackground(
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -216,17 +233,65 @@ class HeritageProjectsScreen extends StatelessWidget {
 
             const SliverToBoxAdapter(child: SizedBox(height: 32)),
 
+            // ── Search & Filter ──────────────────────────────────────────────
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: _SearchAndFilterBar(isAr: isAr, isDark: isDark),
+              ).animate().fadeIn(delay: 450.ms).slideY(begin: 0.05),
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
             // ── Project Cards ──────────────────────────────────────────────
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final project = _projects[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    child: _ProjectCard(project: project, isAr: isAr, isDark: isDark),
-                  ).animate().fadeIn(delay: (500 + index * 150).ms).slideY(begin: 0.08);
-                },
-                childCount: _projects.length,
+            ref.watch(heritageProjectsProvider).when(
+              data: (projects) {
+                final query = ref.watch(searchQueryProvider).toLowerCase();
+                final filter = ref.watch(projectFilterProvider);
+
+                final filteredProjects = projects.where((p) {
+                  final matchesQuery = p.titleAr.toLowerCase().contains(query) ||
+                                       p.titleFr.toLowerCase().contains(query) ||
+                                       p.titleEn.toLowerCase().contains(query) ||
+                                       p.summaryAr.toLowerCase().contains(query);
+                  final matchesFilter = filter == 'all' || p.category.toLowerCase() == filter;
+                  return matchesQuery && matchesFilter;
+                }).toList();
+
+                if (filteredProjects.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Center(
+                        child: Text(
+                          isAr ? 'لا توجد مشاريع تطابق بحثك.' : 'Aucun projet ne correspond à votre recherche.',
+                          style: TextStyle(color: isDark ? Colors.white54 : Colors.black54),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final project = filteredProjects[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        child: _ProjectCard(project: project, isAr: isAr, isDark: isDark),
+                      ).animate(key: ValueKey(project.id)).fadeIn(delay: (100 + index * 50).ms).slideY(begin: 0.08);
+                    },
+                    childCount: filteredProjects.length,
+                  ),
+                );
+              },
+              loading: () => const SliverToBoxAdapter(
+                child: Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator())),
+              ),
+              error: (_, __) => SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Center(child: Text(isAr ? 'خطأ في جلب البيانات' : 'Erreur de chargement')),
+                ),
               ),
             ),
 
@@ -353,20 +418,99 @@ class _PartnerChip extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Search and Filter Bar
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _SearchAndFilterBar extends ConsumerWidget {
+  final bool isAr;
+  final bool isDark;
+  const _SearchAndFilterBar({required this.isAr, required this.isDark});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filter = ref.watch(projectFilterProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Search Bar
+        Container(
+          height: 52,
+          decoration: BoxDecoration(
+            color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(26),
+            border: Border.all(color: isDark ? Colors.white10 : AppTheme.accentColor.withValues(alpha: 0.1)),
+          ),
+          child: TextField(
+            onChanged: (val) => ref.read(searchQueryProvider.notifier).state = val,
+            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            decoration: InputDecoration(
+              hintText: isAr ? 'ابحث عن مشروع، معلم، أو شراكة...' : 'Rechercher un projet, un monument...',
+              hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13),
+              prefixIcon: Icon(Icons.search_rounded, color: AppTheme.accentColor.withValues(alpha: 0.7)),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Filter Chips
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            children: [
+              _buildFilterChip(context, ref, 'all', isAr ? 'الكل' : 'Tous', filter == 'all'),
+              const SizedBox(width: 8),
+              _buildFilterChip(context, ref, 'heritage', isAr ? 'معالم تراثية' : 'Monuments', filter == 'heritage'),
+              const SizedBox(width: 8),
+              _buildFilterChip(context, ref, 'project', isAr ? 'مشاريع حفظ' : 'Projets', filter == 'project'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFilterChip(BuildContext context, WidgetRef ref, String value, String label, bool isSelected) {
+    return GestureDetector(
+      onTap: () => ref.read(projectFilterProvider.notifier).state = value,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.5)),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white10 : AppTheme.accentColor.withValues(alpha: 0.2))),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.tajawal(
+            color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            fontSize: 13,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Project Card
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _ProjectCard extends StatelessWidget {
-  final _RestorationProject project;
+  final NewsPost project;
   final bool isAr;
   final bool isDark;
   const _ProjectCard({required this.project, required this.isAr, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    final title = isAr ? project.titleAr : project.titleFr;
-    final description = isAr ? project.descriptionAr : project.descriptionFr;
-    final partner = isAr ? project.partnerAr : project.partnerFr;
+    final lang = isAr ? 'ar' : 'fr';
+    final title = project.getTitle(lang);
+    final description = project.getSummary(lang);
+    final partner = project.partnerName ?? (isAr ? 'شراكة' : 'Partenariat');
 
     return GlassCard(
       padding: EdgeInsets.zero,
@@ -391,7 +535,7 @@ class _ProjectCard extends StatelessWidget {
                     height: 180,
                     width: double.infinity,
                     color: const Color(0xFF081C10),
-                    child: Icon(project.icon, color: AppTheme.accentColor.withValues(alpha: 0.3), size: 60),
+                    child: Icon(Icons.apartment_outlined, color: AppTheme.accentColor.withValues(alpha: 0.3), size: 60),
                   ),
                 ),
                 // Gradient overlay
@@ -417,31 +561,18 @@ class _ProjectCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: _statusColor(project.status).withValues(alpha: 0.9),
+                          color: _statusColor('نشط').withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          project.status,
+                          isAr ? 'نشط' : 'Actif',
                           style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.6),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.place_outlined, color: Colors.white60, size: 12),
-                            const SizedBox(width: 4),
-                            Text(
-                              project.location,
-                              style: const TextStyle(color: Colors.white70, fontSize: 10),
-                            ),
                           ],
                         ),
                       ),
+
                     ],
                   ),
                 ),
@@ -458,7 +589,7 @@ class _ProjectCard extends StatelessWidget {
                 // Partner chip
                 Row(
                   children: [
-                    Icon(project.icon, color: AppTheme.accentColor, size: 16),
+                    const Icon(Icons.apartment_outlined, color: AppTheme.accentColor, size: 16),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
@@ -471,7 +602,7 @@ class _ProjectCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      project.yearStarted,
+                      project.publishedAt.year.toString(),
                       style: TextStyle(
                         color: isDark ? Colors.white30 : Colors.black38,
                         fontSize: 11,
@@ -503,60 +634,7 @@ class _ProjectCard extends StatelessWidget {
                   ),
                 ),
 
-                // Progress (only if < 100%)
-                if (project.progressPercent < 1.0) ...[
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        isAr ? 'نسبة الإنجاز' : 'Avancement',
-                        style: TextStyle(
-                          color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black38,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        '${(project.progressPercent * 100).toInt()}%',
-                        style: TextStyle(
-                          color: AppTheme.accentColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: project.progressPercent,
-                      backgroundColor: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06),
-                      valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.accentColor),
-                      minHeight: 6,
-                    ),
-                  ),
-                ],
-
-                const SizedBox(height: 20),
-
-                // Milestones
-                Text(
-                  isAr ? 'محطات المشروع' : 'Étapes du Projet',
-                  style: GoogleFonts.tajawal(
-                    color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black38,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.5,
-                  ),
                 ),
-                const SizedBox(height: 12),
-                ...project.milestones.map((m) => _MilestoneTile(
-                  label: isAr ? m.labelAr : m.labelFr,
-                  done: m.done,
-                  isDark: isDark,
-                )),
               ],
             ),
           ),

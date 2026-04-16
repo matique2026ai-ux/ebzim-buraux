@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
+import 'package:ebzim_app/core/services/storage_service.dart';
 
 class OnboardingSliderScreen extends ConsumerStatefulWidget {
   const OnboardingSliderScreen({super.key});
@@ -16,16 +17,21 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  void _completeOnboarding() {
+    ref.read(storageServiceProvider).setFirstLaunchCompleted();
+    context.go('/home');
+  }
+
   void _nextPage() {
     if (_currentPage < 2) {
       _pageController.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic);
     } else {
-      context.go('/login');
+      _completeOnboarding();
     }
   }
 
   void _skip() {
-    context.go('/login');
+    _completeOnboarding();
   }
 
   @override

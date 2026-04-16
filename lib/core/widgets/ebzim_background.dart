@@ -22,7 +22,7 @@ class EbzimBackground extends StatelessWidget {
               radius: 1.2,
               colors: isDark 
                 ? [const Color(0xFF081C10), AppTheme.backgroundDark] // Very deep sophisticated dark emerald to midnight
-                : [const Color(0xFFF2F7F2), const Color(0xFFF9F9F7)], // Silk Ivory Gradient
+                : [const Color(0xFFE2E9E5), const Color(0xFFD4DFD9)], // Sovereign Sage & Deeper Mint-Sage Gradient
             ),
           ),
         ),

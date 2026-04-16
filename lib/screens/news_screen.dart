@@ -7,7 +7,7 @@ import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 class NewsScreen extends ConsumerStatefulWidget {
   const NewsScreen({super.key});
 
@@ -41,10 +41,12 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
     final newsAsync = ref.watch(newsProvider);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      body: EbzimBackground(
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
           const EbzimSliverAppBar(),
           
           // ── Header & Filters ──
@@ -204,6 +206,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

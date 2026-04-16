@@ -32,6 +32,7 @@ import 'package:ebzim_app/screens/help_support_screen.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/screens/heritage_projects_screen.dart';
+import 'package:ebzim_app/screens/heritage_map_screen.dart';
 import 'package:ebzim_app/screens/civic_report_screen.dart';
 import 'package:ebzim_app/screens/statute_screen.dart';
 import 'package:ebzim_app/screens/digital_library_screen.dart';
@@ -268,6 +269,10 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) => _slidePage(state, const HeritageProjectsScreen()),
     ),
     GoRoute(
+      path: '/heritage-map',
+      pageBuilder: (context, state) => _slidePage(state, const HeritageMapScreen()),
+    ),
+    GoRoute(
       path: '/report',
       pageBuilder: (context, state) => _slidePage(state, const CivicReportScreen()),
     ),
@@ -294,8 +299,9 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/news/:id',
       pageBuilder: (context, state) {
-        final post = state.extra as NewsPost;
-        return _slidePage(state, NewsDetailScreen(post: post));
+        final post = state.extra as NewsPost?;
+        final id = state.pathParameters['id']!;
+        return _slidePage(state, NewsDetailWrapper(initialPost: post, postId: id));
       },
     ),
   ],

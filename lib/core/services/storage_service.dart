@@ -23,6 +23,17 @@ class StorageService {
   Future<void> deleteToken() async {
     await _storage.delete(key: _tokenKey);
   }
+
+  static const String _firstLaunchKey = 'is_first_launch_v1';
+
+  Future<bool> isFirstLaunch() async {
+    final val = await _storage.read(key: _firstLaunchKey);
+    return val == null || val == 'true';
+  }
+
+  Future<void> setFirstLaunchCompleted() async {
+    await _storage.write(key: _firstLaunchKey, value: 'false');
+  }
 }
 
 final storageServiceProvider = Provider((ref) => StorageService());

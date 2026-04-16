@@ -6,6 +6,7 @@ import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/router/app_router.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/providers/theme_provider.dart';
+import 'package:ebzim_app/core/widgets/network_aware_app.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,28 +25,30 @@ class EbzimApp extends ConsumerWidget {
     final lightTheme = AppTheme.getTheme(currentLocale, ThemeMode.light);
     final darkTheme = AppTheme.getTheme(currentLocale, ThemeMode.dark);
 
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'EBZIM APP',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: themeMode,
-      locale: currentLocale,
-      
-      // Localization Setup
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ar'), // Arabic
-        Locale('en'), // English
-        Locale('fr'), // French
-      ],
-      
-      routerConfig: appRouter,
+    return NetworkAwareApp(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        title: 'EBZIM APP',
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: themeMode,
+        locale: currentLocale,
+        
+        // Localization Setup
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ar'), // Arabic
+          Locale('en'), // English
+          Locale('fr'), // French
+        ],
+        
+        routerConfig: appRouter,
+      ),
     );
   }
 }

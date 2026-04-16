@@ -4,6 +4,35 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class NewsDetailWrapper extends ConsumerWidget {
+  final NewsPost? initialPost;
+  final String postId;
+
+  const NewsDetailWrapper({super.key, this.initialPost, required this.postId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (initialPost != null) {
+      return NewsDetailScreen(post: initialPost!);
+    }
+    
+    final postAsync = ref.watch(postDetailsProvider(postId));
+    
+    return postAsync.when(
+      data: (post) {
+        if (post == null) {
+          return const Scaffold(body: Center(child: Text('News not found')));
+        }
+        return NewsDetailScreen(post: post);
+      },
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (_, __) => const Scaffold(body: Center(child: Text('Error loading news'))),
+    );
+  }
+}
+
 class NewsDetailScreen extends StatelessWidget {
   final NewsPost post;
   const NewsDetailScreen({super.key, required this.post});

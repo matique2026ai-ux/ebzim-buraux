@@ -1,6 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Represents a single news post / announcement from the association.
 class NewsPost {
@@ -127,6 +127,20 @@ class NewsService {
     }
   }
 
+  Future<NewsPost?> getPost(String id) async {
+    try {
+      final response = await _ref.read(apiClientProvider).dio.get('/posts/$id');
+      final data = response.data;
+      if (data != null && (data is Map || data['data'] is Map)) {
+        final postData = data['data'] ?? data;
+        return NewsPost.fromJson(Map<String, dynamic>.from(postData));
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   // Category ID for News (hardcoded based on DB check)
   static const String newsCategoryId = '69d97497b964b974fd6ba1f2';
 
@@ -187,4 +201,13 @@ final newsProvider = FutureProvider<List<NewsPost>>((ref) {
 
 final adminNewsProvider = FutureProvider<List<NewsPost>>((ref) {
   return ref.watch(newsServiceProvider).getAdminNews();
+});
+
+final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
+  final news = await ref.watch(newsServiceProvider).getNews();
+  return news.where((p) => p.category == 'HERITAGE' || p.category == 'PROJECT').toList();
+});
+
+final postDetailsProvider = FutureProvider.family<NewsPost?, String>((ref, id) {
+  return ref.watch(newsServiceProvider).getPost(id);
 });

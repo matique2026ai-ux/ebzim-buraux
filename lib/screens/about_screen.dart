@@ -31,6 +31,7 @@ class AboutScreen extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       body: EbzimBackground(
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),

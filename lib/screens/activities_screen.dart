@@ -9,6 +9,8 @@ import 'package:ebzim_app/core/common_widgets/ebzim_app_bar.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 class ActivitiesScreen extends ConsumerStatefulWidget {
   const ActivitiesScreen({super.key});
 
@@ -44,10 +46,12 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      body: EbzimBackground(
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
           const EbzimSliverAppBar(),
           
           // ── Header & Filters ──
@@ -106,7 +110,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                                 : null,
                           ),
                         ),
-                      ),
+                      ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
                     ],
                   ),
                 ),
@@ -161,7 +165,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                       );
                     },
                   ),
-                ),
+                ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.05),
                 
                 const SizedBox(height: 24),
               ],
@@ -220,6 +224,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

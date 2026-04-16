@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Patch, Param, Body, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -18,5 +18,23 @@ export class AdminController {
   @ApiOperation({ summary: 'Get summary statistics for admin dashboard' })
   async getStats() {
     return this.adminService.getStats();
+  }
+
+  @Get('users')
+  @ApiOperation({ summary: 'Get all registered users' })
+  async getAllUsers() {
+    return this.adminService.getAllUsers();
+  }
+
+  @Patch('users/:id/status')
+  @ApiOperation({ summary: 'Update user account status' })
+  async updateUserStatus(@Param('id') id: string, @Body('status') status: string) {
+    return this.adminService.updateUserStatus(id, status);
+  }
+
+  @Delete('users/:id')
+  @ApiOperation({ summary: 'Delete user account' })
+  async deleteUser(@Param('id') id: string) {
+    return this.adminService.deleteUser(id);
   }
 }

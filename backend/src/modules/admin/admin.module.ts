@@ -7,6 +7,7 @@ import { ReportSchema } from '../reports/schemas/report.schema';
 import { EventSchema } from '../events/schemas/event.schema';
 import { ContributionSchema } from '../contributions/schemas/contribution.schema';
 import { PostSchema } from '../posts/schemas/post.schema';
+import { UserSchema } from '../users/schemas/user.schema';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PostSchema } from '../posts/schemas/post.schema';
       { name: 'Event', schema: EventSchema },
       { name: 'Contribution', schema: ContributionSchema },
       { name: 'Post', schema: PostSchema },
+      { name: 'User', schema: UserSchema },
     ]),
   ],
   controllers: [AdminController],

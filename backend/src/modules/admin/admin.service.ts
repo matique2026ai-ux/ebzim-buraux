@@ -6,6 +6,7 @@ import { ReportDocument } from '../reports/schemas/report.schema';
 import { EventDocument } from '../events/schemas/event.schema';
 import { ContributionDocument } from '../contributions/schemas/contribution.schema';
 import { PostDocument } from '../posts/schemas/post.schema';
+import { UserDocument } from '../users/schemas/user.schema';
 
 @Injectable()
 export class AdminService {
@@ -15,6 +16,7 @@ export class AdminService {
     @InjectModel('Event') private eventModel: Model<EventDocument>,
     @InjectModel('Contribution') private contributionModel: Model<ContributionDocument>,
     @InjectModel('Post') private postModel: Model<PostDocument>,
+    @InjectModel('User') private userModel: Model<UserDocument>,
   ) {}
 
   async getStats() {
@@ -36,6 +38,19 @@ export class AdminService {
       totalContributions,
       pinnedPostsCount,
       totalPostsCount,
+      totalUsersCount: await this.userModel.countDocuments({}),
     };
+  }
+
+  async getAllUsers() {
+    return this.userModel.find({}, { passwordHash: 0 }).sort({ createdAt: -1 });
+  }
+
+  async updateUserStatus(userId: string, status: string) {
+    return this.userModel.findByIdAndUpdate(userId, { status }, { new: true });
+  }
+
+  async deleteUser(userId: string) {
+    return this.userModel.findByIdAndDelete(userId);
   }
 }

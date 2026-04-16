@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ebzim_app/core/services/admin_user_service.dart';
+import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,7 +36,7 @@ class AdminDashboardScreen extends ConsumerWidget {
     }
 
     return DefaultTabController(
-      length: 7,
+      length: 8,
       child: Scaffold(
         backgroundColor: const Color(0xFFF4F6F9),
         body: NestedScrollView(
@@ -183,6 +185,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                     unselectedLabelStyle: GoogleFonts.tajawal(fontSize: 12),
                     tabs: const [
                       Tab(icon: Icon(Icons.group_add_rounded, size: 18), text: 'العضوية'),
+                      Tab(icon: Icon(Icons.people_alt_rounded, size: 18), text: 'المستخدمون'),
                       Tab(icon: Icon(Icons.dashboard_customize_rounded, size: 18), text: 'المحتوى'),
                       Tab(icon: Icon(Icons.event_rounded, size: 18), text: 'الأنشطة'),
                       Tab(icon: Icon(Icons.newspaper_rounded, size: 18), text: 'الأخبار'),
@@ -198,6 +201,7 @@ class AdminDashboardScreen extends ConsumerWidget {
           body: const TabBarView(
             children: [
               _MembershipTab(),
+              _UsersTab(),
               _CMSTab(),
               _EventsTab(),
               _NewsTab(),
@@ -206,6 +210,150 @@ class AdminDashboardScreen extends ConsumerWidget {
               _SettingsTab(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 2: REGISTERED USERS
+// ─────────────────────────────────────────────────────────────────────────────
+class _UsersTab extends ConsumerWidget {
+  const _UsersTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final usersAsync = ref.watch(allUsersProvider);
+
+    return RefreshIndicator(
+      color: AppTheme.primaryColor,
+      onRefresh: () async => ref.invalidate(allUsersProvider),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SectionHeader(
+              title: 'إدارة المسجلين',
+              subtitle: 'التحكم الكامل في حسابات المستخدمين، الحالة، والصلاحيات',
+              icon: Icons.people_alt_rounded,
+            ).animate().fadeIn(delay: 100.ms),
+            const SizedBox(height: 24),
+            
+            usersAsync.when(
+              data: (users) => Column(
+                children: users.map((user) => _UserCard(user: user)).toList(),
+              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('Error loading users: $e')),
+            ),
+            const SizedBox(height: 100),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _UserCard extends ConsumerWidget {
+  final UserProfile user;
+  const _UserCard({required this.user});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isBanned = user.status == 'BANNED';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4)),
+        ],
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          width: 50, height: 50,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1), width: 2),
+          ),
+          child: ClipOval(
+            child: user.imageUrl.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: user.imageUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (_, __) => const CircularProgressIndicator(),
+                    errorWidget: (_, __, ___) => const Icon(Icons.person, color: AppTheme.primaryColor),
+                  )
+                : const Icon(Icons.person, color: AppTheme.primaryColor),
+          ),
+        ),
+        title: Text(
+          user.name,
+          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(user.email, style: GoogleFonts.inter(fontSize: 11, color: Colors.grey.shade600)),
+            const SizedBox(height: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: isBanned ? Colors.red.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                user.status ?? 'ACTIVE',
+                style: GoogleFonts.tajawal(
+                  fontSize: 10, 
+                  fontWeight: FontWeight.bold, 
+                  color: isBanned ? Colors.red : Colors.green,
+                ),
+              ),
+            ),
+          ],
+        ),
+        trailing: PopupMenuButton<String>(
+          onSelected: (val) async {
+            if (val == 'ban') {
+              await ref.read(adminUserServiceProvider).updateUserStatus(user.id, isBanned ? 'ACTIVE' : 'BANNED');
+              ref.invalidate(allUsersProvider);
+            } else if (val == 'delete') {
+              final confirm = await _confirmDelete(context, 'حذف المستخدم', user.name);
+              if (confirm == true) {
+                await ref.read(adminUserServiceProvider).deleteUser(user.id);
+                ref.invalidate(allUsersProvider);
+              }
+            }
+          },
+          itemBuilder: (_) => [
+            PopupMenuItem(
+              value: 'ban',
+              child: Row(
+                children: [
+                  Icon(isBanned ? Icons.check_circle_outline : Icons.block_flipped, size: 18, color: isBanned ? Colors.green : Colors.orange),
+                  const SizedBox(width: 8),
+                  Text(isBanned ? 'تفعيل الحساب' : 'حظر الحساب', style: GoogleFonts.tajawal()),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: 'delete',
+              child: Row(
+                children: [
+                  const Icon(Icons.delete_outline, size: 18, color: Colors.red),
+                  const SizedBox(width: 8),
+                  Text('حذف الحساب', style: GoogleFonts.tajawal(color: Colors.red)),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

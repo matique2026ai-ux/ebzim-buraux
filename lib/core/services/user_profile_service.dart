@@ -14,6 +14,7 @@ class UserProfile {
   final DateTime? membershipExpiry;
   final int profileCompletionPercentage;
   final String? membershipBadge;
+  final String status;
 
   UserProfile({
     required this.id,
@@ -27,6 +28,7 @@ class UserProfile {
     this.membershipExpiry,
     required this.profileCompletionPercentage,
     this.membershipBadge,
+    this.status = 'ACTIVE',
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,7 @@ class UserProfile {
       membershipExpiry: json['expiryDate'] != null ? DateTime.parse(json['expiryDate']) : null,
       profileCompletionPercentage: 40, // Base completion for registration
       membershipBadge: json['membershipBadge'],
+      status: json['status'] ?? 'ACTIVE',
     );
   }
 

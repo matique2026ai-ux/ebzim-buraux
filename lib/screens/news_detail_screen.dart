@@ -171,7 +171,8 @@ class NewsDetailScreen extends StatelessWidget {
                         color: theme.colorScheme.primaryContainer.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(14),
                         border: Border(
-                          right: BorderSide(color: AppTheme.primaryColor, width: 4),
+                          right: lang == 'ar' ? const BorderSide(color: AppTheme.primaryColor, width: 4) : BorderSide.none,
+                          left: lang != 'ar' ? const BorderSide(color: AppTheme.primaryColor, width: 4) : BorderSide.none,
                         ),
                       ),
                       child: Text(

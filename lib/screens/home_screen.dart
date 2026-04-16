@@ -455,7 +455,6 @@ class _SectionHeader extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
-            color: AppTheme.primaryColor,
           ),
         ),
         if (onViewAll != null)
@@ -463,8 +462,8 @@ class _SectionHeader extends StatelessWidget {
             onTap: onViewAll,
             child: Text(
               lang == 'ar' ? 'عرض الكل' : 'Voir tout',
-              style: const TextStyle(
-                color: AppTheme.secondaryColor,
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark ? AppTheme.accentColor : AppTheme.secondaryColor,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),
@@ -483,90 +482,115 @@ class _NewsPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final isAr = lang == 'ar';
-    final isPartnership = post.category == 'PARTNERSHIP';
     
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isPartnership
-              ? AppTheme.accentColor.withValues(alpha: 0.3)
-              : theme.dividerTheme.color ?? Colors.transparent,
+    return InkWell(
+      onTap: () => context.push('/news/${post.id}', extra: post),
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        height: 110,
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: theme.dividerTheme.color?.withValues(alpha: 0.5) ?? Colors.transparent),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Elegant Icon Box
-          Container(
-            width: 52, height: 52,
-            decoration: BoxDecoration(
-              color: isPartnership
-                  ? AppTheme.accentColor.withValues(alpha: 0.1)
-                  : AppTheme.primaryColor.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(14),
+        child: Row(
+          children: [
+            // Image or Placeholder
+            ClipRRect(
+              borderRadius: BorderRadius.horizontal(
+                left: isAr ? Radius.zero : const Radius.circular(24),
+                right: isAr ? const Radius.circular(24) : Radius.zero,
+              ),
+              child: SizedBox(
+                width: 110,
+                height: 110,
+                child: post.imageUrl.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: post.imageUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (ctx, url) => Container(color: theme.dividerTheme.color),
+                        errorWidget: (ctx, url, err) => _buildPlaceholder(isDark),
+                      )
+                    : _buildPlaceholder(isDark),
+              ),
             ),
-            child: Icon(
-              isPartnership ? Icons.handshake_outlined : Icons.newspaper_rounded,
-              color: isPartnership ? AppTheme.accentColor : AppTheme.primaryColor,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (post.partnerName != null)
-                  Text(
-                    post.partnerName!.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.accentColor,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                if (post.partnerName != null) const SizedBox(height: 4),
-                Text(
-                  post.getTitle(lang),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    height: 1.3,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 6),
-                Row(
+            
+            // Content
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.calendar_today_outlined, size: 10, color: theme.textTheme.bodySmall?.color),
-                    const SizedBox(width: 4),
                     Text(
-                      '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
-                      style: theme.textTheme.bodySmall,
+                      post.category.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? AppTheme.accentColor : AppTheme.primaryColor,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      post.getTitle(lang),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        height: 1.2,
+                        color: isDark ? Colors.white : AppTheme.primaryColor,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        Icon(Icons.access_time_rounded, size: 12, color: theme.hintColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
+                          style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-          Icon(
-            isAr ? Icons.chevron_left : Icons.chevron_right, 
-            color: theme.textTheme.bodySmall?.color, 
-            size: 20
-          ),
-        ],
+            
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Icon(
+                isAr ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+                color: isDark ? AppTheme.accentColor.withValues(alpha: 0.5) : AppTheme.primaryColor.withValues(alpha: 0.3),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder(bool isDark) {
+    return Container(
+      color: isDark ? Colors.white.withValues(alpha: 0.05) : AppTheme.primaryColor.withValues(alpha: 0.05),
+      child: Center(
+        child: Icon(
+          Icons.newspaper_rounded,
+          color: isDark ? Colors.white12 : AppTheme.primaryColor.withValues(alpha: 0.1),
+          size: 32,
+        ),
       ),
     );
   }

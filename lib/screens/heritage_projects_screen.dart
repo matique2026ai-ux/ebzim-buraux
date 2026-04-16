@@ -2,145 +2,24 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
-
-// ─────────────────────────────────────────────────────────────────────────────
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
-import 'package:go_router/go_router.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Data Models (Unused but kept for reference)
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _RestorationProject {
-  final String id;
-  final String titleAr;
-  final String titleFr;
-  final String partnerAr;
-  final String partnerFr;
-  final String descriptionAr;
-  final String descriptionFr;
-  final String imageUrl;
-  final String status;
-  final String yearStarted;
-  final String location;
-  final double progressPercent;
-  final IconData icon;
-  final List<_ProjectMilestone> milestones;
-
-  const _RestorationProject({
-    required this.id,
-    required this.titleAr,
-    required this.titleFr,
-    required this.partnerAr,
-    required this.partnerFr,
-    required this.descriptionAr,
-    required this.descriptionFr,
-    required this.imageUrl,
-    required this.status,
-    required this.yearStarted,
-    required this.location,
-    required this.progressPercent,
-    required this.icon,
-    required this.milestones,
-  });
-}
-
-class _ProjectMilestone {
-  final String labelAr;
-  final String labelFr;
-  final bool done;
-  const _ProjectMilestone({required this.labelAr, required this.labelFr, required this.done});
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Static Data
-// ─────────────────────────────────────────────────────────────────────────────
-
-final _projects = [
-  _RestorationProject(
-    id: 'caserne',
-    titleAr: 'ترميم الثكنة العسكرية — الحامة',
-    titleFr: 'Restauration de la Caserne — El Hamman',
-    partnerAr: 'وزارة المجاهدين وذوي الحقوق',
-    partnerFr: 'Ministère des Moudjahidines',
-    descriptionAr:
-        'مشروع ترميم وصون تاريخي لإحدى الشواهد المعمارية التي تحمل ذاكرة الثورة التحريرية الجزائرية في ولاية سطيف. يجري تنفيذ المشروع بموجب عقد رسمي مع وزارة المجاهدين وذوي الحقوق، في إطار الحفاظ على تراث الذاكرة الوطنية وإعادة الاعتبار للمواقع التاريخية.',
-    descriptionFr:
-        'Projet de restauration et de conservation d\'un site architectural portant la mémoire de la Révolution algérienne à Sétif. Réalisé dans le cadre d\'un contrat officiel avec le Ministère des Moudjahidines, pour la préservation du patrimoine mémoriel national.',
-    imageUrl: 'https://placehold.co/800x400/081C10/D4AF37?text=Caserne+El+Hamman+Setif',
-    status: 'جارٍ التنفيذ',
-    yearStarted: '2024',
-    location: 'الحامة، ولاية سطيف',
-    progressPercent: 0.45,
-    icon: Icons.apartment_outlined,
-    milestones: [
-      _ProjectMilestone(labelAr: 'توقيع عقد الترميم', labelFr: 'Signature du contrat', done: true),
-      _ProjectMilestone(labelAr: 'الدراسة الهندسية والتقنية', labelFr: 'Étude technique', done: true),
-      _ProjectMilestone(labelAr: 'أشغال الهيكل الحامل', labelFr: 'Travaux de structure', done: true),
-      _ProjectMilestone(labelAr: 'ترميم الواجهات التاريخية', labelFr: 'Restauration des façades', done: false),
-      _ProjectMilestone(labelAr: 'التهيئة الداخلية', labelFr: 'Aménagement intérieur', done: false),
-      _ProjectMilestone(labelAr: 'الافتتاح الرسمي', labelFr: 'Inauguration officielle', done: false),
-    ],
-  ),
-  _RestorationProject(
-    id: 'museum',
-    titleAr: 'شراكة المتحف الوطني للآثار',
-    titleFr: 'Partenariat — Musée National des Antiquités',
-    partnerAr: 'المتحف الوطني للآثار — سطيف',
-    partnerFr: 'Musée National des Antiquités de Sétif',
-    descriptionAr:
-        'اتفاقية شراكة استراتيجية بين جمعية إبزيم والمتحف الوطني للآثار بسطيف، بهدف تنظيم أيام ثقافية مشتركة، ودعم البحث الأثري، والتعريف بالتراث الحضاري لمنطقة سطيف ذات العمق التاريخي الروماني والبيزنطي والإسلامي.',
-    descriptionFr:
-        'Convention de partenariat stratégique entre l\'association Ebzim et le Musée National des Antiquités de Sétif pour l\'organisation de journées culturelles, le soutien à la recherche archéologique et la valorisation du patrimoine civilisationnel de la région.',
-    imageUrl: 'https://placehold.co/800x400/081C10/D4AF37?text=Musee+National+Setif',
-    status: 'نشط',
-    yearStarted: '2023',
-    location: 'سطيف، الجزائر',
-    progressPercent: 1.0,
-    icon: Icons.account_balance_outlined,
-    milestones: [
-      _ProjectMilestone(labelAr: 'إمضاء اتفاقية الشراكة', labelFr: 'Signature de la convention', done: true),
-      _ProjectMilestone(labelAr: 'الأيام التراثية المشتركة الأولى', labelFr: 'Premières journées patrimoniales', done: true),
-      _ProjectMilestone(labelAr: 'برنامج التوعية المدرسية', labelFr: 'Programme scolaire', done: true),
-      _ProjectMilestone(labelAr: 'المعرض الأثري المتنقل', labelFr: 'Exposition itinérante', done: false),
-    ],
-  ),
-  _RestorationProject(
-    id: 'unesco',
-    titleAr: 'عضوية شبكة اليونسكو',
-    titleFr: 'Réseau UNESCO Algérie',
-    partnerAr: 'منظمة اليونسكو — الجزائر',
-    partnerFr: 'UNESCO Algérie',
-    descriptionAr:
-        'عضوية جمعية إبزيم في شبكة اليونسكو بالجزائر يُرسّخ دورها كفاعل مجتمعي معتمد دولياً في صون التراث الإنساني. هذه العضوية تُلزم الجمعية بمعايير الحوكمة الثقافية الدولية وتفتح أمامها أبواب الشراكات العالمية.',
-    descriptionFr:
-        'L\'adhésion d\'Ebzim au réseau UNESCO en Algérie consacre son rôle d\'acteur sociétal reconnu internationalement dans la sauvegarde du patrimoine humain, l\'engageant dans les standards de gouvernance culturelle internationale.',
-    imageUrl: 'https://placehold.co/800x400/081C10/D4AF37?text=UNESCO+Network+Algeria',
-    status: 'عضو فاعل',
-    yearStarted: '2022',
-    location: 'الجزائر العاصمة',
-    progressPercent: 1.0,
-    icon: Icons.public_outlined,
-    milestones: [
-      _ProjectMilestone(labelAr: 'قبول طلب العضوية', labelFr: 'Adhésion acceptée', done: true),
-      _ProjectMilestone(labelAr: 'التكوين على معايير اليونسكو', labelFr: 'Formation aux standards', done: true),
-      _ProjectMilestone(labelAr: 'المشاركة في الملتقيات الوطنية', labelFr: 'Participation nationale', done: true),
-      _ProjectMilestone(labelAr: 'المشاركة في المؤتمرات الدولية', labelFr: 'Conférences internationales', done: false),
-    ],
-  ),
-];
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Screen
+// State Providers
 // ─────────────────────────────────────────────────────────────────────────────
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 final projectFilterProvider = StateProvider<String>((ref) => 'all');
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Screen
+// ─────────────────────────────────────────────────────────────────────────────
 
 class HeritageProjectsScreen extends ConsumerWidget {
   const HeritageProjectsScreen({super.key});
@@ -233,7 +112,7 @@ class HeritageProjectsScreen extends ConsumerWidget {
 
             const SliverToBoxAdapter(child: SizedBox(height: 32)),
 
-            // ── Search & Filter ──────────────────────────────────────────────
+            // ── Search & Filter ────────────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -304,7 +183,7 @@ class HeritageProjectsScreen extends ConsumerWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Partnership Banner — 3 logos
+// Partnership Banner
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _PartnershipBanner extends StatelessWidget {
@@ -407,10 +286,7 @@ class _PartnerChip extends StatelessWidget {
         ),
         Text(
           sub,
-          style: TextStyle(
-            color: color.withValues(alpha: 0.7),
-            fontSize: 9,
-          ),
+          style: TextStyle(color: color.withValues(alpha: 0.7), fontSize: 9),
         ),
       ],
     );
@@ -432,7 +308,6 @@ class _SearchAndFilterBar extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Search Bar
         Container(
           height: 52,
           decoration: BoxDecoration(
@@ -453,7 +328,6 @@ class _SearchAndFilterBar extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        // Filter Chips
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
@@ -521,7 +395,6 @@ class _ProjectCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             child: Stack(
@@ -538,7 +411,6 @@ class _ProjectCard extends StatelessWidget {
                     child: Icon(Icons.apartment_outlined, color: AppTheme.accentColor.withValues(alpha: 0.3), size: 60),
                   ),
                 ),
-                // Gradient overlay
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
@@ -550,43 +422,29 @@ class _ProjectCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Status badge
                 Positioned(
                   top: 12,
                   left: 12,
-                  right: 12,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: _statusColor('نشط').withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          isAr ? 'نشط' : 'Actif',
-                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                          ],
-                        ),
-                      ),
-
-                    ],
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: _statusColor(project.category).withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      project.category,
+                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-
-          // Content
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Partner chip
                 Row(
                   children: [
                     const Icon(Icons.apartment_outlined, color: AppTheme.accentColor, size: 16),
@@ -611,8 +469,6 @@ class _ProjectCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-
-                // Title
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -621,9 +477,7 @@ class _ProjectCard extends StatelessWidget {
                     height: 1.3,
                   ),
                 ),
-                const SizedBox(height: 10),
-
-                // Description
+                const SizedBox(height: 8),
                 Text(
                   description,
                   maxLines: 3,
@@ -632,8 +486,6 @@ class _ProjectCard extends StatelessWidget {
                     height: 1.6,
                     color: isDark ? Colors.white60 : Colors.black54,
                   ),
-                ),
-
                 ),
               ],
             ),
@@ -644,60 +496,8 @@ class _ProjectCard extends StatelessWidget {
   }
 
   Color _statusColor(String status) {
-    if (status.contains('جارٍ') || status.contains('cours')) return const Color(0xFFF59E0B);
-    if (status.contains('نشط') || status.contains('actif')) return const Color(0xFF22C55E);
-    if (status.contains('عضو') || status.contains('membre')) return const Color(0xFF009FDA);
+    if (status.contains('PROJECT')) return const Color(0xFFF59E0B);
+    if (status.contains('HERITAGE')) return const Color(0xFF22C55E);
     return AppTheme.accentColor;
-  }
-}
-
-class _MilestoneTile extends StatelessWidget {
-  final String label;
-  final bool done;
-  final bool isDark;
-  const _MilestoneTile({required this.label, required this.done, required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: done
-                  ? AppTheme.accentColor.withValues(alpha: 0.15)
-                  : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.04)),
-              border: Border.all(
-                color: done ? AppTheme.accentColor : (isDark ? Colors.white.withValues(alpha: 0.2) : Colors.black12),
-                width: 1.5,
-              ),
-            ),
-            child: done
-                ? const Icon(Icons.check_rounded, color: AppTheme.accentColor, size: 12)
-                : null,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              label,
-              style: TextStyle(
-                color: done
-                    ? (isDark ? Colors.white.withValues(alpha: 0.87) : Colors.black87)
-                    : (isDark ? Colors.white38 : Colors.black38),
-                fontSize: 13,
-                decoration: done ? null : null,
-                fontWeight: done ? FontWeight.w500 : FontWeight.normal,
-              ),
-            ),
-          ),
-          if (!done)
-            const Icon(Icons.schedule_rounded, size: 14, color: Colors.orange),
-        ],
-      ),
-    );
   }
 }

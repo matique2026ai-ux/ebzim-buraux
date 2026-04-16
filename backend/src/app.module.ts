@@ -17,6 +17,7 @@ import { ContributionsModule } from './modules/contributions/contributions.modul
 import { PartnersModule } from './modules/partners/partners.module';
 import { HeroModule } from './modules/hero/hero.module';
 import { LeadershipModule } from './modules/leadership/leadership.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { LeadershipModule } from './modules/leadership/leadership.module';
     PartnersModule,
     HeroModule,
     LeadershipModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

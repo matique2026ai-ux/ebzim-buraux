@@ -1426,7 +1426,7 @@ class _AdminNewsCard extends ConsumerWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // MEMBERSHIP REQUEST CARD
 // ─────────────────────────────────────────────────────────────────────────────
-class _MembershipRequestCard extends StatelessWidget {
+class _MembershipRequestCard extends ConsumerWidget {
   final MembershipRequest request;
   final VoidCallback onApprove;
   final VoidCallback onReject;
@@ -1450,7 +1450,7 @@ class _MembershipRequestCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final statusColor = _statusColor(request.status);
 
     return Container(
@@ -2007,56 +2007,6 @@ class _ActionButton extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-  Widget build(BuildContext context) {
-    final isResolved = status == 'RESOLVED';
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 3))],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 42, height: 42,
-            decoration: BoxDecoration(
-              color: isResolved ? const Color(0xFF15803D).withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              isResolved ? Icons.check_circle_rounded : Icons.flag_rounded,
-              color: isResolved ? const Color(0xFF15803D) : Colors.red,
-              size: 22,
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13)),
-                if (description.isNotEmpty)
-                  Text(description, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade500), maxLines: 2, overflow: TextOverflow.ellipsis),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: isResolved ? const Color(0xFFDCFCE7) : const Color(0xFFFEE2E2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              isResolved ? 'محلول' : 'معلّق',
-              style: GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold, color: isResolved ? const Color(0xFF15803D) : Colors.red),
-            ),
-          ),
-        ],
       ),
     );
   }

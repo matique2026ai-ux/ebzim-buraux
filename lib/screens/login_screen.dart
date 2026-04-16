@@ -3,12 +3,13 @@ import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

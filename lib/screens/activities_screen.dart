@@ -37,12 +37,12 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
 
     // Categories aligned with EBZIM's real activity domains
     final categories = [
-      loc.actCatAll,
-      loc.actCatWorkshops,
-      loc.actCatEvents,
-      loc.actCatCampaigns,
-      loc.actCatYouth,
-      'شراكات', // Partnerships (Museum, University)
+      {'label': loc.actCatAll, 'slug': 'all'},
+      {'label': loc.actCatWorkshops, 'slug': 'workshop'},
+      {'label': loc.actCatEvents, 'slug': 'event'},
+      {'label': loc.actCatCampaigns, 'slug': 'campaign'},
+      {'label': loc.actCatYouth, 'slug': 'youth'},
+      {'label': 'شراكات', 'slug': 'partnership'},
     ];
 
     return Scaffold(
@@ -139,7 +139,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                                   child: Icon(Icons.handshake, size: 12, color: AppTheme.accentColor),
                                 ),
                               Text(
-                                categories[index].toUpperCase(),
+                                categories[index]['label']!.toUpperCase(),
                                 style: TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
@@ -175,12 +175,17 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
           // ── Events Grid ──
           eventsAsync.when(
             data: (events) {
-              final filtered = _searchQuery.isEmpty
-                  ? events
-                  : events.where((e) {
-                      final title = e.getTitle(lang).toLowerCase();
-                      return title.contains(_searchQuery.toLowerCase());
-                    }).toList();
+              final filtered = events.where((e) {
+                // Category Filter
+                final selectedSlug = categories[_selectedCategoryIndex]['slug'];
+                final matchesCategory = selectedSlug == 'all' || e.categorySlug == selectedSlug;
+                
+                // Search Filter
+                final title = e.getTitle(lang).toLowerCase();
+                final matchesSearch = _searchQuery.isEmpty || title.contains(_searchQuery.toLowerCase());
+                
+                return matchesCategory && matchesSearch;
+              }).toList();
 
               if (filtered.isEmpty) {
                 return SliverFillRemaining(

@@ -21,6 +21,7 @@ class ActivityEvent {
   final String categoryEn;
   final String categoryAr;
   final String categoryFr;
+  final String categorySlug;
   final bool isFeatured;
   final double price;
   final int capacity;
@@ -41,6 +42,7 @@ class ActivityEvent {
     required this.categoryEn,
     required this.categoryAr,
     required this.categoryFr,
+    this.categorySlug = 'all',
     this.isFeatured = false,
     this.price = 0.0,
     this.capacity = 0,
@@ -70,6 +72,9 @@ class ActivityEvent {
       return 0;
     }
 
+    final categoryData = json['category'] is Map ? json['category'] : {};
+    final catName = categoryData['name'] is Map ? categoryData['name'] : {};
+
     return ActivityEvent(
       id: json['_id']?.toString() ?? '',
       titleEn: title['en']?.toString() ?? '',
@@ -88,9 +93,10 @@ class ActivityEvent {
           ? (json['coverImage']['url']?.toString() ??
                 'https://placehold.co/600x400/020F08/F7C04A/png?text=EBZIM')
           : 'https://placehold.co/600x400/020F08/F7C04A/png?text=EBZIM',
-      categoryEn: 'General',
-      categoryAr: 'عام',
-      categoryFr: 'Général',
+      categoryEn: catName['en']?.toString() ?? 'General',
+      categoryAr: catName['ar']?.toString() ?? 'عام',
+      categoryFr: catName['fr']?.toString() ?? 'Général',
+      categorySlug: categoryData['slug']?.toString() ?? 'all',
       isFeatured:
           json['isFeatured'] == true ||
           json['isFeatured'] == 1 ||

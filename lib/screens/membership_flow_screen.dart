@@ -21,7 +21,7 @@ class MembershipFlowScreen extends ConsumerStatefulWidget {
 class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
   final PageController _pageController = PageController();
   int _currentStep = 0;
-  final int _totalSteps = 5;
+  final int _totalSteps = 6;
 
   void _nextStep() {
     if (_currentStep < _totalSteps - 1) {
@@ -65,6 +65,7 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
       isAr ? 'الشروط' : 'Éligibilité',
       isAr ? 'الهوية' : 'Identité',
       isAr ? 'الاتصال' : 'Contact',
+      isAr ? 'الوثائق' : 'Documents',
       isAr ? 'الدوافع' : 'Motivation',
       isAr ? 'التأكيد' : 'Confirm',
     ];
@@ -203,8 +204,9 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
                   _Step0Conditions(),
                   _Step1IdentityForm(),
                   _Step2ContactForm(),
-                  _Step3CredentialsForm(),
-                  _Step4ReviewForm(),
+                  _Step3AttachmentsForm(),
+                  _Step4CredentialsForm(),
+                  _Step5ReviewForm(),
                 ],
               ),
             ),
@@ -279,6 +281,18 @@ class _Step1IdentityForm extends ConsumerWidget {
     final loc = AppLocalizations.of(context)!;
     final state = ref.watch(membershipProvider);
     final notifier = ref.read(membershipProvider.notifier);
+    final userAsync = ref.watch(currentUserProvider);
+
+    // Auto-fill from profile on first load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (state.fullName.isEmpty) {
+        userAsync.whenData((user) {
+          notifier.updateField('fullName', user.name);
+          notifier.updateField('email', user.email);
+          notifier.updateField('phone', user.phone);
+        });
+      }
+    });
 
     final theme = Theme.of(context);
 
@@ -451,8 +465,15 @@ class _Step3CredentialsForm extends ConsumerWidget {
     final loc = AppLocalizations.of(context)!;
     final state = ref.watch(membershipProvider);
     final notifier = ref.read(membershipProvider.notifier);
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
 
-    final mockInterests = ['Heritage', 'Digital Archiving', 'Event Management', 'History', 'Technology', 'Art'];
+    final realCommittees = [
+      {'id': 'heritage', 'ar': 'لجنة التراث', 'en': 'Heritage'},
+      {'id': 'children', 'ar': 'لجنة الطفل', 'en': 'Children'},
+      {'id': 'tourism', 'ar': 'لجنة السياحة الثقافية', 'en': 'Tourism'},
+      {'id': 'research', 'ar': 'لجنة البحث العلمي', 'en': 'Research'},
+      {'id': 'memory', 'ar': 'لجنة الذاكرة', 'en': 'History/Memory'},
+    ];
 
     final theme = Theme.of(context);
 
@@ -468,12 +489,13 @@ class _Step3CredentialsForm extends ConsumerWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: mockInterests.map((interest) {
-              final isSelected = state.interests.contains(interest);
+            children: realCommittees.map((committee) {
+              final label = isAr ? committee['ar']! : committee['en']!;
+              final isSelected = state.interests.contains(committee['id']);
               return FilterChip(
-                label: Text(interest),
+                label: Text(label),
                 selected: isSelected,
-                onSelected: (_) => notifier.toggleList('interests', interest),
+                onSelected: (_) => notifier.toggleList('interests', committee['id']!),
                 selectedColor: AppTheme.secondaryColor.withValues(alpha: 0.2),
                 checkmarkColor: AppTheme.secondaryColor,
               );
@@ -500,10 +522,10 @@ class _Step3CredentialsForm extends ConsumerWidget {
 }
 
 // --------------------------------------------------------------------------
-// STEP 4: REVIEW
+// STEP 5: REVIEW
 // --------------------------------------------------------------------------
-class _Step4ReviewForm extends ConsumerWidget {
-  const _Step4ReviewForm();
+class _Step5ReviewForm extends ConsumerWidget {
+  const _Step5ReviewForm();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -554,6 +576,121 @@ class _Step4ReviewForm extends ConsumerWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------------------------------
+// STEP 3: ATTACHMENTS (ID, Photo)
+// --------------------------------------------------------------------------
+class _Step3AttachmentsForm extends ConsumerWidget {
+  const _Step3AttachmentsForm();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(membershipProvider);
+    final notifier = ref.read(membershipProvider.notifier);
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final hasId = state.attachments.any((a) => a['type'] == 'ID_CARD');
+    final hasPhoto = state.attachments.any((a) => a['type'] == 'PHOTO');
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            isAr ? 'الوثائق الثبوتية' : 'Documents Identity',
+            style: GoogleFonts.tajawal(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            isAr ? 'يرجى تحميل نسخة من بطاقة الهوية وصورة شخصية حديثة' : 'Please upload a copy of your ID and a recent photo',
+            style: const TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+          const SizedBox(height: 32),
+          
+          _buildUploadCard(
+            context, 
+            isAr ? 'بطاقة التعريف الوطنية' : 'Identity Card (National ID)',
+            'ID_CARD',
+            hasId,
+            Icons.badge_outlined,
+            () {
+              // Simulating upload for now
+              final newList = List<Map<String, String>>.from(state.attachments);
+              newList.add({'url': 'https://mock.url/id.jpg', 'type': 'ID_CARD'});
+              notifier.updateField('attachments', newList);
+            }
+          ),
+          
+          const SizedBox(height: 20),
+          
+          _buildUploadCard(
+            context, 
+            isAr ? 'صورة شخصية حديثة' : 'Recent Personal Photo',
+            'PHOTO',
+            hasPhoto,
+            Icons.face_retouching_natural_rounded,
+            () {
+              // Simulating upload
+              final newList = List<Map<String, String>>.from(state.attachments);
+              newList.add({'url': 'https://mock.url/photo.jpg', 'type': 'PHOTO'});
+              notifier.updateField('attachments', newList);
+            }
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUploadCard(BuildContext context, String title, String type, bool isDone, IconData icon, VoidCallback onUpload) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return InkWell(
+      onTap: onUpload,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isDone 
+            ? const Color(0xFF22C55E).withValues(alpha: 0.05) 
+            : isDark ? Colors.white.withValues(alpha: 0.02) : Colors.black.withValues(alpha: 0.02),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isDone ? const Color(0xFF22C55E).withValues(alpha: 0.3) : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isDone ? const Color(0xFF22C55E).withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(isDone ? Icons.check_circle_rounded : icon, color: isDone ? const Color(0xFF22C55E) : Colors.grey, size: 24),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14)),
+                  Text(
+                    isDone ? 'تم التحميل بنجاح' : 'اضغط للتحميل (JPG, PNG)', 
+                    style: TextStyle(fontSize: 11, color: isDone ? const Color(0xFF22C55E) : Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            if (!isDone) const Icon(Icons.cloud_upload_outlined, color: AppTheme.accentColor, size: 20),
+          ],
+        ),
       ),
     );
   }

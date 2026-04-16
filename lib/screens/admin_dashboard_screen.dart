@@ -1830,6 +1830,44 @@ class _MembershipDetailsDialog extends StatelessWidget {
                         style: GoogleFonts.tajawal(fontSize: 13, color: const Color(0xFF475569), height: 1.6),
                       ),
                     ),
+
+                    const SizedBox(height: 24),
+                    _buildSectionTitle('الوثائق المرفقة', Icons.attach_file_rounded),
+                    const SizedBox(height: 12),
+                    if (data['attachments'] != null && (data['attachments'] as List).isNotEmpty)
+                      SizedBox(
+                        height: 100,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: (data['attachments'] as List).length,
+                          separatorBuilder: (_, __) => const SizedBox(width: 12),
+                          itemBuilder: (context, index) {
+                            final attachment = (data['attachments'] as List)[index];
+                            final type = attachment['type'] == 'ID_CARD' ? 'بطاقة هوية' : 'صورة شخصية';
+                            return Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    attachment['url'],
+                                    width: 70, height: 70,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Container(
+                                      width: 70, height: 70,
+                                      color: Colors.grey.shade200,
+                                      child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(type, style: GoogleFonts.tajawal(fontSize: 9, fontWeight: FontWeight.bold)),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    else
+                      Text('لا توجد وثائق مرفقة', style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey)),
                   ],
                 ),
               ),

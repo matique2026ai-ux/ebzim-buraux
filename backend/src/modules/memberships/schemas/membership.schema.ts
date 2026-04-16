@@ -34,6 +34,9 @@ export class MembershipProfileData {
 
   @Prop({ required: true })
   motivation: string;
+
+  @Prop({ type: [Object], default: [] })
+  attachments?: { url: string; publicId: string; type: string }[]; 
 }
 const MembershipProfileDataSchema = SchemaFactory.createForClass(MembershipProfileData);
 

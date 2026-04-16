@@ -59,6 +59,7 @@ class MembershipFormState {
   // Step 4: Review
   final String notes;
   final bool hasConsented;
+  final List<Map<String, String>> attachments; // { 'url': ..., 'type': 'ID_CARD' }
 
   const MembershipFormState({
     this.fullName = '',
@@ -73,6 +74,7 @@ class MembershipFormState {
     this.motivation = '',
     this.notes = '',
     this.hasConsented = false,
+    this.attachments = const [],
   });
 
   MembershipFormState copyWith({
@@ -102,6 +104,7 @@ class MembershipFormState {
       motivation: motivation ?? this.motivation,
       notes: notes ?? this.notes,
       hasConsented: hasConsented ?? this.hasConsented,
+      attachments: attachments ?? this.attachments,
     );
   }
 }
@@ -121,6 +124,7 @@ class MembershipNotifier extends StateNotifier<MembershipFormState> {
     if (field == 'motivation') state = state.copyWith(motivation: value as String);
     if (field == 'notes') state = state.copyWith(notes: value as String);
     if (field == 'hasConsented') state = state.copyWith(hasConsented: value as bool);
+    if (field == 'attachments') state = state.copyWith(attachments: value as List<Map<String, String>>);
   }
   
   void toggleList(String field, String item) {
@@ -149,6 +153,7 @@ class MembershipNotifier extends StateNotifier<MembershipFormState> {
       'interests': state.interests,
       'skills': state.skills,
       'motivation': state.motivation,
+      'attachments': state.attachments,
     };
     
     await dio.post('/memberships', data: payload);

@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: ebzim-api
+    runtime: node
+    plan: free
+    # Point Render to build from the backend directory
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm run start:prod"
+    rootDirectory: backend
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_USER
+        sync: false
+      - key: MAIL_PASS
+        sync: false
+      - key: MAIL_FROM
+        value: "جمعية إبزيم"

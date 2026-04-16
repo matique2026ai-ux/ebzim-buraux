@@ -9,9 +9,10 @@ async function bootstrap() {
   // Set Global API Prefix
   app.setGlobalPrefix('api/v1');
 
-  // Enable CORS for all origins in production to allow mobile access
+  // Enable CORS — allow web app from any origin
   app.enableCors({
-    origin: '*',
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
 

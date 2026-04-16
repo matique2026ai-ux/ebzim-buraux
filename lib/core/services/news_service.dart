@@ -59,7 +59,15 @@ class NewsPost {
   factory NewsPost.fromJson(Map<String, dynamic> json) {
     final title = json['title'] is Map ? json['title'] : {};
     final summary = json['summary'] is Map ? json['summary'] : {};
-    final body = json['body'] is Map ? json['body'] : {};
+    final content = json['content'] is Map ? json['content'] : {};
+    
+    // Get image from media array or fallback to imageUrl
+    String img = json['imageUrl']?.toString() ?? '';
+    if (img.isEmpty && json['media'] is List && (json['media'] as List).isNotEmpty) {
+      final firstMedia = (json['media'] as List).first;
+      img = firstMedia['cloudinaryUrl']?.toString() ?? '';
+    }
+
     return NewsPost(
       id: json['_id']?.toString() ?? '',
       titleAr: title['ar']?.toString() ?? '',
@@ -68,11 +76,11 @@ class NewsPost {
       summaryAr: summary['ar']?.toString() ?? '',
       summaryFr: summary['fr']?.toString() ?? '',
       summaryEn: summary['en']?.toString() ?? '',
-      bodyAr: body['ar']?.toString() ?? '',
-      bodyFr: body['fr']?.toString() ?? '',
-      bodyEn: body['en']?.toString() ?? '',
-      imageUrl: json['imageUrl']?.toString() ?? '',
-      publishedAt: DateTime.tryParse(json['publishedAt']?.toString() ?? '') ?? DateTime.now(),
+      bodyAr: content['ar']?.toString() ?? '',
+      bodyFr: content['fr']?.toString() ?? '',
+      bodyEn: content['en']?.toString() ?? '',
+      imageUrl: img,
+      publishedAt: DateTime.tryParse(json['publishedAt']?.toString() ?? json['createdAt']?.toString() ?? '') ?? DateTime.now(),
       category: json['category']?.toString() ?? 'GENERAL',
       partnerName: json['partnerName']?.toString(),
       isPinned: json['isPinned'] == true,
@@ -88,7 +96,7 @@ class NewsService {
     try {
       final lang = _ref.read(localeProvider).languageCode;
       final response = await _ref.read(apiClientProvider).dio.get(
-        '/news',
+        'posts',
         queryParameters: {'lang': lang},
       );
       final data = response.data;
@@ -110,7 +118,7 @@ class NewsService {
 
   Future<List<NewsPost>> getAdminNews() async {
     try {
-      final response = await _ref.read(apiClientProvider).dio.get('/posts/admin');
+      final response = await _ref.read(apiClientProvider).dio.get('posts/admin');
       final data = response.data;
       List rawList = [];
       if (data is Map && data['data'] is List) {
@@ -129,7 +137,7 @@ class NewsService {
 
   Future<NewsPost?> getPost(String id) async {
     try {
-      final response = await _ref.read(apiClientProvider).dio.get('/posts/$id');
+      final response = await _ref.read(apiClientProvider).dio.get('posts/$id');
       final data = response.data;
       if (data != null && (data is Map || data['data'] is Map)) {
         final postData = data['data'] ?? data;
@@ -149,6 +157,7 @@ class NewsService {
     required String summary,
     required String content,
     String? imageUrl,
+    bool isPinned = false,
   }) async {
     final Map<String, dynamic> data = {
       'categoryId': newsCategoryId,
@@ -168,6 +177,7 @@ class NewsService {
         'en': content,
       },
       'status': 'PUBLISHED',
+      'isPinned': isPinned,
       'isFeatured': false,
     };
 
@@ -181,15 +191,15 @@ class NewsService {
       ];
     }
 
-    await _ref.read(apiClientProvider).dio.post('/posts', data: data);
+    await _ref.read(apiClientProvider).dio.post('posts', data: data);
   }
 
   Future<void> updatePost(String id, Map<String, dynamic> data) async {
-    await _ref.read(apiClientProvider).dio.patch('/posts/$id', data: data);
+    await _ref.read(apiClientProvider).dio.patch('posts/$id', data: data);
   }
 
   Future<void> deletePost(String id) async {
-    await _ref.read(apiClientProvider).dio.delete('/posts/$id');
+    await _ref.read(apiClientProvider).dio.delete('posts/$id');
   }
 }
 

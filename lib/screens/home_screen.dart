@@ -491,12 +491,21 @@ class _NewsPreviewCard extends StatelessWidget {
       child: Container(
         height: 110,
         decoration: BoxDecoration(
-          color: theme.cardColor,
+          color: post.isPinned 
+              ? AppTheme.heritageOrange.withValues(alpha: 0.03) 
+              : theme.cardColor,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: theme.dividerTheme.color?.withValues(alpha: 0.5) ?? Colors.transparent),
+          border: Border.all(
+            color: post.isPinned 
+                ? AppTheme.heritageOrange.withValues(alpha: 0.5) 
+                : theme.dividerTheme.color?.withValues(alpha: 0.5) ?? Colors.transparent,
+            width: post.isPinned ? 1.5 : 1.0,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: post.isPinned 
+                  ? AppTheme.heritageOrange.withValues(alpha: 0.08) 
+                  : Colors.black.withValues(alpha: 0.05),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -537,7 +546,9 @@ class _NewsPreviewCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? AppTheme.accentColor : AppTheme.primaryColor,
+                        color: post.isPinned 
+                            ? AppTheme.heritageOrange 
+                            : (isDark ? AppTheme.accentColor : AppTheme.primaryColor),
                         letterSpacing: 1.2,
                       ),
                     ),

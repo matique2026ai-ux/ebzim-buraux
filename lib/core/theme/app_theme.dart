@@ -8,6 +8,7 @@ class AppTheme {
   static const Color accentColor    = Color(0xFFD4AF37);     // Muted Gold
   static const Color heritageRed    = Color(0xFF9E1F1F);     // Heritage Crimson
   static const Color secondaryColor = Color(0xFF685D4A);     // Earthy Bronze
+  static const Color heritageOrange = Color(0xFFE67E22);     // Professional Heritage Orange
 
   // ── Dark mode surfaces ────────────────────────────────────────────────────
   static const Color backgroundDark = Color(0xFF030906);     // Deep Charcoal Emerald (Premium Pitch)

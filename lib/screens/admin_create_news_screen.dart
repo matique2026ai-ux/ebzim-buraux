@@ -29,6 +29,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
   Uint8List? _selectedFileBytes;
   String? _selectedFileName;
   String? _existingImageUrl;
+  bool _isPinned = false;
   bool _isLoading = false;
 
   @override
@@ -40,6 +41,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       _summaryArController.text = p.summaryAr;
       _contentArController.text = p.bodyAr;
       _existingImageUrl = p.imageUrl;
+      _isPinned = p.isPinned;
     }
   }
 
@@ -98,6 +100,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         },
         'status': 'PUBLISHED',
         'isFeatured': false,
+        'isPinned': _isPinned,
       };
 
       if (finalImageUrl != null && finalImageUrl.isNotEmpty) {
@@ -118,6 +121,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
               summary: _summaryArController.text,
               content: _contentArController.text,
               imageUrl: finalImageUrl,
+              isPinned: _isPinned,
             );
       }
 
@@ -319,6 +323,55 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                       maxLines: 9,
                       validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null,
                     ).animate().fadeIn(delay: 250.ms).slideX(begin: 0.04),
+                    
+                    const SizedBox(height: 24),
+
+                    // Pin Toggle
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: _isPinned ? AppTheme.heritageOrange.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: _isPinned ? AppTheme.heritageOrange : Colors.white.withValues(alpha: 0.1),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.push_pin_rounded,
+                            color: _isPinned ? AppTheme.heritageOrange : Colors.white.withValues(alpha: 0.3),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'تثبيت هذا المقال',
+                                  style: TextStyle(
+                                    color: _isPinned ? AppTheme.heritageOrange : Colors.white.withValues(alpha: 0.7),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'سيظهر في أعلى القائمة بلون مميز',
+                                  style: TextStyle(
+                                    color: Colors.white.withValues(alpha: 0.4),
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Switch(
+                            value: _isPinned,
+                            onChanged: (v) => setState(() => _isPinned = v),
+                            activeColor: AppTheme.heritageOrange,
+                          ),
+                        ],
+                      ),
+                    ),
 
                     const SizedBox(height: 40),
 

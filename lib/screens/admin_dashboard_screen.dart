@@ -233,33 +233,85 @@ class _MembershipTab extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _SectionHeader(
-              title: 'طلبات العضوية',
-              subtitle: 'مراجعة طلبات الانضمام الجديدة للجمعية',
-              icon: Icons.person_add_alt_1_rounded,
+              title: 'مركز العضوية',
+              subtitle: 'إدارة الطلبات، الإحصائيات، ومراقبة نمو الجمعية',
+              icon: Icons.group_add_rounded,
             ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
             const SizedBox(height: 20),
+            
+            // --- Custom Visual Analytics Section ---
             pendingAsync.when(
-              data: (requests) => Row(
-                children: [
-                  _StatCard(
-                    label: 'إجمالي الطلبات',
-                    value: '${requests.length}',
-                    icon: Icons.analytics_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+              data: (requests) {
+                final total = requests.length;
+                final approved = requests.where((r) => r.status == 'APPROVED').length;
+                final pending = requests.where((r) => r.status == 'SUBMITTED').length;
+                final ratio = total > 0 ? (approved / total) : 0.0;
+                
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 15, offset: const Offset(0, 5)),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  _StatCard(
-                    label: 'بانتظار المراجعة',
-                    value: requests.where((r) => r.status == 'SUBMITTED').length.toString(),
-                    icon: Icons.hourglass_top_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFFB45309), Color(0xFFD97706)]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.analytics_outlined, size: 18, color: AppTheme.primaryColor.withValues(alpha: 0.5)),
+                          const SizedBox(width: 8),
+                          Text(
+                            'نبض النظام (System Pulse)',
+                            style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
+                          ),
+                          const Spacer(),
+                          Text(
+                            'معدل القبول: ${(ratio * 100).toStringAsFixed(0)}%',
+                            style: GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFF15803D)),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // Custom Progress Indicator
+                      Stack(
+                        children: [
+                          Container(
+                            height: 8,
+                            width: double.infinity,
+                            decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(4)),
+                          ),
+                          FractionallySizedBox(
+                            widthFactor: ratio,
+                            child: Container(
+                              height: 8,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _MiniMetric(label: 'الإجمالي', value: '$total', color: AppTheme.primaryColor),
+                          _MiniMetric(label: 'مقبول', value: '$approved', color: const Color(0xFF15803D)),
+                          _MiniMetric(label: 'قيد الانتظار', value: '$pending', color: const Color(0xFFB45309)),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ).animate().fadeIn(delay: 200.ms),
-              loading: () => const _LoadingShimmer(),
+                ).animate().fadeIn(delay: 200.ms).scale(begin: const Offset(0.95, 0.95));
+              },
+              loading: () => const SizedBox(height: 120),
               error: (_, __) => const SizedBox(),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -552,6 +604,7 @@ class _ReportsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reportsAsync = ref.watch(adminReportsProvider);
+    final reportService = ref.read(reportServiceProvider);
 
     return RefreshIndicator(
       color: AppTheme.primaryColor,
@@ -563,10 +616,10 @@ class _ReportsTab extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _SectionHeader(
-              title: 'البلاغات المدنية',
-              subtitle: 'متابعة بلاغات التخريب أو الإهمال للمواقع التراثية',
-              icon: Icons.flag_rounded,
-            ).animate().fadeIn(delay: 100.ms),
+              title: 'إدارة البلاغات المدنية',
+              subtitle: 'تتبع ومعالجة بلاغات حماية التراث والمباني الأثرية',
+              icon: Icons.assignment_rounded,
+            ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
             const SizedBox(height: 24),
             reportsAsync.when(
               data: (reports) {
@@ -577,12 +630,27 @@ class _ReportsTab extends ConsumerWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: reports.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, i) => _ReportCard(
-                    title: reports[i]['incidentCategory']?.toString() ?? 'بلاغ عام',
-                    description: reports[i]['description']?.toString() ?? '',
-                    status: reports[i]['status']?.toString() ?? 'PENDING',
-                  ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05),
+                  separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  itemBuilder: (context, i) {
+                    final report = reports[i];
+                    return _ReportCard(
+                      id: report['_id'],
+                      title: report['incidentCategory']?.toString() ?? 'بلاغ عام',
+                      description: report['description']?.toString() ?? '',
+                      location: report['locationData']?['formattedAddress'] ?? 'موقع غير محدد',
+                      status: report['status']?.toString() ?? 'PENDING',
+                      date: DateTime.parse(report['createdAt'] ?? DateTime.now().toIso8601String()),
+                      onUpdateStatus: (newStatus) async {
+                        try {
+                          await reportService.updateReportStatus(report['_id'], newStatus);
+                          ref.invalidate(adminReportsProvider);
+                          if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم تحديث حالة البلاغ'));
+                        } catch (e) {
+                          if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('❌ خطأ: $e'));
+                        }
+                      },
+                    ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05);
+                  },
                 );
               },
               loading: () => const _LoadingShimmer(),
@@ -1450,14 +1518,14 @@ class _MembershipRequestCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: onReject,
-                    icon: const Icon(Icons.close_rounded, size: 16),
-                    label: Text('رفض', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    onPressed: () => _showReviewDialog(context, ref),
+                    icon: const Icon(Icons.visibility_rounded, size: 16),
+                    label: Text('عرض التفاصيل', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13)),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFFB91C1C),
-                      side: const BorderSide(color: Color(0xFFB91C1C)),
+                      foregroundColor: AppTheme.primaryColor,
+                      side: BorderSide(color: AppTheme.primaryColor.withValues(alpha: 0.5)),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
@@ -1466,12 +1534,13 @@ class _MembershipRequestCard extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onApprove,
                     icon: const Icon(Icons.check_rounded, size: 16),
-                    label: Text('قبول', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    label: Text('قبول سريع', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF15803D),
                       foregroundColor: Colors.white,
+                      elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
@@ -1482,16 +1551,466 @@ class _MembershipRequestCard extends StatelessWidget {
       ),
     );
   }
+
+  void _showReviewDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => _MembershipDetailsDialog(request: request, onApprove: onApprove, onReject: onReject),
+    );
+  }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MEMBERSHIP DETAILS DIALOG (PREMIUM VIEW)
+// ─────────────────────────────────────────────────────────────────────────────
+class _MembershipDetailsDialog extends StatelessWidget {
+  final MembershipRequest request;
+  final VoidCallback onApprove;
+  final VoidCallback onReject;
+
+  const _MembershipDetailsDialog({
+    required this.request,
+    required this.onApprove,
+    required this.onReject,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final data = request.data;
+    final interests = (data['interests'] as List?)?.cast<String>() ?? [];
+    final skills = (data['skills'] as List?)?.cast<String>() ?? [];
+
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header with Gradient
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF03140A), Color(0xFF052011)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.person_search_rounded, color: Colors.white, size: 28),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'مراجعة طلب العضوية',
+                          style: GoogleFonts.tajawal(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          request.fullName,
+                          style: GoogleFonts.tajawal(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white54),
+                  ),
+                ],
+              ),
+            ),
+
+            // Content
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionTitle('المعلومات الشخصية', Icons.badge_outlined),
+                    const SizedBox(height: 12),
+                    _buildInfoGrid([
+                      _InfoItem(label: 'رقم الهاتف', value: data['phone'] ?? 'غير متوفر', icon: Icons.phone_android_rounded),
+                      _InfoItem(label: 'البريد الإلكتروني', value: data['email'] ?? 'غير متوفر', icon: Icons.alternate_email_rounded),
+                      _InfoItem(label: 'الجنس', value: data['gender'] == 'MALE' ? 'ذكر' : 'أنثى', icon: Icons.wc_rounded),
+                      _InfoItem(label: 'تاريخ الميلاد', value: data['dob']?.toString().split('T')[0] ?? '-', icon: Icons.cake_outlined),
+                    ]),
+                    
+                    const SizedBox(height: 24),
+                    _buildSectionTitle('الاهتمامات والمهارات', Icons.psychology_outlined),
+                    const SizedBox(height: 12),
+                    Text('الاهتمامات:', style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                    const SizedBox(height: 8),
+                    _buildChips(interests, const Color(0xFF052011)),
+                    const SizedBox(height: 16),
+                    Text('المهارات والمؤهلات:', style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                    const SizedBox(height: 8),
+                    _buildChips(skills, const Color(0xFFD4AF37)),
+
+                    const SizedBox(height: 24),
+                    _buildSectionTitle('الدافع للانضمام', Icons.edit_note_rounded),
+                    const SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                      ),
+                      child: Text(
+                        data['motivation'] ?? 'لا يوجد نص توضيحي',
+                        style: GoogleFonts.tajawal(fontSize: 13, color: const Color(0xFF475569), height: 1.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Actions
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        onReject();
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.red.shade700,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: Text('رفض الطلب', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        onApprove();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF15803D),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: Text('قبول العضوية', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: AppTheme.primaryColor.withValues(alpha: 0.6)),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: GoogleFonts.tajawal(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.primaryColor),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoGrid(List<Widget> items) {
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: items.map((e) => SizedBox(width: 130, child: e)).toList(),
+    );
+  }
+
+  Widget _buildChips(List<String> labels, Color color) {
+    if (labels.isEmpty) return Text('لم يتم التحديد', style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey));
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: labels.map((label) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.tajawal(fontSize: 11, color: color, fontWeight: FontWeight.bold),
+        ),
+      )).toList(),
+    );
+  }
+}
+
+class _InfoItem extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+
+  const _InfoItem({required this.label, required this.value, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 12, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(label, style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade600)),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+}
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // REPORT CARD
 // ─────────────────────────────────────────────────────────────────────────────
 class _ReportCard extends StatelessWidget {
-  final String title, description, status;
-  const _ReportCard({required this.title, required this.description, required this.status});
+  final String id, title, description, status, location;
+  final DateTime date;
+  final Function(String) onUpdateStatus;
+
+  const _ReportCard({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.status,
+    required this.location,
+    required this.date,
+    required this.onUpdateStatus,
+  });
+
+  Color _statusColor(String s) {
+    switch (s.toUpperCase()) {
+      case 'RESOLVED': return const Color(0xFF15803D);
+      case 'INVESTIGATING': return const Color(0xFF1D4ED8);
+      case 'REJECTED': return const Color(0xFFB91C1C);
+      default: return const Color(0xFFB45309);
+    }
+  }
+
+  String _statusLabel(String s) {
+    switch (s.toUpperCase()) {
+      case 'RESOLVED': return 'تم الحل';
+      case 'INVESTIGATING': return 'قيد المراجعة';
+      case 'REJECTED': return 'مرفوض';
+      default: return 'بلاغ جديد';
+    }
+  }
 
   @override
+  Widget build(BuildContext context) {
+    final statusColor = _statusColor(status);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4)),
+        ],
+        border: Border.all(color: const Color(0xFFF1F5F9)),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with status indicator
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: statusColor.withValues(alpha: 0.05),
+              child: Row(
+                children: [
+                  Container(
+                    width: 8, height: 8,
+                    decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _statusLabel(status),
+                    style: GoogleFonts.tajawal(fontSize: 11, fontWeight: FontWeight.bold, color: statusColor),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${date.day}/${date.month}/${date.year}',
+                    style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade500),
+                  ),
+                ],
+              ),
+            ),
+            
+            Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(color: AppTheme.primaryColor.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(10)),
+                        child: const Icon(Icons.warning_amber_rounded, size: 18, color: AppTheme.primaryColor),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 15, color: const Color(0xFF1A1A2E)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined, size: 14, color: Color(0xFF64748B)),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          location,
+                          style: GoogleFonts.tajawal(fontSize: 11, color: const Color(0xFF64748B)),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    description,
+                    style: GoogleFonts.tajawal(fontSize: 13, color: const Color(0xFF475569), height: 1.5),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  
+                  const SizedBox(height: 20),
+                  const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                  const SizedBox(height: 16),
+                  
+                  Row(
+                    children: [
+                      Text('تغيير الحالة:', style: GoogleFonts.tajawal(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade700)),
+                      const Spacer(),
+                      _ActionButton(
+                        label: 'مراجعة',
+                        icon: Icons.search_rounded,
+                        color: const Color(0xFF1D4ED8),
+                        onPressed: () => onUpdateStatus('INVESTIGATING'),
+                        isActive: status == 'INVESTIGATING',
+                      ),
+                      const SizedBox(width: 8),
+                      _ActionButton(
+                        label: 'حل',
+                        icon: Icons.check_circle_outline_rounded,
+                        color: const Color(0xFF15803D),
+                        onPressed: () => onUpdateStatus('RESOLVED'),
+                        isActive: status == 'RESOLVED',
+                      ),
+                      const SizedBox(width: 8),
+                      _ActionButton(
+                        label: 'رفض',
+                        icon: Icons.cancel_outlined,
+                        color: const Color(0xFFB91C1C),
+                        onPressed: () => onUpdateStatus('REJECTED'),
+                        isActive: status == 'REJECTED',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onPressed;
+  final bool isActive;
+
+  const _ActionButton({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.onPressed,
+    required this.isActive,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: isActive ? null : onPressed,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: isActive ? color : color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 14, color: isActive ? Colors.white : color),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: GoogleFonts.tajawal(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: isActive ? Colors.white : color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
   Widget build(BuildContext context) {
     final isResolved = status == 'RESOLVED';
     return Container(
@@ -1880,4 +2399,30 @@ Future<bool?> _confirmDelete(BuildContext context, String title, String name) {
       ],
     ),
   );
+}
+
+class _MiniMetric extends StatelessWidget {
+  final String label, value;
+  final Color color;
+
+  const _MiniMetric({required this.label, required this.value, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade600)),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
 }

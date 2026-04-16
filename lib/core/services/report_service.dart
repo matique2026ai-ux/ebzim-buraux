@@ -45,6 +45,22 @@ class ReportService {
       return [];
     }
   }
+
+  /// Updates the status of a civic report (Admin Only).
+  /// Statuses: PENDING, INVESTIGATING, RESOLVED, REJECTED.
+  Future<void> updateReportStatus(String id, String status, {String? adminComment}) async {
+    try {
+      await _apiClient.dio.patch(
+        '/reports/$id',
+        data: {
+          'status': status,
+          if (adminComment != null) 'adminComment': adminComment,
+        },
+      );
+    } on DioException catch (e) {
+      throw e.response?.data?['message'] ?? 'Failed to update report status';
+    }
+  }
 }
 
 final reportServiceProvider = Provider((ref) {

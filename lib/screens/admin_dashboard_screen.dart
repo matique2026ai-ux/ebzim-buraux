@@ -530,7 +530,7 @@ class _NewsTab extends ConsumerWidget {
                     label: 'مقالات مثبتة',
                     value: posts.where((p) => p.isPinned).length.toString(),
                     icon: Icons.push_pin_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFF6D28D9), Color(0xFF7C3AED)]),
+                    gradient: const LinearGradient(colors: [AppTheme.heritageOrange, Color(0xFFD35400)]),
                   ),
                 ],
               ).animate().fadeIn(delay: 200.ms),
@@ -1329,12 +1329,17 @@ class _AdminNewsCard extends ConsumerWidget {
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withValues(alpha: 0.08),
+              color: post.isPinned 
+                  ? AppTheme.heritageOrange.withValues(alpha: 0.1) 
+                  : AppTheme.primaryColor.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(12),
+              border: post.isPinned 
+                  ? Border.all(color: AppTheme.heritageOrange.withValues(alpha: 0.3)) 
+                  : null,
             ),
             child: Icon(
               post.isPinned ? Icons.push_pin_rounded : Icons.article_rounded,
-              color: AppTheme.primaryColor,
+              color: post.isPinned ? AppTheme.heritageOrange : AppTheme.primaryColor,
               size: 22,
             ),
           ),

@@ -54,7 +54,13 @@ A premium institutional platform for cultural heritage protection, citizen repor
 ## ✅ CURRENT STATE (V1.2.0 - Stable)
 As of **April 17, 2026**, the project is in a fully stable, production-ready state.
 
-### 🌟 Key Features Implemented:
+### 🌟 Latest Updates & New Features:
+- **Advanced Admin Control**: Real-time user management (CRUD), account status toggles, and role assignments (Admin, Authority, Member).
+- **Honorary Badge System**: Dynamic gamification with custom medal assets (Bronze, Gold, Diamond) with high-fidelity UI animations.
+- **Data Export**: Seamless CSV export with Arabic encoding (UTF-8 BOM) for administrative reporting.
+- **Backend-Frontend Sync**: All endpoints (Reports, Memberships, Admin) are fully synchronized and secured.
+
+### 🌟 Historical Features:
 1.  **Dynamic Home Screen**: High-fidelity redesign with glassmorphic hero carousel and real-time statistics.
 2.  **Admin Dashboard (Mission Control)**: Full CRUD for News, Events, and Membership management.
 3.  **Membership Flow**: 6-step recruitment process based on the association's statutes.
@@ -85,5 +91,6 @@ As of **April 17, 2026**, the project is in a fully stable, production-ready sta
 ## 📂 WORKSPACE STATUS
 The project directory has been consolidated. All legacy documentation and redundant handoff files have been removed or archived into this README.
 - **Reference Material**: Association statutes remain in `docs/statutes/` for institutional alignment.
+- **Latest Walkthrough**: See `walkthrough.md` for a deep dive into the Badge and Export systems implemented in the latest sprint.
 - **Cleaned Files**: `HANDOFF.md`, `PROJECT_HANDOVER.md`, `MASTER_PLAN.md`, `ARCHITECTURE.md`, etc. have been deleted.
 

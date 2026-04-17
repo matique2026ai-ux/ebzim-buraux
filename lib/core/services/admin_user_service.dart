@@ -29,6 +29,10 @@ class AdminUserService {
   Future<void> deleteUser(String userId) async {
     await _ref.read(apiClientProvider).dio.delete('admin/users/$userId');
   }
+
+  Future<void> updateUser(String userId, Map<String, dynamic> data) async {
+    await _ref.read(apiClientProvider).dio.patch('admin/users/$userId', data: data);
+  }
 }
 
 final adminUserServiceProvider = Provider((ref) => AdminUserService(ref));

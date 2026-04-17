@@ -53,4 +53,17 @@ export class AdminService {
   async deleteUser(userId: string) {
     return this.userModel.findByIdAndDelete(userId);
   }
+
+  async updateUser(userId: string, data: any) {
+    const { profile, ...rest } = data;
+    const update: any = { ...rest };
+    
+    if (profile) {
+      for (const key in profile) {
+        update[`profile.${key}`] = profile[key];
+      }
+    }
+    
+    return this.userModel.findByIdAndUpdate(userId, { $set: update }, { new: true });
+  }
 }

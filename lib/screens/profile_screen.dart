@@ -83,30 +83,15 @@ class ProfileScreen extends ConsumerWidget {
                               ),
                               Positioned(
                                 bottom: -15,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: isPublic ? (isDark ? Colors.white : Colors.black.withValues(alpha: 0.05)) : accentColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.2),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
-                                      )
-                                    ],
-                                  ),
-                                  child: Text(
-                                    isPublic ? loc.dashMemberLevelPublic : loc.dashMemberLevelMember,
-                                    style: TextStyle(
-                                      color: isPublic ? (isDark ? AppTheme.primaryColor : const Color(0xFF003300)) : Colors.black,
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                ),
+                                child: _RoleBadge(role: user.membershipLevel),
                               ),
+                              // --- HONORARY MEDAL (CUSTOM BADGES) ---
+                              if (user.membershipBadge != null && user.membershipBadge != 'NONE')
+                                Positioned(
+                                  top: -10,
+                                  right: -10,
+                                  child: _HonoraryMedal(badge: user.membershipBadge!),
+                                ),
                             ],
                           ),
                         ).animate().fadeIn().scale(),
@@ -440,5 +425,120 @@ class _Sk extends StatelessWidget {
       ),
     ).animate(onPlay: (c) => c.repeat(reverse: true))
      .shimmer(duration: 1500.ms, color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.02));
+  }
+}
+
+class _RoleBadge extends StatelessWidget {
+  final String role;
+  const _RoleBadge({required this.role});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    Color bgColor;
+    Color textColor;
+    String label;
+    IconData? icon;
+
+    switch (role.toUpperCase()) {
+      case 'SUPER_ADMIN':
+        bgColor = const Color(0xFFFFD700); // Gold
+        textColor = Colors.black;
+        label = 'مدير عام';
+        icon = Icons.stars_rounded;
+        break;
+      case 'ADMIN':
+        bgColor = AppTheme.accentColor;
+        textColor = Colors.black;
+        label = 'مسؤول نظام';
+        icon = Icons.admin_panel_settings_rounded;
+        break;
+      case 'AUTHORITY':
+        bgColor = const Color(0xFF2196F3); // Blue
+        textColor = Colors.white;
+        label = 'سلطة محلية';
+        icon = Icons.account_balance_rounded;
+        break;
+      case 'MEMBER':
+        bgColor = const Color(0xFF1A6B3A); // Deep Green
+        textColor = Colors.white;
+        label = 'عضو مشارك';
+        icon = Icons.verified_rounded;
+        break;
+      default:
+        bgColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05);
+        textColor = isDark ? Colors.white70 : Colors.black54;
+        label = 'زائر';
+        icon = Icons.person_outline_rounded;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 3)),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 12, color: textColor),
+            const SizedBox(width: 6),
+          ],
+          Text(
+            label.toUpperCase(),
+            style: GoogleFonts.tajawal(
+              color: textColor,
+              fontSize: 10,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HonoraryMedal extends StatelessWidget {
+  final String badge;
+  const _HonoraryMedal({required this.badge});
+
+  @override
+  Widget build(BuildContext context) {
+    String imagePath;
+    switch (badge.toUpperCase()) {
+      case 'NORMAL': imagePath = 'assets/images/badge_normal.png'; break;
+      case 'BRONZE': imagePath = 'assets/images/badge_bronze.png'; break;
+      case 'GOLD': imagePath = 'assets/images/badge_gold.png'; break;
+      case 'DIAMOND': imagePath = 'assets/images/badge_diamond.png'; break;
+      default: return const SizedBox();
+    }
+
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 6)),
+        ],
+      ),
+      child: Image.asset(
+        imagePath,
+        fit: BoxFit.contain,
+        errorBuilder: (ctx, err, stack) => Container(
+          padding: const EdgeInsets.all(8),
+          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+          child: const Icon(Icons.workspace_premium, color: Color(0xFFFFD700), size: 28),
+        ),
+      ),
+    ).animate(onPlay: (c) => c.repeat())
+     .shimmer(duration: 2000.ms, color: Colors.white.withValues(alpha: 0.4))
+     .shake(hz: 0.5, curve: Curves.easeInOut);
   }
 }

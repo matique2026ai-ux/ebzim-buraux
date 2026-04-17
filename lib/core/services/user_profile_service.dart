@@ -45,8 +45,8 @@ class UserProfile {
       membershipLevel: role,
       membershipStatus: json['status'] ?? 'ACTIVE',
       membershipExpiry: json['expiryDate'] != null ? DateTime.parse(json['expiryDate']) : null,
-      profileCompletionPercentage: 40, // Base completion for registration
-      membershipBadge: json['membershipBadge'],
+      profileCompletionPercentage: 40,
+      membershipBadge: profile['badge'] ?? 'NONE',
       status: json['status'] ?? 'ACTIVE',
     );
   }

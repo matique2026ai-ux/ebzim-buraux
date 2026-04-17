@@ -37,4 +37,10 @@ export class AdminController {
   async deleteUser(@Param('id') id: string) {
     return this.adminService.deleteUser(id);
   }
+
+  @Patch('users/:id')
+  @ApiOperation({ summary: 'Update user account details' })
+  async updateUser(@Param('id') id: string, @Body() data: any) {
+    return this.adminService.updateUser(id, data);
+  }
 }

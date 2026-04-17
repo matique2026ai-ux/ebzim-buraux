@@ -51,7 +51,7 @@ class ReportService {
   Future<void> updateReportStatus(String id, String status, {String? adminComment}) async {
     try {
       await _apiClient.dio.patch(
-        '/reports/$id',
+        '/reports/$id/status',
         data: {
           'status': status,
           if (adminComment != null) 'adminComment': adminComment,

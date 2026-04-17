@@ -5,6 +5,11 @@ import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
@@ -219,38 +224,170 @@ class AdminDashboardScreen extends ConsumerWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // TAB 2: REGISTERED USERS
 // ─────────────────────────────────────────────────────────────────────────────
-class _UsersTab extends ConsumerWidget {
+class _UsersTab extends StatefulWidget {
   const _UsersTab();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final usersAsync = ref.watch(allUsersProvider);
+  State<_UsersTab> createState() => _UsersTabState();
+}
 
-    return RefreshIndicator(
-      color: AppTheme.primaryColor,
-      onRefresh: () async => ref.invalidate(allUsersProvider),
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _SectionHeader(
-              title: 'إدارة المسجلين',
-              subtitle: 'التحكم الكامل في حسابات المستخدمين، الحالة، والصلاحيات',
-              icon: Icons.people_alt_rounded,
-            ).animate().fadeIn(delay: 100.ms),
-            const SizedBox(height: 24),
-            
-            usersAsync.when(
-              data: (users) => Column(
-                children: users.map((user) => _UserCard(user: user)).toList(),
-              ),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error loading users: $e')),
+class _UsersTabState extends State<_UsersTab> {
+  String _searchQuery = '';
+  bool _isExporting = false;
+
+  void _exportUsersToCSV(List<UserProfile> users) {
+    setState(() => _isExporting = true);
+    try {
+      // Build CSV content
+      final header = 'Name,Email,Role,Status,Join Date\n';
+      final rows = users.map((u) {
+        final name = u.name.replaceAll(',', ' ');
+        return '$name,${u.email},${u.membershipLevel},${u.status},${u.joinDate}';
+      }).join('\n');
+      
+      final csvContent = header + rows;
+
+      // Web download logic (using universal_html style for stability)
+      // Note: In a real production app we'd use package:web or dart:html
+      // For this environment, we simulate the logic or use a helper
+      _triggerWebDownload(csvContent, 'ebzim_users_export_${DateTime.now().millisecondsSinceEpoch}.csv');
+    } catch (e) {
+      debugPrint('Export failed: $e');
+    } finally {
+      setState(() => _isExporting = false);
+    }
+  }
+
+  void _triggerWebDownload(String content, String filename) {
+    if (!kIsWeb) return;
+
+    // Add UTF-8 BOM to ensure Excel opens Arabic characters correctly
+    final bytes = utf8.encode(content);
+    final bom = [0xEF, 0xBB, 0xBF];
+    final fullContent = Uint8List.fromList([...bom, ...bytes]);
+
+    final blob = html.Blob([fullContent], 'text/csv;charset=utf-8');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.AnchorElement(href: url)
+      ..setAttribute('download', filename)
+      ..click();
+    html.Url.revokeObjectUrl(url);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final usersAsync = ref.watch(allUsersProvider);
+
+        return RefreshIndicator(
+          color: AppTheme.primaryColor,
+          onRefresh: () async => ref.invalidate(allUsersProvider),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SectionHeader(
+                  title: 'إدارة المسجلين',
+                  subtitle: 'التحكم الكامل في حسابات المستخدمين، الحالة، والصلاحيات',
+                  icon: Icons.people_alt_rounded,
+                ).animate().fadeIn(delay: 100.ms),
+                const SizedBox(height: 24),
+                
+                // Search & Export Bar
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4)),
+                          ],
+                        ),
+                        child: TextField(
+                          onChanged: (val) => setState(() => _searchQuery = val.toLowerCase()),
+                          decoration: InputDecoration(
+                            hintText: 'البحث عن مستخدم (اسم، بريد...)',
+                            hintStyle: GoogleFonts.tajawal(fontSize: 13, color: Colors.grey),
+                            prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.primaryColor),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    usersAsync.maybeWhen(
+                      data: (users) => _ExportButton(
+                        isLoading: _isExporting,
+                        onPressed: () => _exportUsersToCSV(users),
+                      ),
+                      orElse: () => const SizedBox(),
+                    ),
+                  ],
+                ).animate().fadeIn(delay: 200.ms),
+                const SizedBox(height: 24),
+
+                usersAsync.when(
+                  data: (users) {
+                    final filteredUsers = users.where((u) {
+                      final name = u.name.toLowerCase();
+                      final email = u.email.toLowerCase();
+                      return name.contains(_searchQuery) || email.contains(_searchQuery);
+                    }).toList();
+
+                    if (filteredUsers.isEmpty) {
+                      return const _EmptyState(message: 'لم يتم العثور على مستخدمين مطابقتين للبحث', icon: Icons.person_search_rounded);
+                    }
+
+                    return Column(
+                      children: filteredUsers.map((user) => _UserCard(user: user)).toList(),
+                    );
+                  },
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(child: Text('Error loading users: $e')),
+                ),
+                const SizedBox(height: 100),
+              ],
             ),
-            const SizedBox(height: 100),
-          ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ExportButton extends StatelessWidget {
+  final bool isLoading;
+  final VoidCallback onPressed;
+  const _ExportButton({required this.isLoading, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 54,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: const Color(0xFF052011).withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 4)),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isLoading ? null : onPressed,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: isLoading
+                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                : const Icon(Icons.download_rounded, color: AppTheme.accentColor),
+          ),
         ),
       ),
     );
@@ -264,64 +401,76 @@ class _UserCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBanned = user.status == 'BANNED';
+    final displayName = user.name.trim().isEmpty ? user.email.split('@').first : user.name;
+    final roleColor = _getRoleColor(user.membershipLevel);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 15, offset: const Offset(0, 5)),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         leading: Container(
-          width: 50, height: 50,
+          width: 54, height: 54,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1), width: 2),
+            border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.08), width: 2),
+            color: AppTheme.primaryColor.withValues(alpha: 0.05),
           ),
           child: ClipOval(
-            child: user.imageUrl.isNotEmpty
+            child: user.imageUrl.isNotEmpty && !user.imageUrl.contains('placehold.co')
                 ? CachedNetworkImage(
                     imageUrl: user.imageUrl,
                     fit: BoxFit.cover,
-                    placeholder: (_, __) => const CircularProgressIndicator(),
-                    errorWidget: (_, __, ___) => const Icon(Icons.person, color: AppTheme.primaryColor),
+                    placeholder: (_, __) => const CircularProgressIndicator(strokeWidth: 2),
+                    errorWidget: (_, __, ___) => const Icon(Icons.person, color: AppTheme.primaryColor, size: 28),
                   )
-                : const Icon(Icons.person, color: AppTheme.primaryColor),
+                : const Icon(Icons.person, color: AppTheme.primaryColor, size: 28),
           ),
         ),
         title: Text(
-          user.name,
-          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14),
+          displayName,
+          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 15, color: const Color(0xFF1A1A2E)),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(user.email, style: GoogleFonts.inter(fontSize: 11, color: Colors.grey.shade600)),
             const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: isBanned ? Colors.red.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                user.status ?? 'ACTIVE',
-                style: GoogleFonts.tajawal(
-                  fontSize: 10, 
-                  fontWeight: FontWeight.bold, 
-                  color: isBanned ? Colors.red : Colors.green,
+            Text(user.email, style: GoogleFonts.inter(fontSize: 11, color: Colors.grey.shade500)),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                _buildSmallBadge(
+                  label: user.status ?? 'ACTIVE',
+                  color: isBanned ? Colors.red : const Color(0xFF15803D),
                 ),
-              ),
+                const SizedBox(width: 8),
+                _buildSmallBadge(
+                  label: user.membershipLevel,
+                  color: roleColor,
+                  isOutline: true,
+                ),
+              ],
             ),
           ],
         ),
         trailing: PopupMenuButton<String>(
           onSelected: (val) async {
-            if (val == 'ban') {
+            if (val == 'edit') {
+              final updated = await showDialog<bool>(
+                context: context,
+                builder: (_) => _EditUserDialog(user: user),
+              );
+              if (updated == true) {
+                ref.invalidate(allUsersProvider);
+              }
+            } else if (val == 'ban') {
               await ref.read(adminUserServiceProvider).updateUserStatus(user.id, isBanned ? 'ACTIVE' : 'BANNED');
               ref.invalidate(allUsersProvider);
             } else if (val == 'delete') {
@@ -332,7 +481,18 @@ class _UserCard extends ConsumerWidget {
               }
             }
           },
+          icon: const Icon(Icons.more_vert_rounded, color: Color(0xFF64748B)),
           itemBuilder: (_) => [
+            PopupMenuItem(
+              value: 'edit',
+              child: Row(
+                children: [
+                  const Icon(Icons.edit_outlined, size: 18, color: AppTheme.primaryColor),
+                  const SizedBox(width: 8),
+                  Text('تعديل البيانات', style: GoogleFonts.tajawal()),
+                ],
+              ),
+            ),
             PopupMenuItem(
               value: 'ban',
               child: Row(
@@ -2538,6 +2698,219 @@ Future<bool?> _confirmDelete(BuildContext context, String title, String name) {
           child: Text('حذف نهائياً', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
         ),
       ],
+    ),
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EDIT USER DIALOG
+// ─────────────────────────────────────────────────────────────────────────────
+class _EditUserDialog extends StatefulWidget {
+  final UserProfile user;
+  const _EditUserDialog({required this.user});
+
+  @override
+  State<_EditUserDialog> createState() => _EditUserDialogState();
+}
+
+class _EditUserDialogState extends State<_EditUserDialog> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late String _selectedRole;
+  late String _selectedBadge;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.user.name);
+    _emailController = TextEditingController(text: widget.user.email);
+    _selectedRole = widget.user.membershipLevel;
+    _selectedBadge = widget.user.membershipBadge ?? 'NONE';
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Text('تعديل بيانات المستخدم', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildTextField(
+                  controller: _nameController,
+                  label: 'الاسم الكامل',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  controller: _emailController,
+                  label: 'البريد الإلكتروني',
+                  icon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 16),
+                _buildRoleDropdown(),
+                const SizedBox(height: 16),
+                _buildBadgeDropdown(),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: _isLoading ? null : () => Navigator.pop(context),
+              child: Text('إلغاء', style: GoogleFonts.tajawal()),
+            ),
+            ElevatedButton(
+              onPressed: _isLoading ? null : () => _handleUpdate(ref),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: _isLoading
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                  : Text('حفظ التغييرات', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType? keyboardType,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, size: 20),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        labelStyle: GoogleFonts.tajawal(),
+      ),
+      style: GoogleFonts.tajawal(),
+    );
+  }
+
+  Widget _buildRoleDropdown() {
+    final roles = ['PUBLIC', 'MEMBER', 'ADMIN', 'SUPER_ADMIN', 'AUTHORITY'];
+    return DropdownButtonFormField<String>(
+      value: _selectedRole,
+      decoration: InputDecoration(
+        labelText: 'الصلاحيات (Role)',
+        prefixIcon: const Icon(Icons.security, size: 20),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        labelStyle: GoogleFonts.tajawal(),
+      ),
+      items: roles.map((role) {
+        return DropdownMenuItem(
+          value: role,
+          child: Text(role, style: GoogleFonts.inter()),
+        );
+      }).toList(),
+      onChanged: (val) => setState(() => _selectedRole = val!),
+    );
+  }
+
+  Widget _buildBadgeDropdown() {
+    final badges = ['NONE', 'NORMAL', 'BRONZE', 'GOLD', 'DIAMOND'];
+    final labels = {
+      'NONE': 'بدون وسام',
+      'NORMAL': 'مستخدم عادي',
+      'BRONZE': 'مستخدم برونزي',
+      'GOLD': 'مستخدم ذهبي',
+      'DIAMOND': 'مستخدم ماسي',
+    };
+    return DropdownButtonFormField<String>(
+      value: _selectedBadge,
+      decoration: InputDecoration(
+        labelText: 'الوسام المستحق',
+        prefixIcon: const Icon(Icons.military_tech_rounded, size: 20),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        labelStyle: GoogleFonts.tajawal(),
+      ),
+      items: badges.map((badge) {
+        return DropdownMenuItem(
+          value: badge,
+          child: Text(labels[badge]!, style: GoogleFonts.tajawal()),
+        );
+      }).toList(),
+      onChanged: (val) => setState(() => _selectedBadge = val!),
+    );
+  }
+
+  Future<void> _handleUpdate(WidgetRef ref) async {
+    setState(() => _isLoading = true);
+    try {
+      final nameParts = _nameController.text.trim().split(' ');
+      final firstName = nameParts.first;
+      final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+
+      final updateData = {
+        'email': _emailController.text.trim(),
+        'role': _selectedRole,
+        'profile': {
+          'firstName': firstName,
+          'lastName': lastName,
+          'badge': _selectedBadge,
+        }
+      };
+
+      await ref.read(adminUserServiceProvider).updateUser(widget.user.id, updateData);
+      if (mounted) Navigator.pop(context, true);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('خطأ في التعديل: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+}
+
+Color _getRoleColor(String role) {
+  switch (role) {
+    case 'SUPER_ADMIN': return const Color(0xFF7C3AED);
+    case 'ADMIN': return const Color(0xFF1D4ED8);
+    case 'MEMBER': return const Color(0xFF15803D);
+    case 'AUTHORITY': return const Color(0xFFB45309);
+    default: return const Color(0xFF64748B);
+  }
+}
+
+Widget _buildSmallBadge({required String label, required Color color, bool isOutline = false}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+    decoration: BoxDecoration(
+      color: isOutline ? Colors.transparent : color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(6),
+      border: isOutline ? Border.all(color: color.withValues(alpha: 0.3)) : null,
+    ),
+    child: Text(
+      label,
+      style: GoogleFonts.tajawal(
+        fontSize: 9, 
+        fontWeight: FontWeight.bold, 
+        color: color,
+        letterSpacing: 0.5,
+      ),
     ),
   );
 }

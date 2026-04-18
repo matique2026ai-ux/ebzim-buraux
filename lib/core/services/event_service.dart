@@ -91,8 +91,8 @@ class ActivityEvent {
       locationFr: location.toString(),
       imageUrl: (json['coverImage'] is Map)
           ? (json['coverImage']['url']?.toString() ??
-                'https://placehold.co/600x400/020F08/F7C04A/png?text=EBZIM')
-          : 'https://placehold.co/600x400/020F08/F7C04A/png?text=EBZIM',
+                'https://placehold.co/600x400/020617/F7C04A/png?text=EBZIM')
+          : 'https://placehold.co/600x400/020617/F7C04A/png?text=EBZIM',
       categoryEn: catName['en']?.toString() ?? 'General',
       categoryAr: catName['ar']?.toString() ?? 'عام',
       categoryFr: catName['fr']?.toString() ?? 'Général',

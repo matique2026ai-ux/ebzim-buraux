@@ -7,6 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:typed_data';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 import 'dart:convert';
@@ -92,7 +93,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                 background: Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF03140A), Color(0xFF052011)],
+                      colors: [Color(0xFF020617), Color(0xFF0F172A)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
@@ -239,10 +240,10 @@ class _UsersTabState extends State<_UsersTab> {
     setState(() => _isExporting = true);
     try {
       // Build CSV content
-      final header = 'Name,Email,Role,Status,Join Date\n';
+      final header = 'Name,Email,Role,Status\n';
       final rows = users.map((u) {
         final name = u.name.replaceAll(',', ' ');
-        return '$name,${u.email},${u.membershipLevel},${u.status},${u.joinDate}';
+        return '$name,${u.email},${u.membershipLevel},${u.status}';
       }).join('\n');
       
       final csvContent = header + rows;
@@ -456,6 +457,18 @@ class _UserCard extends ConsumerWidget {
                   color: roleColor,
                   isOutline: true,
                 ),
+                if (user.membershipBadge != null && user.membershipBadge != 'NONE') ...[
+                  const SizedBox(width: 8),
+                  Icon(
+                    user.membershipBadge == 'GOLD' ? Icons.stars_rounded : 
+                    user.membershipBadge == 'DIAMOND' ? Icons.diamond_rounded :
+                    Icons.workspace_premium_rounded,
+                    size: 16,
+                    color: user.membershipBadge == 'GOLD' ? const Color(0xFFFFD700) :
+                           user.membershipBadge == 'DIAMOND' ? const Color(0xFF00E5FF) :
+                           const Color(0xFFCD7F32),
+                  ),
+                ],
               ],
             ),
           ],
@@ -2718,6 +2731,7 @@ class _EditUserDialogState extends State<_EditUserDialog> {
   late TextEditingController _emailController;
   late String _selectedRole;
   late String _selectedBadge;
+  late String _selectedStatus;
   bool _isLoading = false;
 
   @override
@@ -2727,6 +2741,7 @@ class _EditUserDialogState extends State<_EditUserDialog> {
     _emailController = TextEditingController(text: widget.user.email);
     _selectedRole = widget.user.membershipLevel;
     _selectedBadge = widget.user.membershipBadge ?? 'NONE';
+    _selectedStatus = widget.user.membershipStatus;
   }
 
   @override
@@ -2761,8 +2776,12 @@ class _EditUserDialogState extends State<_EditUserDialog> {
                 ),
                 const SizedBox(height: 16),
                 _buildRoleDropdown(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
+                // --- MANDATORY BADGE SELECTION ---
                 _buildBadgeDropdown(),
+                const SizedBox(height: 16),
+                _buildStatusDropdown(),
+                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -2809,6 +2828,13 @@ class _EditUserDialogState extends State<_EditUserDialog> {
 
   Widget _buildRoleDropdown() {
     final roles = ['PUBLIC', 'MEMBER', 'ADMIN', 'SUPER_ADMIN', 'AUTHORITY'];
+    final roleLabels = {
+      'PUBLIC': 'زائر',
+      'MEMBER': 'عضو مشارك',
+      'ADMIN': 'مسؤول نظام',
+      'SUPER_ADMIN': 'مدير عام (Super Admin)',
+      'AUTHORITY': 'سلطة محلية',
+    };
     return DropdownButtonFormField<String>(
       value: _selectedRole,
       decoration: InputDecoration(
@@ -2820,7 +2846,7 @@ class _EditUserDialogState extends State<_EditUserDialog> {
       items: roles.map((role) {
         return DropdownMenuItem(
           value: role,
-          child: Text(role, style: GoogleFonts.inter()),
+          child: Text(roleLabels[role] ?? role, style: GoogleFonts.tajawal()),
         );
       }).toList(),
       onChanged: (val) => setState(() => _selectedRole = val!),
@@ -2854,6 +2880,32 @@ class _EditUserDialogState extends State<_EditUserDialog> {
     );
   }
 
+  Widget _buildStatusDropdown() {
+    final statuses = ['ACTIVE', 'PENDING', 'REJECTED', 'APPROVED'];
+    final labels = {
+      'ACTIVE': 'نشط',
+      'PENDING': 'قيد الانتظار',
+      'REJECTED': 'مرفوض',
+      'APPROVED': 'مقبول / معتمد',
+    };
+    return DropdownButtonFormField<String>(
+      value: _selectedStatus,
+      decoration: InputDecoration(
+        labelText: 'حالة العضوية',
+        prefixIcon: const Icon(Icons.verified_user_rounded, size: 20),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        labelStyle: GoogleFonts.tajawal(),
+      ),
+      items: statuses.map((status) {
+        return DropdownMenuItem(
+          value: status,
+          child: Text(labels[status] ?? status, style: GoogleFonts.tajawal()),
+        );
+      }).toList(),
+      onChanged: (val) => setState(() => _selectedStatus = val!),
+    );
+  }
+
   Future<void> _handleUpdate(WidgetRef ref) async {
     setState(() => _isLoading = true);
     try {
@@ -2864,10 +2916,11 @@ class _EditUserDialogState extends State<_EditUserDialog> {
       final updateData = {
         'email': _emailController.text.trim(),
         'role': _selectedRole,
+        'membershipBadge': _selectedBadge,
+        'status': _selectedStatus,
         'profile': {
           'firstName': firstName,
           'lastName': lastName,
-          'badge': _selectedBadge,
         }
       };
 
@@ -2916,10 +2969,16 @@ Widget _buildSmallBadge({required String label, required Color color, bool isOut
 }
 
 class _MiniMetric extends StatelessWidget {
-  final String label, value;
+  final String label;
+  final String value;
   final Color color;
 
-  const _MiniMetric({required this.label, required this.value, required this.color});
+  const _MiniMetric({
+    Key? key,
+    required this.label,
+    required this.value,
+    required this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

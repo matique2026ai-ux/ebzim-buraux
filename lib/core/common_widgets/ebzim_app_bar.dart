@@ -8,7 +8,6 @@ class EbzimAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Color? color;
   final Color? backgroundColor;
-
   final PreferredSizeWidget? bottom;
 
   const EbzimAppBar({
@@ -23,33 +22,52 @@ class EbzimAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final activeColor = color ?? Theme.of(context).primaryColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // Always use accent gold for the premium feel requested by user
+    final activeColor = AppTheme.accentColor;
+    final bgColor = isDark ? AppTheme.backgroundDark : Colors.white;
 
     return AppBar(
       leading: leading,
       centerTitle: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
+      scrolledUnderElevation: 0,
       flexibleSpace: ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16), // High blur for premium feel
           child: Container(
-            color: (backgroundColor ?? Theme.of(context).primaryColor).withValues(alpha: 0.8),
+            decoration: BoxDecoration(
+              color: bgColor.withValues(alpha: isDark ? 0.4 : 0.7),
+              border: Border(
+                bottom: BorderSide(
+                  color: activeColor.withValues(alpha: 0.1),
+                  width: 1,
+                ),
+              ),
+            ),
           ),
         ),
       ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset('assets/images/logo.png', height: 24, color: activeColor),
-          const SizedBox(width: 8),
+          Image.asset(
+            'assets/images/logo.png', 
+            height: 28, 
+            color: activeColor,
+            colorBlendMode: BlendMode.srcIn,
+          ),
+          const SizedBox(width: 12),
           Text(
             loc.appName,
             style: TextStyle(
               fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily,
               color: activeColor,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w900,
               fontSize: 18,
+              letterSpacing: 0.5,
             ),
           ),
         ],

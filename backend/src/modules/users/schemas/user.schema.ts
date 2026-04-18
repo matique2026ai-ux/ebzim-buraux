@@ -41,7 +41,7 @@ export class User {
   @Prop({ type: UserProfileSchema, default: {} })
   profile: UserProfile;
 
-  @Prop({ type: String, enum: ['ACTIVE', 'INACTIVE', 'BANNED'], default: 'ACTIVE' })
+  @Prop({ type: String, enum: ['ACTIVE', 'INACTIVE', 'BANNED', 'PENDING_VERIFICATION'], default: 'ACTIVE' })
   status: string;
 
   @Prop({ type: String, required: false })
@@ -52,6 +52,12 @@ export class User {
 
   @Prop({ type: Date, required: false })
   resetPasswordExpires?: Date;
+
+  @Prop({ type: String, required: false })
+  verificationToken?: string;
+
+  @Prop({ type: Date, required: false })
+  verificationExpires?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

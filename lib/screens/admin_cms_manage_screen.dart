@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
@@ -95,7 +96,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF052011), Color(0xFF0A3D21)],
+            colors: [Color(0xFF020617), Color(0xFF0F172A)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -344,42 +345,76 @@ class _PartnerTile extends StatelessWidget {
     final color = _hexColor(partner.color);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4))],
-        border: Border(left: BorderSide(color: color, width: 4)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          children: [
-            Container(
-              width: 52, height: 52,
-              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-              padding: const EdgeInsets.all(6),
-              child: CachedNetworkImage(imageUrl: partner.logoUrl, fit: BoxFit.contain,
-                errorWidget: (_, __, ___) => Icon(Icons.business_rounded, color: color)),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(partner.nameAr, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14)),
-                  if (partner.goalsSummaryAr.isNotEmpty)
-                    Text(partner.goalsSummaryAr, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade600), maxLines: 2, overflow: TextOverflow.ellipsis),
-                ],
+      child: Stack(
+        children: [
+          // Glass Base
+          ClipRRect(
+            borderRadius: BorderRadius.circular(18),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.4), width: 1.5),
+                  boxShadow: [
+                    BoxShadow(color: color.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4)),
+                  ],
+                ),
               ),
             ),
-            Column(
+          ),
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
               children: [
-                IconButton(icon: const Icon(Icons.edit_rounded, color: Color(0xFF2196F3), size: 20), onPressed: onEdit),
-                IconButton(icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20), onPressed: onDelete),
+                Container(
+                  width: 52, height: 52,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1), 
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: color.withValues(alpha: 0.2)),
+                  ),
+                  padding: const EdgeInsets.all(6),
+                  child: CachedNetworkImage(
+                    imageUrl: partner.logoUrl, 
+                    fit: BoxFit.contain,
+                    errorWidget: (_, __, ___) => Icon(Icons.business_rounded, color: color),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(partner.nameAr, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const SizedBox(height: 4),
+                      if (partner.goalsSummaryAr.isNotEmpty)
+                        Text(
+                          'الاتفاقية: ${partner.goalsSummaryAr}', 
+                          style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade600, height: 1.4), 
+                          maxLines: 2, 
+                          overflow: TextOverflow.ellipsis
+                        ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    IconButton(icon: const Icon(Icons.edit_rounded, color: Color(0xFF2196F3), size: 20), onPressed: onEdit),
+                    IconButton(icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20), onPressed: onDelete),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+          // Accent strip
+          Positioned(
+            left: 0, top: 12, bottom: 12,
+            child: Container(width: 4, decoration: BoxDecoration(color: color, borderRadius: const BorderRadius.horizontal(right: Radius.circular(2)))),
+          ),
+        ],
       ),
     );
   }
@@ -704,31 +739,135 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
 
   List<Widget> _partnerFields() {
     return [
-      _sectionLabel('شعار الشريك', Icons.image_rounded),
-      _imagePreviewField('logoUrl', 'رابط الشعار (URL)', _data['logoUrl']),
-      const SizedBox(height: 20),
-      _sectionLabel('اسم الشريك', Icons.business_rounded),
+      _sectionLabel('هوية الشريك المرئية', Icons.palette_rounded),
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)],
+        ),
+        child: Column(
+          children: [
+            // Professional Upload Area
+            _imageUploadArea('logoUrl', 'شعار الشريك (PNG يفضل)', _data['logoUrl']),
+            const SizedBox(height: 24),
+            // Color Palette Picker
+            Text('لون العلامة التجارية', style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey.shade600)),
+            const SizedBox(height: 12),
+            _buildColorPalette(),
+          ],
+        ),
+      ),
+      const SizedBox(height: 32),
+      _sectionLabel('بيانات التعريف', Icons.business_rounded),
       _buildLangTabs(
         fields: [
-          _buildTextField('الاسم (عربي) *', 'name.ar', _data['name']?['ar'], required: true, isAr: true),
-          _buildTextField('Name (English)', 'name.en', _data['name']?['en'], isAr: false),
-          _buildTextField('Nom (Français)', 'name.fr', _data['name']?['fr'], isAr: false),
+          _buildTextField('اسم المؤسسة أو الشريك (عربي) *', 'name.ar', _data['name']?['ar'], required: true, isAr: true),
+          _buildTextField('Partner Name (English)', 'name.en', _data['name']?['en'], isAr: false),
+          _buildTextField('Nom du partenaire (Français)', 'name.fr', _data['name']?['fr'], isAr: false),
         ],
       ),
-      const SizedBox(height: 20),
-      _sectionLabel('ملخص أهداف الشراكة', Icons.description_rounded),
+      const SizedBox(height: 32),
+      _sectionLabel('اتفاقية الشراكة الرسمية', Icons.description_rounded),
       _buildLangTabs(
         fields: [
-          _buildTextField('الأهداف (عربي)', 'goalsSummary.ar', _data['goalsSummary']?['ar'], isAr: true, maxLines: 3),
-          _buildTextField('Goals (English)', 'goalsSummary.en', _data['goalsSummary']?['en'], isAr: false, maxLines: 3),
-          _buildTextField('Objectifs (Français)', 'goalsSummary.fr', _data['goalsSummary']?['fr'], isAr: false, maxLines: 3),
+          _buildTextField('تفاصيل وأهداف الاتفاقية (عربي)', 'goalsSummary.ar', _data['goalsSummary']?['ar'], isAr: true, maxLines: 10),
+          _buildTextField('Partnership Terms (English)', 'goalsSummary.en', _data['goalsSummary']?['en'], isAr: false, maxLines: 10),
+          _buildTextField('Termes du partenariat (Français)', 'goalsSummary.fr', _data['goalsSummary']?['fr'], isAr: false, maxLines: 10),
         ],
         tabKey: 'goals',
       ),
-      const SizedBox(height: 20),
-      _sectionLabel('اللون المميز', Icons.palette_rounded),
-      _buildTextField('لون (Hex code مثال: 1A6B3A)', 'color', _data['color'], isAr: false),
     ];
+  }
+
+  Widget _imageUploadArea(String key, String label, String? currentUrl) {
+    return StatefulBuilder(builder: (context, setS) {
+      bool isUploading = false;
+      return Column(
+        children: [
+          GestureDetector(
+            onTap: () async {
+              final result = await FilePicker.pickFiles(type: FileType.image, withData: true);
+              if (result == null || result.files.isEmpty) return;
+              setS(() => isUploading = true);
+              try {
+                final file = result.files.first;
+                final url = await ref.read(mediaServiceProvider).uploadMedia(file.bytes!, file.name);
+                setState(() => _data[key] = url);
+              } finally {
+                setS(() => isUploading = false);
+              }
+            },
+            child: Container(
+              height: 120,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withValues(alpha: 0.02),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1), style: BorderStyle.solid),
+              ),
+              child: isUploading 
+                ? const Center(child: CircularProgressIndicator())
+                : currentUrl != null && currentUrl.isNotEmpty
+                  ? Stack(
+                      children: [
+                        Center(child: CachedNetworkImage(imageUrl: currentUrl, height: 80, fit: BoxFit.contain)),
+                        Positioned(right: 8, top: 8, child: Icon(Icons.check_circle, color: Colors.green.shade400, size: 20)),
+                      ],
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.cloud_upload_outlined, size: 32, color: AppTheme.primaryColor),
+                        const SizedBox(height: 8),
+                        Text('انقر لتحميل الشعار', style: GoogleFonts.tajawal(color: AppTheme.primaryColor, fontSize: 13, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(label, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey)),
+        ],
+      );
+    });
+  }
+
+  Widget _buildColorPalette() {
+    final colors = [
+      '#0F172A', '#1E293B', '#334155', '#6366F1', '#EC4899', '#F59E0B', '#3B82F6', '#EF4444'
+    ];
+    return Wrap(
+      spacing: 12,
+      children: colors.map((hex) {
+        final isSelected = _data['color'] == hex;
+        return GestureDetector(
+          onTap: () => setState(() => _data['color'] = hex),
+          child: Container(
+            width: 36, height: 36,
+            decoration: BoxDecoration(
+              color: _hexToColor(hex),
+              shape: BoxShape.circle,
+              border: Border.all(color: isSelected ? Colors.white : Colors.transparent, width: 2.5),
+              boxShadow: isSelected ? [BoxShadow(color: Colors.black26, blurRadius: 6)] : null,
+            ),
+            child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 16) : null,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Color _hexToColor(String? hex) {
+    if (hex == null || hex.isEmpty) return AppTheme.primaryColor;
+    try {
+      String h = hex.replaceFirst('#', '');
+      if (h.length == 6) h = 'FF$h';
+      return Color(int.parse(h, radix: 16));
+    } catch (_) {
+      return AppTheme.primaryColor;
+    }
   }
 
   List<Widget> _leaderFields() {

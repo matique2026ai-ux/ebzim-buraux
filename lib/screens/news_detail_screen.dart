@@ -5,6 +5,8 @@ import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ebzim_app/core/widgets/ebzim_background.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 
 class NewsDetailWrapper extends ConsumerWidget {
   final NewsPost? initialPost;
@@ -67,34 +69,25 @@ class NewsDetailScreen extends StatelessWidget {
     final catColor = _catColor(post.category, context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+      backgroundColor: Colors.transparent,
+      body: EbzimBackground(
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
         slivers: [
           // ── Hero App Bar ──
-          SliverAppBar(
+          EbzimSliverAppBar(
             expandedHeight: post.imageUrl.isNotEmpty ? 280 : 120,
-            pinned: true,
-            backgroundColor: theme.scaffoldBackgroundColor,
-            leading: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: isDark ? Colors.black45 : Colors.white.withValues(alpha: 0.9),
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: theme.colorScheme.onSurface),
-                  onPressed: () => context.pop(),
-                ),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+              onPressed: () => context.pop(),
             ),
-            flexibleSpace: post.imageUrl.isNotEmpty
-                ? FlexibleSpaceBar(
-                    background: Image.network(
-                      post.imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: theme.colorScheme.surfaceContainerHighest,
-                        child: Icon(Icons.image_outlined, size: 64, color: theme.colorScheme.primary),
-                      ),
+            background: post.imageUrl.isNotEmpty
+                ? Image.network(
+                    post.imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      child: Icon(Icons.image_outlined, size: 64, color: theme.colorScheme.primary),
                     ),
                   )
                 : null,
@@ -235,6 +228,7 @@ class NewsDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

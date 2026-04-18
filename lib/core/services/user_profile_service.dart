@@ -1,6 +1,9 @@
+import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
+import 'package:ebzim_app/core/services/media_service.dart';
 
 class UserProfile {
   final String id;
@@ -33,7 +36,8 @@ class UserProfile {
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     final profile = json['profile'] ?? {};
-    final role = json['role'] ?? 'PUBLIC';
+    final role = json['role'] ?? json['membershipLevel'] ?? 'PUBLIC';
+    final badge = json['membershipBadge'] ?? json['badge'] ?? profile['badge'] ?? 'NONE';
     
     return UserProfile(
       id: json['id'] ?? json['_id'] ?? '',
@@ -41,12 +45,12 @@ class UserProfile {
       nameAr: profile['firstNameAr'] ?? profile['firstName'] ?? '',
       email: json['email'] ?? '',
       phone: profile['phone'] ?? '',
-      imageUrl: profile['avatarUrl'] ?? 'https://placehold.co/150/020F08/F7C04A/png?text=User',
+      imageUrl: profile['avatarUrl'] ?? '',
       membershipLevel: role,
       membershipStatus: json['status'] ?? 'ACTIVE',
       membershipExpiry: json['expiryDate'] != null ? DateTime.parse(json['expiryDate']) : null,
       profileCompletionPercentage: 40,
-      membershipBadge: profile['badge'] ?? 'NONE',
+      membershipBadge: badge,
       status: json['status'] ?? 'ACTIVE',
     );
   }
@@ -66,6 +70,30 @@ class UserProfileService {
     final response = await _apiClient.dio.get('auth/me');
     return UserProfile.fromJson(response.data);
   }
+
+  Future<UserProfile> updateProfile(Map<String, dynamic> profileData) async {
+    // Backend expects 'profile' object with firstName, lastName, phone, etc.
+    final response = await _apiClient.dio.patch('users/profile', data: {
+      'profile': profileData,
+    });
+    return UserProfile.fromJson(response.data);
+  }
+
+  Future<UserProfile> uploadAvatar(List<int> bytes, String fileName, Ref ref) async {
+    // 1. Upload the image to the media service
+    final imageUrl = await ref.read(mediaServiceProvider).uploadMedia(
+      Uint8List.fromList(bytes),
+      fileName,
+    );
+
+    // 2. Update the user's imageUrl in their profile
+    final response = await _apiClient.dio.patch('users/profile', data: {
+      'profile': {
+        'imageUrl': imageUrl,
+      },
+    });
+    return UserProfile.fromJson(response.data);
+  }
 }
 
 /// Provider for UserProfileService
@@ -74,7 +102,7 @@ final userProfileServiceProvider = Provider<UserProfileService>((ref) {
 });
 
 /// Provider that reads from auth state (no extra API call needed)
-final currentUserProvider = Provider<AsyncValue<UserProfile>>((ref) {
+final currentUserProvider = Provider<AsyncValue<UserProfile?>>((ref) {
   final authState = ref.watch(authProvider);
 
   if (authState.isInitializing || authState.isLoading) {
@@ -85,5 +113,6 @@ final currentUserProvider = Provider<AsyncValue<UserProfile>>((ref) {
     return AsyncValue.data(authState.user!);
   }
 
-  return AsyncValue.error('Not authenticated', StackTrace.current);
+  // Return data(null) instead of error to allow screens to handle guest state gracefully
+  return const AsyncValue.data(null);
 });

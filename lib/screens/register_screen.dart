@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
@@ -67,12 +68,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
 
     ref.listen<AuthState>(authProvider, (previous, next) {
-      if (next.isAuthenticated && previous?.isAuthenticated != true) {
+      if (next.isEmailVerificationRequired && next.emailForVerification != null) {
+        context.push('/auth/verify-email/otp', extra: next.emailForVerification);
+      } else if (next.isAuthenticated && previous?.isAuthenticated != true) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(loc.authAccountCreated),
           backgroundColor: AppTheme.primaryColor,
         ));
-        context.go('/dashboard');
+        context.go('/home');
       }
     });
 
@@ -174,17 +177,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(32),
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  isDark ? const Color(0xFFE2E9E5).withValues(alpha: 0.18) : Colors.white.withValues(alpha: 0.98),
-                                  isDark ? const Color(0xFFC5D4CD).withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.90),
-                                ],
-                              ),
+                              color: isDark ? const Color(0xFF061A12).withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.95),
                               borderRadius: BorderRadius.circular(32),
                               border: Border.all(
-                                color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.05),
+                                color: isDark ? AppTheme.borderGlass : Colors.black.withValues(alpha: 0.05),
                                 width: 1.2,
                               ),
                             ),
@@ -366,51 +362,65 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     String? Function(String?)? validator,
     List<TextInputFormatter>? inputFormatters,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: const Color(0xFFD3C5AD).withValues(alpha: 0.6),
-            fontSize: 10,
+          style: GoogleFonts.cairo(
+            color: isDark ? AppTheme.accentColor.withValues(alpha: 0.9) : AppTheme.primaryColor.withValues(alpha: 0.7),
+            fontSize: 11,
             fontWeight: FontWeight.bold,
-            letterSpacing: 2.0,
+            letterSpacing: 1.5,
           ),
         ),
-        const SizedBox(height: 12),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark 
-                ? Colors.white.withValues(alpha: 0.06) 
-                : Colors.black.withValues(alpha: 0.03),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
-          ),
-          child: TextFormField(
-            controller: controller,
-            obscureText: obscureText,
-            keyboardType: keyboardType,
-            textDirection: textDirection,
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
-            validator: validator,
-            inputFormatters: inputFormatters,
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), fontSize: 14),
-              prefixIcon: Icon(icon, color: Colors.white38, size: 20),
-              suffixIcon: onToggleObscure != null
-                  ? IconButton(
-                      icon: Icon(
-                        obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: Colors.white38,
-                      ),
-                      onPressed: onToggleObscure,
-                    )
-                  : null,
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        const SizedBox(height: 10),
+        TextFormField(
+          controller: controller,
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          textDirection: textDirection,
+          style: GoogleFonts.cairo(color: theme.colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600),
+          validator: validator,
+          inputFormatters: inputFormatters,
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: GoogleFonts.cairo(color: theme.colorScheme.onSurface.withValues(alpha: 0.2), fontSize: 14),
+            prefixIcon: Icon(icon, color: isDark ? Colors.white38 : AppTheme.primaryColor.withValues(alpha: 0.5), size: 22),
+            suffixIcon: onToggleObscure != null
+                ? IconButton(
+                    icon: Icon(
+                      obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: isDark ? Colors.white38 : AppTheme.primaryColor.withValues(alpha: 0.5),
+                    ),
+                    onPressed: onToggleObscure,
+                  )
+                : null,
+            filled: true,
+            fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
             ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: AppTheme.accentColor, width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: AppTheme.heritageRed, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: AppTheme.heritageRed, width: 1.5),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           ),
         ),
       ],

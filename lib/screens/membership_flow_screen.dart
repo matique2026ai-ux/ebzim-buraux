@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
+import 'package:ebzim_app/core/services/user_profile_service.dart';
 
 class MembershipFlowScreen extends ConsumerStatefulWidget {
   const MembershipFlowScreen({super.key});
@@ -205,7 +206,7 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
                   _Step1IdentityForm(),
                   _Step2ContactForm(),
                   _Step3AttachmentsForm(),
-                  _Step4CredentialsForm(),
+                  _Step4MotivationForm(),
                   _Step5ReviewForm(),
                 ],
               ),
@@ -287,9 +288,11 @@ class _Step1IdentityForm extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (state.fullName.isEmpty) {
         userAsync.whenData((user) {
-          notifier.updateField('fullName', user.name);
-          notifier.updateField('email', user.email);
-          notifier.updateField('phone', user.phone);
+          if (user != null) {
+            notifier.updateField('fullName', user.name);
+            notifier.updateField('email', user.email);
+            notifier.updateField('phone', user.phone);
+          }
         });
       }
     });
@@ -455,10 +458,10 @@ class _Step2ContactForm extends ConsumerWidget {
 }
 
 // --------------------------------------------------------------------------
-// STEP 3: CREDENTIALS (Experience)
+// STEP 4: MOTIVATION & INTERESTS
 // --------------------------------------------------------------------------
-class _Step3CredentialsForm extends ConsumerWidget {
-  const _Step3CredentialsForm();
+class _Step4MotivationForm extends ConsumerWidget {
+  const _Step4MotivationForm();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -742,6 +745,12 @@ class _Step0Conditions extends StatelessWidget {
             Icons.gavel,
             'النزاهة والوطنية',
             'أن لا يكون للمتقدم أي نشاط سابق يتعارض مع المصالح العليا للأمة الجزائرية.',
+          ),
+          const SizedBox(height: 20),
+          _buildConditionItem(
+            Icons.payments_outlined,
+            'الاشتراك السنوي',
+            'الانخراط في الجمعية خاضع لدفع الاشتراك السنوي. لا تُفعَّل العضوية إلا بعد سداد الرسوم المقررة والمصادقة عليها من مكتب الجمعية.',
           ),
           const SizedBox(height: 40),
           Container(

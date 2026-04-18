@@ -8,8 +8,11 @@ import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/common_widgets/glass_card.dart';
-import 'package:ebzim_app/core/services/report_service.dart';
+import 'package:ebzim_app/core/services/auth_service.dart';
+import 'package:ebzim_app/core/common_widgets/login_required_overlay.dart';
+import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
+import 'package:ebzim_app/core/services/report_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Report Type model
@@ -191,6 +194,27 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final userAsync = ref.watch(currentUserProvider);
+
+    if (userAsync.value == null && !userAsync.isLoading) {
+      return Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                color: AppTheme.accentColor, size: 20),
+            onPressed: () => context.pop(),
+          ),
+        ),
+        body: const EbzimBackground(
+          child: LoginRequiredOverlay(
+            icon: Icons.shield_outlined,
+          ),
+        ),
+      );
+    }
 
     // ── Success Screen ─────────────────────────────────────────────────────
     if (state.isSubmitted) {

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
-import 'package:ebzim_app/core/services/event_service.dart';
-import 'package:ebzim_app/widgets/event_card.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_app_bar.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +10,7 @@ import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/widgets/digital_id_card.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ebzim_app/core/services/membership_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Design tokens for the dashboard surface layer
@@ -41,7 +40,7 @@ class DashboardScreen extends ConsumerWidget {
     final loc = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
     final userAsync = ref.watch(currentUserProvider);
-    final upcomingEvents = ref.watch(upcomingEventsProvider);
+    final membershipStatusAsync = ref.watch(membershipStatusProvider);
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     if (authState.isInitializing) {
@@ -59,14 +58,20 @@ class DashboardScreen extends ConsumerWidget {
       appBar: EbzimAppBar(
         backgroundColor: Colors.transparent,
         color: _kGold,
-        leading: IconButton(
-          icon: const Icon(Icons.tune_outlined, color: _kGold, size: 22),
-          onPressed: () => context.push('/settings'),
-          tooltip: loc.settingsTitle,
-        ),
+        leading: null,
         actions: [
           userAsync.when(
             data: (user) {
+              if (user == null) {
+                return Padding(
+                  padding: const EdgeInsetsDirectional.only(end: 16.0),
+                  child: TextButton.icon(
+                    onPressed: () => context.push('/login'),
+                    icon: const Icon(Icons.login_rounded, color: _kGold, size: 20),
+                    label: Text(loc.authAccessButton, style: const TextStyle(color: _kGold, fontWeight: FontWeight.bold)),
+                  ),
+                );
+              }
               final isAdmin = user.membershipLevel == 'ADMIN' || user.membershipLevel == 'SUPER_ADMIN';
               return Row(
                 children: [
@@ -82,14 +87,14 @@ class DashboardScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsetsDirectional.only(end: 16.0),
                     child: GestureDetector(
-                      onTap: () => context.push('/profile'),
+                      onTap: () => context.push('/profile/edit'),
                       child: CircleAvatar(
                         backgroundColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.14),
-                        backgroundImage: user.imageUrl.startsWith('http')
+                        backgroundImage: user.imageUrl.isNotEmpty && user.imageUrl.startsWith('http')
                             ? NetworkImage(user.imageUrl)
                             : null,
                         radius: 19,
-                        child: !user.imageUrl.startsWith('http')
+                        child: user.imageUrl.isEmpty || !user.imageUrl.startsWith('http')
                             ? const Icon(Icons.person_outline_rounded, color: _kGold, size: 20)
                             : null,
                       ),
@@ -106,54 +111,96 @@ class DashboardScreen extends ConsumerWidget {
       body: EbzimBackground(
         child: userAsync.when(
           data: (user) {
+            // Provide a fallback Guest profile if unauthenticated
+            final displayUser = user ?? UserProfile(
+              id: 'guest',
+              name: 'Guest User',
+              nameAr: 'زائر',
+              email: '',
+              phone: '',
+              imageUrl: '',
+              membershipLevel: 'PUBLIC',
+              membershipStatus: 'ACTIVE',
+              profileCompletionPercentage: 0,
+            );
+
             final langCode = Localizations.localeOf(context).languageCode;
-            final fullName = user.getName(langCode);
+            final fullName = displayUser.getName(langCode);
             final firstName = fullName.isNotEmpty ? fullName.split(' ').first : '';
-            final isPublic = user.membershipLevel == 'PUBLIC';
+            final isPublic = displayUser.membershipLevel == 'PUBLIC';
             final isMember = ['MEMBER', 'ADMIN', 'AUTHORITY', 'SUPER_ADMIN']
-                .contains(user.membershipLevel.toUpperCase());
+                .contains(displayUser.membershipLevel.toUpperCase());
 
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(top: 88, bottom: 128),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // ── HERO ───────────────────────────────────────────────
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: _HeroSection(
-                      user: user,
+                      user: displayUser,
                       firstName: firstName,
-                      levelLabel: _getLocalizedLevel(user, loc),
+                      fullName: fullName,
+                      profileCompletionPercentage: displayUser.profileCompletionPercentage,
+                      levelLabel: _getLocalizedLevel(displayUser, loc),
                       loc: loc,
                       isRtl: isRtl,
                       isPublic: isPublic,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 28),
 
-                  // ── PLATFORM INTRO CARD or MEMBER CARD ─────────────────
+                  // ── PROFILE COMPLETION (Professional touch) ───────────────
+                  if (user != null) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: _ProfileCompletionCard(
+                        percentage: displayUser.profileCompletionPercentage,
+                        loc: loc,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+
+                  // ── ACCOUNT ACTIONS GRID ──────────────────────────────────
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: isMember
-                        ? DigitalIdCard(user: user).animate().fadeIn().slideY(begin: 0.04)
-                        : _PublicPlatformCard(loc: loc),
+                    child: _AccountActionsGrid(loc: loc),
                   ),
                   const SizedBox(height: 32),
 
-                  // ── QUICK ACTIONS ──────────────────────────────────────
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: _QuickActionsRow(loc: loc, isPublic: isPublic),
-                  ),
-                  const SizedBox(height: 48),
-
-                  // ── EVENTS SECTION ─────────────────────────────────────
-                  _EventsSection(upcomingEvents: upcomingEvents, loc: loc),
+                  // ── DIGITAL ID CARD (members only) ──────────────────────────
+                  if (isMember) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: DigitalIdCard(user: displayUser).animate().fadeIn().slideY(begin: 0.04),
+                    ),
+                    const SizedBox(height: 32),
+                  ],
 
                   // ── MEMBERSHIP ENTRY (secondary, bottom) ────────────────────
-                  if (isPublic) ...[
+                  if (isPublic && user != null) ...[
+                    const SizedBox(height: 48),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: membershipStatusAsync.when(
+                        data: (status) {
+                          if (status == 'PENDING' || status == 'SUBMITTED') {
+                            return _MembershipPendingTile(loc: loc);
+                          } else if (status == 'REJECTED') {
+                            return _MembershipRejectedTile(loc: loc);
+                          } else {
+                            return _MembershipEntryTile(loc: loc);
+                          }
+                        },
+                        loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.accentColor)),
+                        error: (_, __) => _MembershipEntryTile(loc: loc),
+                      ),
+                    ),
+                  ] else if (isPublic && user == null) ...[
                     const SizedBox(height: 48),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -161,12 +208,6 @@ class DashboardScreen extends ConsumerWidget {
                     ),
                   ],
 
-                  // ── INSTITUTIONAL FEATURES SECTION ──────────────
-                  const SizedBox(height: 48),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: _InstitutionalSection(loc: loc),
-                  ),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -194,9 +235,14 @@ class _HeroSection extends StatelessWidget {
   final bool isRtl;
   final bool isPublic;
 
+  final String fullName;
+  final int profileCompletionPercentage;
+
   const _HeroSection({
     required this.user,
     required this.firstName,
+    required this.fullName,
+    required this.profileCompletionPercentage,
     required this.levelLabel,
     required this.loc,
     required this.isRtl,
@@ -205,79 +251,111 @@ class _HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Eyebrow label
-        Row(
-          children: [
-            Container(
-              width: 36,
-              height: 3,
-              decoration: BoxDecoration(
-                color: _kGold,
-                borderRadius: BorderRadius.circular(2),
+        // --- CENTERED AVATAR ---
+        GestureDetector(
+          onTap: () => context.push('/profile/edit'),
+          child: Center(
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: _kGold.withValues(alpha: 0.2), width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _kGold.withValues(alpha: 0.08),
+                      blurRadius: 30,
+                      spreadRadius: 2,
+                    )
+                  ],
+                ),
+                child: CircleAvatar(
+                  radius: 54,
+                  backgroundColor: textColor.withValues(alpha: 0.05),
+                  backgroundImage: user.imageUrl.isNotEmpty && user.imageUrl.startsWith('http')
+                      ? NetworkImage(user.imageUrl)
+                      : null,
+                  child: user.imageUrl.isEmpty || !user.imageUrl.startsWith('http')
+                      ? const Icon(Icons.person_rounded, color: _kGold, size: 48)
+                      : null,
+                ),
               ),
-              margin: const EdgeInsetsDirectional.only(end: 12),
-            ),
-            Text(
-              loc.welcome.toUpperCase(),
-              style: GoogleFonts.inter(
-                color: _kGold,
-                fontSize: 11,
-                letterSpacing: 4.5,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ).animate().fadeIn(delay: 50.ms),
+              // Hint for editing
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: _kGold,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: theme.scaffoldBackgroundColor, width: 3),
+                ),
+                child: Icon(Icons.camera_alt_rounded, size: 14, color: isDark ? Colors.black : Colors.white),
+              ).animate().scale(delay: 400.ms),
+            ],
+          ),
+        ).animate().fadeIn().scale(duration: 400.ms),
+      ),
 
-        const SizedBox(height: 14),
+        const SizedBox(height: 24),
 
-        // Main welcome name
+        // --- NAME ---
         Text(
-          firstName.isNotEmpty
-              ? loc.dashboardWelcome(firstName)
-              : loc.dashboardWelcomePublic,
+          fullName,
+          textAlign: TextAlign.center,
           style: GoogleFonts.tajawal(
             color: _textPrimary(context),
-            fontSize: 34,
-            fontWeight: FontWeight.bold,
-            height: 1.2,
+            fontSize: 28,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -0.5,
           ),
-        ).animate().fadeIn(delay: 100.ms).slideX(
-              begin: isRtl ? 0.04 : -0.04,
-              curve: Curves.easeOut,
-            ),
+        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
 
-        // Status badge row
+        // --- MEMBERSHIP ID & LEVEL ---
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _StatusBadge(label: levelLabel, isPublic: isPublic),
-            if (isPublic) ...[
-              const SizedBox(width: 8),
-              _ActiveBadge(label: loc.dashStatusActive),
-            ],
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: _textPrimary(context).withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'ID: ${user.id.substring(user.id.length > 6 ? user.id.length - 6 : 0).toUpperCase()}',
+                style: GoogleFonts.inter(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: _textMuted(context),
+                  letterSpacing: 1,
+                ),
+              ),
+            ),
           ],
-        ).animate().fadeIn(delay: 180.ms).scale(
-              begin: const Offset(0.96, 0.96),
-              curve: Curves.easeOut,
-            ),
+        ).animate().fadeIn(delay: 300.ms),
 
-        if (isPublic) ...[
-          const SizedBox(height: 12),
+        const SizedBox(height: 16),
+        
+        // --- LOGICAL NOTE ---
+        if (profileCompletionPercentage < 100)
           Text(
-            loc.dashAccountNote,
+            'أكمل بياناتك الشخصية للوصول إلى كافة ميزات المنصة',
             style: GoogleFonts.cairo(
-              fontSize: 10.5,
-              color: _textMuted(context),
-              fontStyle: FontStyle.italic,
-              height: 1.5,
+              fontSize: 11,
+              color: _kGold.withValues(alpha: 0.7),
+              fontWeight: FontWeight.bold,
             ),
-          ).animate().fadeIn(delay: 250.ms),
-        ],
+          ).animate().fadeIn(delay: 400.ms),
       ],
     );
   }
@@ -369,329 +447,14 @@ class _ActiveBadge extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PUBLIC PLATFORM INTRO CARD
-// ─────────────────────────────────────────────────────────────────────────────
-class _PublicPlatformCard extends StatelessWidget {
-  final AppLocalizations loc;
-  const _PublicPlatformCard({required this.loc});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: _cardBgStrong(context),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: _cardBorder(context), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Card header with gold left rule
-          Container(
-            padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: _cardBorder(context)),
-              ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 4,
-                  height: 28,
-                  margin: const EdgeInsetsDirectional.only(end: 16),
-                  decoration: BoxDecoration(
-                    color: _kGold,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    loc.dashPublicIntroTitle,
-                    style: GoogleFonts.tajawal(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: _textPrimary(context),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: _kGold.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.explore_outlined, color: _kGold, size: 22),
-                ),
-              ],
-            ),
-          ),
 
-          // Card body
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  loc.dashPublicIntroDesc,
-                  style: GoogleFonts.cairo(
-                    fontSize: 14,
-                    color: _textSecondary(context),
-                    height: 1.65,
-                  ),
-                ),
-                const SizedBox(height: 22),
-                Container(height: 1, color: _cardBorder(context)),
-                const SizedBox(height: 18),
-                _PillarRow(icon: Icons.palette_outlined, label: loc.dashPillar1),
-                const SizedBox(height: 12),
-                _PillarRow(icon: Icons.account_balance_outlined, label: loc.dashPillar2),
-                const SizedBox(height: 12),
-                _PillarRow(icon: Icons.people_outline_rounded, label: loc.dashPillar3),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ).animate().fadeIn(delay: 150.ms).slideY(begin: 0.04, curve: Curves.easeOut);
-  }
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PILLAR ROW — association thematic pillars inside the intro card
+// MEMBERSHIP ENTRY TILE — kept for reference only
 // ─────────────────────────────────────────────────────────────────────────────
-class _PillarRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  const _PillarRow({required this.icon, required this.label});
+// (Events section moved to HomeScreen)
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            color: _kGold.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: _kGold.withValues(alpha: 0.85), size: 15),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          label,
-          style: GoogleFonts.cairo(
-            fontSize: 13,
-            color: _textSecondary(context),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// QUICK ACTIONS ROW
-// ─────────────────────────────────────────────────────────────────────────────
-class _QuickActionsRow extends StatelessWidget {
-  final AppLocalizations loc;
-  final bool isPublic;
-  const _QuickActionsRow({required this.loc, required this.isPublic});
-
-  @override
-  Widget build(BuildContext context) {
-    final actions = [
-      _ActionDef(Icons.person_outline_rounded, loc.dashQuickProfile, () => context.push('/profile')),
-      _ActionDef(Icons.event_note_rounded, loc.dashboardQuickReg, () => context.go('/activities')),
-      _ActionDef(Icons.info_outline_rounded, loc.dashQuickAbout, () => context.push('/about')),
-    ];
-
-    return Row(
-      children: actions.asMap().entries.map((e) {
-        final isLast = e.key == actions.length - 1;
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(end: isLast ? 0 : 10),
-            child: _QuickActionTile(def: e.value),
-          ),
-        );
-      }).toList(),
-    ).animate().fadeIn(delay: 280.ms);
-  }
-}
-
-class _ActionDef {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  const _ActionDef(this.icon, this.label, this.onTap);
-}
-
-class _QuickActionTile extends StatelessWidget {
-  final _ActionDef def;
-  const _QuickActionTile({required this.def});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: def.onTap,
-        borderRadius: BorderRadius.circular(20),
-        splashColor: _kGold.withValues(alpha: 0.08),
-        highlightColor: _kGold.withValues(alpha: 0.04),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 10),
-          decoration: BoxDecoration(
-            color: _cardBg(context),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _cardBorder(context), width: 1.5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.12),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: _kGold.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: _kGold.withValues(alpha: 0.10),
-                    width: 1,
-                  ),
-                ),
-                child: Icon(def.icon, color: _kGold, size: 24),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                def.label,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.cairo(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: _textPrimary(context),
-                  height: 1.35,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// EVENTS SECTION
-// ─────────────────────────────────────────────────────────────────────────────
-class _EventsSection extends StatelessWidget {
-  final AsyncValue<List<ActivityEvent>> upcomingEvents;
-  final AppLocalizations loc;
-  const _EventsSection({required this.upcomingEvents, required this.loc});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section header
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    loc.dashboardUpcoming,
-                    style: GoogleFonts.tajawal(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: _textPrimary(context),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Container(height: 2, width: 40, color: _kGold.withValues(alpha: 0.6)),
-                ],
-              ),
-              GestureDetector(
-                onTap: () => context.go('/activities'),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      loc.dashViewAll,
-                      style: GoogleFonts.cairo(
-                        color: _kGold,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(width: 3),
-                    const Icon(Icons.chevron_right_rounded, color: _kGold, size: 16),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 18),
-
-        // Events list
-        upcomingEvents.when(
-          data: (events) => events.isEmpty
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: _EmptyEventsPlaceholder(loc: loc),
-                )
-              : SizedBox(
-                  height: 265,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    itemCount: events.take(4).length,
-                    separatorBuilder: (_, i2) => const SizedBox(width: 14),
-                    itemBuilder: (_, i) => EventCard(
-                      event: events[i],
-                      onTap: () => context.push('/event/${events[i].id}'),
-                    ),
-                  ),
-                ),
-          loading: () => const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: _EventsSkeleton(),
-          ),
-          error: (e, _) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: _EmptyEventsPlaceholder(loc: loc),
-          ),
-        ),
-      ],
-    ).animate().fadeIn(delay: 380.ms);
-  }
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MEMBERSHIP ENTRY TILE (secondary, bottom of page)
@@ -766,269 +529,126 @@ class _MembershipEntryTile extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// INSTITUTIONAL SECTION — Heritage Projects + Civic Report
-// ─────────────────────────────────────────────────────────────────────────────
-class _InstitutionalSection extends StatelessWidget {
+class _MembershipPendingTile extends StatelessWidget {
   final AppLocalizations loc;
-  const _InstitutionalSection({required this.loc});
-
-  @override
-  Widget build(BuildContext context) {
-    final isAr = Localizations.localeOf(context).languageCode == 'ar';
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section header
-        Row(
-          children: [
-            Container(
-              width: 36, height: 3,
-              decoration: BoxDecoration(color: _kGold, borderRadius: BorderRadius.circular(2)),
-              margin: const EdgeInsetsDirectional.only(end: 12),
-            ),
-            Text(
-              (isAr ? 'ابزيم تعمل • مشاريع ميدانية' : 'Ebzim en action • Projets terrain').toUpperCase(),
-              style: GoogleFonts.inter(
-                color: _kGold,
-                fontSize: 10,
-                letterSpacing: 3,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ).animate().fadeIn(delay: 520.ms),
-        const SizedBox(height: 18),
-
-        // Heritage Projects Card
-        _InstitutionalCard(
-          icon: Icons.apartment_outlined,
-          iconColor: const Color(0xFFD4AF37),
-          tag: isAr ? 'شراكة • وزارة المجاهدين • اليونسكو' : 'Partenariat • Min. Moudjahidines • UNESCO',
-          title: isAr ? 'مشاريع الذاكرة والتراث' : 'Projets Mémoriels et Patrimoniaux',
-          subtitle: isAr
-              ? 'ترميم الثكنة العسكرية • شراكة المتحف الوطني • شبكة اليونسكو'
-              : 'Restauration caserne militaire • Partenariat Musée National • Réseau UNESCO',
-          buttonLabel: isAr ? 'استعراض المشاريع' : 'Voir les projets',
-          buttonIcon: Icons.arrow_outward_rounded,
-          isDark: isDark,
-          delay: 550,
-          onTap: () => context.push('/heritage'),
-        ),
-        const SizedBox(height: 14),
-
-        // Digital Library Card
-        _InstitutionalCard(
-          icon: Icons.auto_stories_outlined,
-          iconColor: const Color(0xFF8B5CF6),
-          tag: isAr ? 'معرفة • أرشيف • بحوث' : 'Savoir • Archives • Recherche',
-          title: isAr ? 'المكتبة الرقمية' : 'Bibliothèque Numérique',
-          subtitle: isAr
-              ? 'أرشيف الثكنة، بحوث علم الآثار، تقارير المواطنة...'
-              : 'Archives Caserne, recherche archéologique, rapports citoyenneté...',
-          buttonLabel: isAr ? 'تصفح المكتبة' : 'Explorer la bibliothèque',
-          buttonIcon: Icons.library_books_outlined,
-          isDark: isDark,
-          delay: 600,
-          onTap: () => context.push('/library'),
-        ),
-        const SizedBox(height: 14),
-
-        // Contributions Card
-        _InstitutionalCard(
-          icon: Icons.volunteer_activism_outlined,
-          iconColor: const Color(0xFFE11D48),
-          tag: isAr ? 'دعم • اشتراك • مساهمة' : 'Soutien • Adhésion • Appui',
-          title: isAr ? 'المساهمات والاشتراكات' : 'Contributions & Adhésions',
-          subtitle: isAr
-              ? 'تجديد العضوية السنوية، دعم مشاريع الترميم...'
-              : 'Renouvellement annuel, soutien aux projets de restauration...',
-          buttonLabel: isAr ? 'المساهمة الآن' : 'Contribuer maintenant',
-          buttonIcon: Icons.favorite_border_rounded,
-          isDark: isDark,
-          delay: 650,
-          onTap: () => context.push('/contributions'),
-        ),
-        const SizedBox(height: 14),
-
-        // Civic Report Card
-        _InstitutionalCard(
-          icon: Icons.shield_outlined,
-          iconColor: const Color(0xFF22C55E),
-          tag: isAr ? 'مجتمع مدني • إبلاغ مدني' : 'Société civile • Signalement civique',
-          title: isAr ? 'بلّغ عن انتهاك' : 'Signaler une violation',
-          subtitle: isAr
-              ? 'تراث عمراني، سرقة أثرية، تشويه الفضاء العام…'
-              : 'Patrimoine urbain, vol archéologique, dégradation de l\'espace public…',
-          buttonLabel: isAr ? 'إرسال بلاغ' : 'Envoyer un signalement',
-          buttonIcon: Icons.send_rounded,
-          isDark: isDark,
-          delay: 640,
-          onTap: () => context.push('/report'),
-        ),
-      ],
-    );
-  }
-}
-
-class _InstitutionalCard extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String tag;
-  final String title;
-  final String subtitle;
-  final String buttonLabel;
-  final IconData buttonIcon;
-  final bool isDark;
-  final int delay;
-  final VoidCallback onTap;
-
-  const _InstitutionalCard({
-    required this.icon,
-    required this.iconColor,
-    required this.tag,
-    required this.title,
-    required this.subtitle,
-    required this.buttonLabel,
-    required this.buttonIcon,
-    required this.isDark,
-    required this.delay,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        splashColor: iconColor.withValues(alpha: 0.06),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: _cardBgStrong(context),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isDark ? iconColor.withValues(alpha: 0.15) : iconColor.withValues(alpha: 0.2),
-              width: 1.5,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.12),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: isDark ? 0.1 : 0.08),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(icon, color: iconColor, size: 26),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      tag,
-                      style: GoogleFonts.inter(
-                        color: iconColor.withValues(alpha: 0.8),
-                        fontSize: 9,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      title,
-                      style: GoogleFonts.tajawal(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                        color: _textPrimary(context),
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      subtitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.cairo(
-                        fontSize: 11,
-                        color: _textMuted(context),
-                        height: 1.4,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          buttonLabel,
-                          style: GoogleFonts.cairo(
-                            color: iconColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(buttonIcon, color: iconColor, size: 14),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ).animate().fadeIn(delay: Duration(milliseconds: delay)).slideY(begin: 0.05);
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// EMPTY EVENTS PLACEHOLDER
-// ─────────────────────────────────────────────────────────────────────────────
-class _EmptyEventsPlaceholder extends StatelessWidget {
-  final AppLocalizations loc;
-  const _EmptyEventsPlaceholder({required this.loc});
+  const _MembershipPendingTile({required this.loc});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       decoration: BoxDecoration(
         color: _cardBg(context),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _cardBorder(context)),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.amber.withValues(alpha: 0.30), width: 1.5),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.event_busy_outlined,
-              color: _textMuted(context), size: 18),
-          const SizedBox(width: 10),
-          Text(
-            loc.dashNoEvents,
-            style: GoogleFonts.cairo(
-              color: _textMuted(context),
-              fontSize: 13,
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.amber.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Icon(Icons.hourglass_empty, color: Colors.amber, size: 28),
+          ),
+          const SizedBox(width: 18),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  loc.dashPendingTitle,
+                  style: GoogleFonts.cairo(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: _textPrimary(context),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  loc.dashPendingDesc,
+                  style: GoogleFonts.cairo(
+                    fontSize: 12,
+                    color: _textSecondary(context),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
-    );
+    ).animate().fadeIn(delay: 500.ms);
   }
 }
+
+class _MembershipRejectedTile extends StatelessWidget {
+  final AppLocalizations loc;
+  const _MembershipRejectedTile({required this.loc});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      decoration: BoxDecoration(
+        color: _cardBg(context),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.redAccent.withValues(alpha: 0.30), width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(Icons.cancel_outlined, color: Colors.redAccent, size: 28),
+              ),
+              const SizedBox(width: 18),
+              Expanded(
+                child: Text(
+                  loc.memStatusRejected,
+                  style: GoogleFonts.cairo(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: _textPrimary(context),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                // Future: Trigger support or re-apply modal
+              },
+              icon: const Icon(Icons.support_agent_rounded, size: 18),
+              label: const Text('التواصل مع الإدارة'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.white.withValues(alpha: 0.1) 
+                    : Colors.black.withValues(alpha: 0.05),
+                foregroundColor: _textPrimary(context),
+                elevation: 0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(delay: 500.ms);
+  }
+}
+
+
+
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SKELETON LOADING STATES
@@ -1066,20 +686,7 @@ class _DashboardSkeleton extends StatelessWidget {
   }
 }
 
-class _EventsSkeleton extends StatelessWidget {
-  const _EventsSkeleton();
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: Row(children: [
-        Expanded(child: _S(h: 200, w: double.infinity, r: 16)),
-        const SizedBox(width: 14),
-        Expanded(child: _S(h: 200, w: double.infinity, r: 16)),
-      ]),
-    );
-  }
-}
+
 
 class _S extends StatelessWidget {
   final double h, w, r;
@@ -1101,3 +708,191 @@ class _S extends StatelessWidget {
      );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PROFILE COMPLETION CARD
+// ─────────────────────────────────────────────────────────────────────────────
+class _ProfileCompletionCard extends StatelessWidget {
+  final int percentage;
+  final AppLocalizations loc;
+  const _ProfileCompletionCard({required this.percentage, required this.loc});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push('/profile/edit'),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              _cardBg(context),
+              _kGold.withValues(alpha: 0.05),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: _kGold.withValues(alpha: 0.15), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: _kGold.withValues(alpha: 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.auto_awesome_rounded, color: _kGold, size: 18),
+                const SizedBox(width: 10),
+                Text(
+                  'جاهزية الملف الشخصي', 
+                  style: GoogleFonts.cairo(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                    color: _textPrimary(context),
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '$percentage%',
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: _kGold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Stack(
+              children: [
+                Container(
+                  height: 10,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: _kGold.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.easeOutCubic,
+                  height: 10,
+                  width: (MediaQuery.of(context).size.width - 96) * (percentage / 100),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [_kGold, Color(0xFFFFA000)],
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _kGold.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'أكمل بياناتك للحصول على هوية رقمية معتمدة',
+              style: GoogleFonts.cairo(
+                fontSize: 11,
+                color: _textMuted(context),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.05),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ACCOUNT ACTIONS GRID
+// ─────────────────────────────────────────────────────────────────────────────
+class _AccountActionsGrid extends StatelessWidget {
+  final AppLocalizations loc;
+  const _AccountActionsGrid({required this.loc});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 3,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      childAspectRatio: 0.95,
+      children: [
+        _ActionItem(
+          icon: Icons.edit_note_rounded,
+          label: loc.profileEdit,
+          onTap: () => context.push('/profile/edit'),
+        ),
+        _ActionItem(
+          icon: Icons.support_agent_rounded,
+          label: loc.supportContactTitle,
+          onTap: () {
+            // Support logic
+          },
+        ),
+        _ActionItem(
+          icon: Icons.settings_outlined,
+          label: loc.settingsTitle,
+          onTap: () => context.push('/settings'),
+        ),
+      ],
+    ).animate().fadeIn(delay: 300.ms);
+  }
+}
+
+class _ActionItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _ActionItem({required this.icon, required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            color: _cardBg(context),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: _cardBorder(context), width: 1.2),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: _kGold, size: 22),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.cairo(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w700,
+                  color: _textSecondary(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

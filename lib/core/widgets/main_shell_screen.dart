@@ -18,21 +18,21 @@ class MainShellScreen extends StatelessWidget {
 
   int _calculateSelectedIndex(BuildContext context) {
     final loc = GoRouterState.of(context).uri.toString();
-    if (loc.startsWith('/dashboard')) return 0;
+    if (loc.startsWith('/home')) return 0;
     if (loc.startsWith('/activities')) return 1;
     if (loc.startsWith('/news')) return 2;
-    if (loc.startsWith('/about')) return 3;
-    if (loc.startsWith('/profile')) return 4;
+    if (loc.startsWith('/about') || loc.startsWith('/directory')) return 3;
+    if (loc.startsWith('/dashboard') || loc.startsWith('/profile')) return 4;
     return 0;
   }
 
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
-      case 0: context.go('/dashboard'); break;
+      case 0: context.go('/home'); break;
       case 1: context.go('/activities'); break;
       case 2: context.go('/news'); break;
       case 3: context.go('/about'); break;
-      case 4: context.go('/profile'); break;
+      case 4: context.go('/dashboard'); break;
     }
   }
 

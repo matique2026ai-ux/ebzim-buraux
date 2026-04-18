@@ -16,81 +16,56 @@ A premium institutional platform for cultural heritage protection, citizen repor
 
 ### 🎨 Frontend (Flutter Web/Mobile)
 - **Path**: `c:\ebzim-buraux`
-- **Design System**: "Dark Glass" Institutional Aesthetic.
-  - **Primary Colors**: Midnight Emerald (`#052011`), Muted Gold (`#D4AF37`).
-  - **Light Mode**: "Sovereign Sage" (`#E2E9E5`) with pure white cards.
+- **Design System**: **"Emerald Nocturne"** (Institutional Artist Grade).
+  - **Background**: Midnight Forest Obsidian (`#010503`) with Aurora Atmospheric Glows.
+  - **Primary Colors**: Royal Emerald (`#064E3B`), Antique Gold (`#C5A059`).
+  - **Surface Style**: "Glass Jewel" (60% opacity crystalline cards with 30% white glass borders).
 - **Typography**: `Tajawal` (Headlines) & `Cairo` (Body). Strictly managed via `AppTheme`.
 - **State Management**: `Riverpod`.
-- **Navigation**: `GoRouter`.
-- **Serving Strategy**: For production-like testing, use `flutter build web --release` and serve via a custom Node.js script if necessary.
 
 ### ⚙️ Backend (NestJS)
 - **Path**: `c:\ebzim-buraux\backend`
 - **Database**: **MongoDB Atlas** (Cloud-based).
 - **Environment**: Port 3000. Use `npm run start:dev`.
-- **API URL**: `https://ebzim-api.onrender.com/api/v1/` (Production) / `http://localhost:3000/api/v1/` (Local).
+- **API URL**: `http://localhost:3000/api/v1/` (Local Development Baseline).
 
 ---
 
-## 🔍 KEY LOGIC LOCATIONS
-
-### Authentication & User Flow
-- **Frontend Entry**: `lib/screens/login_screen.dart`
-- **Frontend Auth Service**: `lib/core/services/auth_service.dart`
-- **Backend Guard**: `backend/src/common/guards/jwt-auth.guard.ts`
-- **Backend Service**: `backend/src/modules/auth/auth.service.ts`
-
-### Content & Membership
-- **News/Posts**: `lib/core/services/news_service.dart` (Frontend) / `backend/src/modules/posts/` (Backend).
-- **Membership**: `lib/screens/membership/` (Frontend) / `backend/src/modules/members/` (Backend).
-- **Civil Reporting**: `lib/screens/civil_reporting/` (Frontend) / `backend/src/modules/reports/` (Backend).
-
-### Localization (i18n)
-- **Source Files**: `lib/core/localization/l10n/*.arb`
-- **Generated Files**: `lib/core/localization/l10n/app_localizations_*.dart`
+## 📂 CRITICAL DOCUMENTATION (April 2026 Milestone)
+- **[Visual Identity: Emerald Nocturne](C:\Users\PCIB\.gemini\antigravity\brain\058aa6ef-a5e1-46c8-8963-df040cbe17e1\visual_identity_emerald_nocturne.md)**: Details the artistic philosophy and color tokens.
+- **[Handover & Roadmap](C:\Users\PCIB\.gemini\antigravity\brain\058aa6ef-a5e1-46c8-8963-df040cbe17e1\handover_and_roadmap.md)**: Current task list and next integration steps.
 
 ---
 
-## ✅ CURRENT STATE (V1.2.0 - Stable)
-As of **April 17, 2026**, the project is in a fully stable, production-ready state.
+## ✅ CURRENT STATE (V1.3.0 - Artistic Milestone)
+As of **April 17, 2026 (Evening)**, the project is in a high-fidelity, production-stable state.
 
-### 🌟 Latest Updates & New Features:
-- **Advanced Admin Control**: Real-time user management (CRUD), account status toggles, and role assignments (Admin, Authority, Member).
-- **Honorary Badge System**: Dynamic gamification with custom medal assets (Bronze, Gold, Diamond) with high-fidelity UI animations.
-- **Data Export**: Seamless CSV export with Arabic encoding (UTF-8 BOM) for administrative reporting.
-- **Backend-Frontend Sync**: All endpoints (Reports, Memberships, Admin) are fully synchronized and secured.
-
-### 🌟 Historical Features:
-1.  **Dynamic Home Screen**: High-fidelity redesign with glassmorphic hero carousel and real-time statistics.
-2.  **Admin Dashboard (Mission Control)**: Full CRUD for News, Events, and Membership management.
-3.  **Membership Flow**: 6-step recruitment process based on the association's statutes.
-4.  **Civil Reporting**: E2E workflow for reporting heritage violations (Vandalism, Theft).
-5.  **Digital Library**: Searchable repository for research papers and PDFs.
-6.  **Auth System**: Secure JWT-based login/register with OTP verification support.
+### 🌟 Latest Achievements:
+- **Emerald Nocturne Identity**: Complete overhaul of the visual system to a premium institutional grade.
+- **Atmospheric UI**: Implementation of layered radial glows and physical material textures (Stardust Grain).
+- **Dashboard Stability**: Null-safe handling of Guest vs. Member states with elegant fallback profiles.
+- **Architecture**: Unified `EbzimBackground` and `AppTheme` as the "Single Source of Truth" for visuals.
 
 ---
 
-## ⚠️ MISSION-CRITICAL RULES (FOR AGENTS)
-1.  **RTL First**: All UI components MUST be tested in Arabic first. Use `Directional` padding/margins.
-2.  **Theme Tokens**: Never use hardcoded colors. Use `AppTheme.primaryColor`, `AppTheme.accentColor`, etc.
-3.  **Institutional Tone**: Use formal, professional Arabic as found in `docs/statutes/`.
-4.  **Port Management**: 
-    - Backend: `3000`
-    - Frontend (Web): `5050` (Dev) / `8080` (Release).
+## ⚠️ MISSION-CRITICAL RULES
+1.  **NO NEUTRAL GREYS**: Never use standard grey/black. Use the `Emerald Nocturne` palette.
+2.  **RTL First**: All UI components MUST be tested in Arabic first.
+3.  **Theme Tokens**: Never use hardcoded colors. Use `AppTheme` constants.
 
 ---
 
 ## 🚀 QUICK START
-1.  **Sync**: Always `git pull origin main` before starting.
-2.  **Backend**: `cd backend; npm run start:dev`
-3.  **Frontend**: `flutter run -d web-server --web-port 5050`
-4.  **Test Account**: `matique2025@gmail.com` / `12345678`
+1.  **Backend**: `cd backend; npm run start:dev`
+2.  **Frontend**: `flutter run -d web-server --web-port 8080`
+3.  **Test Account**: `matique2025@gmail.com` / `12345678`
 
 ---
 
 ## 📂 WORKSPACE STATUS
-The project directory has been consolidated. All legacy documentation and redundant handoff files have been removed or archived into this README.
-- **Reference Material**: Association statutes remain in `docs/statutes/` for institutional alignment.
-- **Latest Walkthrough**: See `walkthrough.md` for a deep dive into the Badge and Export systems implemented in the latest sprint.
-- **Cleaned Files**: `HANDOFF.md`, `PROJECT_HANDOVER.md`, `MASTER_PLAN.md`, `ARCHITECTURE.md`, etc. have been deleted.
+The project is clean, documented, and ready for continuous integration.
+- **Reference Material**: Association statutes remain in `docs/statutes/`.
+- **Archive**: Legacy design experiments have been purged to maintain project cleanliness.
 
+---
+*Maintained by Antigravity (Advanced Agentic Coding)*

@@ -90,6 +90,7 @@ class MembershipFormState {
     String? motivation,
     String? notes,
     bool? hasConsented,
+    List<Map<String, String>>? attachments,
   }) {
     return MembershipFormState(
       fullName: fullName ?? this.fullName,

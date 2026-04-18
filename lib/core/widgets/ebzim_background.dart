@@ -6,6 +6,10 @@ class EbzimBackground extends StatelessWidget {
 
   const EbzimBackground({super.key, required this.child});
 
+  /// ── EMERALD NOCTURNE BACKGROUND ───────────────────────────────────
+  /// Visual artist's implementation of a deep gemstone atmosphere.
+  /// Consists of layered atmospheric glows and a physical material texture.
+  /// ───────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -14,18 +18,60 @@ class EbzimBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Premium Mesh Gradient Background
-        Container(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              center: const Alignment(-0.8, -0.6),
-              radius: 1.2,
-              colors: isDark 
-                ? [const Color(0xFF081C10), AppTheme.backgroundDark] // Very deep sophisticated dark emerald to midnight
-                : [const Color(0xFFE2E9E5), const Color(0xFFD4DFD9)], // Sovereign Sage & Deeper Mint-Sage Gradient
+        // ── Deep Velvet Base (Pure Obsidian) ───────────────────────────
+        Container(color: isDark ? const Color(0xFF010503) : const Color(0xFFFDFBF7)),
+
+        // ── Artistic Light Leak 1 (Top Left - Warm Emerald) ────────────
+        if (isDark)
+          Positioned(
+            top: -400,
+            left: -300,
+            child: Container(
+              width: 1500,
+              height: 1200,
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  colors: [
+                    const Color(0xFF064E3B).withValues(alpha: 0.35), // Doubled intensity
+                    Colors.transparent,
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+
+        // ── Artistic Light Leak 2 (Bottom Right - Gemstone) ───────────
+        if (isDark)
+          Positioned(
+            bottom: -300,
+            right: -200,
+            child: Container(
+              width: 1000,
+              height: 1000,
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  colors: [
+                    const Color(0xFF0B6E4F).withValues(alpha: 0.25), // Increased highlight
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+        // ── Material Texture (Physical Grain for WOW factor) ────────────
+        if (isDark)
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.04, // Doubled texture visibility
+              child: Image.network(
+                'https://www.transparenttextures.com/patterns/stardust.png',
+                repeat: ImageRepeat.repeat,
+                color: Colors.white,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              ),
+            ),
+          ),
         
         // Second subtle gradient for depth
         Container(
@@ -43,13 +89,19 @@ class EbzimBackground extends StatelessWidget {
           ),
         ),
 
-        // Pattern Texture (Muted for premium feel)
-        Opacity(
-          opacity: isDark ? 0.02 : 0.05,
-          child: Image.network(
-            'https://www.transparenttextures.com/patterns/cubes.png',
-            repeat: ImageRepeat.repeat,
-            errorBuilder: (_, _, _) => const SizedBox.shrink(),
+        // ── Satin Sheen Overlay ──────────────────────────────────────────
+        Positioned.fill(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: const Alignment(-0.5, -0.5),
+                radius: 1.5,
+                colors: [
+                  Colors.white.withValues(alpha: isDark ? 0.03 : 0.0), // Subtle silk sheen
+                  Colors.transparent,
+                ],
+              ),
+            ),
           ),
         ),
 

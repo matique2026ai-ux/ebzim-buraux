@@ -1,3 +1,4 @@
+import 'package:ebzim_app/core/common_widgets/login_required_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
@@ -23,6 +24,10 @@ class ProfileScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     
+    // Safety check for user profile data
+    final UserProfile? userProfile = userAsync.value;
+    final isAdmin = userProfile?.membershipLevel == 'ADMIN' || userProfile?.membershipLevel == 'SUPER_ADMIN';
+
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
     final accentColor = AppTheme.accentColor;
 
@@ -32,6 +37,11 @@ class ProfileScreen extends ConsumerWidget {
       body: EbzimBackground(
         child: userAsync.when(
           data: (user) {
+            if (user == null) {
+              return const LoginRequiredOverlay(
+                icon: Icons.account_circle_outlined,
+              );
+            }
             final isRtl = Localizations.localeOf(context).languageCode == 'ar';
             final displayName = isRtl ? user.nameAr : user.name;
             final isPublic = user.membershipLevel == 'PUBLIC';
@@ -108,14 +118,35 @@ class ProfileScreen extends ConsumerWidget {
                         const SizedBox(height: 8),
 
                         statusAsync.when(
-                          data: (status) => Text(
-                            '${isPublic ? loc.dashAccountStatus : loc.dashboardStatus}: ID-${user.id.substring(user.id.length - 6).toUpperCase()}',
-                            style: GoogleFonts.cairo(
-                              color: accentColor.withValues(alpha: 0.7),
-                              fontSize: 12,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
+                          data: (statusStr) {
+                            // Logic Fix: Admins/SuperAdmins are ALWAYS Active
+                            final displayStatus = (user.membershipLevel == 'SUPER_ADMIN' || user.membershipLevel == 'ADMIN') 
+                                ? 'نشط (صلاحية إدارية)' 
+                                : statusStr;
+                            
+                            return Column(
+                              children: [
+                                Text(
+                                  '${isPublic ? loc.dashMemberLevelPublic : loc.dashMemberLevelMember} • $displayStatus',
+                                style: GoogleFonts.cairo(
+                                  color: AppTheme.accentColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'رقم العضوية: ${user.id.substring(user.id.length - 6).toUpperCase()}',
+                                style: GoogleFonts.inter(
+                                  color: textColor.withValues(alpha: 0.4),
+                                  fontSize: 10,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                              ],
+                            );
+                          },
                           loading: () => const SizedBox(height: 16),
                           error: (err, stack) => const SizedBox(height: 16),
                         ),
@@ -469,7 +500,7 @@ class _RoleBadge extends StatelessWidget {
       default:
         bgColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05);
         textColor = isDark ? Colors.white70 : Colors.black54;
-        label = 'زائر';
+        label = 'مستخدم مسجل'; // More accurate than 'Guest' for a logged-in user
         icon = Icons.person_outline_rounded;
     }
 
@@ -510,35 +541,48 @@ class _HonoraryMedal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String imagePath;
+    Color color;
+    IconData icon;
+    String label;
+
     switch (badge.toUpperCase()) {
-      case 'NORMAL': imagePath = 'assets/images/badge_normal.png'; break;
-      case 'BRONZE': imagePath = 'assets/images/badge_bronze.png'; break;
-      case 'GOLD': imagePath = 'assets/images/badge_gold.png'; break;
-      case 'DIAMOND': imagePath = 'assets/images/badge_diamond.png'; break;
+      case 'BRONZE':
+        color = const Color(0xFFCD7F32);
+        icon = Icons.workspace_premium_rounded;
+        label = 'برونزي';
+        break;
+      case 'GOLD':
+        color = const Color(0xFFFFD700);
+        icon = Icons.stars_rounded;
+        label = 'ذهبي';
+        break;
+      case 'DIAMOND':
+        color = const Color(0xFF00E5FF);
+        icon = Icons.diamond_rounded;
+        label = 'ماسي';
+        break;
+      case 'NORMAL':
+        color = const Color(0xFFA8A29E);
+        icon = Icons.shield_rounded;
+        label = 'عادي';
+        break;
       default: return const SizedBox();
     }
 
     return Container(
-      width: 60,
-      height: 60,
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
+        color: Colors.white,
         shape: BoxShape.circle,
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 6)),
+          BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 12, spreadRadius: 2),
         ],
+        border: Border.all(color: color, width: 2),
       ),
-      child: Image.asset(
-        imagePath,
-        fit: BoxFit.contain,
-        errorBuilder: (ctx, err, stack) => Container(
-          padding: const EdgeInsets.all(8),
-          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-          child: const Icon(Icons.workspace_premium, color: Color(0xFFFFD700), size: 28),
-        ),
+      child: Center(
+        child: Icon(icon, color: color, size: 28),
       ),
-    ).animate(onPlay: (c) => c.repeat())
-     .shimmer(duration: 2000.ms, color: Colors.white.withValues(alpha: 0.4))
-     .shake(hz: 0.5, curve: Curves.easeInOut);
+    );
   }
 }

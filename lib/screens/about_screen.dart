@@ -680,7 +680,14 @@ class _PartnerDossier extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = partner.color != null ? Color(int.parse(partner.color!.replaceFirst('#', '0xFF'))) : AppTheme.accentColor;
+    Color color = AppTheme.accentColor;
+    try {
+      if (partner.color != null && partner.color!.isNotEmpty) {
+        String hex = partner.color!.replaceFirst('#', '');
+        if (hex.length == 6) hex = 'FF$hex';
+        color = Color(int.parse(hex, radix: 16));
+      }
+    } catch (_) {}
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),

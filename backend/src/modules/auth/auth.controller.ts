@@ -41,6 +41,13 @@ export class AuthController {
     return this.authService.resetPassword(token, password);
   }
 
+  @Post('verify-email')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Verify email using OTP' })
+  async verifyEmail(@Body('email') email: string, @Body('token') token: string) {
+    return this.authService.verifyEmail(email, token);
+  }
+
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

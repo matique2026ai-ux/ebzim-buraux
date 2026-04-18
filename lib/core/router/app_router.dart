@@ -38,6 +38,7 @@ import 'package:ebzim_app/screens/statute_screen.dart';
 import 'package:ebzim_app/screens/digital_library_screen.dart';
 import 'package:ebzim_app/screens/contributions_screen.dart';
 import 'package:ebzim_app/screens/news_detail_screen.dart';
+import 'package:ebzim_app/screens/edit_profile_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Premium Page Transition Builders
@@ -153,6 +154,13 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: '/auth/verify-email/otp',
+      pageBuilder: (context, state) {
+        final email = state.extra as String? ?? '';
+        return _slideHoriz(state, OtpVerificationScreen(email: email, isRegistration: true));
+      },
+    ),
+    GoRoute(
       path: '/auth/reset-password',
       pageBuilder: (context, state) {
         final token = state.extra as String? ?? '';
@@ -171,13 +179,13 @@ final appRouter = GoRouter(
       path: '/register',
       pageBuilder: (context, state) => _slideHoriz(state, const RegisterScreen()),
     ),
-    GoRoute(
-      path: '/home',
-      pageBuilder: (context, state) => _fadePage(state, const HomeScreen()),
-    ),
     ShellRoute(
       builder: (context, state, child) => MainShellScreen(child: child),
       routes: [
+        GoRoute(
+          path: '/home',
+          pageBuilder: (context, state) => _fadePage(state, const HomeScreen()),
+        ),
         GoRoute(
           path: '/dashboard',
           pageBuilder: (context, state) => _fadePage(state, const DashboardScreen()),
@@ -200,7 +208,13 @@ final appRouter = GoRouter(
         ),
         GoRoute(
           path: '/profile',
-          pageBuilder: (context, state) => _fadePage(state, const ProfileScreen()),
+          pageBuilder: (context, state) => _fadePage(state, const DashboardScreen()),
+          routes: [
+            GoRoute(
+              path: 'edit',
+              pageBuilder: (context, state) => _slidePage(state, const EditProfileScreen()),
+            ),
+          ],
         ),
       ]
     ),

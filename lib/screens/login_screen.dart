@@ -47,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         if (role == 'ADMIN' || role == 'SUPER_ADMIN') {
           context.go('/admin');
         } else {
-          context.go('/dashboard');
+          context.go('/home');
         }
       }
     });

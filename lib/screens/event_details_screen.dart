@@ -5,6 +5,8 @@ import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
+import 'package:ebzim_app/core/widgets/ebzim_background.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 
 class EventDetailsScreen extends ConsumerWidget {
   final String eventId;
@@ -14,195 +16,219 @@ class EventDetailsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final loc = AppLocalizations.of(context)!;
     final eventAsync = ref.watch(eventDetailsProvider(eventId));
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: eventAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, s) => Center(child: Text(e.toString())),
-        data: (event) {
-          final lang = Localizations.localeOf(context).languageCode;
-          final dateFormat = DateFormat('MMMM dd, yyyy', lang);
-          final title = event.getTitle(lang);
-          final description = event.getDescription(lang);
-          final location = event.getLocation(lang);
-          final category = event.getCategory(lang);
+      body: EbzimBackground(
+        child: eventAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.accentColor)),
+          error: (e, s) => Center(child: Text(e.toString(), style: const TextStyle(color: Colors.white))),
+          data: (event) {
+            final lang = Localizations.localeOf(context).languageCode;
+            final dateFormat = DateFormat('MMMM dd, yyyy', lang);
+            final title = event.getTitle(lang);
+            final description = event.getDescription(lang);
+            final location = event.getLocation(lang);
+            final category = event.getCategory(lang);
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 120),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Immersive Hero
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  child: Stack(
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                EbzimSliverAppBar(
+                  expandedHeight: 400,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                    onPressed: () => context.pop(),
+                  ),
+                  background: Stack(
                     fit: StackFit.expand,
                     children: [
                       Image.network(event.imageUrl, fit: BoxFit.cover),
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [AppTheme.primaryColor.withValues(alpha: 0.2), AppTheme.primaryColor.withValues(alpha: 0.95)],
+                            colors: [
+                              Colors.black.withValues(alpha: 0.1),
+                              AppTheme.backgroundDark.withValues(alpha: 0.8),
+                            ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
                         ),
                       ),
-                      Positioned(
-                        bottom: 40,
-                        left: 24,
-                        right: 24,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: AppTheme.accentColor.withValues(alpha: 0.9),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                category.toUpperCase(),
-                                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2, color: Colors.white),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              title,
-                              style: TextStyle(
-                                fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                height: 1.1,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Wrap(
-                              spacing: 24,
-                              runSpacing: 12,
-                              children: [
-                                _buildIconLabel(Icons.calendar_today, dateFormat.format(event.date)),
-                                _buildIconLabel(Icons.schedule, DateFormat('HH:mm').format(event.date)),
-                                _buildIconLabel(Icons.location_on, location),
-                              ],
-                            )
-                          ],
-                        ),
-                      )
                     ],
                   ),
                 ),
                 
-                // Content
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        loc.eventAboutGathering,
-                        style: TextStyle(
-                          fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryColor,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        description,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withValues(alpha: 0.8),
-                          height: 1.6,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      
-                      // Venue Box
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.grey.shade200),
-                          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20)],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              loc.eventVenue.toUpperCase(),
-                              style: const TextStyle(fontSize: 10, letterSpacing: 2, fontWeight: FontWeight.bold, color: AppTheme.secondaryColor),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Category Tag
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: AppTheme.accentColor.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
+                          ),
+                          child: Text(
+                            category.toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 10, 
+                              fontWeight: FontWeight.bold, 
+                              letterSpacing: 2, 
+                              color: AppTheme.accentColor,
                             ),
-                            const SizedBox(height: 16),
-                            Text(location, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppTheme.primaryColor)),
-                            const SizedBox(height: 8),
-                            TextButton.icon(
-                              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Map feature coming soon'))),
-                              icon: const Icon(Icons.arrow_outward, size: 16),
-                              label: Text(loc.eventOpenMaps.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.5)),
-                              style: TextButton.styleFrom(foregroundColor: AppTheme.secondaryColor, padding: EdgeInsets.zero, alignment: Alignment.centerLeft),
-                            )
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Title
+                        Text(
+                          title,
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : AppTheme.primaryColor,
+                            height: 1.2,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Quick Info
+                        Wrap(
+                          spacing: 24,
+                          runSpacing: 16,
+                          children: [
+                            _buildIconLabel(Icons.calendar_today, dateFormat.format(event.date)),
+                            _buildIconLabel(Icons.schedule, DateFormat('HH:mm').format(event.date)),
+                            _buildIconLabel(Icons.location_on_outlined, location),
                           ],
                         ),
-                      )
-                    ],
+                        const SizedBox(height: 40),
+                        
+                        // Description Section
+                        Text(
+                          loc.eventAboutGathering,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          description,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            height: 1.8,
+                            color: isDark ? Colors.white.withValues(alpha: 0.7) : Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        
+                        // Venue Glass Box
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1), 
+                                blurRadius: 40, 
+                                offset: const Offset(0, 10),
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                loc.eventVenue.toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 10, 
+                                  letterSpacing: 2, 
+                                  fontWeight: FontWeight.bold, 
+                                  color: AppTheme.accentColor.withValues(alpha: 0.8),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                location, 
+                                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 12),
+                              TextButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(Icons.map_outlined, size: 16, color: AppTheme.accentColor),
+                                label: Text(
+                                  loc.eventOpenMaps.toUpperCase(), 
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 1, color: AppTheme.accentColor),
+                                ),
+                                style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 120), // Spacer for FAB
+                      ],
+                    ),
                   ),
                 ),
               ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: eventAsync.hasValue ? Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: ElevatedButton.icon(
-          onPressed: () => showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: const Text('تسجيل في الفعالية'),
-              content: const Text('للتسجيل في هذه الفعالية، يرجى التواصل مع الجمعية عبر صفحة المساهمات أو الاتصال المباشر.'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('إغلاق'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    context.push('/contributions');
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor, foregroundColor: Colors.white),
-                  child: const Text('المساهمات'),
-                ),
-              ],
-            ),
-          ),
-          icon: const Icon(Icons.check_circle_outline),
+          onPressed: () => _showRegisterDialog(context),
+          icon: const Icon(Icons.how_to_reg_rounded),
           label: Text(loc.eventRegister.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.primaryColor,
+            backgroundColor: AppTheme.accentColor,
             foregroundColor: Colors.white,
-            minimumSize: const Size(double.infinity, 60),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            elevation: 10,
+            minimumSize: const Size(double.infinity, 64),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            elevation: 8,
           ),
         ),
       ) : null,
+    );
+  }
+
+  void _showRegisterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppTheme.backgroundDark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text('تسجيل في الفعالية', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        content: const Text(
+          'للتسجيل في هذه الفعالية، يرجى التواصل مع الجمعية عبر صفحة المساهمات أو الاتصال المباشر.',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('إغلاق', style: TextStyle(color: Colors.white38)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.push('/contributions');
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accentColor),
+            child: const Text('المساهمات'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -210,11 +236,15 @@ class EventDetailsScreen extends ConsumerWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: AppTheme.accentColor, size: 16),
-        const SizedBox(width: 8),
+        Icon(icon, color: AppTheme.accentColor, size: 18),
+        const SizedBox(width: 10),
         Text(
-          label.toUpperCase(),
-          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.white.withValues(alpha: 0.9)),
+          label,
+          style: TextStyle(
+            fontSize: 12, 
+            fontWeight: FontWeight.w600, 
+            color: Colors.white.withValues(alpha: 0.8),
+          ),
         ),
       ],
     );

@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
+import 'package:ebzim_app/core/services/auth_service.dart';
 
 class OtpVerificationScreen extends ConsumerStatefulWidget {
   final String email;
+  final bool isRegistration;
 
-  const OtpVerificationScreen({super.key, required this.email});
+  const OtpVerificationScreen({super.key, required this.email, this.isRegistration = false});
 
   @override
   ConsumerState<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
@@ -28,10 +30,12 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
 
   void _verifyOtp() {
     if (_formKey.currentState!.validate()) {
-      // In this flow, the backend does not verify OTP separately.
-      // We pass the token to the ResetPasswordScreen, where it will be
-      // submitted alongside the new password to /auth/reset-password.
-      context.push('/auth/reset-password', extra: _otpController.text);
+      if (widget.isRegistration) {
+        ref.read(authProvider.notifier).verifyEmail(widget.email, _otpController.text);
+      } else {
+        // Password reset flow
+        context.push('/auth/reset-password', extra: _otpController.text);
+      }
     }
   }
 
@@ -39,6 +43,24 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     final langCode = ref.watch(localeProvider).languageCode;
     final isRtl = langCode == 'ar';
+    final authState = ref.watch(authProvider);
+
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (widget.isRegistration) {
+        if (!next.isEmailVerificationRequired && next.error == null && previous?.isEmailVerificationRequired == true) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(langCode == 'ar' ? 'تم تأكيد الحساب بنجاح، يرجى تسجيل الدخول' : 'Account verified successfully, please log in'),
+            backgroundColor: AppTheme.primaryColor,
+          ));
+          context.go('/login');
+        } else if (next.error != null && previous?.error != next.error) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(next.error!),
+            backgroundColor: Colors.redAccent,
+          ));
+        }
+      }
+    });
 
     String getTitle() {
       if (langCode == 'ar') return 'تأكيد الرمز';
@@ -219,17 +241,19 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                         width: double.infinity,
                         height: 64,
                         child: ElevatedButton(
-                          onPressed: _verifyOtp,
+                          onPressed: authState.isLoading ? null : _verifyOtp,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFF0E0C8),
                             foregroundColor: AppTheme.primaryColor,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             elevation: 0,
                           ),
-                          child: Text(
-                            getConfirmBtnText().toUpperCase(),
-                            style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2),
-                          ),
+                          child: authState.isLoading 
+                            ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primaryColor))
+                            : Text(
+                                getConfirmBtnText().toUpperCase(),
+                                style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2),
+                              ),
                         ),
                       ),
                     ],

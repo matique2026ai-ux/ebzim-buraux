@@ -279,10 +279,10 @@ class MembershipDiscoverScreen extends StatelessWidget {
                       Expanded(
                         child: Text(
                           isAr
-                              ? 'الانخراط مجاني ويخضع لمراجعة اللجنة التنفيذية وفقاً للقانون الأساسي المصادق عليه في 14 ديسمبر 2024.'
+                              ? 'الانخراط خاضع لدفع الاشتراك السنوي ومراجعة اللجنة التنفيذية وفقاً للقانون الأساسي المصادق عليه في 14 ديسمبر 2024.'
                               : isFr
-                                  ? 'L\'adhésion est gratuite et soumise à l\'examen du bureau exécutif conformément aux statuts ratifiés le 14 décembre 2024.'
-                                  : 'Membership is free and subject to executive board review per the statutes ratified December 14, 2024.',
+                                  ? 'L\'adhésion est soumise au paiement d\'une cotisation annuelle et à l\'examen du bureau exécutif conformément aux statuts ratifiés le 14 décembre 2024.'
+                                  : 'Membership requires annual subscription payment and is subject to executive board review per the statutes ratified December 14, 2024.',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: const Color(0xFF22C55E),
                             height: 1.5,
@@ -440,17 +440,20 @@ List<String> _conditions(bool isAr, bool isFr) => isAr
         'أن تكون ناشطاً في المجال الاجتماعي أو الثقافي أو الفني أو مساهماً في خدمة الصالح العام.',
         'أن تكون من ذوي الأخلاق الحسنة وألا يكون له أي نشاط يتعارض مع المصالح العليا للأمة الجزائرية.',
         'أن يلتزم بالقانون الأساسي والنظام الداخلي للجمعية وقيمها الثوابت (المادة 10).',
+        'أن يسدّد الاشتراك السنوي للجمعية كشرط أساسي لتفعيل العضوية والتمتع بكامل الحقوق.',
       ]
     : isFr
         ? [
             'Être actif dans le domaine social, culturel ou artistique, ou contribuer au bien public.',
             'Être de bonne moralité et n\'avoir aucune activité contraire aux intérêts supérieurs de la nation algérienne.',
             'S\'engager à respecter les statuts, le règlement intérieur et les valeurs fondatrices de l\'association (Article 10).',
+            'S\'acquitter de la cotisation annuelle de l\'association, condition indispensable à l\'activation de l\'adhésion.',
           ]
         : [
             'Be active in the social, cultural or artistic field, or contribute to public welfare.',
             'Be of good moral standing and have no activity contrary to the supreme interests of the Algerian nation.',
             'Commit to abide by the association\'s statutes, internal regulations, and founding values (Article 10).',
+            'Pay the annual membership subscription as a mandatory condition to activate membership rights.',
           ];
 
 // ─────────────────────────────────────────────────────────────────────────────

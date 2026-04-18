@@ -9,13 +9,17 @@ class AuthState {
   final bool isAuthenticated;
   final bool isLoading;
   final bool isInitializing; // New flag for boot/refresh
+  final bool isEmailVerificationRequired;
+  final String? emailForVerification;
   final String? error;
   final UserProfile? user;
 
   AuthState({
     this.isAuthenticated = false,
     this.isLoading = false,
-    this.isInitializing = true, // Defaults to true on startup
+    this.isInitializing = false, // Defaults to false after boot
+    this.isEmailVerificationRequired = false,
+    this.emailForVerification,
     this.error,
     this.user,
   });
@@ -40,12 +44,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = AuthState(isAuthenticated: true, user: user, isInitializing: false);
       } else {
         print('[DEBUG AUTH] No token, setting initializing to false');
-        state = AuthState(isAuthenticated: false, isInitializing: false);
+        state = AuthState(); // isInitializing defaults to false
       }
     } catch (e) {
       print('[DEBUG AUTH] Error in _loadSession: $e');
       await _ref.read(storageServiceProvider).deleteToken();
-      state = AuthState(isAuthenticated: false, isInitializing: false);
+      state = AuthState(); // Now correctly defaults isInitializing to false
     }
   }
 
@@ -128,10 +132,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       
       if (response.statusCode == 201 || response.statusCode == 200) {
-        // Auto-login after successful registration
-        await login(email, password);
+        if (response.data != null && response.data['isVerificationRequired'] == true) {
+          state = AuthState(
+            isEmailVerificationRequired: true,
+            emailForVerification: email,
+            isInitializing: false,
+          );
+        } else {
+          // Auto-login after successful registration if verification not required
+          await login(email, password);
+        }
       } else {
-        state = AuthState(error: "Registration failed with status: ${response.statusCode}");
+        state = AuthState(error: "Registration failed with status: ${response.statusCode}", isInitializing: false);
       }
     } on DioException catch (e) {
       final dynamic serverData = e.response?.data;
@@ -175,7 +187,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> resetPassword(String token, String newPassword) async {
-    state = AuthState(isLoading: true);
+    state = AuthState(isLoading: true, isInitializing: false);
     try {
       await _ref.read(apiClientProvider).dio.post(
         'auth/reset-password',
@@ -184,9 +196,81 @@ class AuthNotifier extends StateNotifier<AuthState> {
           'password': newPassword,
         },
       );
-      state = AuthState(); // Reset loading
+      state = AuthState(isInitializing: false); // Reset loading
     } catch (e) {
-      state = AuthState(error: e.toString());
+      state = AuthState(error: e.toString(), isInitializing: false);
+    }
+  }
+
+  Future<void> verifyEmail(String email, String token) async {
+    state = AuthState(isLoading: true, isEmailVerificationRequired: true, emailForVerification: email, isInitializing: false);
+    try {
+      await _ref.read(apiClientProvider).dio.post(
+        'auth/verify-email',
+        data: {
+          'email': email,
+          'token': token,
+        },
+      );
+      state = AuthState(isInitializing: false); // Success, verification no longer required
+    } on DioException catch (e) {
+      final dynamic serverData = e.response?.data;
+      final errorMessage = serverData is Map ? serverData['message'] : e.toString();
+      state = AuthState(error: errorMessage, isEmailVerificationRequired: true, emailForVerification: email, isInitializing: false);
+    } catch (e) {
+      state = AuthState(error: e.toString(), isEmailVerificationRequired: true, emailForVerification: email, isInitializing: false);
+    }
+  }
+
+  Future<void> updateProfile(Map<String, dynamic> profileData) async {
+    final currentUser = state.user;
+    state = AuthState(
+      isAuthenticated: state.isAuthenticated,
+      user: currentUser,
+      isLoading: true,
+      isInitializing: state.isInitializing,
+    );
+    try {
+      final updatedUser = await _ref.read(userProfileServiceProvider).updateProfile(profileData);
+      state = AuthState(
+        isAuthenticated: true,
+        user: updatedUser,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = AuthState(
+        isAuthenticated: state.isAuthenticated,
+        user: currentUser,
+        error: e.toString(),
+        isLoading: false,
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> uploadAvatar(List<int> bytes, String fileName) async {
+    final currentUser = state.user;
+    state = AuthState(
+      isAuthenticated: state.isAuthenticated,
+      user: currentUser,
+      isLoading: true,
+      isInitializing: state.isInitializing,
+    );
+    try {
+      final updatedUser = await _ref.read(userProfileServiceProvider).uploadAvatar(bytes, fileName, _ref);
+      state = AuthState(
+        isAuthenticated: true,
+        user: updatedUser,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = AuthState(
+        isAuthenticated: state.isAuthenticated,
+        user: currentUser,
+        error: e.toString(),
+        isLoading: false,
+      );
+      rethrow;
     }
   }
 }

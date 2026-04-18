@@ -3,16 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   
+  // ── EMERALD NOCTURNE IDENTITY (Official Milestone April 2026) ──────
+  // DO NOT ALTER: These tokens define the institutional visual prestige.
+  // Contact Design Lead before introducing any neutral greys or standard blacks.
+  
   // ── Brand Colors ─────────────────────────────────────────────────────────
   static const Color primaryColor   = Color(0xFF052011);     // Deep Emerald / Midnight
-  static const Color accentColor    = Color(0xFFD4AF37);     // Muted Gold
+  static const Color accentColor    = Color(0xFFC5A059);     // Premium Antique Gold
   static const Color heritageRed    = Color(0xFF9E1F1F);     // Heritage Crimson
   static const Color secondaryColor = Color(0xFF685D4A);     // Earthy Bronze
   static const Color heritageOrange = Color(0xFFE67E22);     // Professional Heritage Orange
 
   // ── Dark mode surfaces ────────────────────────────────────────────────────
-  static const Color backgroundDark = Color(0xFF030906);     // Deep Charcoal Emerald (Premium Pitch)
-  static const Color borderGlass    = Color(0x33FFFFFF);     // More visible glass border
+  static const Color backgroundDark = Color(0xFF010A08);     // Midnight Forest Obsidian
+  static const Color borderGlass    = Color(0x4DFFFFFF);     // More Visible Glass Border (30%)
 
   // ── Light mode tokens — Sovereign Sage & Aged Parchment (Museum Grade) ──
   static const Color _lightBg       = Color(0xFFE2E9E5);    // Sovereign Sage (Definite colored feel, NOT white)
@@ -119,13 +123,14 @@ class AppTheme {
       ),
 
       cardTheme: CardThemeData(
-        color: isDark ? const Color(0xFF0A140F) : _lightCard,
+        color: isDark ? const Color(0xFF061A12).withValues(alpha: 0.6) : _lightCard,
         elevation: isDark ? 0 : 3,
         shadowColor: isDark ? Colors.transparent : Colors.black.withValues(alpha: 0.08),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           side: BorderSide(
             color: isDark ? borderGlass : _lightBorder.withValues(alpha: 0.7),
+            width: 0.8,
           ),
         ),
       ),

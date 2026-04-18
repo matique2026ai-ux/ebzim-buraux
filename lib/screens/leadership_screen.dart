@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';import 'package:ebzim_app/core/s
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 
 class LeadershipScreen extends ConsumerWidget {
   const LeadershipScreen({super.key});
@@ -19,20 +20,18 @@ class LeadershipScreen extends ConsumerWidget {
     final leadersAsync = ref.watch(leadershipProvider);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
-        leading: IconButton(
-          icon: Icon(isRtl ? Icons.arrow_forward : Icons.arrow_back, color: AppTheme.accentColor),
-          onPressed: () => context.pop(),
-        ),
-      ),
       body: EbzimBackground(
         child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
+            EbzimSliverAppBar(
+              leading: IconButton(
+                icon: Icon(isRtl ? Icons.arrow_forward : Icons.arrow_back, color: AppTheme.accentColor),
+                onPressed: () => context.pop(),
+              ),
+            ),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 80.0),

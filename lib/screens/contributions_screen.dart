@@ -10,6 +10,8 @@ import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
+import 'package:ebzim_app/core/common_widgets/login_required_overlay.dart';
+import 'package:ebzim_app/core/services/auth_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Contributions & Subscriptions Screen
@@ -58,6 +60,31 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context)!;
+    final userAsync = ref.watch(currentUserProvider);
+
+    if (userAsync.value == null && !userAsync.isLoading) {
+      return Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_rounded, color: AppTheme.accentColor, size: 20),
+            onPressed: () => context.pop(),
+          ),
+          title: Text(
+            loc.finTitle,
+            style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 18, color: AppTheme.accentColor),
+          ),
+          centerTitle: true,
+        ),
+        body: const EbzimBackground(
+          child: LoginRequiredOverlay(
+            icon: Icons.volunteer_activism_rounded,
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,

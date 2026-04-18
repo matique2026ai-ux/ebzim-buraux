@@ -46,4 +46,21 @@ export class MailService {
       `,
     });
   }
+
+  async sendEmailVerificationOtp(email: string, otp: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'تأكيد البريد الإلكتروني - جمعية إبزيم',
+      html: `
+        <div style="direction: rtl; font-family: Arial, sans-serif; padding: 20px;">
+          <h2 style="color: #006654;">مرحباً بك في إبزيم!</h2>
+          <p>شكراً لتسجيلك. يرجى استخدام الرمز التالي لتأكيد بريدك الإلكتروني وتفعيل حسابك:</p>
+          <div style="background: #f4f4f4; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #006654; border-radius: 8px;">
+            ${otp}
+          </div>
+          <p>هذا الرمز صالح لمدة ساعة واحدة.</p>
+        </div>
+      `,
+    });
+  }
 }

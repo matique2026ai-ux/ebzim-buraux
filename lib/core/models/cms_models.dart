@@ -43,16 +43,30 @@ class HeroSlide {
     );
   }
 
+  bool _isJunk(String? text) {
+    if (text == null || text.trim().isEmpty) return true;
+    final t = text.trim();
+    // Simple heuristic: if it's the same character repeated many times
+    if (t.length > 3 && t.split('').every((char) => char == t[0])) return true;
+    return false;
+  }
+
   String getTitle(String lang) {
-    if (lang == 'ar') return titleAr;
-    if (lang == 'fr') return titleFr;
-    return titleEn;
+    String val = titleEn;
+    if (lang == 'ar' && !_isJunk(titleAr)) val = titleAr;
+    else if (lang == 'fr' && !_isJunk(titleFr)) val = titleFr;
+    else if (!_isJunk(titleEn)) val = titleEn;
+    else val = lang == 'ar' ? 'إرث سطيف، هوية وطن' : 'L\'héritage de Sétif';
+    return val;
   }
 
   String getSubtitle(String lang) {
-    if (lang == 'ar') return subtitleAr;
-    if (lang == 'fr') return subtitleFr;
-    return subtitleEn;
+    String val = subtitleEn;
+    if (lang == 'ar' && !_isJunk(subtitleAr)) val = subtitleAr;
+    else if (lang == 'fr' && !_isJunk(subtitleFr)) val = subtitleFr;
+    else if (!_isJunk(subtitleEn)) val = subtitleEn;
+    else val = lang == 'ar' ? 'جمعية إبزيم هي المساحة الولائية لتسخير المعارف والوسائل في سبيل حماية الهوية الجزائرية.' : 'L\'association Ebzim est l\'espace pour la protection de l\'identité algérienne.';
+    return val;
   }
 }
 
@@ -79,7 +93,7 @@ class Partner {
     required this.goalsSummaryEn,
     required this.goalsSummaryFr,
     this.websiteUrl,
-    this.color = '#052011',
+    this.color = '#0F172A',
     this.order = 0,
   });
 
@@ -96,7 +110,7 @@ class Partner {
       goalsSummaryEn: goals['en']?.toString() ?? '',
       goalsSummaryFr: goals['fr']?.toString() ?? '',
       websiteUrl: json['websiteUrl']?.toString(),
-      color: json['color']?.toString() ?? '#052011',
+      color: json['color']?.toString() ?? '#0F172A',
       order: json['order'] is int ? json['order'] : 0,
     );
   }

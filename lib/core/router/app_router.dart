@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/screens/splash_screen.dart';
 import 'package:ebzim_app/screens/language_selection_screen.dart';
@@ -29,6 +30,8 @@ import 'package:ebzim_app/screens/admin_cms_manage_screen.dart';
 import 'package:ebzim_app/screens/news_screen.dart';
 import 'package:ebzim_app/screens/membership_discover_screen.dart';
 import 'package:ebzim_app/screens/help_support_screen.dart';
+import 'package:ebzim_app/core/services/auth_service.dart';
+import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/screens/heritage_projects_screen.dart';
@@ -127,196 +130,235 @@ CustomTransitionPage<T> _scalePage<T>(GoRouterState state, Widget child) {
   );
 }
 
-final appRouter = GoRouter(
-  initialLocation: '/admin',
-  routes: [
-    GoRoute(
-      path: '/',
-      redirect: (_, _) => '/splash',
-    ),
-    GoRoute(
-      path: '/splash',
-      pageBuilder: (context, state) => _fadePage(state, const SplashScreen()),
-    ),
-    GoRoute(
-      path: '/login',
-      pageBuilder: (context, state) => _slidePage(state, const LoginScreen()),
-    ),
-    GoRoute(
-      path: '/auth/forgot-password',
-      pageBuilder: (context, state) => _slideHoriz(state, const ForgotPasswordScreen()),
-    ),
-    GoRoute(
-      path: '/auth/forgot-password/otp',
-      pageBuilder: (context, state) {
-        final email = state.extra as String? ?? '';
-        return _slideHoriz(state, OtpVerificationScreen(email: email));
-      },
-    ),
-    GoRoute(
-      path: '/auth/verify-email/otp',
-      pageBuilder: (context, state) {
-        final email = state.extra as String? ?? '';
-        return _slideHoriz(state, OtpVerificationScreen(email: email, isRegistration: true));
-      },
-    ),
-    GoRoute(
-      path: '/auth/reset-password',
-      pageBuilder: (context, state) {
-        final token = state.extra as String? ?? '';
-        return _slideHoriz(state, ResetPasswordScreen(token: token));
-      },
-    ),
-    GoRoute(
-      path: '/auth/privacy',
-      pageBuilder: (context, state) => _slidePage(state, const LegalContentScreen(type: 'privacy')),
-    ),
-    GoRoute(
-      path: '/auth/terms',
-      pageBuilder: (context, state) => _slidePage(state, const LegalContentScreen(type: 'terms')),
-    ),
-    GoRoute(
-      path: '/register',
-      pageBuilder: (context, state) => _slideHoriz(state, const RegisterScreen()),
-    ),
-    ShellRoute(
-      builder: (context, state, child) => MainShellScreen(child: child),
-      routes: [
-        GoRoute(
-          path: '/home',
-          pageBuilder: (context, state) => _fadePage(state, const HomeScreen()),
-        ),
-        GoRoute(
-          path: '/dashboard',
-          pageBuilder: (context, state) => _fadePage(state, const DashboardScreen()),
-        ),
-        GoRoute(
-          path: '/leadership',
-          pageBuilder: (context, state) => _fadePage(state, const LeadershipScreen()),
-        ),
-        GoRoute(
-          path: '/activities',
-          pageBuilder: (context, state) => _fadePage(state, const ActivitiesScreen()),
-        ),
-        GoRoute(
-          path: '/about',
-          pageBuilder: (context, state) => _fadePage(state, const AboutScreen()),
-        ),
-        GoRoute(
-          path: '/news',
-          pageBuilder: (context, state) => _fadePage(state, const NewsScreen()),
-        ),
-        GoRoute(
-          path: '/profile',
-          pageBuilder: (context, state) => _fadePage(state, const DashboardScreen()),
-          routes: [
-            GoRoute(
-              path: 'edit',
-              pageBuilder: (context, state) => _slidePage(state, const EditProfileScreen()),
-            ),
-          ],
-        ),
-      ]
-    ),
-    GoRoute(
-      path: '/settings',
-      pageBuilder: (context, state) => _slidePage(state, const SettingsScreen()),
-    ),
-    GoRoute(
-      path: '/support',
-      pageBuilder: (context, state) => _slidePage(state, const HelpSupportScreen()),
-    ),
-    GoRoute(
-      path: '/notifications',
-      pageBuilder: (context, state) => _slidePage(state, const NotificationsScreen()),
-    ),
-    GoRoute(
-      path: '/membership/discover',
-      pageBuilder: (context, state) => _slidePage(state, const MembershipDiscoverScreen()),
-    ),
-    GoRoute(
-      path: '/membership/apply',
-      pageBuilder: (context, state) => _slidePage(state, const MembershipFlowScreen()),
-    ),
-    GoRoute(
-      path: '/membership/success',
-      pageBuilder: (context, state) => _scalePage(state, const MembershipSuccessScreen()),
-    ),
-    GoRoute(
-      path: '/membership/review',
-      pageBuilder: (context, state) => _slidePage(state, const MembershipReviewScreen()),
-    ),
-    GoRoute(
-      path: '/event/:id',
-      pageBuilder: (context, state) {
-        final id = state.pathParameters['id']!;
-        return _slidePage(state, EventDetailsScreen(eventId: id));
-      },
-    ),
-    GoRoute(
-      path: '/admin',
-      pageBuilder: (context, state) => _slidePage(state, const AdminDashboardScreen()),
-    ),
-    GoRoute(
-      path: '/admin/news/create',
-      pageBuilder: (context, state) {
-        final existingPost = state.extra as NewsPost?;
-        return _slidePage(state, AdminCreateNewsScreen(existingPost: existingPost));
-      },
-    ),
-    GoRoute(
-      path: '/admin/events/create',
-      pageBuilder: (context, state) {
-        final existingEvent = state.extra as ActivityEvent?;
-        return _slidePage(state, AdminCreateEventScreen(existingEvent: existingEvent));
-      },
-    ),
-    GoRoute(
-      path: '/admin/cms/:type',
-      pageBuilder: (context, state) {
-        final type = state.pathParameters['type'] ?? 'hero';
-        return _slidePage(state, AdminCmsManageScreen(contentType: type));
-      },
-    ),
-    GoRoute(
-      path: '/heritage',
-      pageBuilder: (context, state) => _slidePage(state, const HeritageProjectsScreen()),
-    ),
-    GoRoute(
-      path: '/heritage-map',
-      pageBuilder: (context, state) => _slidePage(state, const HeritageMapScreen()),
-    ),
-    GoRoute(
-      path: '/report',
-      pageBuilder: (context, state) => _slidePage(state, const CivicReportScreen()),
-    ),
-    GoRoute(
-      path: '/statute',
-      pageBuilder: (context, state) => _slidePage(state, const StatuteScreen()),
-    ),
-    GoRoute(
-      path: '/library',
-      pageBuilder: (context, state) => _fadePage(state, const DigitalLibraryScreen()),
-    ),
-    GoRoute(
-      path: '/contributions',
-      pageBuilder: (context, state) => _slidePage(state, const ContributionsScreen()),
-    ),
-    GoRoute(
-      path: '/language',
-      pageBuilder: (context, state) => _fadePage(state, const LanguageSelectionScreen()),
-    ),
-    GoRoute(
-      path: '/onboarding',
-      pageBuilder: (context, state) => _fadePage(state, const OnboardingSliderScreen()),
-    ),
-    GoRoute(
-      path: '/news/:id',
-      pageBuilder: (context, state) {
-        final post = state.extra as NewsPost?;
-        final id = state.pathParameters['id']!;
-        return _slidePage(state, NewsDetailWrapper(initialPost: post, postId: id));
-      },
-    ),
-  ],
-);
+final appRouterProvider = Provider((ref) {
+  final authState = ref.watch(authProvider);
+
+  return GoRouter(
+    initialLocation: '/splash',
+    refreshListenable: _AuthStateNotifier(ref),
+    redirect: (context, state) {
+      final isAuthenticated = authState.isAuthenticated;
+      final isInitializing = authState.isInitializing;
+      
+      final loc = state.matchedLocation;
+      final isLoggingIn = loc == '/login';
+      final isRegistering = loc == '/register';
+      final isAuthFlow = loc.startsWith('/auth/');
+      final isPublicHome = loc == '/splash' || loc == '/language' || loc == '/onboarding';
+
+      if (isInitializing) return null;
+
+      // Allowed routes for unauthenticated users
+      final isAllowedUnauthenticated = isLoggingIn || isRegistering || isAuthFlow || isPublicHome;
+
+      if (!isAuthenticated && !isAllowedUnauthenticated) {
+        return '/login';
+      }
+
+      // If authenticated and trying to go to login/register, go to home/admin
+      if (isAuthenticated && (isLoggingIn || isRegistering)) {
+        final role = authState.user?.membershipLevel ?? 'USER';
+        return (role == 'ADMIN' || role == 'SUPER_ADMIN') ? '/admin' : '/home';
+      }
+
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: '/',
+        redirect: (_, __) => '/splash',
+      ),
+      GoRoute(
+        path: '/splash',
+        pageBuilder: (context, state) => _fadePage(state, const SplashScreen()),
+      ),
+      GoRoute(
+        path: '/login',
+        pageBuilder: (context, state) => _slidePage(state, const LoginScreen()),
+      ),
+      GoRoute(
+        path: '/auth/forgot-password',
+        pageBuilder: (context, state) => _slideHoriz(state, const ForgotPasswordScreen()),
+      ),
+      GoRoute(
+        path: '/auth/forgot-password/otp',
+        pageBuilder: (context, state) {
+          final email = state.extra as String? ?? '';
+          return _slideHoriz(state, OtpVerificationScreen(email: email));
+        },
+      ),
+      GoRoute(
+        path: '/auth/verify-email/otp',
+        pageBuilder: (context, state) {
+          final email = state.extra as String? ?? '';
+          return _slideHoriz(state, OtpVerificationScreen(email: email, isRegistration: true));
+        },
+      ),
+      GoRoute(
+        path: '/auth/reset-password',
+        pageBuilder: (context, state) {
+          final token = state.extra as String? ?? '';
+          return _slideHoriz(state, ResetPasswordScreen(token: token));
+        },
+      ),
+      GoRoute(
+        path: '/auth/privacy',
+        pageBuilder: (context, state) => _slidePage(state, const LegalContentScreen(type: 'privacy')),
+      ),
+      GoRoute(
+        path: '/auth/terms',
+        pageBuilder: (context, state) => _slidePage(state, const LegalContentScreen(type: 'terms')),
+      ),
+      GoRoute(
+        path: '/register',
+        pageBuilder: (context, state) => _slideHoriz(state, const RegisterScreen()),
+      ),
+      ShellRoute(
+        builder: (context, state, child) => MainShellScreen(child: child),
+        routes: [
+          GoRoute(
+            path: '/home',
+            pageBuilder: (context, state) => _fadePage(state, const HomeScreen()),
+          ),
+          GoRoute(
+            path: '/dashboard',
+            pageBuilder: (context, state) => _fadePage(state, const DashboardScreen()),
+          ),
+          GoRoute(
+            path: '/leadership',
+            pageBuilder: (context, state) => _fadePage(state, const LeadershipScreen()),
+          ),
+          GoRoute(
+            path: '/activities',
+            pageBuilder: (context, state) => _fadePage(state, const ActivitiesScreen()),
+          ),
+          GoRoute(
+            path: '/about',
+            pageBuilder: (context, state) => _fadePage(state, const AboutScreen()),
+          ),
+          GoRoute(
+            path: '/news',
+            pageBuilder: (context, state) => _fadePage(state, const NewsScreen()),
+          ),
+          GoRoute(
+            path: '/profile',
+            pageBuilder: (context, state) => _fadePage(state, const ProfileScreen()),
+            routes: [
+              GoRoute(
+                path: 'edit',
+                pageBuilder: (context, state) => _slidePage(state, const EditProfileScreen()),
+              ),
+            ],
+          ),
+        ]
+      ),
+      GoRoute(
+        path: '/settings',
+        pageBuilder: (context, state) => _slidePage(state, const SettingsScreen()),
+      ),
+      GoRoute(
+        path: '/support',
+        pageBuilder: (context, state) => _slidePage(state, const HelpSupportScreen()),
+      ),
+      GoRoute(
+        path: '/notifications',
+        pageBuilder: (context, state) => _slidePage(state, const NotificationsScreen()),
+      ),
+      GoRoute(
+        path: '/membership/discover',
+        pageBuilder: (context, state) => _slidePage(state, const MembershipDiscoverScreen()),
+      ),
+      GoRoute(
+        path: '/membership/apply',
+        pageBuilder: (context, state) => _slidePage(state, const MembershipFlowScreen()),
+      ),
+      GoRoute(
+        path: '/membership/success',
+        pageBuilder: (context, state) => _scalePage(state, const MembershipSuccessScreen()),
+      ),
+      GoRoute(
+        path: '/membership/review',
+        pageBuilder: (context, state) => _slidePage(state, const MembershipReviewScreen()),
+      ),
+      GoRoute(
+        path: '/event/:id',
+        pageBuilder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return _slidePage(state, EventDetailsScreen(eventId: id));
+        },
+      ),
+      GoRoute(
+        path: '/admin',
+        pageBuilder: (context, state) => _slidePage(state, const AdminDashboardScreen()),
+      ),
+      GoRoute(
+        path: '/admin/news/create',
+        pageBuilder: (context, state) {
+          final existingPost = state.extra as NewsPost?;
+          return _slidePage(state, AdminCreateNewsScreen(existingPost: existingPost));
+        },
+      ),
+      GoRoute(
+        path: '/admin/events/create',
+        pageBuilder: (context, state) {
+          final existingEvent = state.extra as ActivityEvent?;
+          return _slidePage(state, AdminCreateEventScreen(existingEvent: existingEvent));
+        },
+      ),
+      GoRoute(
+        path: '/admin/cms/:type',
+        pageBuilder: (context, state) {
+          final type = state.pathParameters['type'] ?? 'hero';
+          return _slidePage(state, AdminCmsManageScreen(contentType: type));
+        },
+      ),
+      GoRoute(
+        path: '/heritage',
+        pageBuilder: (context, state) => _slidePage(state, const HeritageProjectsScreen()),
+      ),
+      GoRoute(
+        path: '/heritage-map',
+        pageBuilder: (context, state) => _slidePage(state, const HeritageMapScreen()),
+      ),
+      GoRoute(
+        path: '/report',
+        pageBuilder: (context, state) => _slidePage(state, const CivicReportScreen()),
+      ),
+      GoRoute(
+        path: '/statute',
+        pageBuilder: (context, state) => _slidePage(state, const StatuteScreen()),
+      ),
+      GoRoute(
+        path: '/library',
+        pageBuilder: (context, state) => _fadePage(state, const DigitalLibraryScreen()),
+      ),
+      GoRoute(
+        path: '/contributions',
+        pageBuilder: (context, state) => _slidePage(state, const ContributionsScreen()),
+      ),
+      GoRoute(
+        path: '/language',
+        pageBuilder: (context, state) => _fadePage(state, const LanguageSelectionScreen()),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        pageBuilder: (context, state) => _fadePage(state, const OnboardingSliderScreen()),
+      ),
+      GoRoute(
+        path: '/news/:id',
+        pageBuilder: (context, state) {
+          final post = state.extra as NewsPost?;
+          final id = state.pathParameters['id']!;
+          return _slidePage(state, NewsDetailWrapper(initialPost: post, postId: id));
+        },
+      ),
+    ],
+  );
+});
+
+/// A notifier that forces GoRouter to refresh when auth state changes.
+class _AuthStateNotifier extends ChangeNotifier {
+  _AuthStateNotifier(Ref ref) {
+    ref.listen(authProvider, (_, __) => notifyListeners());
+  }
+}

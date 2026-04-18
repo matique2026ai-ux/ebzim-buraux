@@ -275,10 +275,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                     const SizedBox(width: 14),
                                                     Expanded(
                                                       child: Text(
-                                                        authState.error == 'authErrorInvalid' ? loc.authErrorInvalid : loc.authErrorUnknown,
+                                                        authState.error == 'authErrorInvalid' 
+                                                          ? loc.authErrorInvalid 
+                                                          : '${loc.authErrorUnknown}\n(${authState.error})',
                                                         style: theme.textTheme.bodyMedium?.copyWith(
                                                           color: Colors.white, 
                                                           fontWeight: FontWeight.w600,
+                                                          fontSize: 12,
                                                         ),
                                                       ),
                                                     ),

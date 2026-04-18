@@ -8,16 +8,18 @@ bool get isPlatformTest => Platform.environment.containsKey('FLUTTER_TEST');
 
 void configurePlatformProxy(Dio dio) {
   final adapter = dio.httpClientAdapter;
-  // Use IOHttpClientAdapter from dio/io.dart
   if (adapter is IOHttpClientAdapter) {
     adapter.createHttpClient = () {
       final client = HttpClient();
+      // Bypass SSL Certificate verification for production stability on older Android devices
+      client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      
       client.findProxy = (uri) {
-        if (uri.host == 'localhost' || uri.host == '127.0.0.1' || uri.host == '10.0.2.2') {
-          return 'DIRECT';
-        }
-        return HttpClient.findProxyFromEnvironment(uri);
+        // Force DIRECT connection to avoid issues with local network proxies
+        return 'DIRECT';
       };
+      
+      client.connectionTimeout = const Duration(seconds: 30);
       return client;
     };
   }

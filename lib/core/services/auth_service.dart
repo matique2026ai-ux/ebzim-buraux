@@ -100,7 +100,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = AuthState(error: "authErrorInvalid");
       } else {
         print('[DEBUG AUTH] Unhandled Status Code: ${e.response?.statusCode}');
-        state = AuthState(error: "authErrorUnknown");
+        state = AuthState(error: "Error ${e.response?.statusCode}: ${e.message}");
       }
     } catch (e) {
       print('[DEBUG AUTH] Unexpected error during login: $e');

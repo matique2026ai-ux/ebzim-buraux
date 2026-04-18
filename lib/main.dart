@@ -47,7 +47,7 @@ class EbzimApp extends ConsumerWidget {
           Locale('fr'), // French
         ],
         
-        routerConfig: appRouter,
+        routerConfig: ref.watch(appRouterProvider),
       ),
     );
   }

@@ -28,6 +28,7 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
   DateTime? _selectedDate;
   Uint8List? _selectedFileBytes;
   String? _selectedFileName;
+  String? _selectedFilePath;
   String? _existingImageUrl;
   bool _isLoading = false;
   bool _isOnline = false;
@@ -53,10 +54,11 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
     );
     if (result != null && result.files.isNotEmpty && mounted) {
       final file = result.files.first;
-      if (file.bytes != null) {
+      if (file.bytes != null || file.path != null) {
         setState(() {
           _selectedFileBytes = file.bytes;
           _selectedFileName = file.name;
+          _selectedFilePath = file.path;
         });
       }
     }
@@ -97,10 +99,11 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
       String? uploadedImageUrl;
 
       // 1. Upload Image
-      if (_selectedFileBytes != null && _selectedFileName != null) {
+      if ((_selectedFileBytes != null || _selectedFilePath != null) && _selectedFileName != null) {
         uploadedImageUrl = await ref.read(mediaServiceProvider).uploadMedia(
-              _selectedFileBytes!,
+              _selectedFileBytes ?? Uint8List(0),
               _selectedFileName!,
+              filePath: _selectedFilePath,
             );
       }
 
@@ -110,13 +113,13 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
         'categoryId': EventService.eventCategoryId,
         'title': {
           'ar': _titleArController.text,
-          'fr': _titleArController.text,
-          'en': _titleArController.text,
+          'fr': _titleArController.text.isNotEmpty ? _titleArController.text : ' ',
+          'en': _titleArController.text.isNotEmpty ? _titleArController.text : ' ',
         },
         'description': {
-          'ar': _descriptionArController.text,
-          'fr': _descriptionArController.text,
-          'en': _descriptionArController.text,
+          'ar': _descriptionArController.text.isNotEmpty ? _descriptionArController.text : ' ',
+          'fr': _descriptionArController.text.isNotEmpty ? _descriptionArController.text : ' ',
+          'en': _descriptionArController.text.isNotEmpty ? _descriptionArController.text : ' ',
         },
         'startDate': _selectedDate!.toIso8601String(),
         'endDate': _selectedDate!.add(const Duration(hours: 4)).toIso8601String(),
@@ -166,10 +169,14 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('❌ فشل النشر: $e'),
-            backgroundColor: Colors.redAccent,
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('❌ فشل نشر النشاط'),
+            content: SingleChildScrollView(child: Text('حدث خطأ أثناء التواصل مع السيرفر:\n\n$e')),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('حسناً'))
+            ],
           ),
         );
       }

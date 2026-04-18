@@ -578,6 +578,15 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
     }
   }
 
+  Map<String, dynamic> _ensureMultilingual(Map<String, dynamic> langMap) {
+    final ar = (langMap['ar']?.toString().isNotEmpty ?? false) ? langMap['ar'].toString() : ' ';
+    return {
+      'ar': ar,
+      'en': (langMap['en']?.toString().isEmpty ?? true) ? ar : langMap['en'],
+      'fr': (langMap['fr']?.toString().isEmpty ?? true) ? ar : langMap['fr'],
+    };
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
@@ -593,16 +602,52 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       final id = widget.item?.id;
       if (kDebugMode) print('[CMS_SAVE] Saving ${widget.type} with data: $_data');
 
+      // Clean data based on type to match backend DTOs exactly
+      final Map<String, dynamic> cleanData = {};
+      
       if (widget.type == CMSManageType.hero) {
-        id == null ? await service.createHeroSlide(_data) : await service.updateHeroSlide(id, _data);
+        cleanData['title'] = _ensureMultilingual(_data['title']);
+        cleanData['subtitle'] = _ensureMultilingual(_data['subtitle']);
+        cleanData['imageUrl'] = _data['imageUrl'] ?? '';
+        cleanData['buttonText'] = _data['buttonText'] ?? '';
+        cleanData['buttonLink'] = _data['buttonLink'] ?? '';
+        cleanData['order'] = _data['order'] ?? 0;
+        cleanData['isActive'] = _data['isActive'] ?? true;
+        
+        id == null ? await service.createHeroSlide(cleanData) : await service.updateHeroSlide(id, cleanData);
       } else if (widget.type == CMSManageType.partner) {
-        id == null ? await service.createPartner(_data) : await service.updatePartner(id, _data);
+        cleanData['name'] = _ensureMultilingual(_data['name']);
+        cleanData['logoUrl'] = _data['logoUrl'] ?? '';
+        cleanData['goalsSummary'] = _ensureMultilingual(_data['goalsSummary']);
+        cleanData['websiteUrl'] = _data['websiteUrl'] ?? '';
+        cleanData['color'] = _data['color'] ?? '1A6B3A';
+        cleanData['order'] = _data['order'] ?? 0;
+        cleanData['isActive'] = _data['isActive'] ?? true;
+
+        id == null ? await service.createPartner(cleanData) : await service.updatePartner(id, cleanData);
       } else if (widget.type == CMSManageType.leadership) {
-        id == null ? await service.createLeader(_data) : await service.updateLeader(id, _data);
+        cleanData['name'] = _ensureMultilingual(_data['name']);
+        cleanData['role'] = _ensureMultilingual(_data['role']);
+        cleanData['photoUrl'] = _data['photoUrl'] ?? '';
+        cleanData['order'] = _data['order'] ?? 0;
+        cleanData['isActive'] = _data['isActive'] ?? true;
+
+        id == null ? await service.createLeader(cleanData) : await service.updateLeader(id, cleanData);
       }
       widget.onSaved();
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('خطأ: $e', style: GoogleFonts.tajawal())));
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('❌ فشل الحفظ', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+            content: SingleChildScrollView(child: Text('السيرفر رفض الطلب أو تعذر الاتصال:\n\n$e', style: GoogleFonts.tajawal())),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: Text('حسناً', style: GoogleFonts.tajawal()))
+            ],
+          ),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -957,14 +1002,18 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
             );
             if (result == null || result.files.isEmpty) return;
             final file = result.files.first;
-            if (file.bytes == null) return;
+            if (file.bytes == null && file.path == null) {
+               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تعذر الوصول إلى ملف الصورة المختارة.')));
+               return;
+            }
 
             setS(() => isUploading = true);
-            if (kDebugMode) print('[IMAGE PICKER] Starting upload for child file: ${file.name}');
+            if (kDebugMode) print('[IMAGE PICKER] Starting upload for child file: ${file.name} (Path: ${file.path})');
             
             final uploadedUrl = await ref.read(mediaServiceProvider).uploadMedia(
-              file.bytes!,
+              file.bytes ?? Uint8List(0),
               file.name,
+              filePath: file.path,
             );
             
             if (kDebugMode) print('[IMAGE PICKER] Upload success: $uploadedUrl');

@@ -28,6 +28,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
   Uint8List? _selectedFileBytes;
   String? _selectedFileName;
+  String? _selectedFilePath;
   String? _existingImageUrl;
   bool _isPinned = false;
   bool _isLoading = false;
@@ -53,10 +54,11 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
     );
     if (result != null && result.files.isNotEmpty && mounted) {
       final file = result.files.first;
-      if (file.bytes != null) {
+      if (file.bytes != null || file.path != null) {
         setState(() {
           _selectedFileBytes = file.bytes;
           _selectedFileName = file.name;
+          _selectedFilePath = file.path;
         });
       }
     }
@@ -70,10 +72,11 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       String? uploadedImageUrl;
 
       // 1. Upload Image to Cloudinary if selected
-      if (_selectedFileBytes != null && _selectedFileName != null) {
+      if ((_selectedFileBytes != null || _selectedFilePath != null) && _selectedFileName != null) {
         uploadedImageUrl = await ref.read(mediaServiceProvider).uploadMedia(
-              _selectedFileBytes!,
+              _selectedFileBytes ?? Uint8List(0),
               _selectedFileName!,
+              filePath: _selectedFilePath,
             );
       }
 
@@ -85,18 +88,18 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         'categoryId': NewsService.newsCategoryId,
         'title': {
           'ar': _titleArController.text,
-          'fr': _titleArController.text,
-          'en': _titleArController.text,
+          'fr': _titleArController.text.isNotEmpty ? _titleArController.text : ' ',
+          'en': _titleArController.text.isNotEmpty ? _titleArController.text : ' ',
         },
         'summary': {
-          'ar': _summaryArController.text,
-          'fr': _summaryArController.text,
-          'en': _summaryArController.text,
+          'ar': _summaryArController.text.isNotEmpty ? _summaryArController.text : ' ',
+          'fr': _summaryArController.text.isNotEmpty ? _summaryArController.text : ' ',
+          'en': _summaryArController.text.isNotEmpty ? _summaryArController.text : ' ',
         },
         'content': {
           'ar': _contentArController.text,
-          'fr': _contentArController.text,
-          'en': _contentArController.text,
+          'fr': _contentArController.text.isNotEmpty ? _contentArController.text : ' ',
+          'en': _contentArController.text.isNotEmpty ? _contentArController.text : ' ',
         },
         'status': 'PUBLISHED',
         'isFeatured': false,
@@ -141,10 +144,14 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('❌ فشل النشر: $e'),
-            backgroundColor: Colors.redAccent,
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('❌ فشل النشر'),
+            content: SingleChildScrollView(child: Text('حدث خطأ أثناء التواصل مع السيرفر:\n\n$e')),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('حسناً'))
+            ],
           ),
         );
       }

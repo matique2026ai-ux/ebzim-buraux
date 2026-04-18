@@ -1,10 +1,8 @@
 import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:dio/dio.dart';
-import 'package:ebzim_app/core/services/storage_service.dart';
-import 'package:flutter/foundation.dart';
-import 'package:ebzim_app/core/services/api_client_platform.dart';
 import 'package:http_parser/http_parser.dart';
 
 final mediaServiceProvider = Provider<MediaService>((ref) {
@@ -19,10 +17,23 @@ class MediaService {
 
   Future<String> uploadMedia(Uint8List fileBytes, String fileName, {String? filePath}) async {
     try {
-      // If bytes are null (common on some Android versions), read from path
-      if (fileBytes.isEmpty && filePath != null) {
-        // In a real app we'd use File(filePath).readAsBytesSync()
-        // But for this environment, we rely on the bytes passed from picker
+      print('[MEDIA] Starting upload for $fileName (Path: $filePath, Bytes: ${fileBytes.length})');
+      
+      List<int> finalBytes = List<int>.from(fileBytes);
+      
+      // If bytes are empty/null and we have a path (Android case), read from storage
+      if ((finalBytes.isEmpty) && filePath != null) {
+        final file = File(filePath);
+        if (await file.exists()) {
+          finalBytes = await file.readAsBytes();
+          print('[MEDIA] Read ${finalBytes.length} bytes from path');
+        } else {
+          print('[MEDIA] ERROR: File does not exist at path: $filePath');
+        }
+      }
+
+      if (finalBytes.isEmpty) {
+        throw Exception('Cannot upload empty file. Try picking the image again.');
       }
 
       String mimeType = 'image';
@@ -35,23 +46,35 @@ class MediaService {
 
       final formData = FormData.fromMap({
         'file': MultipartFile.fromBytes(
-          fileBytes, 
+          finalBytes, 
           filename: fileName,
           contentType: MediaType(mimeType, subType),
         ),
       });
 
-      final response = await _dio.post('media/upload', data: formData);
+      print('[MEDIA] Sending POST to media/upload...');
+      final response = await _dio.post(
+        'media/upload', 
+        data: formData,
+        options: Options(
+          sendTimeout: const Duration(seconds: 60),
+          receiveTimeout: const Duration(seconds: 60),
+        ),
+      );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        return response.data['url'] as String; // Cloudinary URL returned
+        final url = response.data['url'] as String;
+        print('[MEDIA] Upload Success: $url');
+        return url;
       } else {
-        throw Exception('Failed to upload media');
+        throw Exception('Failed to upload media (Status: ${response.statusCode})');
       }
     } on DioException catch (e) {
-      final errorData = e.response?.data;
-      throw Exception('Server Error: $errorData');
+      print('[MEDIA] Dio Error: ${e.message}');
+      print('[MEDIA] Response Data: ${e.response?.data}');
+      throw Exception('Server Media Error: ${e.response?.data ?? e.message}');
     } catch (e) {
+      print('[MEDIA] Unknown Error: $e');
       throw Exception('Exception uploading media: $e');
     }
   }

@@ -3,13 +3,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/storage_service.dart';
 import 'package:ebzim_app/core/services/api_client_platform.dart';
+import 'package:ebzim_app/core/services/auth_service.dart';
 
 
 class ApiClient {
   final Dio dio;
   final StorageService storageService;
+  final Ref _ref;
 
-  ApiClient({required this.dio, required this.storageService}) {
+  ApiClient({required this.dio, required this.storageService, required Ref ref}) : _ref = ref {
     _initInterceptors();
     _initProxy();
   }
@@ -45,8 +47,9 @@ class ApiClient {
           print('[API ERROR] ${e.response?.statusCode} for ${e.requestOptions.path}');
           print('[API ERROR DATA] ${e.response?.data}');
           if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-            // If unauthorized or forbidden, clear token to force re-login
-            storageService.deleteToken();
+            // If unauthorized or forbidden, clear token and trigger global logout
+            _ref.read(storageServiceProvider).deleteToken();
+            _ref.read(authProvider.notifier).logout();
           }
           return handler.next(e);
         },
@@ -75,6 +78,5 @@ final apiClientProvider = Provider((ref) {
     receiveTimeout: const Duration(seconds: 90),
   ));
 
-  return ApiClient(dio: dio, storageService: storageService);
+  return ApiClient(dio: dio, storageService: storageService, ref: ref);
 });
-

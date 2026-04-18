@@ -13,5 +13,5 @@ String getPlatformBaseUrl(bool isTest) {
   if (hostname == 'localhost' || hostname == '127.0.0.1') {
     return 'http://localhost:3000/api/v1/';
   }
-  return 'https://ebzim-api.onrender.com/api/v1/';
+  return 'https://ebzim-api-prod.onrender.com/api/v1/';
 }

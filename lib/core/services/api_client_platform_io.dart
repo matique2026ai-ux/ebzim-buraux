@@ -27,5 +27,5 @@ void configurePlatformProxy(Dio dio) {
 
 String getPlatformBaseUrl(bool isTest) {
   // Use the production Render URL for all platforms
-  return 'https://ebzim-api.onrender.com/api/v1/';
+  return 'https://ebzim-api-prod.onrender.com/api/v1/';
 }

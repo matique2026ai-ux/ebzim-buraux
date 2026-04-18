@@ -1,4 +1,13 @@
-import { Controller, Post, Get, Patch, Body, Param, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { ContributionsService } from './contributions.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -14,7 +23,9 @@ export class ContributionsController {
   constructor(private readonly contributionsService: ContributionsService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Submit a new contribution (membership or donation)' })
+  @ApiOperation({
+    summary: 'Submit a new contribution (membership or donation)',
+  })
   async submit(@Request() req: any, @Body() dto: any) {
     return this.contributionsService.submitContribution(req.user.userId, dto);
   }
@@ -43,6 +54,11 @@ export class ContributionsController {
     @Body('status') status: string,
     @Body('notes') notes?: string,
   ) {
-    return this.contributionsService.verifyContribution(id, req.user.userId, status, notes);
+    return this.contributionsService.verifyContribution(
+      id,
+      req.user.userId,
+      status,
+      notes,
+    );
   }
 }

@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { MultilingualTextSchema, MultilingualText } from '../../institutions/schemas/institution.schema';
+import {
+  MultilingualTextSchema,
+  MultilingualText,
+} from '../../institutions/schemas/institution.schema';
 
 export type PartnerDocument = Partner & Document;
 

@@ -18,7 +18,10 @@ export function buildOffsetPagination(options: OffsetPaginationOptions) {
   return { skip, limit, page };
 }
 
-export function buildCursorPagination(options: CursorPaginationOptions, cursorField = '_id') {
+export function buildCursorPagination(
+  options: CursorPaginationOptions,
+  cursorField = '_id',
+) {
   const limit = options.limit && options.limit > 0 ? options.limit : 10;
   const query: Record<string, any> = {};
 
@@ -29,7 +32,12 @@ export function buildCursorPagination(options: CursorPaginationOptions, cursorFi
   return { query, limit };
 }
 
-export function formatOffsetPaginatedResponse(data: any[], total: number, page: number, limit: number) {
+export function formatOffsetPaginatedResponse(
+  data: any[],
+  total: number,
+  page: number,
+  limit: number,
+) {
   return {
     data,
     meta: {
@@ -42,7 +50,10 @@ export function formatOffsetPaginatedResponse(data: any[], total: number, page: 
   };
 }
 
-export function formatCursorPaginatedResponse(data: any[], cursorField = '_id') {
+export function formatCursorPaginatedResponse(
+  data: any[],
+  cursorField = '_id',
+) {
   const hasNextPage = data.length > 0;
   const nextCursor = hasNextPage ? data[data.length - 1][cursorField] : null;
 

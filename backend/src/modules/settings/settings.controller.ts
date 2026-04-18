@@ -12,7 +12,9 @@ export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get global system settings (Publicly accessible for fees)' })
+  @ApiOperation({
+    summary: 'Get global system settings (Publicly accessible for fees)',
+  })
   async getSettings() {
     return this.settingsService.getSettings();
   }

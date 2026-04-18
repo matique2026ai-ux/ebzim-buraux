@@ -1,4 +1,10 @@
-import { IsString, IsObject, IsOptional, IsBoolean, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsObject,
+  IsOptional,
+  IsBoolean,
+  IsNumber,
+} from 'class-validator';
 
 export class CreatePartnerDto {
   @IsObject()

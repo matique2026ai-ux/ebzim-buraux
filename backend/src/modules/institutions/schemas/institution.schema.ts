@@ -14,14 +14,19 @@ export class MultilingualText {
   @Prop({ required: false, default: '' })
   en: string;
 }
-export const MultilingualTextSchema = SchemaFactory.createForClass(MultilingualText);
+export const MultilingualTextSchema =
+  SchemaFactory.createForClass(MultilingualText);
 
 @Schema({ timestamps: true })
 export class Institution {
   @Prop({ type: MultilingualTextSchema, required: true })
   name: MultilingualText;
 
-  @Prop({ type: String, enum: ['MUSEUM', 'UNIVERSITY', 'NETWORK', 'GOVERNMENT', 'NGO'], required: true })
+  @Prop({
+    type: String,
+    enum: ['MUSEUM', 'UNIVERSITY', 'NETWORK', 'GOVERNMENT', 'NGO'],
+    required: true,
+  })
   type: string;
 
   @Prop({ type: MultilingualTextSchema })

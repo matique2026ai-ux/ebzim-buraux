@@ -7,7 +7,11 @@ export class AppController {
 
   @Get('debug/test')
   getDebug() {
-    return { status: 'OK', version: 'STABLE_V3_DEBUG', timestamp: new Date().toISOString() };
+    return {
+      status: 'OK',
+      version: 'STABLE_V3_DEBUG',
+      timestamp: new Date().toISOString(),
+    };
   }
 
   @Get()

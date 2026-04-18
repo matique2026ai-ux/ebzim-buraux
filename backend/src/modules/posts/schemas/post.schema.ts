@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { MultilingualTextSchema, MultilingualText } from '../../institutions/schemas/institution.schema';
+import {
+  MultilingualTextSchema,
+  MultilingualText,
+} from '../../institutions/schemas/institution.schema';
 
 export type PostDocument = Post & Document;
 
@@ -37,7 +40,11 @@ export class Post {
   @Prop({ type: [MediaAttachmentSchema], default: [] })
   media: MediaAttachment[];
 
-  @Prop({ type: String, enum: ['DRAFT', 'PUBLISHED', 'ARCHIVED'], default: 'DRAFT' })
+  @Prop({
+    type: String,
+    enum: ['DRAFT', 'PUBLISHED', 'ARCHIVED'],
+    default: 'DRAFT',
+  })
   status: string;
 
   @Prop({ type: Boolean, default: false })

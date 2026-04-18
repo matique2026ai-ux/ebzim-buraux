@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { MultilingualTextSchema, MultilingualText } from '../../institutions/schemas/institution.schema'; // Re-use embedded pattern
+import {
+  MultilingualTextSchema,
+  MultilingualText,
+} from '../../institutions/schemas/institution.schema'; // Re-use embedded pattern
 
 export type CategoryDocument = Category & Document;
 

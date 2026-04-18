@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { MultilingualTextSchema, MultilingualText } from '../../institutions/schemas/institution.schema';
+import {
+  MultilingualTextSchema,
+  MultilingualText,
+} from '../../institutions/schemas/institution.schema';
 
 export type EventDocument = Event & Document;
 
@@ -43,10 +46,20 @@ export class Event {
   @Prop({ type: Object })
   coverImage?: { url: string; publicId: string };
 
-  @Prop({ type: String, enum: ['DRAFT', 'PUBLISHED', 'CANCELLED'], default: 'DRAFT', index: true })
+  @Prop({
+    type: String,
+    enum: ['DRAFT', 'PUBLISHED', 'CANCELLED'],
+    default: 'DRAFT',
+    index: true,
+  })
   publicationStatus: string;
 
-  @Prop({ type: String, enum: ['UPCOMING', 'ONGOING', 'COMPLETED', 'CANCELLED'], default: 'UPCOMING', index: true })
+  @Prop({
+    type: String,
+    enum: ['UPCOMING', 'ONGOING', 'COMPLETED', 'CANCELLED'],
+    default: 'UPCOMING',
+    index: true,
+  })
   eventStatus: string;
 
   @Prop({ type: Boolean, default: false })
@@ -66,7 +79,11 @@ export class EventRsvp {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   userId: Types.ObjectId;
 
-  @Prop({ type: String, enum: ['REGISTERED', 'ATTENDED', 'CANCELLED'], default: 'REGISTERED' })
+  @Prop({
+    type: String,
+    enum: ['REGISTERED', 'ATTENDED', 'CANCELLED'],
+    default: 'REGISTERED',
+  })
   status: string;
 }
 

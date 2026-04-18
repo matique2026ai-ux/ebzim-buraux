@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { HeroSlideDocument } from './schemas/hero-slide.schema';
-import { CreateHeroSlideDto, UpdateHeroSlideDto } from './dto/create-hero-slide.dto';
+import {
+  CreateHeroSlideDto,
+  UpdateHeroSlideDto,
+} from './dto/create-hero-slide.dto';
 
 @Injectable()
 export class HeroService {

@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, IsOptional, IsBoolean, ValidateNested, IsEnum, IsObject } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+  IsEnum,
+  IsObject,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { LocationDataDto } from '../../../common/dto/shared.dto';
 
@@ -19,7 +27,14 @@ export class CreateReportDto {
   @IsNotEmpty()
   description: string;
 
-  @IsEnum(['VANDALISM', 'THEFT', 'ILLEGAL_CONSTRUCTION', 'NEGLECT', 'PUBLIC_SPACE', 'OTHER'])
+  @IsEnum([
+    'VANDALISM',
+    'THEFT',
+    'ILLEGAL_CONSTRUCTION',
+    'NEGLECT',
+    'PUBLIC_SPACE',
+    'OTHER',
+  ])
   @IsNotEmpty()
   incidentCategory: string;
 
@@ -39,14 +54,14 @@ export class CreateReportDto {
 
 export class UpdateReportStatusDto {
   @IsEnum([
-      'TRIAGED_BY_ASSOCIATION',
-      'UNDER_REVIEW',
-      'ASSIGNED_TO_AUTHORITY',
-      'IN_INTERVENTION',
-      'NEEDS_MORE_INFO',
-      'RESOLVED',
-      'CLOSED',
-      'REJECTED',
+    'TRIAGED_BY_ASSOCIATION',
+    'UNDER_REVIEW',
+    'ASSIGNED_TO_AUTHORITY',
+    'IN_INTERVENTION',
+    'NEEDS_MORE_INFO',
+    'RESOLVED',
+    'CLOSED',
+    'REJECTED',
   ])
   @IsNotEmpty()
   status: string;

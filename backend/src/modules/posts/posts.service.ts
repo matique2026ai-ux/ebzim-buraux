@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostDocument } from './schemas/post.schema';
-import { 
-  buildCursorPagination, 
-  formatCursorPaginatedResponse, 
-  buildOffsetPagination, 
-  formatOffsetPaginatedResponse 
+import {
+  buildCursorPagination,
+  formatCursorPaginatedResponse,
+  buildOffsetPagination,
+  formatOffsetPaginatedResponse,
 } from '../../common/utils/pagination.util';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class PostsService {
     const pagination = buildCursorPagination(options);
     const query: Record<string, any> = pagination.query;
     const limit = pagination.limit;
-    
+
     // Public feed constraints
     query['status'] = 'PUBLISHED';
 
@@ -33,7 +33,7 @@ export class PostsService {
       title: post.title,
       summary: post.summary,
       content: post.content,
-      imageUrl: post.media.find(m => m.type === 'IMAGE')?.cloudinaryUrl || '',
+      imageUrl: post.media.find((m) => m.type === 'IMAGE')?.cloudinaryUrl || '',
       publishedAt: post.publishedAt,
     }));
 
@@ -42,9 +42,14 @@ export class PostsService {
 
   async getAdminTable(options: any) {
     const { skip, limit, page } = buildOffsetPagination(options);
-    
+
     const [posts, total] = await Promise.all([
-      this.postModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit).exec(),
+      this.postModel
+        .find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.postModel.countDocuments(),
     ]);
 

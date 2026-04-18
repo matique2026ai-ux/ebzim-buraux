@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { Role } from '../enums/role.enum';
@@ -12,25 +17,27 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    
+
     if (!requiredRoles) {
       return true; // No explicit role required, allow
     }
-    
+
     const { user } = context.switchToHttp().getRequest();
-    
+
     if (!user || !user.role) {
       throw new ForbiddenException('No user identity provided');
     }
 
     // SUPER_ADMIN implies total control
     if (user.role === Role.SUPER_ADMIN) {
-        return true;
+      return true;
     }
 
     const hasRole = requiredRoles.some((role) => user.role === role);
     if (!hasRole) {
-        throw new ForbiddenException(`Require one of these roles: ${requiredRoles.join(', ')}`);
+      throw new ForbiddenException(
+        `Require one of these roles: ${requiredRoles.join(', ')}`,
+      );
     }
 
     return true;

@@ -35,16 +35,22 @@ describe('RolesGuard', () => {
       }),
     } as unknown as ExecutionContext;
 
-    expect(() => rolesGuard.canActivate(mockContext)).toThrow(ForbiddenException);
+    expect(() => rolesGuard.canActivate(mockContext)).toThrow(
+      ForbiddenException,
+    );
   });
 
   it('should allow access for SUPER_ADMIN unconditionally', () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue([Role.AUTHORITY]); // Requires Authority
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValue([Role.AUTHORITY]); // Requires Authority
     const mockContext = {
       getHandler: jest.fn(),
       getClass: jest.fn(),
       switchToHttp: jest.fn().mockReturnValue({
-        getRequest: jest.fn().mockReturnValue({ user: { role: Role.SUPER_ADMIN } }), // Pass as Super Admin
+        getRequest: jest
+          .fn()
+          .mockReturnValue({ user: { role: Role.SUPER_ADMIN } }), // Pass as Super Admin
       }),
     } as unknown as ExecutionContext;
 
@@ -61,11 +67,15 @@ describe('RolesGuard', () => {
       }),
     } as unknown as ExecutionContext;
 
-    expect(() => rolesGuard.canActivate(mockContext)).toThrow(ForbiddenException);
+    expect(() => rolesGuard.canActivate(mockContext)).toThrow(
+      ForbiddenException,
+    );
   });
 
   it('should allow access if role matches perfectly', () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue([Role.ADMIN, Role.MEMBER]);
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValue([Role.ADMIN, Role.MEMBER]);
     const mockContext = {
       getHandler: jest.fn(),
       getClass: jest.fn(),

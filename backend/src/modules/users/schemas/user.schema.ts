@@ -41,7 +41,11 @@ export class User {
   @Prop({ type: UserProfileSchema, default: {} })
   profile: UserProfile;
 
-  @Prop({ type: String, enum: ['ACTIVE', 'INACTIVE', 'BANNED', 'PENDING_VERIFICATION'], default: 'ACTIVE' })
+  @Prop({
+    type: String,
+    enum: ['ACTIVE', 'INACTIVE', 'BANNED', 'PENDING_VERIFICATION'],
+    default: 'ACTIVE',
+  })
   status: string;
 
   @Prop({ type: String, required: false })

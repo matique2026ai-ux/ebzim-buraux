@@ -8,8 +8,8 @@ import { EventSchema, EventRsvpSchema } from './schemas/event.schema';
   imports: [
     MongooseModule.forFeature([
       { name: 'Event', schema: EventSchema },
-      { name: 'EventRsvp', schema: EventRsvpSchema }
-    ])
+      { name: 'EventRsvp', schema: EventRsvpSchema },
+    ]),
   ],
   controllers: [EventsController],
   providers: [EventsService],

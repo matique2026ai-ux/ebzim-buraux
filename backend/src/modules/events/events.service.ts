@@ -2,18 +2,18 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EventDocument, EventRsvpDocument } from './schemas/event.schema';
-import { 
-  buildCursorPagination, 
-  formatCursorPaginatedResponse, 
-  buildOffsetPagination, 
-  formatOffsetPaginatedResponse 
+import {
+  buildCursorPagination,
+  formatCursorPaginatedResponse,
+  buildOffsetPagination,
+  formatOffsetPaginatedResponse,
 } from '../../common/utils/pagination.util';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectModel('Event') private eventModel: Model<EventDocument>,
-    @InjectModel('EventRsvp') private rsvpModel: Model<EventRsvpDocument>
+    @InjectModel('EventRsvp') private rsvpModel: Model<EventRsvpDocument>,
   ) {}
 
   async getPublicFeed(locale: string, options: any) {
@@ -22,9 +22,9 @@ export class EventsService {
     const query: any = { publicationStatus: 'PUBLISHED' };
 
     if (options.cursor) {
-        query.startDate = { $gte: new Date(options.cursor) }; // Fetch upcoming
+      query.startDate = { $gte: new Date(options.cursor) }; // Fetch upcoming
     } else {
-        query.startDate = { $gte: new Date() }; // Default: From now
+      query.startDate = { $gte: new Date() }; // Default: From now
     }
 
     const events = await this.eventModel
@@ -43,7 +43,9 @@ export class EventsService {
     }));
 
     const hasNextPage = localizedEvents.length > 0;
-    const nextCursor = hasNextPage ? localizedEvents[localizedEvents.length - 1].startDate.toISOString() : null;
+    const nextCursor = hasNextPage
+      ? localizedEvents[localizedEvents.length - 1].startDate.toISOString()
+      : null;
 
     return { data: localizedEvents, meta: { nextCursor, hasNextPage } };
   }
@@ -51,7 +53,12 @@ export class EventsService {
   async getAdminTable(options: any) {
     const { skip, limit, page } = buildOffsetPagination(options);
     const [events, total] = await Promise.all([
-      this.eventModel.find().sort({ startDate: -1 }).skip(skip).limit(limit).exec(),
+      this.eventModel
+        .find()
+        .sort({ startDate: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.eventModel.countDocuments(),
     ]);
     return formatOffsetPaginatedResponse(events, total, page, limit);
@@ -71,10 +78,16 @@ export class EventsService {
 
   async rsvp(eventId: string, userId: string) {
     try {
-      return await this.rsvpModel.create({ eventId, userId, status: 'REGISTERED' });
+      return await this.rsvpModel.create({
+        eventId,
+        userId,
+        status: 'REGISTERED',
+      });
     } catch (e) {
       if (e.code === 11000) {
-        throw new ConflictException('User already formally registered for this event');
+        throw new ConflictException(
+          'User already formally registered for this event',
+        );
       }
       throw e;
     }

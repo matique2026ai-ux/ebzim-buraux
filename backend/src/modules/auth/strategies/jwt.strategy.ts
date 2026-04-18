@@ -9,22 +9,23 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET') || 'ebzim-secret-fallback',
+      secretOrKey:
+        configService.get<string>('JWT_SECRET') || 'ebzim-secret-fallback',
     });
   }
 
   async validate(payload: any) {
-    // This payload is decoded JWT. 
+    // This payload is decoded JWT.
     // We attach it to the Express request object as `req.user`.
     if (!payload.sub || !payload.role) {
       throw new UnauthorizedException('Invalid token payload');
     }
 
-    return { 
-      userId: payload.sub, 
-      email: payload.email, 
-      role: payload.role, 
-      institutionId: payload.institutionId 
+    return {
+      userId: payload.sub,
+      email: payload.email,
+      role: payload.role,
+      institutionId: payload.institutionId,
     };
   }
 }

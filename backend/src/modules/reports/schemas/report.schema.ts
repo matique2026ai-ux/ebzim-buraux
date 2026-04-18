@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { LocationData, LocationDataSchema } from '../../events/schemas/event.schema';
+import {
+  LocationData,
+  LocationDataSchema,
+} from '../../events/schemas/event.schema';
 
 export type ReportDocument = Report & Document;
 
@@ -39,14 +42,25 @@ export class Report {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ 
-    type: String, 
-    enum: ['VANDALISM', 'THEFT', 'ILLEGAL_CONSTRUCTION', 'NEGLECT', 'PUBLIC_SPACE', 'OTHER'],
-    required: true 
+  @Prop({
+    type: String,
+    enum: [
+      'VANDALISM',
+      'THEFT',
+      'ILLEGAL_CONSTRUCTION',
+      'NEGLECT',
+      'PUBLIC_SPACE',
+      'OTHER',
+    ],
+    required: true,
   })
   incidentCategory: string;
 
-  @Prop({ type: String, enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'], default: 'MEDIUM' })
+  @Prop({
+    type: String,
+    enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
+    default: 'MEDIUM',
+  })
   severity: string;
 
   @Prop({ type: String, enum: ['LOW', 'NORMAL', 'URGENT'], default: 'NORMAL' })

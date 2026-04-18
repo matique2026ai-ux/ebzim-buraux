@@ -1,6 +1,18 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { HeroService } from './hero.service';
-import { CreateHeroSlideDto, UpdateHeroSlideDto } from './dto/create-hero-slide.dto';
+import {
+  CreateHeroSlideDto,
+  UpdateHeroSlideDto,
+} from './dto/create-hero-slide.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';

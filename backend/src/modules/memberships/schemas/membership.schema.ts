@@ -36,9 +36,11 @@ export class MembershipProfileData {
   motivation: string;
 
   @Prop({ type: [Object], default: [] })
-  attachments?: { url: string; publicId: string; type: string }[]; 
+  attachments?: { url: string; publicId: string; type: string }[];
 }
-const MembershipProfileDataSchema = SchemaFactory.createForClass(MembershipProfileData);
+const MembershipProfileDataSchema = SchemaFactory.createForClass(
+  MembershipProfileData,
+);
 
 @Schema({ timestamps: true })
 export class Membership {

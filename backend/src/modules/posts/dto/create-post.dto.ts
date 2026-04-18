@@ -1,6 +1,17 @@
-import { IsString, IsNotEmpty, IsOptional, IsBoolean, ValidateNested, IsMongoId, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+  IsMongoId,
+  IsEnum,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-import { MultilingualTextDto, MediaAttachmentDto } from '../../../common/dto/shared.dto';
+import {
+  MultilingualTextDto,
+  MediaAttachmentDto,
+} from '../../../common/dto/shared.dto';
 
 export class CreatePostDto {
   @IsMongoId()

@@ -9,8 +9,8 @@ import { UserSchema } from '../users/schemas/user.schema';
   imports: [
     MongooseModule.forFeature([
       { name: 'Membership', schema: MembershipSchema },
-      { name: 'User', schema: UserSchema }
-    ])
+      { name: 'User', schema: UserSchema },
+    ]),
   ],
   controllers: [MembershipsController],
   providers: [MembershipsService],

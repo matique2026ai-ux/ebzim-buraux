@@ -6,6 +6,6 @@ import { MediaController } from './media.controller';
 @Module({
   controllers: [MediaController],
   providers: [CloudinaryProvider, MediaService],
-  exports: [MediaService], // Highly reusable service 
+  exports: [MediaService], // Highly reusable service
 })
 export class MediaModule {}

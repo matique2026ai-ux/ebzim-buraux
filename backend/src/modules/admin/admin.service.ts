@@ -11,16 +11,25 @@ import { UserDocument } from '../users/schemas/user.schema';
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectModel('Membership') private membershipModel: Model<MembershipDocument>,
+    @InjectModel('Membership')
+    private membershipModel: Model<MembershipDocument>,
     @InjectModel('Report') private reportModel: Model<ReportDocument>,
     @InjectModel('Event') private eventModel: Model<EventDocument>,
-    @InjectModel('Contribution') private contributionModel: Model<ContributionDocument>,
+    @InjectModel('Contribution')
+    private contributionModel: Model<ContributionDocument>,
     @InjectModel('Post') private postModel: Model<PostDocument>,
     @InjectModel('User') private userModel: Model<UserDocument>,
   ) {}
 
   async getStats() {
-    const [membersCount, pendingReportsCount, activeEventsCount, contributions, pinnedPostsCount, totalPostsCount] = await Promise.all([
+    const [
+      membersCount,
+      pendingReportsCount,
+      activeEventsCount,
+      contributions,
+      pinnedPostsCount,
+      totalPostsCount,
+    ] = await Promise.all([
       this.membershipModel.countDocuments({ status: 'APPROVED' }),
       this.reportModel.countDocuments({ status: 'SUBMITTED' }),
       this.eventModel.countDocuments({ date: { $gte: new Date() } }),
@@ -29,7 +38,10 @@ export class AdminService {
       this.postModel.countDocuments({}),
     ]);
 
-    const totalContributions = contributions.reduce((sum, c) => sum + (c.amount || 0), 0);
+    const totalContributions = contributions.reduce(
+      (sum, c) => sum + (c.amount || 0),
+      0,
+    );
 
     return {
       membersCount,
@@ -57,13 +69,17 @@ export class AdminService {
   async updateUser(userId: string, data: any) {
     const { profile, ...rest } = data;
     const update: any = { ...rest };
-    
+
     if (profile) {
       for (const key in profile) {
         update[`profile.${key}`] = profile[key];
       }
     }
-    
-    return this.userModel.findByIdAndUpdate(userId, { $set: update }, { new: true });
+
+    return this.userModel.findByIdAndUpdate(
+      userId,
+      { $set: update },
+      { new: true },
+    );
   }
 }

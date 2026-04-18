@@ -5,13 +5,17 @@ import { MembershipDocument } from './schemas/membership.schema';
 import { UserDocument } from '../users/schemas/user.schema';
 import { Role } from '../../common/enums/role.enum';
 import { MembershipWorkflowUtil } from './utils/membership-workflow.util';
-import { buildOffsetPagination, formatOffsetPaginatedResponse } from '../../common/utils/pagination.util';
+import {
+  buildOffsetPagination,
+  formatOffsetPaginatedResponse,
+} from '../../common/utils/pagination.util';
 
 @Injectable()
 export class MembershipsService {
   constructor(
-    @InjectModel('Membership') private membershipModel: Model<MembershipDocument>,
-    @InjectModel('User') private userModel: Model<UserDocument>
+    @InjectModel('Membership')
+    private membershipModel: Model<MembershipDocument>,
+    @InjectModel('User') private userModel: Model<UserDocument>,
   ) {}
 
   async submit(userId: string, applicationData: any) {
@@ -19,7 +23,7 @@ export class MembershipsService {
     return this.membershipModel.findOneAndUpdate(
       { userId },
       { applicationData, status: 'SUBMITTED', submissionDate: new Date() },
-      { upsert: true, new: true }
+      { upsert: true, new: true },
     );
   }
 
@@ -31,7 +35,13 @@ export class MembershipsService {
   async getAdminTable(options: any) {
     const { skip, limit, page } = buildOffsetPagination(options);
     const [docs, total] = await Promise.all([
-      this.membershipModel.find().populate('userId', 'email').sort({ submissionDate: -1 }).skip(skip).limit(limit).exec(),
+      this.membershipModel
+        .find()
+        .populate('userId', 'email')
+        .sort({ submissionDate: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.membershipModel.countDocuments(),
     ]);
     return formatOffsetPaginatedResponse(docs, total, page, limit);
@@ -42,18 +52,24 @@ export class MembershipsService {
     if (!membership) throw new NotFoundException('Application not found');
 
     if (updateDto.status) {
-        MembershipWorkflowUtil.validateStatusTransition(membership.status, updateDto.status, adminUser);
-        membership.status = updateDto.status;
-        membership.reviewDate = new Date();
-        membership.reviewedBy = adminUser.userId;
+      MembershipWorkflowUtil.validateStatusTransition(
+        membership.status,
+        updateDto.status,
+        adminUser,
+      );
+      membership.status = updateDto.status;
+      membership.reviewDate = new Date();
+      membership.reviewedBy = adminUser.userId;
 
-        if (updateDto.status === 'APPROVED') {
-            await this.userModel.findByIdAndUpdate(membership.userId, { role: Role.MEMBER });
-        }
+      if (updateDto.status === 'APPROVED') {
+        await this.userModel.findByIdAndUpdate(membership.userId, {
+          role: Role.MEMBER,
+        });
+      }
     }
 
     if (updateDto.internalReviewNotes) {
-        membership.internalReviewNotes = updateDto.internalReviewNotes;
+      membership.internalReviewNotes = updateDto.internalReviewNotes;
     }
 
     return membership.save();

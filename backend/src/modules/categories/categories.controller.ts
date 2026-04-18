@@ -1,5 +1,17 @@
-import { Controller, Get, Post, Body, Headers, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Headers,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiHeader,
+} from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -15,7 +27,11 @@ export class CategoriesController {
 
   @Get()
   @ApiOperation({ summary: 'Public: List all categories (Localized)' })
-  @ApiHeader({ name: 'Accept-Language', required: false, description: 'ar, fr, or en' })
+  @ApiHeader({
+    name: 'Accept-Language',
+    required: false,
+    description: 'ar, fr, or en',
+  })
   async getPublicCategories(@Headers('Accept-Language') lang: string) {
     const locale = ['ar', 'fr', 'en'].includes(lang) ? lang : 'en';
     return this.categoriesService.getPublicCategories(locale);
@@ -39,4 +55,3 @@ export class CategoriesController {
     return this.categoriesService.createCategory(createDto);
   }
 }
-

@@ -8,29 +8,49 @@ export class ReportWorkflowUtil {
 
     // If an Admin/Editor tries to alter a report, ensure it's not strictly assigned to an authority
     // (Optional logic, depends on strict bounds, but for now Admins might still triage)
-    
+
     // Core check: AUTHORITY can only touch reports strictly assigned to their Institution
     if (user.role === Role.AUTHORITY) {
       if (!report.institutionId) {
-        throw new ForbiddenException('Report is not assigned to any institution');
+        throw new ForbiddenException(
+          'Report is not assigned to any institution',
+        );
       }
       if (report.institutionId.toString() !== user.institutionId?.toString()) {
-        throw new ForbiddenException('Authority cannot manage reports assigned to other institutions');
+        throw new ForbiddenException(
+          'Authority cannot manage reports assigned to other institutions',
+        );
       }
     }
   }
 
-  static validateStatusTransition(currentStatus: string, newStatus: string, user: any) {
+  static validateStatusTransition(
+    currentStatus: string,
+    newStatus: string,
+    user: any,
+  ) {
     // Basic logic constraint: Can only close if it was resolved, etc.
-    if (newStatus === 'CLOSED' && currentStatus !== 'RESOLVED' && user.role !== Role.SUPER_ADMIN) {
-      throw new BadRequestException('Report must be RESOLVED before it can be CLOSED');
+    if (
+      newStatus === 'CLOSED' &&
+      currentStatus !== 'RESOLVED' &&
+      user.role !== Role.SUPER_ADMIN
+    ) {
+      throw new BadRequestException(
+        'Report must be RESOLVED before it can be CLOSED',
+      );
     }
 
     if (user.role === Role.AUTHORITY) {
       // Authority mostly updates status to IN_INTERVENTION, RESOLVED
-      const allowedAuthorityTargetStatuses = ['IN_INTERVENTION', 'RESOLVED', 'NEEDS_MORE_INFO'];
+      const allowedAuthorityTargetStatuses = [
+        'IN_INTERVENTION',
+        'RESOLVED',
+        'NEEDS_MORE_INFO',
+      ];
       if (!allowedAuthorityTargetStatuses.includes(newStatus)) {
-        throw new ForbiddenException(`Authorities cannot change status to ${newStatus}`);
+        throw new ForbiddenException(
+          `Authorities cannot change status to ${newStatus}`,
+        );
       }
     }
   }

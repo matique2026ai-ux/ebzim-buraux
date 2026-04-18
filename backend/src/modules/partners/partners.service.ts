@@ -3,7 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PartnerDocument } from './schemas/partner.schema';
 import { CreatePartnerDto, UpdatePartnerDto } from './dto/create-partner.dto';
-import { buildOffsetPagination, formatOffsetPaginatedResponse } from '../../common/utils/pagination.util';
+import {
+  buildOffsetPagination,
+  formatOffsetPaginatedResponse,
+} from '../../common/utils/pagination.util';
 
 @Injectable()
 export class PartnersService {
@@ -18,7 +21,12 @@ export class PartnersService {
   async getAdminTable(options: any) {
     const { skip, limit, page } = buildOffsetPagination(options);
     const [partners, total] = await Promise.all([
-      this.partnerModel.find().sort({ order: 1 }).skip(skip).limit(limit).exec(),
+      this.partnerModel
+        .find()
+        .sort({ order: 1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.partnerModel.countDocuments(),
     ]);
     return formatOffsetPaginatedResponse(partners, total, page, limit);

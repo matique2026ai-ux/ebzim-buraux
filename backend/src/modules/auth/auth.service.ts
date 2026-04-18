@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -22,7 +26,10 @@ export class AuthService {
     try {
       return await op();
     } catch (err) {
-      console.warn('[AUTH] MongoDB operation failed, falling back to memory store:', err.message);
+      console.warn(
+        '[AUTH] MongoDB operation failed, falling back to memory store:',
+        err.message,
+      );
       throw err; // For now let it throw, but we can catch it specifically
     }
   }
@@ -53,9 +60,12 @@ export class AuthService {
 
       const savedUser = await newUser.save();
 
-      this.mailService.sendEmailVerificationOtp(savedUser.email, token)
-        .catch(err => console.error('[AUTH] Failed to send verification email:', err));
-      
+      this.mailService
+        .sendEmailVerificationOtp(savedUser.email, token)
+        .catch((err) =>
+          console.error('[AUTH] Failed to send verification email:', err),
+        );
+
       return {
         id: savedUser._id,
         email: savedUser.email,
@@ -66,18 +76,23 @@ export class AuthService {
       };
     } catch (err) {
       // Fallback to Memory Store if DB is down
-      if (err.name === 'MongooseServerSelectionError' || err.message?.includes('buffering timed out')) {
+      if (
+        err.name === 'MongooseServerSelectionError' ||
+        err.message?.includes('buffering timed out')
+      ) {
         console.log('[AUTH] Using Memory Fallback for Registration');
         if (this.memoryStore.has(email)) {
-          throw new ConflictException('User with this email already exists (Memory)');
+          throw new ConflictException(
+            'User with this email already exists (Memory)',
+          );
         }
-        
+
         const id = Math.random().toString(36).substring(7);
         const saltRounds = 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
-        
+
         const token = Math.floor(100000 + Math.random() * 900000).toString();
-        
+
         const userData = {
           _id: id,
           email,
@@ -87,10 +102,10 @@ export class AuthService {
           status: 'PENDING_VERIFICATION',
           verificationToken: token,
         };
-        
+
         this.memoryStore.set(email, userData);
         this.memoryStore.set(id, userData);
-        
+
         return {
           id,
           email,
@@ -114,10 +129,15 @@ export class AuthService {
     }
 
     if (!user || user.status !== 'ACTIVE') {
-      throw new UnauthorizedException('Invalid credentials or inactive account');
+      throw new UnauthorizedException(
+        'Invalid credentials or inactive account',
+      );
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.passwordHash);
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.passwordHash,
+    );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -144,7 +164,8 @@ export class AuthService {
     const user = await this.userModel.findOne({ email });
     if (!user)
       return {
-        message: 'If this email is registered, a password reset link has been sent.',
+        message:
+          'If this email is registered, a password reset link has been sent.',
       };
 
     // Generate a 6-digit OTP (for simulation)
@@ -153,11 +174,14 @@ export class AuthService {
     user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
     await user.save();
 
-    console.log(`[AUTH SERVICE] Sending password reset OTP for ${email}: ${token}`);
-    
+    console.log(
+      `[AUTH SERVICE] Sending password reset OTP for ${email}: ${token}`,
+    );
+
     // Send OTP email
-    await this.mailService.sendPasswordResetOtp(email, token)
-      .catch(err => console.error('[AUTH] Failed to send OTP email:', err));
+    await this.mailService
+      .sendPasswordResetOtp(email, token)
+      .catch((err) => console.error('[AUTH] Failed to send OTP email:', err));
 
     return {
       message: 'Password reset instructions have been sent.',
@@ -171,7 +195,8 @@ export class AuthService {
       resetPasswordExpires: { $gt: new Date() },
     });
 
-    if (!user) throw new UnauthorizedException('Invalid or expired reset token');
+    if (!user)
+      throw new UnauthorizedException('Invalid or expired reset token');
 
     const saltRounds = 10;
     user.passwordHash = await bcrypt.hash(newPassword, saltRounds);
@@ -208,7 +233,7 @@ export class AuthService {
     }
 
     if (!user) throw new UnauthorizedException('User not found');
-    
+
     if (user.status === 'ACTIVE') {
       return { message: 'Email is already verified' };
     }
@@ -228,8 +253,11 @@ export class AuthService {
     if (user.save) {
       await user.save();
       // Optionally send welcome email here since they are now active
-      this.mailService.sendWelcomeEmail(user.email, user.profile?.firstName || 'عضو إبزيم')
-        .catch(err => console.error('[AUTH] Failed to send welcome email:', err));
+      this.mailService
+        .sendWelcomeEmail(user.email, user.profile?.firstName || 'عضو إبزيم')
+        .catch((err) =>
+          console.error('[AUTH] Failed to send welcome email:', err),
+        );
     } else {
       this.memoryStore.set(email, user); // Memory update
     }

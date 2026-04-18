@@ -11,20 +11,20 @@ export class Contribution {
   @Prop({ required: true })
   amount: number;
 
-  @Prop({ 
-    type: String, 
-    enum: ['ANNUAL_MEMBERSHIP', 'GENERAL_DONATION', 'PROJECT_SUPPORT'], 
-    required: true 
+  @Prop({
+    type: String,
+    enum: ['ANNUAL_MEMBERSHIP', 'GENERAL_DONATION', 'PROJECT_SUPPORT'],
+    required: true,
   })
   type: string;
 
   @Prop()
   projectId?: string; // Optional restoration project ID
 
-  @Prop({ 
-    type: String, 
-    enum: ['PENDING', 'VERIFIED', 'REJECTED'], 
-    default: 'PENDING' 
+  @Prop({
+    type: String,
+    enum: ['PENDING', 'VERIFIED', 'REJECTED'],
+    default: 'PENDING',
   })
   status: string;
 

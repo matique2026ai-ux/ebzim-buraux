@@ -3,19 +3,26 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ReportDocument } from './schemas/report.schema';
 import { ReportWorkflowUtil } from './utils/report-workflow.util';
-import { buildOffsetPagination, formatOffsetPaginatedResponse } from '../../common/utils/pagination.util';
+import {
+  buildOffsetPagination,
+  formatOffsetPaginatedResponse,
+} from '../../common/utils/pagination.util';
 import { Role } from '../../common/enums/role.enum';
 
 @Injectable()
 export class ReportsService {
-  constructor(@InjectModel('Report') private reportModel: Model<ReportDocument>) {}
+  constructor(
+    @InjectModel('Report') private reportModel: Model<ReportDocument>,
+  ) {}
 
   async createReport(dto: any, reporterId: string | null) {
     const reportData = { ...dto };
-    
+
     // Auto-generate title if missing
     if (!reportData.title) {
-      const categoryLabel = reportData.incidentCategory?.toLowerCase().replace('_', ' ') || 'incident';
+      const categoryLabel =
+        reportData.incidentCategory?.toLowerCase().replace('_', ' ') ||
+        'incident';
       reportData.title = `${categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1)} Report`;
     }
 
@@ -23,7 +30,13 @@ export class ReportsService {
       ...reportData,
       reporterId,
       status: 'SUBMITTED',
-      timeline: [{ actorId: reporterId ? new Types.ObjectId(reporterId) : null, action: 'SUBMITTED', timestamp: new Date() }],
+      timeline: [
+        {
+          actorId: reporterId ? new Types.ObjectId(reporterId) : null,
+          action: 'SUBMITTED',
+          timestamp: new Date(),
+        },
+      ],
     });
   }
 
@@ -37,7 +50,12 @@ export class ReportsService {
     }
 
     const [reports, total] = await Promise.all([
-      this.reportModel.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).exec(),
+      this.reportModel
+        .find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.reportModel.countDocuments(query),
     ]);
 

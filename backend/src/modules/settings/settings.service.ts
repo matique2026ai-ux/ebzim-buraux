@@ -22,10 +22,8 @@ export class SettingsService implements OnModuleInit {
   }
 
   async updateMembershipFee(fee: number) {
-    return this.settingsModel.findOneAndUpdate(
-      {},
-      { annualMembershipFee: fee },
-      { new: true },
-    ).exec();
+    return this.settingsModel
+      .findOneAndUpdate({}, { annualMembershipFee: fee }, { new: true })
+      .exec();
   }
 }

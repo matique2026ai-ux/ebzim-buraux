@@ -11,18 +11,25 @@ export interface CloudinaryResponse {
 
 @Injectable()
 export class MediaService {
-  
-  async uploadImage(file: any, folder = 'ebzim/uploads'): Promise<CloudinaryResponse> {
-    
+  async uploadImage(
+    file: any,
+    folder = 'ebzim/uploads',
+  ): Promise<CloudinaryResponse> {
     // Strict MIME boundary validation
-    if (!file.mimetype.match(/^(image\/(jpeg|png|gif|webp)|video\/(mp4|webm))$/)) {
-      throw new BadRequestException('Invalid file type. Only jpeg, png, gif, webp imagery or mp4, webm videos are allowed.');
+    if (
+      !file.mimetype.match(/^(image\/(jpeg|png|gif|webp)|video\/(mp4|webm))$/)
+    ) {
+      throw new BadRequestException(
+        'Invalid file type. Only jpeg, png, gif, webp imagery or mp4, webm videos are allowed.',
+      );
     }
 
     // Increased limit for institutional media content (images/videos)
     const MAX_MB = 20;
     if (file.size > MAX_MB * 1024 * 1024) {
-      throw new BadRequestException(`File size exceeds strict ${MAX_MB}MB limit.`);
+      throw new BadRequestException(
+        `File size exceeds strict ${MAX_MB}MB limit.`,
+      );
     }
 
     return new Promise<CloudinaryResponse>((resolve, reject) => {

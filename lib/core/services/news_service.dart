@@ -86,13 +86,21 @@ class NewsPost {
             .toList()
         : <ProjectMilestone>[];
 
-    // Fallback: Read category and status from metadata if top-level fields are missing/null
-    final categoryStr = json['category']?.toString() ?? metadata['category']?.toString() ?? 'ANNOUNCEMENT';
+    final titleArRaw = title['ar']?.toString() ?? '';
+    final isProjectTagged = titleArRaw.startsWith('[PROJ]');
+    final cleanTitleAr = isProjectTagged ? titleArRaw.replaceFirst('[PROJ]', '') : titleArRaw;
+
+    // Final category determination (Top-level > Metadata > Tag > Default)
+    String categoryStr = json['category']?.toString() ?? metadata['category']?.toString() ?? 'ANNOUNCEMENT';
+    if (categoryStr == 'ANNOUNCEMENT' && isProjectTagged) {
+      categoryStr = 'PROJECT'; // Force project categorization if tag found
+    }
+
     final pStatus = json['projectStatus']?.toString() ?? metadata['projectStatus']?.toString() ?? 'GENERAL';
 
     return NewsPost(
       id: json['_id']?.toString() ?? '',
-      titleAr: title['ar']?.toString() ?? '',
+      titleAr: cleanTitleAr,
       titleFr: title['fr']?.toString() ?? '',
       titleEn: title['en']?.toString() ?? '',
       summaryAr: summary['ar']?.toString() ?? '',
@@ -224,7 +232,7 @@ class NewsService {
       'category': category,
       'projectStatus': projectStatus,
       'title': {
-        'ar': title,
+        'ar': (category != 'ANNOUNCEMENT') ? '[PROJ]$title' : title,
         'fr': title,
         'en': title,
       },
@@ -247,6 +255,8 @@ class NewsService {
         'projectStatus': projectStatus, // Fallback for stale backend
       },
     };
+
+    print('DEBUG: Sending createPost data: $data');
 
     if (imageUrl != null && imageUrl.isNotEmpty) {
       data['media'] = [

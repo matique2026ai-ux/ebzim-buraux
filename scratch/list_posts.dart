@@ -2,31 +2,19 @@ import 'package:dio/dio.dart';
 
 void main() async {
   final dio = Dio(BaseOptions(
-    baseUrl: 'https://ebzim-api.onrender.com/api/v1/',
+    baseUrl: 'https://ebzim-api-prod.onrender.com/api/v1/',
     validateStatus: (status) => true,
   ));
 
-  print('--- FETCHING LAST 10 POSTS WITH METADATA ---');
+  final timestamp = DateTime.now().millisecondsSinceEpoch;
+  print('--- FETCHING WITH CACHE BUSTER ($timestamp) ---');
   try {
-    final response = await dio.get('posts');
+    final response = await dio.get('posts?t=$timestamp&limit=50');
     final data = response.data;
-    List posts = [];
-    if (data is List) {
-      posts = data;
-    } else if (data is Map && data['data'] is List) {
-      posts = data['data'];
-    }
+    List posts = data['data'] ?? [];
 
-    if (posts.isEmpty) {
-      print('❌ NO POSTS FOUND');
-    } else {
-      for (var p in posts.take(5)) {
-        print('-------------------------------------------');
-        print('ID: ${p['_id']}');
-        print('Title: ${p['title']?['ar']}');
-        print('Category (Top): ${p['category']}');
-        print('Metadata: ${p['metadata']}');
-      }
+    for (var p in posts) {
+      print('ID: ${p['_id']} | Title: ${p['title']?['ar']} | Category: ${p['category']} | Metadata: ${p['metadata']}');
     }
   } catch (e) {
     print('❌ ERROR: $e');

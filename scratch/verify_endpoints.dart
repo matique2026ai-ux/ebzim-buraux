@@ -6,25 +6,23 @@ void main() async {
     validateStatus: (status) => true,
   ));
   
-  final endpoints = [
-    'hero-slides', 
-    'cms/hero-slides',
-    'partners', 
-    'cms/partners',
-    'leadership',
-    'cms/leadership',
-    'posts', 
-    'events',
-    'auth/login'
-  ];
+  print('--- VERIFYING LIVE API STATUS ---');
   
-  print('--- VERIFYING ENDPOINTS ---');
-  for (var endpoint in endpoints) {
+  // Test POST for Auth
+  try {
+    final authRes = await dio.post('auth/login', data: {'email': 'test@test.com', 'password': 'test'});
+    print('AUTH LOGIN (POST): Status ${authRes.statusCode} (401/400 is GOOD, 404 is BAD)');
+  } catch (e) {
+    print('AUTH LOGIN ERROR: $e');
+  }
+
+  final getEndpoints = ['posts', 'events', 'hero-slides', 'partners', 'leadership'];
+  for (var ep in getEndpoints) {
     try {
-      final response = await dio.get(endpoint);
-      print('ENDPOINT: $endpoint -> STATUS: ${response.statusCode}');
+      final res = await dio.get(ep);
+      print('GET $ep: Status ${res.statusCode}');
     } catch (e) {
-      print('ENDPOINT: $endpoint -> ERROR: $e');
+      print('GET $ep ERROR: $e');
     }
   }
 }

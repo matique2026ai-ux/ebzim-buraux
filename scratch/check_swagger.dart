@@ -6,21 +6,25 @@ void main() async {
     validateStatus: (status) => true,
   ));
   
-  try {
-    // Usually NestJS swagger is at /api/docs-json or similar if configured
-    // Let's try to find it
-    final response = await dio.get('api/docs-json'); // Try common path
-    if (response.statusCode == 200) {
-      print('SWAGGER FOUND!');
-      final paths = (response.data['paths'] as Map).keys.toList();
-      print('PATHS:');
-      for (var path in paths) {
-        print(path);
+  final paths = [
+    'api',
+    'api/docs',
+    'api-docs',
+    'swagger',
+    'api/v1/docs',
+    'docs'
+  ];
+  
+  print('--- SEARCHING FOR SWAGGER/API INFO ---');
+  for (var path in paths) {
+    try {
+      final response = await dio.get(path);
+      print('PATH: $path -> STATUS: ${response.statusCode}');
+      if (response.statusCode == 200 && response.data.toString().contains('swagger')) {
+        print('SWAGGER LIKELY AT: $path');
       }
-    } else {
-      print('SWAGGER NOT FOUND (Status: ${response.statusCode})');
+    } catch (e) {
+      print('PATH: $path -> ERROR: $e');
     }
-  } catch (e) {
-    print('ERROR: $e');
   }
 }

@@ -92,14 +92,36 @@ class DigitalIdCard extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text(
-                      '${loc.cardTitle} / MEMBERSHIP CARD',
-                      style: GoogleFonts.cairo(
-                        color: gold,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1,
-                      ),
+                    child: Column(
+                      children: [
+                        Text(
+                          '${loc.cardTitle} / MEMBERSHIP CARD',
+                          style: GoogleFonts.cairo(
+                            color: gold,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        if (user.membershipLevel.toUpperCase() == 'SUPER_ADMIN' || user.membershipLevel.toUpperCase() == 'ADMIN')
+                          Container(
+                            margin: const EdgeInsets.only(top: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: user.membershipLevel.toUpperCase() == 'SUPER_ADMIN' ? Colors.black : emerald,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              user.membershipLevel.toUpperCase() == 'SUPER_ADMIN' ? 'SUPER ADMIN (OWNER)' : 'ASSOCIATION ADMIN',
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   

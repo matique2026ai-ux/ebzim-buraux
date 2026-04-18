@@ -11,6 +11,8 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/services/web_helper.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
+import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
@@ -40,8 +42,26 @@ class AdminDashboardScreen extends ConsumerWidget {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final userAsync = ref.watch(currentUserProvider);
+    final userRole = userAsync.value?.membershipLevel.toUpperCase() ?? 'ADMIN';
+    final isSuperAdmin = userRole == 'SUPER_ADMIN';
+
+    final List<Map<String, dynamic>> allTabs = [
+      {'icon': Icons.group_add_rounded, 'text': 'العضوية', 'view': const _MembershipTab()},
+      {'icon': Icons.people_alt_rounded, 'text': 'المستخدمون', 'view': const _UsersTab()},
+      {'icon': Icons.dashboard_customize_rounded, 'text': 'المحتوى', 'view': const _CMSTab()},
+      {'icon': Icons.event_rounded, 'text': 'الأنشطة', 'view': const _EventsTab()},
+      {'icon': Icons.newspaper_rounded, 'text': 'الأخبار', 'view': const _NewsTab()},
+      {'icon': Icons.architecture_rounded, 'text': 'المشاريع', 'view': const _ProjectsTab()},
+      {'icon': Icons.flag_rounded, 'text': 'البلاغات', 'view': const _ReportsTab()},
+      if (isSuperAdmin) ...[
+        {'icon': Icons.account_balance_wallet_rounded, 'text': 'المساهمات', 'view': const _FinancialsTab()},
+        {'icon': Icons.settings_rounded, 'text': 'الإعدادات', 'view': const _SettingsTab()},
+      ],
+    ];
+
     return DefaultTabController(
-      length: 8,
+      length: allTabs.length,
       child: Scaffold(
         backgroundColor: const Color(0xFFF4F6F9),
         body: NestedScrollView(
@@ -123,7 +143,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 child: Icon(Icons.chevron_left_rounded, size: 10, color: Colors.white.withValues(alpha: 0.2)),
                               ),
                               Text(
-                                'إدارة النظام'.toUpperCase(),
+                                (isSuperAdmin ? 'إشراف المشرف العام' : 'إدارة النظام').toUpperCase(),
                                 style: GoogleFonts.inter(
                                   color: AppTheme.accentColor.withValues(alpha: 0.6),
                                   fontSize: 8,
@@ -136,7 +156,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                           const SizedBox(height: 6),
                           // Smaller, centered bold title
                           Text(
-                            'لوحة الإدارة الشاملة',
+                            isSuperAdmin ? 'لوحة السيادة والتحكم' : 'لوحة الإدارة الشاملة',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.tajawal(
                               fontSize: 22, // Decreased from 28 to 22
@@ -159,7 +179,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'المركز الرئيسي للتحكم والعمليات',
+                                isSuperAdmin ? 'أهلاً بك يا مشرف النظام. جميع الصلاحيات مفعلة.' : 'المركز الرئيسي للتحكم والعمليات',
                                 style: GoogleFonts.tajawal(
                                   fontSize: 10,
                                   color: Colors.white.withValues(alpha: 0.35),
@@ -188,32 +208,14 @@ class AdminDashboardScreen extends ConsumerWidget {
                     unselectedLabelColor: Colors.white54,
                     labelStyle: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 12),
                     unselectedLabelStyle: GoogleFonts.tajawal(fontSize: 12),
-                    tabs: const [
-                      Tab(icon: Icon(Icons.group_add_rounded, size: 18), text: 'العضوية'),
-                      Tab(icon: Icon(Icons.people_alt_rounded, size: 18), text: 'المستخدمون'),
-                      Tab(icon: Icon(Icons.dashboard_customize_rounded, size: 18), text: 'المحتوى'),
-                      Tab(icon: Icon(Icons.event_rounded, size: 18), text: 'الأنشطة'),
-                      Tab(icon: Icon(Icons.newspaper_rounded, size: 18), text: 'الأخبار'),
-                      Tab(icon: Icon(Icons.flag_rounded, size: 18), text: 'البلاغات'),
-                      Tab(icon: Icon(Icons.account_balance_wallet_rounded, size: 18), text: 'المساهمات'),
-                      Tab(icon: Icon(Icons.settings_rounded, size: 18), text: 'الإعدادات'),
-                    ],
+                    tabs: allTabs.map((t) => Tab(icon: Icon(t['icon'], size: 18), text: t['text'])).toList(),
                   ),
                 ),
               ),
             ),
           ],
-          body: const TabBarView(
-            children: [
-              _MembershipTab(),
-              _UsersTab(),
-              _CMSTab(),
-              _EventsTab(),
-              _NewsTab(),
-              _ReportsTab(),
-              _FinancialsTab(),
-              _SettingsTab(),
-            ],
+          body: TabBarView(
+            children: allTabs.map((t) => t['view'] as Widget).toList(),
           ),
         ),
       ),
@@ -440,7 +442,7 @@ class _UserCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 _buildSmallBadge(
-                  label: user.membershipLevel,
+                  label: _getLocalizedRole(user.membershipLevel, AppLocalizations.of(context)!),
                   color: roleColor,
                   isOutline: true,
                 ),
@@ -482,38 +484,45 @@ class _UserCard extends ConsumerWidget {
             }
           },
           icon: const Icon(Icons.more_vert_rounded, color: Color(0xFF64748B)),
-          itemBuilder: (_) => [
-            PopupMenuItem(
-              value: 'edit',
-              child: Row(
-                children: [
-                  const Icon(Icons.edit_outlined, size: 18, color: AppTheme.primaryColor),
-                  const SizedBox(width: 8),
-                  Text('تعديل البيانات', style: GoogleFonts.tajawal()),
-                ],
+          itemBuilder: (_) {
+            final currentUserRole = ref.watch(currentUserProvider).value?.membershipLevel.toUpperCase() ?? 'ADMIN';
+            final isSuper = currentUserRole == 'SUPER_ADMIN';
+            
+            return [
+              if (isSuper)
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      const Icon(Icons.edit_outlined, size: 18, color: AppTheme.primaryColor),
+                      const SizedBox(width: 8),
+                      Text('تعديل البيانات', style: GoogleFonts.tajawal()),
+                    ],
+                  ),
+                ),
+              PopupMenuItem(
+                value: 'ban',
+                child: Row(
+                  children: [
+                    Icon(isBanned ? Icons.check_circle_outline : Icons.block_flipped, size: 18, color: isBanned ? Colors.green : Colors.orange),
+                    const SizedBox(width: 8),
+                    Text(isBanned ? 'تفعيل الحساب' : 'حظر الحساب', style: GoogleFonts.tajawal()),
+                  ],
+                ),
               ),
-            ),
-            PopupMenuItem(
-              value: 'ban',
-              child: Row(
-                children: [
-                  Icon(isBanned ? Icons.check_circle_outline : Icons.block_flipped, size: 18, color: isBanned ? Colors.green : Colors.orange),
-                  const SizedBox(width: 8),
-                  Text(isBanned ? 'تفعيل الحساب' : 'حظر الحساب', style: GoogleFonts.tajawal()),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: 'delete',
-              child: Row(
-                children: [
-                  const Icon(Icons.delete_outline, size: 18, color: Colors.red),
-                  const SizedBox(width: 8),
-                  Text('حذف الحساب', style: GoogleFonts.tajawal(color: Colors.red)),
-                ],
-              ),
-            ),
-          ],
+              if (isSuper)
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      const Icon(Icons.delete_outline, size: 18, color: Colors.red),
+                      const SizedBox(width: 8),
+                      Text('حذف الحساب', style: GoogleFonts.tajawal(color: Colors.red)),
+                    ],
+                  ),
+                ),
+            ];
+          },
         ),
       ),
     );
@@ -1047,6 +1056,9 @@ class _CMSTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userAsync = ref.watch(currentUserProvider);
+    final isSuperAdmin = userAsync.value?.membershipLevel.toUpperCase() == 'SUPER_ADMIN';
+    
     final slidesAsync = ref.watch(heroSlidesProvider);
     final partnersAsync = ref.watch(partnersProvider);
     final leadershipAsync = ref.watch(leadershipProvider);
@@ -1063,16 +1075,17 @@ class _CMSTab extends ConsumerWidget {
           ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
           const SizedBox(height: 24),
 
-          // Hero Management Card
-          _CMSManagementCard(
-            title: 'شريط الواجهة (Hero Carousel)',
-            description: 'تغيير صور العرض والنصوص الترويجية في الصفحة الرئيسية',
-            icon: Icons.view_carousel_rounded,
-            color: const Color(0xFF6366F1),
-            count: slidesAsync.when(data: (d) => '${d.length} شرائح', loading: () => '...', error: (_, __) => '0'),
-            onTap: () => context.push('/admin/cms/hero'),
-          ),
-          const SizedBox(height: 16),
+          // Hero Management Card (SUPER_ADMIN ONLY)
+          if (isSuperAdmin)
+            _CMSManagementCard(
+              title: 'شريط الواجهة (Hero Carousel)',
+              description: 'تغيير صور العرض والنصوص الترويجية في الصفحة الرئيسية',
+              icon: Icons.view_carousel_rounded,
+              color: const Color(0xFF6366F1),
+              count: slidesAsync.when(data: (d) => '${d.length} شرائح', loading: () => '...', error: (_, __) => '0'),
+              onTap: () => context.push('/admin/cms/hero'),
+            ),
+          if (isSuperAdmin) const SizedBox(height: 16),
 
           // Partners Management Card
           _CMSManagementCard(
@@ -2925,13 +2938,242 @@ class _EditUserDialogState extends State<_EditUserDialog> {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB: PROJECTS
+// ─────────────────────────────────────────────────────────────────────────────
+class _ProjectsTab extends ConsumerWidget {
+  const _ProjectsTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // We use the same news provider but the UI will label them as projects
+    final newsAsync = ref.watch(adminNewsProvider);
+
+    return RefreshIndicator(
+      color: AppTheme.primaryColor,
+      onRefresh: () async => ref.invalidate(adminNewsProvider),
+      child: newsAsync.when(
+        data: (allPosts) {
+          final projects = allPosts.where((p) => p.category == 'HERITAGE' || p.category == 'PROJECT').toList();
+          final avgProgress = projects.isEmpty ? 0 : (projects.map((p) => p.progressPercentage).reduce((a, b) => a + b) / projects.length * 100).toInt();
+
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SectionHeader(
+                  title: 'إدارة المشاريع',
+                  subtitle: 'متابعة المشاريع الجديدة وتقارير الإنجاز الميداني',
+                  icon: Icons.architecture_rounded,
+                ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
+                const SizedBox(height: 20),
+                
+                // Project-specific metrics
+                Row(
+                  children: [
+                    _StatCard(
+                      label: 'مشاريع ميدانية',
+                      value: '${projects.length}',
+                      icon: Icons.construction_rounded,
+                      gradient: const LinearGradient(colors: [Color(0xFF0369A1), Color(0xFF0EA5E9)]),
+                    ),
+                    const SizedBox(width: 12),
+                    _StatCard(
+                      label: 'نسبة الإنجاز العام',
+                      value: '$avgProgress%', 
+                      icon: Icons.trending_up_rounded,
+                      gradient: const LinearGradient(colors: [Color(0xFF15803D), Color(0xFF22C55E)]),
+                    ),
+                  ],
+                ).animate().fadeIn(delay: 200.ms),
+            
+            const SizedBox(height: 28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'قائمة المشاريع والتقدم',
+                  style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
+                ),
+                GestureDetector(
+                  onTap: () => context.push('/admin/news/create'), // Reuse the news creation for now
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(colors: [Color(0xFF0369A1), Color(0xFF0EA5E9)]),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add_task_rounded, color: Colors.white, size: 16),
+                        const SizedBox(width: 6),
+                        Text('مشروع جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            
+            if (projects.isEmpty)
+              const _EmptyState(message: 'لا توجد مشاريع مسجلة بعد', icon: Icons.architecture_rounded)
+            else
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: projects.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final post = projects[index];
+                  return _AdminProjectCard(post: post)
+                      .animate(delay: (index * 80).ms)
+                      .fadeIn()
+                      .slideY(begin: 0.05);
+                },
+              ),
+            const SizedBox(height: 40),
+          ],
+        ),
+      );
+    },
+    loading: () => const _LoadingShimmer(),
+    error: (e, _) => _ErrorState(error: e.toString()),
+  );
+}
+
+class _AdminProjectCard extends StatefulWidget {
+  final NewsPost post;
+  const _AdminProjectCard({required this.post});
+
+  @override
+  State<_AdminProjectCard> createState() => _AdminProjectCardState();
+}
+
+class _AdminProjectCardState extends State<_AdminProjectCard> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4)),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: widget.post.imageUrl,
+                  width: 80, height: 80,
+                  fit: BoxFit.cover,
+                  errorWidget: (_, __, ___) => Container(color: Colors.grey.shade100, child: const Icon(Icons.image_not_supported_outlined)),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.post.titleAr,
+                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14),
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    LinearProgressIndicator(
+                      value: widget.post.progressPercentage,
+                      backgroundColor: Colors.blue.shade50,
+                      color: Colors.blue.shade600,
+                      minHeight: 4,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Text(
+                          'تقدم المشروع: ${(widget.post.progressPercentage * 100).toInt()}%',
+                          style: GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'تحديث: ${DateFormat('yyyy/MM/dd').format(widget.post.publishedAt)}',
+                          style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit_note_rounded, color: Colors.blue),
+                    onPressed: () => context.push('/admin/news/create', extra: widget.post),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      _isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () => setState(() => _isExpanded = !_isExpanded),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          if (_isExpanded) ...[
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Divider(height: 1),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0F1A0F), // Dark background for the timeline to make it pop
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: EbzimProjectTimeline(
+                milestones: widget.post.milestones,
+                lang: 'ar',
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 Color _getRoleColor(String role) {
-  switch (role) {
-    case 'SUPER_ADMIN': return const Color(0xFF7C3AED);
-    case 'ADMIN': return const Color(0xFF1D4ED8);
+  switch (role.toUpperCase()) {
+    case 'SUPER_ADMIN': return const Color(0xFFD4AF37); // Royal Gold
+    case 'ADMIN': return AppTheme.primaryColor;
     case 'MEMBER': return const Color(0xFF15803D);
     case 'AUTHORITY': return const Color(0xFFB45309);
     default: return const Color(0xFF64748B);
+  }
+}
+
+String _getLocalizedRole(String role, AppLocalizations loc) {
+  switch (role.toUpperCase()) {
+    case 'SUPER_ADMIN': return loc.dashMemberLevelSuperAdmin;
+    case 'ADMIN': return loc.dashMemberLevelAdmin;
+    case 'MEMBER': return loc.dashMemberLevelMember;
+    case 'PUBLIC': return loc.dashMemberLevelPublic;
+    default: return role;
   }
 }
 

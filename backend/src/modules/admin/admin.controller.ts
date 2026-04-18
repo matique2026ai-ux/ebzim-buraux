@@ -44,7 +44,8 @@ export class AdminController {
   }
 
   @Delete('users/:id')
-  @ApiOperation({ summary: 'Delete user account' })
+  @Roles(Role.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Delete user account (Super Admin only)' })
   async deleteUser(@Param('id') id: string) {
     return this.adminService.deleteUser(id);
   }

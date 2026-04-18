@@ -209,6 +209,8 @@
     "dashPendingDesc": "Your membership application is currently being reviewed by the executive office. We will notify you once the status is updated.",
     "dashMemberLevelPublic": "User Account (EBZIM Platform)",
     "dashMemberLevelMember": "Official Member",
+    "dashMemberLevelAdmin": "System Administrator",
+    "dashMemberLevelSuperAdmin": "Super Admin (Owner)",
     "dashAccountStatus": "Account Status",
     "dashAccountActive": "Active Account",
     "dashAccountNote": "Note: Creating a platform account does not grant official association membership.",

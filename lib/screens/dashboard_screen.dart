@@ -29,6 +29,8 @@ class DashboardScreen extends ConsumerWidget {
 
   String _getLocalizedLevel(UserProfile user, AppLocalizations loc) {
     switch (user.membershipLevel.toUpperCase()) {
+      case 'SUPER_ADMIN': return loc.dashMemberLevelSuperAdmin;
+      case 'ADMIN': return loc.dashMemberLevelAdmin;
       case 'PUBLIC': return loc.dashMemberLevelPublic;
       case 'MEMBER': return loc.dashMemberLevelMember;
       default: return user.membershipLevel;
@@ -323,7 +325,11 @@ class _HeroSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _StatusBadge(label: levelLabel, isPublic: isPublic),
+            _StatusBadge(
+              label: levelLabel, 
+              isPublic: isPublic, 
+              rawLevel: user.membershipLevel,
+            ),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -367,18 +373,43 @@ class _HeroSection extends StatelessWidget {
 class _StatusBadge extends StatelessWidget {
   final String label;
   final bool isPublic;
-  const _StatusBadge({required this.label, required this.isPublic});
+  final String rawLevel;
+
+  const _StatusBadge({
+    required this.label, 
+    required this.isPublic,
+    required this.rawLevel,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final color = isPublic ? _textSecondary(context) : _kGold;
-    final icon = isPublic ? Icons.person_outline_rounded : Icons.verified_outlined;
+    final isSuperAdmin = rawLevel.toUpperCase() == 'SUPER_ADMIN';
+    final isAdmin = rawLevel.toUpperCase() == 'ADMIN';
+    
+    Color color = isPublic ? _textSecondary(context) : _kGold;
+    IconData icon = isPublic ? Icons.person_outline_rounded : Icons.verified_outlined;
+    
+    if (isSuperAdmin) {
+      color = const Color(0xFFD4AF37); // Royal Gold
+      icon = Icons.shield_rounded;
+    } else if (isAdmin) {
+      color = _kGold;
+      icon = Icons.admin_panel_settings_rounded;
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: isSuperAdmin ? 1.5 : 1.0),
+        boxShadow: isSuperAdmin ? [
+          BoxShadow(
+            color: color.withValues(alpha: 0.05),
+            blurRadius: 10,
+            spreadRadius: 1,
+          )
+        ] : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -389,7 +420,7 @@ class _StatusBadge extends StatelessWidget {
             label,
             style: GoogleFonts.cairo(
               fontSize: 11,
-              fontWeight: FontWeight.w700,
+              fontWeight: isSuperAdmin ? FontWeight.w900 : FontWeight.w700,
               color: color,
               letterSpacing: 0.3,
             ),

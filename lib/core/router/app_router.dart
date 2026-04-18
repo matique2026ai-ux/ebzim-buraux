@@ -42,6 +42,7 @@ import 'package:ebzim_app/screens/digital_library_screen.dart';
 import 'package:ebzim_app/screens/contributions_screen.dart';
 import 'package:ebzim_app/screens/news_detail_screen.dart';
 import 'package:ebzim_app/screens/edit_profile_screen.dart';
+import 'package:ebzim_app/screens/project_details_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Premium Page Transition Builders
@@ -343,6 +344,32 @@ final appRouterProvider = Provider((ref) {
       GoRoute(
         path: '/onboarding',
         pageBuilder: (context, state) => _fadePage(state, const OnboardingSliderScreen()),
+      ),
+      GoRoute(
+        path: '/project/:id',
+        pageBuilder: (context, state) {
+          final project = state.extra as NewsPost?;
+          final id = state.pathParameters['id']!;
+          
+          if (project != null) {
+            return _slidePage(state, ProjectDetailsScreen(project: project));
+          }
+
+          // Fallback for direct links / deep links
+          return CustomTransitionPage(
+            child: Consumer(
+              builder: (context, ref, _) {
+                final postAsync = ref.watch(postDetailsProvider(id));
+                return postAsync.when(
+                  data: (p) => p != null ? ProjectDetailsScreen(project: p) : const Scaffold(body: Center(child: Text('Project not found'))),
+                  loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+                  error: (_, __) => const Scaffold(body: Center(child: Text('Error loading project'))),
+                );
+              },
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child),
+          );
+        },
       ),
       GoRoute(
         path: '/news/:id',

@@ -42,4 +42,19 @@ export class CreatePostDto {
   @IsBoolean()
   @IsOptional()
   isFeatured?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isPinned?: boolean;
+
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @IsEnum(['PREPARING', 'ACTIVE', 'ON_HOLD', 'COMPLETED', 'GENERAL'])
+  @IsOptional()
+  projectStatus?: string;
+
+  @IsOptional()
+  metadata?: Record<string, any>;
 }

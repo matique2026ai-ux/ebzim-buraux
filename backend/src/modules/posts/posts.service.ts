@@ -35,6 +35,9 @@ export class PostsService {
       content: post.content,
       imageUrl: post.media.find((m) => m.type === 'IMAGE')?.cloudinaryUrl || '',
       publishedAt: post.publishedAt,
+      category: (post as any).category || 'ANNOUNCEMENT',
+      projectStatus: (post as any).projectStatus || 'GENERAL',
+      metadata: (post as any).metadata || {},
     }));
 
     return formatCursorPaginatedResponse(localizedPosts);

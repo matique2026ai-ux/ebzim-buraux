@@ -209,6 +209,8 @@
     "dashPendingDesc": "تتم مراجعة طلب انضمامك من قبل المكتب التنفيذي حالياً. سنخطرك فور تحديث الحالة.",
     "dashMemberLevelPublic": "حساب مستخدم (منصة إبزيم)",
     "dashMemberLevelMember": "عضو رسمي بالجمعية",
+    "dashMemberLevelAdmin": "مسؤول النظام (Admin)",
+    "dashMemberLevelSuperAdmin": "المشرف العام (Super Admin)",
     "dashAccountStatus": "حالة الحساب",
     "dashAccountActive": "حساب نشط",
     "dashAccountNote": "تنبيه: إنشاء حساب في المنصة لا يعني اكتساب العضوية الرسمية في الجمعية.",

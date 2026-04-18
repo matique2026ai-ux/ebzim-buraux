@@ -3,22 +3,9 @@ import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Represents a single news post / announcement from the association.
-class NewsPost {
-  final String id;
-  final String titleAr;
-  final String titleFr;
-  final String titleEn;
-  final String summaryAr;
-  final String summaryFr;
-  final String summaryEn;
-  final String bodyAr;
-  final String bodyFr;
-  final String bodyEn;
-  final String imageUrl;
-  final DateTime publishedAt;
-  final String category; // 'ANNOUNCEMENT' | 'PARTNERSHIP' | 'EVENT_REPORT' | 'GENERAL'
-  final String? partnerName; // e.g. "المتحف الوطني للآثار" or "جامعة سطيف"
-  final bool isPinned;
+  final double progressPercentage; // 0.0 to 1.0
+  final List<ProjectMilestone> milestones;
+  final String projectStatus;
 
   NewsPost({
     required this.id,
@@ -36,6 +23,9 @@ class NewsPost {
     required this.category,
     this.partnerName,
     this.isPinned = false,
+    this.progressPercentage = 0.0,
+    this.milestones = const [],
+    this.projectStatus = 'GENERAL',
   });
 
   String getTitle(String lang) {
@@ -68,6 +58,18 @@ class NewsPost {
       img = firstMedia['cloudinaryUrl']?.toString() ?? '';
     }
 
+    // Parse metadata for project-specific fields
+    final metadata = json['metadata'] is Map ? json['metadata'] : {};
+    final progress = (metadata['progressPercentage'] != null) 
+        ? double.tryParse(metadata['progressPercentage'].toString()) ?? 0.0 
+        : 0.0;
+    
+    final milestonesList = (metadata['milestones'] is List)
+        ? (metadata['milestones'] as List)
+            .map((m) => ProjectMilestone.fromJson(Map<String, dynamic>.from(m)))
+            .toList()
+        : <ProjectMilestone>[];
+
     return NewsPost(
       id: json['_id']?.toString() ?? '',
       titleAr: title['ar']?.toString() ?? '',
@@ -84,8 +86,43 @@ class NewsPost {
       category: json['category']?.toString() ?? 'GENERAL',
       partnerName: json['partnerName']?.toString(),
       isPinned: json['isPinned'] == true,
+      progressPercentage: progress,
+      milestones: milestonesList,
+      projectStatus: json['projectStatus']?.toString() ?? 'GENERAL',
     );
   }
+}
+
+class ProjectMilestone {
+  final String labelAr;
+  final String labelFr;
+  final DateTime date;
+  final bool isCompleted;
+
+  ProjectMilestone({
+    required this.labelAr,
+    required this.labelFr,
+    required this.date,
+    this.isCompleted = false,
+  });
+
+  String getLabel(String lang) => lang == 'ar' ? labelAr : labelFr;
+
+  factory ProjectMilestone.fromJson(Map<String, dynamic> json) {
+    return ProjectMilestone(
+      labelAr: json['labelAr']?.toString() ?? '',
+      labelFr: json['labelFr']?.toString() ?? '',
+      date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime.now(),
+      isCompleted: json['isCompleted'] == true,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'labelAr': labelAr,
+    'labelFr': labelFr,
+    'date': date.toIso8601String(),
+    'isCompleted': isCompleted,
+  };
 }
 
 class NewsService {
@@ -158,9 +195,14 @@ class NewsService {
     required String content,
     String? imageUrl,
     bool isPinned = false,
+    String category = 'ANNOUNCEMENT',
+    String projectStatus = 'GENERAL',
+    Map<String, dynamic>? metadata,
   }) async {
     final Map<String, dynamic> data = {
       'categoryId': newsCategoryId,
+      'category': category,
+      'projectStatus': projectStatus,
       'title': {
         'ar': title,
         'fr': title,
@@ -179,6 +221,7 @@ class NewsService {
       'status': 'PUBLISHED',
       'isPinned': isPinned,
       'isFeatured': false,
+      'metadata': metadata ?? {},
     };
 
     if (imageUrl != null && imageUrl.isNotEmpty) {
@@ -215,7 +258,8 @@ final adminNewsProvider = FutureProvider<List<NewsPost>>((ref) {
 
 final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
   final news = await ref.watch(newsServiceProvider).getNews();
-  return news.where((p) => p.category == 'HERITAGE' || p.category == 'PROJECT').toList();
+  const projectCategories = {'HERITAGE', 'PROJECT', 'RESTORATION', 'SCIENTIFIC', 'CULTURAL', 'ARTISTIC'};
+  return news.where((p) => projectCategories.contains(p.category)).toList();
 });
 
 final postDetailsProvider = FutureProvider.family<NewsPost?, String>((ref, id) {

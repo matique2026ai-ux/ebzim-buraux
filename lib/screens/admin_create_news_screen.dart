@@ -33,6 +33,12 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
   bool _isPinned = false;
   bool _isLoading = false;
 
+  // Project-specific fields
+  String _category = 'ANNOUNCEMENT';
+  String _projectStatus = 'GENERAL';
+  double _progressPercentage = 0.0;
+  final List<ProjectMilestone> _milestones = [];
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +49,10 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       _contentArController.text = p.bodyAr;
       _existingImageUrl = p.imageUrl;
       _isPinned = p.isPinned;
+      _category = p.category;
+      _projectStatus = p.projectStatus;
+      _progressPercentage = p.progressPercentage;
+      _milestones.addAll(p.milestones);
     }
   }
 
@@ -104,6 +114,12 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         'status': 'PUBLISHED',
         'isFeatured': false,
         'isPinned': _isPinned,
+        'category': _category,
+        'projectStatus': _projectStatus,
+        'metadata': {
+          'progressPercentage': _progressPercentage,
+          'milestones': _milestones.map((m) => m.toJson()).toList(),
+        }
       };
 
       if (finalImageUrl != null && finalImageUrl.isNotEmpty) {
@@ -125,6 +141,12 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
               content: _contentArController.text,
               imageUrl: finalImageUrl,
               isPinned: _isPinned,
+              category: _category,
+              projectStatus: _projectStatus,
+              metadata: {
+                'progressPercentage': _progressPercentage,
+                'milestones': _milestones.map((m) => m.toJson()).toList(),
+              },
             );
       }
 
@@ -334,51 +356,180 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                     const SizedBox(height: 24),
 
                     // Pin Toggle
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: _isPinned ? AppTheme.heritageOrange.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: _isPinned ? AppTheme.heritageOrange : Colors.white.withValues(alpha: 0.1),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Category Selection
+                    _buildLabel('نوع المنشور'),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        _CategoryChip(
+                          label: 'خبر عام',
+                          icon: Icons.newspaper_rounded,
+                          isSelected: _category == 'ANNOUNCEMENT',
+                          onTap: () => setState(() => _category = 'ANNOUNCEMENT'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'ترميم',
+                          icon: Icons.architecture_rounded,
+                          isSelected: _category == 'RESTORATION',
+                          onTap: () => setState(() => _category = 'RESTORATION'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'ثقافي',
+                          icon: Icons.theater_comedy_rounded,
+                          isSelected: _category == 'CULTURAL',
+                          onTap: () => setState(() => _category = 'CULTURAL'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _CategoryChip(
+                          label: 'علمي',
+                          icon: Icons.science_rounded,
+                          isSelected: _category == 'SCIENTIFIC',
+                          onTap: () => setState(() => _category = 'SCIENTIFIC'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'فني',
+                          icon: Icons.palette_rounded,
+                          isSelected: _category == 'ARTISTIC',
+                          onTap: () => setState(() => _category = 'ARTISTIC'),
+                        ),
+                      ],
+                    ),
+
+                    if (_category != 'ANNOUNCEMENT') ...[
+                      const SizedBox(height: 32),
+                      _buildLabel('حالة المشروع'),
+                      const SizedBox(height: 10),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _StatusChip(
+                              label: 'قيد التحضير',
+                              color: Colors.blue,
+                              isSelected: _projectStatus == 'PREPARING',
+                              onTap: () => setState(() => _projectStatus = 'PREPARING'),
+                            ),
+                            const SizedBox(width: 10),
+                            _StatusChip(
+                              label: 'نشط',
+                              color: Colors.green,
+                              isSelected: _projectStatus == 'ACTIVE',
+                              onTap: () => setState(() => _projectStatus = 'ACTIVE'),
+                            ),
+                            const SizedBox(width: 10),
+                            _StatusChip(
+                              label: 'متوقف',
+                              color: Colors.orange,
+                              isSelected: _projectStatus == 'ON_HOLD',
+                              onTap: () => setState(() => _projectStatus = 'ON_HOLD'),
+                            ),
+                            const SizedBox(width: 10),
+                            _StatusChip(
+                              label: 'مكتمل',
+                              color: const Color(0xFFC5A059),
+                              isSelected: _projectStatus == 'COMPLETED',
+                              onTap: () => setState(() => _projectStatus = 'COMPLETED'),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Row(
+                      const SizedBox(height: 24),
+                      const SizedBox(height: 32),
+                      _buildLabel('نسبة تقدم المشروع (${(_progressPercentage * 100).toInt()}%)'),
+                      Slider(
+                        value: _progressPercentage,
+                        onChanged: (v) => setState(() => _progressPercentage = v),
+                        activeColor: _kGreen,
+                        inactiveColor: _kGreen.withValues(alpha: 0.2),
+                      ),
+
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
-                            Icons.push_pin_rounded,
-                            color: _isPinned ? AppTheme.heritageOrange : Colors.white.withValues(alpha: 0.3),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'تثبيت هذا المقال',
-                                  style: TextStyle(
-                                    color: _isPinned ? AppTheme.heritageOrange : Colors.white.withValues(alpha: 0.7),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'سيظهر في أعلى القائمة بلون مميز',
-                                  style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.4),
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Switch(
-                            value: _isPinned,
-                            onChanged: (v) => setState(() => _isPinned = v),
-                            activeColor: AppTheme.heritageOrange,
+                          _buildLabel('مراحل المشروع (Milestones)'),
+                          TextButton.icon(
+                            onPressed: _addMilestone,
+                            icon: const Icon(Icons.add_circle_outline, size: 16),
+                            label: const Text('إضافة مرحلة', style: TextStyle(fontSize: 12)),
+                            style: TextButton.styleFrom(foregroundColor: _kGreen),
                           ),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 8),
+                      ..._milestones.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final milestone = entry.value;
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.03),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    _buildField(
+                                      controller: TextEditingController(text: milestone.labelAr)..selection = TextSelection.collapsed(offset: milestone.labelAr.length),
+                                      hint: 'عنوان المرحلة (مثال: انطلاق الأشغال)',
+                                      onChanged: (v) => _milestones[idx] = ProjectMilestone(
+                                        labelAr: v,
+                                        labelFr: v,
+                                        date: milestone.date,
+                                        isCompleted: milestone.isCompleted,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                          onPressed: () => _selectMilestoneDate(idx),
+                                          child: Text(
+                                            'التاريخ: ${milestone.date.day}/${milestone.date.month}/${milestone.date.year}',
+                                            style: const TextStyle(fontSize: 11, color: Colors.white60),
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        const Text('مكتملة', style: TextStyle(fontSize: 11, color: Colors.white60)),
+                                        Checkbox(
+                                          value: milestone.isCompleted,
+                                          onChanged: (v) => setState(() => _milestones[idx] = ProjectMilestone(
+                                            labelAr: milestone.labelAr,
+                                            labelFr: milestone.labelFr,
+                                            date: milestone.date,
+                                            isCompleted: v ?? false,
+                                          )),
+                                          activeColor: _kGreen,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+                                onPressed: () => setState(() => _milestones.removeAt(idx)),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
 
                     const SizedBox(height: 40),
 
@@ -438,11 +589,13 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
     required String hint,
     int maxLines = 1,
     String? Function(String?)? validator,
+    void Function(String)? onChanged,
   }) {
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
       validator: validator,
+      onChanged: onChanged,
       style: const TextStyle(color: Colors.white, fontSize: 14.5),
       decoration: InputDecoration(
         hintText: hint,
@@ -467,6 +620,123 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         ),
         errorStyle: const TextStyle(color: Color(0xFFEF4444)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      ),
+    );
+  }
+
+  void _addMilestone() {
+    setState(() {
+      _milestones.add(ProjectMilestone(
+        labelAr: '',
+        labelFr: '',
+        date: DateTime.now(),
+        isCompleted: false,
+      ));
+    });
+  }
+
+  Future<void> _selectMilestoneDate(int idx) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _milestones[idx].date,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null) {
+      setState(() {
+        _milestones[idx] = ProjectMilestone(
+          labelAr: _milestones[idx].labelAr,
+          labelFr: _milestones[idx].labelFr,
+          date: picked,
+          isCompleted: _milestones[idx].isCompleted,
+        );
+      });
+    }
+  }
+}
+
+class _CategoryChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _CategoryChip({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? _kGreen : Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? _kGreen : Colors.white.withValues(alpha: 0.1),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: isSelected ? Colors.white : Colors.white60),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.white60,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  final String label;
+  final Color color;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _StatusChip({
+    required this.label,
+    required this.color,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? color : color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? color : color.withValues(alpha: 0.3),
+            width: 1.5,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : color,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

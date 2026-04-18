@@ -30,7 +30,7 @@ export class HeroService {
   }
 
   async findOne(id: string) {
-    return this.heroSlideModel.findById(id).exec();
+    return this.slideModel.findById(id).exec();
   }
 
   async delete(id: string) {

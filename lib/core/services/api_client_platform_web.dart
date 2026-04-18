@@ -8,10 +8,6 @@ void configurePlatformProxy(Dio dio) {
   // Browser handles proxies automatically.
 }
 
-String getPlatformBaseUrl(bool isTest) {
-  final hostname = html.window.location.hostname;
-  if (hostname == 'localhost' || hostname == '127.0.0.1') {
-    return 'http://localhost:3000/api/v1/';
-  }
-  return 'https://ebzim-api-prod.onrender.com/api/v1/';
+  // For local testing, we use the local backend
+  return 'http://localhost:3000/api/v1/';
 }

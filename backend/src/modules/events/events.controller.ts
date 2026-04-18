@@ -96,6 +96,12 @@ export class EventsController {
     return this.eventsService.deleteEvent(id);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Get single event details' })
+  async findOne(@Param('id') id: string) {
+    return this.eventsService.findOne(id);
+  }
+
   @Post(':id/rsvp')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN, Role.ADMIN, Role.AUTHORITY, Role.MEMBER, Role.PUBLIC)

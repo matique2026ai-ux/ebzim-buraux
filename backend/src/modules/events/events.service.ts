@@ -76,6 +76,10 @@ export class EventsService {
     return this.eventModel.findByIdAndDelete(id).exec();
   }
 
+  async findOne(id: string) {
+    return this.eventModel.findById(id).exec();
+  }
+
   async rsvp(eventId: string, userId: string) {
     try {
       return await this.rsvpModel.create({

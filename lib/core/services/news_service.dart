@@ -86,6 +86,10 @@ class NewsPost {
             .toList()
         : <ProjectMilestone>[];
 
+    // Fallback: Read category and status from metadata if top-level fields are missing/null
+    final categoryStr = json['category']?.toString() ?? metadata['category']?.toString() ?? 'ANNOUNCEMENT';
+    final pStatus = json['projectStatus']?.toString() ?? metadata['projectStatus']?.toString() ?? 'GENERAL';
+
     return NewsPost(
       id: json['_id']?.toString() ?? '',
       titleAr: title['ar']?.toString() ?? '',
@@ -99,12 +103,12 @@ class NewsPost {
       bodyEn: content['en']?.toString() ?? '',
       imageUrl: img,
       publishedAt: DateTime.tryParse(json['publishedAt']?.toString() ?? json['createdAt']?.toString() ?? '') ?? DateTime.now(),
-      category: json['category']?.toString() ?? 'GENERAL',
-      partnerName: json['partnerName']?.toString(),
+      category: categoryStr,
+      projectStatus: pStatus,
+      partnerName: metadata['partnerName']?.toString() ?? json['partnerName']?.toString(),
       isPinned: json['isPinned'] == true,
       progressPercentage: progress,
       milestones: milestonesList,
-      projectStatus: json['projectStatus']?.toString() ?? 'GENERAL',
     );
   }
 }
@@ -237,7 +241,11 @@ class NewsService {
       'status': 'PUBLISHED',
       'isPinned': isPinned,
       'isFeatured': false,
-      'metadata': metadata ?? {},
+      'metadata': {
+        ...?metadata,
+        'category': category, // Fallback for stale backend
+        'projectStatus': projectStatus, // Fallback for stale backend
+      },
     };
 
     if (imageUrl != null && imageUrl.isNotEmpty) {

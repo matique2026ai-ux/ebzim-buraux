@@ -8,10 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:typed_data';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:ebzim_app/core/services/web_helper.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
@@ -260,19 +259,7 @@ class _UsersTabState extends State<_UsersTab> {
   }
 
   void _triggerWebDownload(String content, String filename) {
-    if (!kIsWeb) return;
-
-    // Add UTF-8 BOM to ensure Excel opens Arabic characters correctly
-    final bytes = utf8.encode(content);
-    final bom = [0xEF, 0xBB, 0xBF];
-    final fullContent = Uint8List.fromList([...bom, ...bytes]);
-
-    final blob = html.Blob([fullContent], 'text/csv;charset=utf-8');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.AnchorElement(href: url)
-      ..setAttribute('download', filename)
-      ..click();
-    html.Url.revokeObjectUrl(url);
+    triggerWebDownload(content, filename);
   }
 
   @override

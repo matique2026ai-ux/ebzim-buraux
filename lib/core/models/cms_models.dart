@@ -10,6 +10,7 @@ class HeroSlide {
   final String? buttonText;
   final String? buttonLink;
   final int order;
+  final bool isActive;
 
   HeroSlide({
     required this.id,
@@ -23,6 +24,7 @@ class HeroSlide {
     this.buttonText,
     this.buttonLink,
     this.order = 0,
+    this.isActive = true,
   });
 
   factory HeroSlide.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class HeroSlide {
       buttonText: json['buttonText']?.toString(),
       buttonLink: json['buttonLink']?.toString(),
       order: json['order'] is int ? json['order'] : 0,
+      isActive: json['isActive'] ?? true,
     );
   }
 
@@ -82,6 +85,7 @@ class Partner {
   final String? websiteUrl;
   final String color;
   final int order;
+  final bool isActive;
 
   Partner({
     required this.id,
@@ -95,6 +99,7 @@ class Partner {
     this.websiteUrl,
     this.color = '#0F172A',
     this.order = 0,
+    this.isActive = true,
   });
 
   factory Partner.fromJson(Map<String, dynamic> json) {
@@ -112,6 +117,7 @@ class Partner {
       websiteUrl: json['websiteUrl']?.toString(),
       color: json['color']?.toString() ?? '#0F172A',
       order: json['order'] is int ? json['order'] : 0,
+      isActive: json['isActive'] ?? true,
     );
   }
 
@@ -137,6 +143,7 @@ class EbzimLeader {
   final String roleFr;
   final String? photoUrl;
   final int order;
+  final bool isActive;
 
   EbzimLeader({
     required this.id,
@@ -147,6 +154,7 @@ class EbzimLeader {
     required this.roleFr,
     this.photoUrl,
     this.order = 0,
+    this.isActive = true,
   });
 
   factory EbzimLeader.fromJson(Map<String, dynamic> json) {
@@ -161,6 +169,7 @@ class EbzimLeader {
       roleFr: role['fr']?.toString() ?? '',
       photoUrl: json['photoUrl']?.toString(),
       order: json['order'] is int ? json['order'] : 0,
+      isActive: json['isActive'] ?? true,
     );
   }
 

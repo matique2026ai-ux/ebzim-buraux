@@ -532,6 +532,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         'photoUrl': '',
         'color': '1A6B3A',
         'order': 0,
+        'isActive': true,
       };
       return;
     }
@@ -562,6 +563,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         'role': {'ar': l.roleAr, 'en': l.roleEn, 'fr': l.roleFr},
         'photoUrl': l.photoUrl ?? '',
         'order': l.order,
+        'isActive': l.isActive,
       };
     }
   }
@@ -734,6 +736,14 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       const SizedBox(height: 20),
       _sectionLabel('ترتيب العرض', Icons.sort_rounded),
       _buildTextField('الترتيب (رقمي)', 'order', _data['order']?.toString(), isAr: false),
+      const SizedBox(height: 20),
+      _sectionLabel('الحالة', Icons.visibility_rounded),
+      SwitchListTile(
+        title: Text('تفعيل الشريحة (ظاهرة للجمهور)', style: GoogleFonts.tajawal(fontSize: 14)),
+        value: _data['isActive'] ?? true,
+        activeColor: AppTheme.accentColor,
+        onChanged: (v) => setState(() => _data['isActive'] = v),
+      ),
     ];
   }
 
@@ -779,6 +789,45 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         ],
         tabKey: 'goals',
       ),
+      const SizedBox(height: 24),
+      _sectionLabel('الحالة والترتيب', Icons.settings_suggest_rounded),
+      SwitchListTile(
+        title: Text('تفعيل الشريك (ظاهر للجمهور)', style: GoogleFonts.tajawal(fontSize: 14)),
+        value: _data['isActive'] ?? true,
+        activeColor: AppTheme.accentColor,
+        onChanged: (v) => setState(() => _data['isActive'] = v),
+      ),
+      _buildTextField('الترتيب (رقمي)', 'order', _data['order']?.toString(), isAr: false),
+    ];
+  }
+
+  List<Widget> _leaderFields() {
+    return [
+      _sectionLabel('الصورة الشخصية', Icons.portrait_rounded),
+      _imageUploadArea('photoUrl', 'صورة العضو', _data['photoUrl']),
+      const SizedBox(height: 24),
+      _sectionLabel('بيانات العضو', Icons.person_rounded),
+      _buildTextField('الاسم الكامل (عربي) *', 'name.ar', _data['name']?['ar'], required: true, isAr: true),
+      const SizedBox(height: 12),
+      _buildTextField('Full Name (English)', 'name.en', _data['name']?['en'], isAr: false),
+      const SizedBox(height: 24),
+      _sectionLabel('المنصب الإداري', Icons.work_rounded),
+      _buildLangTabs(
+        fields: [
+          _buildTextField('المنصب (عربي)', 'role.ar', _data['role']?['ar'], isAr: true),
+          _buildTextField('Position (English)', 'role.en', _data['role']?['en'], isAr: false),
+          _buildTextField('Poste (Français)', 'role.fr', _data['role']?['fr'], isAr: false),
+        ],
+      ),
+      const SizedBox(height: 24),
+      _sectionLabel('الحالة والترتيب', Icons.settings_suggest_rounded),
+      SwitchListTile(
+        title: Text('تفعيل العضو (ظاهر للجمهور)', style: GoogleFonts.tajawal(fontSize: 14)),
+        value: _data['isActive'] ?? true,
+        activeColor: AppTheme.accentColor,
+        onChanged: (v) => setState(() => _data['isActive'] = v),
+      ),
+      _buildTextField('الترتيب (رقمي)', 'order', _data['order']?.toString(), isAr: false),
     ];
   }
 
@@ -794,8 +843,15 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
               setS(() => isUploading = true);
               try {
                 final file = result.files.first;
-                final url = await ref.read(mediaServiceProvider).uploadMedia(file.bytes!, file.name);
+                final bytes = file.bytes;
+                if (bytes == null) {
+                   if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('⚠️ تعذر قراءة ملف الصورة. حاول مرة أخرى.')));
+                   return;
+                }
+                final url = await ref.read(mediaServiceProvider).uploadMedia(bytes, file.name);
                 setState(() => _data[key] = url);
+              } catch (e) {
+                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('❌ فشل رفع الصورة: $e')));
               } finally {
                 setS(() => isUploading = false);
               }
@@ -870,31 +926,6 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
     }
   }
 
-  List<Widget> _leaderFields() {
-    return [
-      _sectionLabel('الصورة الشخصية', Icons.person_rounded),
-      _imagePreviewField('photoUrl', 'رابط الصورة الشخصية (URL)', _data['photoUrl'], isCircle: true),
-      const SizedBox(height: 20),
-      _sectionLabel('الاسم الكامل', Icons.badge_rounded),
-      _buildLangTabs(
-        fields: [
-          _buildTextField('الاسم (عربي) *', 'name.ar', _data['name']?['ar'], required: true, isAr: true),
-          _buildTextField('Name (English)', 'name.en', _data['name']?['en'], isAr: false),
-          _buildTextField('Nom (Français)', 'name.fr', _data['name']?['fr'], isAr: false),
-        ],
-      ),
-      const SizedBox(height: 20),
-      _sectionLabel('المنصب الوظيفي', Icons.work_rounded),
-      _buildLangTabs(
-        fields: [
-          _buildTextField('المنصب (عربي) *', 'role.ar', _data['role']?['ar'], required: true, isAr: true),
-          _buildTextField('Role (English)', 'role.en', _data['role']?['en'], isAr: false),
-          _buildTextField('Rôle (Français)', 'role.fr', _data['role']?['fr'], isAr: false),
-        ],
-        tabKey: 'role',
-      ),
-    ];
-  }
 
   Widget _sectionLabel(String label, IconData icon) {
     return Padding(

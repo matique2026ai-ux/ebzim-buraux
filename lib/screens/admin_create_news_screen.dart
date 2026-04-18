@@ -165,9 +165,13 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
            SnackBar(
             content: Text(successMsg),
             backgroundColor: const Color(0xFF15803D),
+            duration: const Duration(seconds: 3),
           ),
         );
-        context.go('/admin');
+        // Wait a bit before navigating back
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) context.go('/admin');
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -488,18 +492,24 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         value: _progressPercentage,
                         onChanged: (v) => setState(() => _progressPercentage = v),
                         activeColor: _kGreen,
-                        inactiveColor: _kGreen.withValues(alpha: 0.2),
+                        inactiveColor: Colors.white.withValues(alpha: 0.1),
+                        thumbColor: _kGold,
                       ),
                       const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _buildLabel('مراحل المشروع (Milestones)'),
-                          TextButton.icon(
+                          ElevatedButton.icon(
                             onPressed: _addMilestone,
-                            icon: const Icon(Icons.add_circle_outline, size: 16),
-                            label: const Text('إضافة مرحلة', style: TextStyle(fontSize: 12)),
-                            style: TextButton.styleFrom(foregroundColor: _kGreen),
+                            icon: const Icon(Icons.add_circle_outline, size: 16, color: Colors.white),
+                            label: const Text('إضافة مرحلة', style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _kGreen.withValues(alpha: 0.3),
+                              side: const BorderSide(color: _kGreen),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            ),
                           ),
                         ],
                       ),

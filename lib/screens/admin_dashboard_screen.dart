@@ -2984,7 +2984,8 @@ class _ProjectsTab extends ConsumerWidget {
       onRefresh: () async => ref.invalidate(adminNewsProvider),
       child: newsAsync.when(
         data: (allPosts) {
-          final projects = allPosts.where((p) => p.category == 'HERITAGE' || p.category == 'PROJECT').toList();
+          final projectCategories = ['HERITAGE', 'PROJECT', 'RESTORATION', 'CULTURAL', 'SCIENTIFIC', 'ARTISTIC'];
+          final projects = allPosts.where((p) => projectCategories.contains(p.category.toUpperCase())).toList();
           final avgProgress = projects.isEmpty ? 0 : (projects.map((p) => (p.progressPercentage)).reduce((a, b) => a + b) / projects.length * 100).toInt();
 
           return SingleChildScrollView(

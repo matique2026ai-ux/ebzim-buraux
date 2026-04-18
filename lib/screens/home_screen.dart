@@ -1,7 +1,9 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ebzim_app/core/services/auth_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
@@ -799,6 +801,17 @@ class _SunriseCarouselState extends State<_SunriseCarousel> {
         ),
         Row(
           children: [
+            if (kDebugMode)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8),
+                child: _GlassIconButton(
+                  icon: Icons.logout_rounded, 
+                  onTap: () async {
+                    await ref.read(authServiceProvider).logout();
+                    if (context.mounted) context.go('/login');
+                  },
+                ),
+              ),
             _GlassIconButton(icon: Icons.translate_outlined, onTap: () => context.push('/language')),
             const SizedBox(width: 8),
             _GlassIconButton(icon: Icons.person_outline, onTap: () => context.go('/dashboard')),

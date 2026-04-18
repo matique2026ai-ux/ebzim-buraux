@@ -4,6 +4,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // EBZIM API - Production Boot Sequence
+  // Last Sync: 2026-04-18 22:40 (Institutional Project Management Pass)
   const app = await NestFactory.create(AppModule);
 
   // Set Global API Prefix

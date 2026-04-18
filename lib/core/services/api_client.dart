@@ -44,7 +44,8 @@ class ApiClient {
         onError: (DioException e, handler) {
           print('[API ERROR] ${e.response?.statusCode} for ${e.requestOptions.path}');
           print('[API ERROR DATA] ${e.response?.data}');
-          if (e.response?.statusCode == 401) {
+          if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+            // If unauthorized or forbidden, clear token to force re-login
             storageService.deleteToken();
           }
           return handler.next(e);

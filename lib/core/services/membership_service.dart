@@ -157,7 +157,7 @@ class MembershipNotifier extends StateNotifier<MembershipFormState> {
       'attachments': state.attachments,
     };
     
-    await dio.post('/memberships', data: payload);
+    await dio.post('memberships', data: payload);
     state = const MembershipFormState();
   }
 }
@@ -169,7 +169,7 @@ final membershipProvider = StateNotifierProvider<MembershipNotifier, MembershipF
 final membershipStatusProvider = FutureProvider<String>((ref) async {
   final dio = ref.read(apiClientProvider).dio;
   try {
-    final response = await dio.get('/memberships/my-status');
+    final response = await dio.get('memberships/my-status');
     return response.data['status'] ?? 'NONE';
   } catch (e) {
     return 'NONE';
@@ -206,7 +206,7 @@ class MembershipRequest {
 final pendingMembershipsProvider = FutureProvider<List<MembershipRequest>>((ref) async {
   final dio = ref.read(apiClientProvider).dio;
   // Note: /memberships/admin returns a paginated response { data: [], meta: {} }
-  final response = await dio.get('/memberships/admin');
+  final response = await dio.get('memberships/admin');
   final list = (response.data['data'] as List).map((e) => MembershipRequest.fromJson(e)).toList();
   return list;
 });
@@ -219,7 +219,7 @@ class MembershipAdminService {
 
   Future<void> reviewRequest(String id, String status, {String? notes}) async {
     final dio = ref.read(apiClientProvider).dio;
-    await dio.patch('/memberships/$id/review', data: {
+    await dio.patch('memberships/$id/review', data: {
       'status': status,
       'internalReviewNotes': notes,
     });

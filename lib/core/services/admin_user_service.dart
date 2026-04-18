@@ -11,9 +11,18 @@ class AdminUserService {
   Future<List<UserProfile>> getAllUsers() async {
     try {
       final response = await _ref.read(apiClientProvider).dio.get('admin/users');
-      final List data = response.data;
-      return data.map((json) => UserProfile.fromJson(json)).toList();
+      final dynamic responseData = response.data;
+      List rawList = [];
+      
+      if (responseData is List) {
+        rawList = responseData;
+      } else if (responseData is Map && responseData['data'] is List) {
+        rawList = responseData['data'];
+      }
+      
+      return rawList.map((json) => UserProfile.fromJson(Map<String, dynamic>.from(json))).toList();
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching users: $e');
       return [];
     }

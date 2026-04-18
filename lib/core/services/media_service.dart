@@ -35,7 +35,7 @@ class MediaService {
         ),
       });
 
-      final response = await _dio.post('/media/upload', data: formData);
+      final response = await _dio.post('media/upload', data: formData);
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         return response.data['url'] as String; // Cloudinary URL returned

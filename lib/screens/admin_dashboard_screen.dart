@@ -3018,6 +3018,8 @@ class _ProjectsTab extends ConsumerWidget {
                   ],
                 ).animate().fadeIn(delay: 200.ms),
                 const SizedBox(height: 28),
+                Text('V1.2 - SYNC ACTIVE', style: TextStyle(fontSize: 9, color: Colors.grey.withValues(alpha: 0.5))),
+                const SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

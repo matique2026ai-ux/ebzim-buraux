@@ -6,7 +6,7 @@ void main() async {
     validateStatus: (status) => true,
   ));
 
-  print('--- FETCHING LAST 10 POSTS FROM SERVER ---');
+  print('--- FETCHING LAST 10 POSTS WITH METADATA ---');
   try {
     final response = await dio.get('posts');
     final data = response.data;
@@ -18,11 +18,14 @@ void main() async {
     }
 
     if (posts.isEmpty) {
-      print('❌ NO POSTS FOUND ON SERVER');
+      print('❌ NO POSTS FOUND');
     } else {
-      print('✅ FOUND ${posts.length} POSTS:');
-      for (var p in posts.take(10)) {
-        print('ID: ${p['_id']} | Title: ${p['title']?['ar']} | Category: ${p['category']} | Status: ${p['projectStatus']}');
+      for (var p in posts.take(5)) {
+        print('-------------------------------------------');
+        print('ID: ${p['_id']}');
+        print('Title: ${p['title']?['ar']}');
+        print('Category (Top): ${p['category']}');
+        print('Metadata: ${p['metadata']}');
       }
     }
   } catch (e) {

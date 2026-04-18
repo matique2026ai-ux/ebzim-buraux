@@ -51,7 +51,7 @@ export class CreatePostDto {
   @IsOptional()
   category?: string;
 
-  @IsEnum(['PREPARING', 'ACTIVE', 'ON_HOLD', 'COMPLETED', 'GENERAL', 'URGENT', 'IMPORTANT'])
+  @IsEnum(['PREPARING', 'LAUNCHING', 'ACTIVE', 'ON_HOLD', 'COMPLETED', 'GENERAL', 'URGENT', 'IMPORTANT'])
   @IsOptional()
   projectStatus?: string;
 

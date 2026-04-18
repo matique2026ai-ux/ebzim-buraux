@@ -295,8 +295,16 @@ final appRouterProvider = Provider((ref) {
       GoRoute(
         path: '/admin/news/create',
         pageBuilder: (context, state) {
-          final existingPost = state.extra as NewsPost?;
-          return _slidePage(state, AdminCreateNewsScreen(existingPost: existingPost));
+          if (state.extra is NewsPost) {
+            return _slidePage(state, AdminCreateNewsScreen(existingPost: state.extra as NewsPost));
+          } else if (state.extra is Map<String, dynamic>) {
+            final map = state.extra as Map<String, dynamic>;
+            return _slidePage(state, AdminCreateNewsScreen(
+              existingPost: map['existingPost'] as NewsPost?,
+              initialCategory: map['initialCategory'] as String?,
+            ));
+          }
+          return _slidePage(state, const AdminCreateNewsScreen());
         },
       ),
       GoRoute(

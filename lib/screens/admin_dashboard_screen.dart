@@ -3025,7 +3025,7 @@ class _ProjectsTab extends ConsumerWidget {
                       style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
                     ),
                     GestureDetector(
-                      onTap: () => context.push('/admin/news/create'),
+                      onTap: () => context.push('/admin/news/create', extra: {'initialCategory': 'RESTORATION'}),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                         decoration: BoxDecoration(

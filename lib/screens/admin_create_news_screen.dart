@@ -14,7 +14,8 @@ const _kGold = Color(0xFFC5A059);
 
 class AdminCreateNewsScreen extends ConsumerStatefulWidget {
   final NewsPost? existingPost;
-  const AdminCreateNewsScreen({super.key, this.existingPost});
+  final String? initialCategory;
+  const AdminCreateNewsScreen({super.key, this.existingPost, this.initialCategory});
 
   @override
   ConsumerState<AdminCreateNewsScreen> createState() => _AdminCreateNewsScreenState();
@@ -53,6 +54,12 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       _projectStatus = p.projectStatus;
       _progressPercentage = p.progressPercentage;
       _milestones.addAll(p.milestones);
+    } else if (widget.initialCategory != null) {
+      _category = widget.initialCategory!;
+      // Default project status if it's a project category
+      if (_category != 'ANNOUNCEMENT') {
+        _projectStatus = 'PREPARING';
+      }
     }
   }
 
@@ -152,7 +159,8 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         ref.invalidate(adminNewsProvider);
         ref.invalidate(newsProvider);
 
-        final successMsg = isEditing ? '✅ تم تحديث الخبر بنجاح!' : '✅ تم نشر الخبر بنجاح!';
+        final typeLabel = _category == 'ANNOUNCEMENT' ? 'الخبر' : 'المشروع';
+        final successMsg = isEditing ? '✅ تم تحديث $typeLabel بنجاح!' : '✅ تم نشر $typeLabel بنجاح!';
         ScaffoldMessenger.of(context).showSnackBar(
            SnackBar(
             content: Text(successMsg),
@@ -224,7 +232,9 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      widget.existingPost != null ? 'تعديل هذا الخبر' : 'إضافة خبر جديد',
+                      widget.existingPost != null 
+                        ? (_category == 'ANNOUNCEMENT' ? 'تعديل هذا الخبر' : 'تعديل هذا المشروع')
+                        : (_category == 'ANNOUNCEMENT' ? 'إضافة خبر جديد' : 'إضافة مشروع جديد'),
                       style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 24),
@@ -316,31 +326,31 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 28),
 
-                    _buildLabel('عنوان الخبر *'),
+                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'عنوان الخبر *' : 'عنوان المشروع *'),
                     const SizedBox(height: 8),
                     _buildField(
                       controller: _titleArController,
-                      hint: 'أدخل عنوان الخبر...',
+                      hint: _category == 'ANNOUNCEMENT' ? 'أدخل عنوان الخبر...' : 'أدخل عنوان المشروع...',
                       validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null,
                     ).animate().fadeIn(delay: 150.ms).slideX(begin: 0.04),
 
                     const SizedBox(height: 20),
 
-                    _buildLabel('ملخص سريع (للبطاقات)'),
+                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'ملخص سريع (للبطاقات)' : 'ملخص المشروع (للبطاقات)'),
                     const SizedBox(height: 8),
                     _buildField(
                       controller: _summaryArController,
-                      hint: 'وصف موجز يظهر في قائمة الأخبار...',
+                      hint: _category == 'ANNOUNCEMENT' ? 'وصف موجز يظهر في قائمة الأخبار...' : 'وصف موجز للمشروع...',
                       maxLines: 2,
                     ).animate().fadeIn(delay: 200.ms).slideX(begin: 0.04),
 
                     const SizedBox(height: 20),
 
-                    _buildLabel('نص الخبر الكامل *'),
+                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'نص الخبر الكامل *' : 'وصف المشروع بالتفصيل *'),
                     const SizedBox(height: 8),
                     _buildField(
                       controller: _contentArController,
-                      hint: 'اكتب محتوى الخبر هنا بالتفصيل...',
+                      hint: _category == 'ANNOUNCEMENT' ? 'اكتب محتوى الخبر هنا بالتفصيل...' : 'اكتب تفاصيل المشروع هنا...',
                       maxLines: 9,
                       validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null,
                     ).animate().fadeIn(delay: 250.ms).slideX(begin: 0.04),
@@ -413,28 +423,35 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                           if (_category != 'ANNOUNCEMENT') ...[
                             _StatusChip(
                               label: 'قيد التحضير',
-                              color: Colors.blue,
+                              color: Colors.blue.shade300,
                               isSelected: _projectStatus == 'PREPARING',
                               onTap: () => setState(() => _projectStatus = 'PREPARING'),
                             ),
                             const SizedBox(width: 10),
                             _StatusChip(
+                              label: 'انطلاق الإنجاز',
+                              color: Colors.indigo.shade400,
+                              isSelected: _projectStatus == 'LAUNCHING',
+                              onTap: () => setState(() => _projectStatus = 'LAUNCHING'),
+                            ),
+                            const SizedBox(width: 10),
+                            _StatusChip(
                               label: 'نشط',
-                              color: Colors.green,
+                              color: Colors.green.shade600,
                               isSelected: _projectStatus == 'ACTIVE',
                               onTap: () => setState(() => _projectStatus = 'ACTIVE'),
                             ),
                             const SizedBox(width: 10),
                             _StatusChip(
-                              label: 'متوقف',
-                              color: Colors.orange,
+                              label: 'متوقف مؤقتاً',
+                              color: Colors.orange.shade700,
                               isSelected: _projectStatus == 'ON_HOLD',
                               onTap: () => setState(() => _projectStatus = 'ON_HOLD'),
                             ),
                             const SizedBox(width: 10),
                             _StatusChip(
-                              label: 'مكتمل',
-                              color: const Color(0xFFC5A059),
+                              label: 'تم الإنجاز',
+                              color: _kGold,
                               isSelected: _projectStatus == 'COMPLETED',
                               onTap: () => setState(() => _projectStatus = 'COMPLETED'),
                             ),
@@ -563,7 +580,9 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         label: Text(
                           _isLoading
                               ? 'جاري النشر...'
-                              : (widget.existingPost != null ? 'تحديث الخبر' : 'نشر الخبر'),
+                              : (widget.existingPost != null 
+                                  ? (_category == 'ANNOUNCEMENT' ? 'تحديث الخبر' : 'تحديث المشروع')
+                                  : (_category == 'ANNOUNCEMENT' ? 'نشر الخبر' : 'نشر المشروع')),
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

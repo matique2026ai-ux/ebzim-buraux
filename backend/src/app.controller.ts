@@ -8,9 +8,10 @@ export class AppController {
   @Get('debug/test')
   getDebug() {
     return {
-      status: 'OK',
-      version: 'STABLE_V3_DEBUG',
+      status: 'EBZIM_DEPLOY_SYNCED',
+      version: 'STABLE_V4_FINAL_CHECK',
       timestamp: new Date().toISOString(),
+      deploymentTag: '11e55c2_force_update',
     };
   }
 

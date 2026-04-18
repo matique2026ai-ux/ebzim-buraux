@@ -25,6 +25,37 @@ import 'package:ebzim_app/core/models/cms_models.dart';
 import 'package:ebzim_app/screens/admin_cms_manage_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+class _MiniMetric extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color color;
+
+  const _MiniMetric({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade600)),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ADMIN DASHBOARD SCREEN
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2946,7 +2977,6 @@ class _ProjectsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // We use the same news provider but the UI will label them as projects
     final newsAsync = ref.watch(adminNewsProvider);
 
     return RefreshIndicator(
@@ -2955,7 +2985,7 @@ class _ProjectsTab extends ConsumerWidget {
       child: newsAsync.when(
         data: (allPosts) {
           final projects = allPosts.where((p) => p.category == 'HERITAGE' || p.category == 'PROJECT').toList();
-          final avgProgress = projects.isEmpty ? 0 : (projects.map((p) => p.progressPercentage).reduce((a, b) => a + b) / projects.length * 100).toInt();
+          final avgProgress = projects.isEmpty ? 0 : (projects.map((p) => (p.progressPercentage)).reduce((a, b) => a + b) / projects.length * 100).toInt();
 
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -2969,8 +2999,6 @@ class _ProjectsTab extends ConsumerWidget {
                   icon: Icons.architecture_rounded,
                 ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
                 const SizedBox(height: 20),
-                
-                // Project-specific metrics
                 Row(
                   children: [
                     _StatCard(
@@ -2988,61 +3016,61 @@ class _ProjectsTab extends ConsumerWidget {
                     ),
                   ],
                 ).animate().fadeIn(delay: 200.ms),
-            
-            const SizedBox(height: 28),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'قائمة المشاريع والتقدم',
-                  style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
+                const SizedBox(height: 28),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'قائمة المشاريع والتقدم',
+                      style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
+                    ),
+                    GestureDetector(
+                      onTap: () => context.push('/admin/news/create'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(colors: [Color(0xFF0369A1), Color(0xFF0EA5E9)]),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.add_task_rounded, color: Colors.white, size: 16),
+                            const SizedBox(width: 6),
+                            Text('مشروع جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                GestureDetector(
-                  onTap: () => context.push('/admin/news/create'), // Reuse the news creation for now
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [Color(0xFF0369A1), Color(0xFF0EA5E9)]),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.add_task_rounded, color: Colors.white, size: 16),
-                        const SizedBox(width: 6),
-                        Text('مشروع جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
-                      ],
-                    ),
+                const SizedBox(height: 16),
+                if (projects.isEmpty)
+                  const _EmptyState(message: 'لا توجد مشاريع مسجلة بعد', icon: Icons.architecture_rounded)
+                else
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: projects.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final post = projects[index];
+                      return _AdminProjectCard(post: post)
+                          .animate(delay: (index * 80).ms)
+                          .fadeIn()
+                          .slideY(begin: 0.05);
+                    },
                   ),
-                ),
+                const SizedBox(height: 40),
               ],
             ),
-            const SizedBox(height: 16),
-            
-            if (projects.isEmpty)
-              const _EmptyState(message: 'لا توجد مشاريع مسجلة بعد', icon: Icons.architecture_rounded)
-            else
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: projects.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final post = projects[index];
-                  return _AdminProjectCard(post: post)
-                      .animate(delay: (index * 80).ms)
-                      .fadeIn()
-                      .slideY(begin: 0.05);
-                },
-              ),
-            const SizedBox(height: 40),
-          ],
-        ),
-      );
-    },
-    loading: () => const _LoadingShimmer(),
-    error: (e, _) => _ErrorState(error: e.toString()),
-  );
+          );
+        },
+        loading: () => const _LoadingShimmer(),
+        error: (e, _) => _ErrorState(error: e.toString()),
+      ),
+    );
+  }
 }
 
 class _AdminProjectCard extends StatefulWidget {
@@ -3197,34 +3225,4 @@ Widget _buildSmallBadge({required String label, required Color color, bool isOut
   );
 }
 
-class _MiniMetric extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color color;
 
-  const _MiniMetric({
-    Key? key,
-    required this.label,
-    required this.value,
-    required this.color,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade600)),
-        const SizedBox(height: 2),
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            color: color,
-          ),
-        ),
-      ],
-    );
-  }
-}

@@ -633,6 +633,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dashMemberLevelMember => 'عضو رسمي بالجمعية';
 
   @override
+  String get dashMemberLevelAdmin => 'مسؤول النظام (Admin)';
+
+  @override
+  String get dashMemberLevelSuperAdmin => 'المشرف العام (Super Admin)';
+
+  @override
   String get dashAccountStatus => 'حالة الحساب';
 
   @override

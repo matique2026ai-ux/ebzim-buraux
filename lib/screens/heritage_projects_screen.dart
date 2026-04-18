@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -124,11 +125,11 @@ class HeritageProjectsScreen extends ConsumerWidget {
 
             // ── Project Cards ──────────────────────────────────────────────
             ref.watch(heritageProjectsProvider).when(
-              data: (projects) {
+              data: (List<NewsPost> projects) {
                 final query = ref.watch(searchQueryProvider).toLowerCase();
                 final filter = ref.watch(projectFilterProvider);
-
-                final filteredProjects = projects.where((p) {
+                
+                final filteredProjects = projects.where((NewsPost p) {
                   final matchesQuery = p.titleAr.toLowerCase().contains(query) ||
                                        p.titleFr.toLowerCase().contains(query) ||
                                        p.titleEn.toLowerCase().contains(query) ||
@@ -382,7 +383,6 @@ class _SearchAndFilterBar extends ConsumerWidget {
 // Project Card
 // ─────────────────────────────────────────────────────────────────────────────
 
-import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 
 class _ProjectCard extends StatelessWidget {
   final NewsPost project;

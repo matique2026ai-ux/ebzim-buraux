@@ -81,7 +81,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
     try {
       String? uploadedImageUrl;
 
-      // 1. Upload Image to Cloudinary if selected
       if ((_selectedFileBytes != null || _selectedFilePath != null) && _selectedFileName != null) {
         uploadedImageUrl = await ref.read(mediaServiceProvider).uploadMedia(
               _selectedFileBytes ?? Uint8List(0),
@@ -90,7 +89,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
             );
       }
 
-      // 2. Create or Update Post in Backend
       final isEditing = widget.existingPost != null;
       final finalImageUrl = uploadedImageUrl ?? _existingImageUrl;
       
@@ -151,7 +149,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       }
 
       if (mounted) {
-        // Invalidate providers to force a refresh on the admin dashboard
         ref.invalidate(adminNewsProvider);
         ref.invalidate(newsProvider);
 
@@ -196,7 +193,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       backgroundColor: const Color(0xFF0F1A0F),
       body: CustomScrollView(
         slivers: [
-          // Custom AppBar
           SliverAppBar(
             backgroundColor: const Color(0xFF0F1A0F),
             expandedHeight: 160,
@@ -248,7 +244,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                   children: [
                     const SizedBox(height: 8),
 
-                    // Cover Image Section - FIRST, most prominent
                     _buildLabel('صورة الغلاف'),
                     const SizedBox(height: 10),
                     GestureDetector(
@@ -321,7 +316,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 28),
 
-                    // Title
                     _buildLabel('عنوان الخبر *'),
                     const SizedBox(height: 8),
                     _buildField(
@@ -332,7 +326,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Summary
                     _buildLabel('ملخص سريع (للبطاقات)'),
                     const SizedBox(height: 8),
                     _buildField(
@@ -343,7 +336,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Content
                     _buildLabel('نص الخبر الكامل *'),
                     const SizedBox(height: 8),
                     _buildField(
@@ -355,12 +347,17 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                     
                     const SizedBox(height: 24),
 
-                    // Pin Toggle
-                    ),
+                    SwitchListTile(
+                      title: const Text('تثبيت في الأعلى', style: TextStyle(color: Colors.white, fontSize: 14.5)),
+                      subtitle: const Text('سيظهر الخبر في الشريط العلوي للمجلة', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                      value: _isPinned,
+                      onChanged: (val) => setState(() => _isPinned = val),
+                      activeColor: _kGreen,
+                      contentPadding: EdgeInsets.zero,
+                    ).animate().fadeIn(delay: 280.ms),
 
                     const SizedBox(height: 24),
 
-                    // Category Selection
                     _buildLabel('نوع المنشور'),
                     const SizedBox(height: 10),
                     Row(
@@ -405,15 +402,15 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         ),
                       ],
                     ),
-
-                    if (_category != 'ANNOUNCEMENT') ...[
-                      const SizedBox(height: 32),
-                      _buildLabel('حالة المشروع'),
-                      const SizedBox(height: 10),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
+                    
+                    const SizedBox(height: 32),
+                    _buildLabel(_category != 'ANNOUNCEMENT' ? 'حالة المشروع' : 'نوع الخبر'),
+                    const SizedBox(height: 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          if (_category != 'ANNOUNCEMENT') ...[
                             _StatusChip(
                               label: 'قيد التحضير',
                               color: Colors.blue,
@@ -441,10 +438,33 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                               isSelected: _projectStatus == 'COMPLETED',
                               onTap: () => setState(() => _projectStatus = 'COMPLETED'),
                             ),
+                          ] else ...[
+                            _StatusChip(
+                              label: 'خبر عام',
+                              color: Colors.grey,
+                              isSelected: _projectStatus == 'GENERAL' || _projectStatus == 'ANNOUNCEMENT',
+                              onTap: () => setState(() => _projectStatus = 'GENERAL'),
+                            ),
+                            const SizedBox(width: 10),
+                            _StatusChip(
+                              label: 'خبر هام',
+                              color: Colors.orange,
+                              isSelected: _projectStatus == 'IMPORTANT',
+                              onTap: () => setState(() => _projectStatus = 'IMPORTANT'),
+                            ),
+                            const SizedBox(width: 10),
+                            _StatusChip(
+                              label: 'خبر عاجل',
+                              color: Colors.red,
+                              isSelected: _projectStatus == 'URGENT',
+                              onTap: () => setState(() => _projectStatus = 'URGENT'),
+                            ),
                           ],
-                        ),
+                        ],
                       ),
-                      const SizedBox(height: 24),
+                    ),
+
+                    if (_category != 'ANNOUNCEMENT') ...[
                       const SizedBox(height: 32),
                       _buildLabel('نسبة تقدم المشروع (${(_progressPercentage * 100).toInt()}%)'),
                       Slider(
@@ -453,7 +473,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         activeColor: _kGreen,
                         inactiveColor: _kGreen.withValues(alpha: 0.2),
                       ),
-
                       const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -487,12 +506,12 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                                     _buildField(
                                       controller: TextEditingController(text: milestone.labelAr)..selection = TextSelection.collapsed(offset: milestone.labelAr.length),
                                       hint: 'عنوان المرحلة (مثال: انطلاق الأشغال)',
-                                      onChanged: (v) => _milestones[idx] = ProjectMilestone(
+                                      onChanged: (v) => setState(() => _milestones[idx] = ProjectMilestone(
                                         labelAr: v,
                                         labelFr: v,
                                         date: milestone.date,
                                         isCompleted: milestone.isCompleted,
-                                      ),
+                                      )),
                                     ),
                                     const SizedBox(height: 8),
                                     Row(
@@ -533,7 +552,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 40),
 
-                    // Submit Button
                     SizedBox(
                       width: double.infinity,
                       height: 56,

@@ -3,6 +3,22 @@ import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Represents a single news post / announcement from the association.
+class NewsPost {
+  final String id;
+  final String titleAr;
+  final String titleFr;
+  final String titleEn;
+  final String summaryAr;
+  final String summaryFr;
+  final String summaryEn;
+  final String bodyAr;
+  final String bodyFr;
+  final String bodyEn;
+  final String imageUrl;
+  final DateTime publishedAt;
+  final String category;
+  final String? partnerName;
+  final bool isPinned;
   final double progressPercentage; // 0.0 to 1.0
   final List<ProjectMilestone> milestones;
   final String projectStatus;

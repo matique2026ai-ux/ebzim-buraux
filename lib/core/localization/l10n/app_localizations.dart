@@ -1282,6 +1282,18 @@ abstract class AppLocalizations {
   /// **'عضو رسمي بالجمعية'**
   String get dashMemberLevelMember;
 
+  /// No description provided for @dashMemberLevelAdmin.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسؤول النظام (Admin)'**
+  String get dashMemberLevelAdmin;
+
+  /// No description provided for @dashMemberLevelSuperAdmin.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشرف العام (Super Admin)'**
+  String get dashMemberLevelSuperAdmin;
+
   /// No description provided for @dashAccountStatus.
   ///
   /// In ar, this message translates to:

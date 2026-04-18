@@ -632,6 +632,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashMemberLevelMember => 'Official Member';
 
   @override
+  String get dashMemberLevelAdmin => 'System Administrator';
+
+  @override
+  String get dashMemberLevelSuperAdmin => 'Super Admin (Owner)';
+
+  @override
   String get dashAccountStatus => 'Account Status';
 
   @override

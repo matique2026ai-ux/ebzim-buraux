@@ -58,7 +58,7 @@ export class Post {
 
   @Prop({
     type: String,
-    enum: ['PREPARING', 'ACTIVE', 'ON_HOLD', 'COMPLETED', 'GENERAL'],
+    enum: ['PREPARING', 'ACTIVE', 'ON_HOLD', 'COMPLETED', 'GENERAL', 'URGENT', 'IMPORTANT'],
     default: 'GENERAL',
   })
   projectStatus: string;

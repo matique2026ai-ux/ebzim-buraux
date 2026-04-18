@@ -59,6 +59,8 @@ let User = class User {
     membershipBadge;
     resetPasswordToken;
     resetPasswordExpires;
+    verificationToken;
+    verificationExpires;
 };
 exports.User = User;
 __decorate([
@@ -78,7 +80,7 @@ __decorate([
     __metadata("design:type", UserProfile)
 ], User.prototype, "profile", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: String, enum: ['ACTIVE', 'INACTIVE', 'BANNED'], default: 'ACTIVE' }),
+    (0, mongoose_1.Prop)({ type: String, enum: ['ACTIVE', 'INACTIVE', 'BANNED', 'PENDING_VERIFICATION'], default: 'ACTIVE' }),
     __metadata("design:type", String)
 ], User.prototype, "status", void 0);
 __decorate([
@@ -93,6 +95,14 @@ __decorate([
     (0, mongoose_1.Prop)({ type: Date, required: false }),
     __metadata("design:type", Date)
 ], User.prototype, "resetPasswordExpires", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String, required: false }),
+    __metadata("design:type", String)
+], User.prototype, "verificationToken", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Date, required: false }),
+    __metadata("design:type", Date)
+], User.prototype, "verificationExpires", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

@@ -22,6 +22,10 @@ const reports_module_1 = require("./modules/reports/reports.module");
 const media_module_1 = require("./modules/media/media.module");
 const settings_module_1 = require("./modules/settings/settings.module");
 const contributions_module_1 = require("./modules/contributions/contributions.module");
+const partners_module_1 = require("./modules/partners/partners.module");
+const hero_module_1 = require("./modules/hero/hero.module");
+const leadership_module_1 = require("./modules/leadership/leadership.module");
+const admin_module_1 = require("./modules/admin/admin.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -47,6 +51,10 @@ exports.AppModule = AppModule = __decorate([
             media_module_1.MediaModule,
             settings_module_1.SettingsModule,
             contributions_module_1.ContributionsModule,
+            partners_module_1.PartnersModule,
+            hero_module_1.HeroModule,
+            leadership_module_1.LeadershipModule,
+            admin_module_1.AdminModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

@@ -36,6 +36,9 @@ let AuthController = class AuthController {
     async resetPassword(token, password) {
         return this.authService.resetPassword(token, password);
     }
+    async verifyEmail(email, token) {
+        return this.authService.verifyEmail(email, token);
+    }
     async getProfile(req) {
         return this.authService.getProfile(req.user.userId);
     }
@@ -82,6 +85,16 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "resetPassword", null);
+__decorate([
+    (0, common_1.Post)('verify-email'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: 'Verify email using OTP' }),
+    __param(0, (0, common_1.Body)('email')),
+    __param(1, (0, common_1.Body)('token')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "verifyEmail", null);
 __decorate([
     (0, common_1.Get)('me'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

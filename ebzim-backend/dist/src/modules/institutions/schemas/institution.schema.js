@@ -22,11 +22,11 @@ __decorate([
     __metadata("design:type", String)
 ], MultilingualText.prototype, "ar", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({ required: false, default: '' }),
     __metadata("design:type", String)
 ], MultilingualText.prototype, "fr", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({ required: false, default: '' }),
     __metadata("design:type", String)
 ], MultilingualText.prototype, "en", void 0);
 exports.MultilingualText = MultilingualText = __decorate([

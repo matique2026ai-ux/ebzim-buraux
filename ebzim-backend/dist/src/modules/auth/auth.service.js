@@ -80,20 +80,25 @@ let AuthService = class AuthService {
             }
             const saltRounds = 10;
             const passwordHash = await bcrypt.hash(password, saltRounds);
+            const token = Math.floor(100000 + Math.random() * 900000).toString();
             const newUser = new this.userModel({
                 email,
                 passwordHash,
                 profile,
-                status: 'ACTIVE',
+                status: 'PENDING_VERIFICATION',
+                verificationToken: token,
+                verificationExpires: new Date(Date.now() + 3600000),
             });
             const savedUser = await newUser.save();
-            this.mailService.sendWelcomeEmail(savedUser.email, profile.firstName || 'عضو إبزيم')
-                .catch(err => console.error('[AUTH] Failed to send welcome email:', err));
+            this.mailService.sendEmailVerificationOtp(savedUser.email, token)
+                .catch(err => console.error('[AUTH] Failed to send verification email:', err));
             return {
                 id: savedUser._id,
                 email: savedUser.email,
                 role: savedUser.role,
                 profile: savedUser.profile,
+                isVerificationRequired: true,
+                debug_otp: token,
             };
         }
         catch (err) {
@@ -105,13 +110,15 @@ let AuthService = class AuthService {
                 const id = Math.random().toString(36).substring(7);
                 const saltRounds = 10;
                 const passwordHash = await bcrypt.hash(password, saltRounds);
+                const token = Math.floor(100000 + Math.random() * 900000).toString();
                 const userData = {
                     _id: id,
                     email,
                     passwordHash,
                     profile,
                     role: 'PUBLIC',
-                    status: 'ACTIVE'
+                    status: 'PENDING_VERIFICATION',
+                    verificationToken: token,
                 };
                 this.memoryStore.set(email, userData);
                 this.memoryStore.set(id, userData);
@@ -120,6 +127,8 @@ let AuthService = class AuthService {
                     email,
                     role: 'PUBLIC',
                     profile,
+                    isVerificationRequired: true,
+                    debug_otp: token,
                 };
             }
             throw err;
@@ -203,6 +212,39 @@ let AuthService = class AuthService {
             role: user.role,
             profile: user.profile,
         };
+    }
+    async verifyEmail(email, token) {
+        let user;
+        try {
+            user = await this.userModel.findOne({ email });
+        }
+        catch (err) {
+            console.log('[AUTH] Verify Email fallback to memory');
+            user = this.memoryStore.get(email);
+        }
+        if (!user)
+            throw new common_1.UnauthorizedException('User not found');
+        if (user.status === 'ACTIVE') {
+            return { message: 'Email is already verified' };
+        }
+        if (user.verificationToken !== token) {
+            throw new common_1.UnauthorizedException('Invalid verification token');
+        }
+        if (user.verificationExpires && user.verificationExpires < new Date()) {
+            throw new common_1.UnauthorizedException('Verification token has expired');
+        }
+        user.status = 'ACTIVE';
+        user.verificationToken = undefined;
+        user.verificationExpires = undefined;
+        if (user.save) {
+            await user.save();
+            this.mailService.sendWelcomeEmail(user.email, user.profile?.firstName || 'عضو إبزيم')
+                .catch(err => console.error('[AUTH] Failed to send welcome email:', err));
+        }
+        else {
+            this.memoryStore.set(email, user);
+        }
+        return { message: 'Email successfully verified' };
     }
 };
 exports.AuthService = AuthService;

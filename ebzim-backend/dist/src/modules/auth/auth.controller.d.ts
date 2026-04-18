@@ -9,11 +9,15 @@ export declare class AuthController {
         email: string;
         role: import("../../common/enums/role.enum").Role;
         profile: import("../users/schemas/user.schema").UserProfile;
+        isVerificationRequired: boolean;
+        debug_otp: string;
     } | {
         id: string;
         email: string;
         role: string;
         profile: import("./dto/register.dto").RegisterProfileDto;
+        isVerificationRequired: boolean;
+        debug_otp: string;
     }>;
     login(loginDto: LoginDto): Promise<{
         access_token: string;
@@ -32,6 +36,9 @@ export declare class AuthController {
         debug_otp: string;
     }>;
     resetPassword(token: string, password: string): Promise<{
+        message: string;
+    }>;
+    verifyEmail(email: string, token: string): Promise<{
         message: string;
     }>;
     getProfile(req: any): Promise<{

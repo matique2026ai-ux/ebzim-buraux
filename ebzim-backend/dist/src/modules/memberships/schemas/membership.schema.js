@@ -23,6 +23,7 @@ let MembershipProfileData = class MembershipProfileData {
     interests;
     skills;
     motivation;
+    attachments;
 };
 exports.MembershipProfileData = MembershipProfileData;
 __decorate([
@@ -65,6 +66,10 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], MembershipProfileData.prototype, "motivation", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [Object], default: [] }),
+    __metadata("design:type", Array)
+], MembershipProfileData.prototype, "attachments", void 0);
 exports.MembershipProfileData = MembershipProfileData = __decorate([
     (0, mongoose_1.Schema)({ _id: false })
 ], MembershipProfileData);

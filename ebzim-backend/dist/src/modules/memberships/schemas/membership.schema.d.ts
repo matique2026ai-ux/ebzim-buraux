@@ -11,6 +11,11 @@ export declare class MembershipProfileData {
     interests: string[];
     skills?: string[];
     motivation: string;
+    attachments?: {
+        url: string;
+        publicId: string;
+        type: string;
+    }[];
 }
 export declare class Membership {
     userId: Types.ObjectId;

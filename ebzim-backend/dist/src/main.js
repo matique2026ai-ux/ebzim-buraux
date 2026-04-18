@@ -8,7 +8,8 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.setGlobalPrefix('api/v1');
     app.enableCors({
-        origin: '*',
+        origin: true,
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
         credentials: true,
     });
     app.useGlobalPipes(new common_1.ValidationPipe({
@@ -25,6 +26,19 @@ async function bootstrap() {
     swagger_1.SwaggerModule.setup('api/docs', app, document);
     const port = process.env.PORT || 3000;
     await app.listen(port);
+    const server = app.getHttpServer();
+    const router = server._events.request._router;
+    const availableRoutes = router.stack
+        .map((layer) => {
+        if (layer.route) {
+            return {
+                path: layer.route?.path,
+                method: layer.route?.stack[0].method,
+            };
+        }
+    })
+        .filter((item) => item !== undefined);
+    console.log('REGISTERED ROUTES:', availableRoutes);
     console.log(`EBZIM API running on port ${port}`);
     console.log(`Swagger Docs available at http://localhost:${port}/api/docs`);
 }

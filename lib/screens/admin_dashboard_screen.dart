@@ -915,17 +915,17 @@ class _NewsTab extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             newsAsync.when(
-              data: (posts) {
-                if (posts.isEmpty) {
+                final newsPosts = posts.where((p) => p.category?.toUpperCase() == 'ANNOUNCEMENT' || p.category == null).toList();
+                if (newsPosts.isEmpty) {
                   return const _EmptyState(message: 'لا توجد أخبار حالياً — انشر أول خبر!', icon: Icons.newspaper_rounded);
                 }
                 return ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: posts.length,
+                  itemCount: newsPosts.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
-                    return _AdminNewsCard(post: posts[index])
+                    return _AdminNewsCard(post: newsPosts[index])
                         .animate(delay: (index * 80).ms)
                         .fadeIn()
                         .slideY(begin: 0.05);

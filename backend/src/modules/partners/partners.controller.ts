@@ -47,6 +47,11 @@ export class PartnersController {
     return this.partnersService.update(id, dto);
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.partnersService.findOne(id);
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN, Role.ADMIN)

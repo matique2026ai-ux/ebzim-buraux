@@ -29,6 +29,10 @@ export class HeroService {
     return this.slideModel.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 
+  async findOne(id: string) {
+    return this.heroSlideModel.findById(id).exec();
+  }
+
   async delete(id: string) {
     return this.slideModel.findByIdAndDelete(id).exec();
   }

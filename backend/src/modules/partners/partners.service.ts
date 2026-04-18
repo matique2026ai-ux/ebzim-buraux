@@ -40,6 +40,10 @@ export class PartnersService {
     return this.partnerModel.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 
+  async findOne(id: string) {
+    return this.partnerModel.findById(id).exec();
+  }
+
   async delete(id: string) {
     return this.partnerModel.findByIdAndDelete(id).exec();
   }

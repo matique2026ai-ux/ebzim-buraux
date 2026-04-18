@@ -66,6 +66,10 @@ export class PostsService {
     return this.postModel.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 
+  async findOne(id: string) {
+    return this.postModel.findById(id).exec();
+  }
+
   async deletePost(id: string) {
     return this.postModel.findByIdAndDelete(id).exec();
   }

@@ -18,6 +18,7 @@ import { PartnersModule } from './modules/partners/partners.module';
 import { HeroModule } from './modules/hero/hero.module';
 import { LeadershipModule } from './modules/leadership/leadership.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { AdminModule } from './modules/admin/admin.module';
     HeroModule,
     LeadershipModule,
     AdminModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

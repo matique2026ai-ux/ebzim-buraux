@@ -94,6 +94,12 @@ export class PostsController {
     return this.postsService.updatePost(id, updateData);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Get single post details' })
+  async findOne(@Param('id') id: string) {
+    return this.postsService.findOne(id);
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN, Role.ADMIN)

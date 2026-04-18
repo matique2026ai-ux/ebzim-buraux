@@ -38,6 +38,11 @@ export class LeadershipController {
     return this.leadershipService.update(id, dto);
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.leadershipService.findOne(id);
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN, Role.ADMIN)

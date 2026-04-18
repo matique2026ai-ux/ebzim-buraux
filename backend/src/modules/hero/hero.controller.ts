@@ -48,6 +48,11 @@ export class HeroController {
     return this.heroService.update(id, dto);
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.heroService.findOne(id);
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN, Role.ADMIN)

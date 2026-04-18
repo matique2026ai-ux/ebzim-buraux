@@ -22,6 +22,10 @@ export class LeadershipService {
     return this.leaderModel.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 
+  async findOne(id: string) {
+    return this.leaderModel.findById(id).exec();
+  }
+
   async delete(id: string) {
     return this.leaderModel.findByIdAndDelete(id).exec();
   }

@@ -13,9 +13,9 @@ Our workflow is highly iterative and focused on **Live Production Stability**:
 - **401/403 Global Sync:** Fixed the "Stuck in Dashboard" issue and unauthorized logout loops.
 - **Backend CMS Audit:** Added missing `findOne` endpoints to ALL CMS modules (News, Events, Hero, Partners, Leadership). 404 errors during edit/view are now eliminated.
 - **UsersModule Implementation:** Created and registered a full `UsersModule` for profile updates (`PATCH /users/profile`). This fixed the crash/logout when updating phone numbers.
-- **Events Data Mapping:** Hardened the `EventsService` mapping to return object-based structures (title, description, coverImage) to match the Flutter model. **(DO NOT REVERT TO STRINGS)**.
-- **UX Professionalism:** Integrated prominent "Logout" and "Edit Profile" buttons directly into the `ProfileScreen` AppBar. Styled the logout card to be high-contrast (Red).
-- **Universal Build v2:** Generated a new stable APK (69.8MB) containing all UI and backend synchronization fixes.
+- **Object-Mapping Hardening:** Ensured `EventsService` and `UsersService` return strictly object-based structures.
+- **UX Professionalism:** Integrated prominent "Logout" and "Edit Profile" buttons directly into the `ProfileScreen` AppBar.
+- **Universal Build v4 (FINAL):** Generated a new stable APK (`ebzim-v4-final.apk`) containing the most advanced frontend logic and hardened error handling.
 
 ---
 
@@ -27,9 +27,9 @@ Our workflow is highly iterative and focused on **Live Production Stability**:
 ---
 
 ## ⏭️ Next Steps for the New Agent
-1.  **Monitor Live Performance:** Observe the Render backend response times (ensure they stay within the 90s timeout).
-2.  **Content Expansion:** Finalize "Digital Library" and "Heritage Map" as the foundation is now rock solid.
-3.  **Visual Consistency:** Ensure all new admin screens follow the established "Emerald Nocturne" header pattern with proper "Back" buttons.
+1.  **URGENT: Manual Render Deploy:** The backend code is 100% correct on GitHub (branch: master), but Render is NOT pulling updates. MUST trigger build manually from the Render Dashboard.
+2.  **Verify STABLE_V4 Tag:** Check `https://ebzim-api-prod.onrender.com/api/v1/debug/test` until it returns `STABLE_V4_FINAL_CHECK`.
+3.  **Content Expansion:** Once the server is live, finalize "Digital Library" and "Heritage Map".
 
 **Message to the next agent:** The foundation is now **Production-Ready**. The CRUD logic is 100% complete across all modules. If you add a feature, ensure it follows the "Object-Mapping" pattern established in `EventsService` to avoid crashing the Flutter frontend.
 

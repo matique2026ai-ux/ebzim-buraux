@@ -14,11 +14,21 @@ export class UsersService {
   }
 
   async updateProfile(id: string, profileData: any): Promise<UserDocument> {
-    const user = await this.userModel.findById(id);
-    if (!user) throw new NotFoundException('User not found');
+    // Map imageUrl to avatarUrl if the frontend sends it
+    if (profileData.imageUrl && !profileData.avatarUrl) {
+      profileData.avatarUrl = profileData.imageUrl;
+    }
 
-    // Update profile fields specifically
-    user.profile = { ...user.profile, ...profileData };
-    return user.save();
+    const update: any = {};
+    for (const key in profileData) {
+      update[`profile.${key}`] = profileData[key];
+    }
+
+    const user = await this.userModel
+      .findByIdAndUpdate(id, { $set: update }, { new: true })
+      .exec();
+
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 }

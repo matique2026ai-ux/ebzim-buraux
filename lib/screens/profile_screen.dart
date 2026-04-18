@@ -52,6 +52,17 @@ class ProfileScreen extends ConsumerWidget {
                 EbzimSliverAppBar(
                   actions: [
                     IconButton(
+                      icon: const Icon(Icons.edit_note_rounded, color: AppTheme.accentColor),
+                      onPressed: () => context.push('/profile/edit'),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
+                      onPressed: () {
+                        ref.read(authProvider.notifier).logout();
+                        context.go('/splash');
+                      },
+                    ),
+                    IconButton(
                       icon: Icon(Icons.settings_outlined, color: AppTheme.accentColor),
                       onPressed: () => context.push('/settings'),
                     ),
@@ -280,13 +291,13 @@ class ProfileScreen extends ConsumerWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.logout_rounded, color: textColor.withValues(alpha: 0.4), size: 20),
+                                  const Icon(Icons.logout_rounded, color: Colors.redAccent, size: 20),
                                   const SizedBox(width: 12),
-                                  Text(
-                                    loc.settingsLogout, 
+                                  const Text(
+                                    'تسجيل الخروج من الحساب', 
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold, 
-                                      color: textColor.withValues(alpha: 0.6),
+                                      color: Colors.redAccent,
                                       fontSize: 16,
                                       letterSpacing: 1,
                                     ),

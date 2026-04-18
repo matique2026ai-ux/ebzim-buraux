@@ -37,6 +37,22 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
+  
+  // Debug: Log all registered routes
+  const server = app.getHttpServer();
+  const router = server._events.request._router;
+  const availableRoutes: [] = router.stack
+    .map((layer: any) => {
+      if (layer.route) {
+        return {
+          path: layer.route?.path,
+          method: layer.route?.stack[0].method,
+        };
+      }
+    })
+    .filter((item: any) => item !== undefined);
+  console.log('REGISTERED ROUTES:', availableRoutes);
+
   console.log(`EBZIM API running on port ${port}`);
   console.log(`Swagger Docs available at http://localhost:${port}/api/docs`);
 }

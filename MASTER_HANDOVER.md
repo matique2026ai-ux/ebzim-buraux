@@ -1,64 +1,62 @@
-# Ebzim Web App: Master Handover & Recovery Guide (April 2026)
+# 👑 Ebzim Sovereign Platform: Master Handover & Source of Truth (April 2026)
 
-## 🚨 Critical Issue: The "Infinite Loading" Hang
-During the April 18-19 session, we faced a persistent white screen/infinite loading hang on the Web environment. This was caused by the **Dart Dev Compiler (DDC)** and **WebSocket debug handlers** getting stuck in the browser.
+This document is the **ONLY** reference required for any agent taking over the Ebzim project. It contains the full architectural context, critical stability rules, and the current state of the platform.
 
-### ✅ The Solution (Mandatory)
-**ALWAYS RUN IN RELEASE MODE** if you encounter hangs:
-```bash
-flutter run -d web-server --web-port 8080 --release
-```
-*Avoid standard debug mode on this specific environment if the white screen persists.*
+---
 
-## 🎨 Design & Compatibility Rules
-To prevent build failures and rendering crashes:
-1. **NO `.withValues(alpha: ...)`**: This new Flutter API caused compilation errors in the current pipeline. Use the stable `.withOpacity(...)` instead.
-2. **Local Fonts Only**: Use `Cairo` and `Inter` from local definitions. Avoid `GoogleFonts` network calls during boot to prevent network-related rendering blocks.
-3. **Glassmorphism**: When using glassmorphism, always ensure `BackdropFilter` is wrapped in a `ClipRRect` to prevent blur leakage.
+## 🏗️ 1. Global Architecture Overview
+The Ebzim platform is a full-stack institutional system:
+- **Frontend:** Flutter Web (optimised for Release Mode on port 8080).
+- **Backend:** NestJS + MongoDB (Running locally on `http://localhost:3000/api/v1/`).
+- **Core Mission:** A premium digital archive and management system for cultural heritage and citizenship.
 
-## 🏗️ Architecture Updates
-### 1. Admin Dashboard & Projects
-- **Dynamic Milestones**: The `AdminCreateProjectScreen` now supports dynamic phase management. 
-- **Timeline Widget**: Use `EbzimProjectTimeline` for visualizing project progress. It is fully integrated into the Admin flow.
+---
 
-### 2. Home Screen Filtering
-- **Latest News**: Is now filtered to only show `ANNOUNCEMENT` category.
-- **Institutional Projects**: A new dynamic section using high-fidelity artistic cards is added to the Home screen, filtering for non-news categories with `progressPercentage`.
+## 🎨 2. The "Ebzim Premium" Standard (UI/UX)
+Any UI update **MUST** follow these high-fidelity institutional rules:
+- **Design Language:** Glassmorphism with deep obsidian backgrounds and emerald/gold accents.
+- **Typography:** Mandatory use of `Tajawal` (Arabic) and `Inter` (Latin). Weights 700-900 for headers.
+- **Animations:** Use `flutter_animate`. Durations must stay between `400ms` and `800ms`. Use "soulful" transitions (expanding underlines, subtle glows).
+- **Stability Rule:** Avoid complex `SlideTransitions` in the Router; they cause web renderer hangs.
 
-## 🛠️ Maintenance Commands
-If the build feels "stale" or corrupted:
-```powershell
-taskkill /F /IM dart.exe
-taskkill /F /IM flutter.exe
-flutter clean
-flutter pub get
-flutter run -d web-server --web-port 8080 --release
-```
+---
 
-## 📋 Note to New Agent
-The application is currently in a **High-Stability, High-Fidelity** state. Do not introduce complex page transitions (like SlideTransitions in Router) as they have previously caused renderer hangs on Web. Keep the navigation logic simple using the standard `builder` pattern in `AppRouter`.
+## 📊 3. Key Technical Features
+### 🚀 Real Excel Export (.xlsx)
+- **Logic:** Uses the `excel` package. Do not use CSV for official reports.
+- **Implementation:** Binary downloads are handled via `triggerWebDownloadBytes` in `web_helper_web.dart`.
+- **Formatting:** Data is explicitly mapped to columns (A, B, C...) to ensure it opens perfectly in Excel on Windows.
 
-## 📅 Update: April 19, 2026 - Recovery & Stability
-- **Global Migration**: Executed a global replacement of `.withValues(alpha: ...)` to `.withOpacity(...)` across the entire codebase to ensure compatibility with the web compiler.
-- **Timeline Fixes**: Updated `EbzimProjectTimeline` to correctly reference `ProjectMilestone` from `news_service.dart` and fixed field name mismatches.
-- **Backend Sync**: Confirmed backend is running locally on port 3000 and the web app is correctly pointing to it.
-- **Release Success**: Verified that the app builds and runs successfully in release mode on `http://localhost:8080`.
+### 🗺️ Dynamic Project Timeline
+- **Widget:** `EbzimProjectTimeline` (found in `core/common_widgets`).
+- **Integration:** Directly linked to the Admin creation flow for milestones and progress tracking.
 
-## 🏆 The Standard of Excellence (Mandatory Persona)
-Any agent taking over this project must operate as a **Master Full-Stack Engineer & UI/UX Specialist**. The user expects an elite level of proficiency, including:
-1. **Expert Full-Stack Development**: Deep understanding of both NestJS (Backend) and Flutter (Frontend) architecture.
-2. **Mobile & Web Engineering**: Ability to solve complex platform-specific issues (Web renderer hangs, build optimizations).
-3. **High-Fidelity UI Design**: Maintaining a "Premium" aesthetic with modern design tokens (Glassmorphism, curated palettes, local typography).
-4. **Agentic Problem Solving**: Taking initiative to stabilize and refine the codebase without waiting for granular instructions.
+---
 
-## 📅 Update: April 19, 2026 - Premium Institutional Overhaul & Data Export
-- **UI Transformation:** Finalized the high-fidelity transformation of the homepage into a prestige, institutionally-grade interface. This includes a new **Glassmorphic Stats Strip**, refined **Section Headers** with micro-animations, and artistic **Project Cards** with pulsing progress indicators.
-- **Excel Export System:** Replaced the simple CSV export with a professional **Real Excel (.xlsx)** system using the `excel` package. 
-    - Implemented `triggerWebDownloadBytes` in `web_helper_web.dart` for binary web downloads.
-    - Ensured explicit cell-by-column placement to prevent data merging.
-    - Added UTF-8 BOM and correct MIME types for seamless opening in Excel.
-- **Dependency Update:** Added `excel: ^4.0.0` to `pubspec.yaml` to support native spreadsheet generation.
-- **State Management:** Fixed compilation and scoping issues in `home_screen.dart` related to `isDark` variable within Builder widgets.
-- **Git Sync:** All changes (UI overhaul + Excel logic) committed and pushed to `origin/main`.
+## 🚨 4. Critical Stability & Build Rules
+### ✅ The "White Screen" Fix
+If the web app hangs on a white screen:
+1. Kill all Dart/Flutter processes: `taskkill /F /IM dart.exe ; taskkill /F /IM flutter.exe`
+2. **ALWAYS** run in release mode: `flutter run -d web-server --web-port 8080 --release`
 
-**Handover Status: PREMIUM UI ACTIVE | EXCEL EXPORT FUNCTIONAL | PROJECT STABLE.**
+### ✅ API & Compatibility
+- **API Client:** Configured in `api_client.dart` with platform-specific proxies in `api_client_platform_web.dart`.
+- **Opacity:** Use `.withOpacity(...)` instead of `.withValues(...)` to ensure compatibility with the current DDC compiler.
+- **Border Conflict:** When importing `excel.dart`, always use `hide Border` to avoid conflicts with Flutter's painting library.
+
+---
+
+## 📅 5. Current State & Latest Milestone (April 19, 2026)
+- **Home Screen:** Fully overhauled with premium stats, artistic project cards, and news previews.
+- **Admin Panel:** Fully functional user management with **Real Excel Export** and membership request review.
+- **Stability:** Project is 100% stable, builds successfully, and all critical bugs are resolved.
+- **Git:** All code is pushed to `origin/main`.
+
+---
+
+## 📋 6. Next Steps for the Agent
+1. **Responsive Audit:** Ensure the new project cards scale elegantly on tablet-sized browsers.
+2. **Backend Sync:** Verify live data integration for the "Stats Strip" (currently uses builder logic).
+3. **Performance:** Monitor the `CustomScrollView` for any frame drops due to heavy animations.
+
+**Status:** 🏆 **PREMIUM, STABLE & READY FOR CONTINUATION.**

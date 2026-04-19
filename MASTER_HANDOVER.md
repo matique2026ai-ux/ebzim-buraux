@@ -1,35 +1,41 @@
-# 📦 EBZIM Project Handover - April 18, 2026 (INSTITUTIONAL SYNC PASS)
+# Ebzim Web App: Master Handover & Recovery Guide (April 2026)
 
-## 🚀 Work Methodology (CRITICAL)
-Our workflow is highly iterative and focused on **Live Production Stability**:
-1.  **Live Browser Improvement:** We modify the Flutter code and logic directly based on user feedback.
-2.  **Live Backend Sync:** All services are pinned to the production backend (`https://ebzim-api.onrender.com/api/v1/`). We verify connectivity live.
-3.  **Universal APK:** Once the logic is sound, generate the APK and test on physical devices.
+## 🚨 Critical Issue: The "Infinite Loading" Hang
+During the April 18-19 session, we faced a persistent white screen/infinite loading hang on the Web environment. This was caused by the **Dart Dev Compiler (DDC)** and **WebSocket debug handlers** getting stuck in the browser.
 
----
+### ✅ The Solution (Mandatory)
+**ALWAYS RUN IN RELEASE MODE** if you encounter hangs:
+```bash
+flutter run -d web-server --web-port 8080 --release
+```
+*Avoid standard debug mode on this specific environment if the white screen persists.*
 
-## ✅ Recent Milestones (FULL SYNC COMPLETE)
-- **Institutional Branding:** Updated the Admin CMS to dynamically switch terminology. When creating/editing projects (Restoration, Scientific, etc.), the UI now correctly says "Project Title" and "Project Description" instead of "News".
-- **Backend Schema Hardening:** Updated the NestJS backend (`post.schema.ts` and `create-post.dto.ts`) to include the **`LAUNCHING`** (انطلاق الإنجاز) status. The system is now 100% synchronized between frontend and backend.
-- **Smart Initialization:** The "New Project" button in the Admin Dashboard now pre-initializes the creation screen in "Restoration" mode, skipping the need for manual category switching for projects.
-- **Dynamic Milestones UI:** Enhanced the milestones section with proper dates, completion toggles, and improved visual hierarchy.
-- **Git Master Sync:** All changes across `lib/` and `backend/` are pushed to the `master` branch.
+## 🎨 Design & Compatibility Rules
+To prevent build failures and rendering crashes:
+1. **NO `.withValues(alpha: ...)`**: This new Flutter API caused compilation errors in the current pipeline. Use the stable `.withOpacity(...)` instead.
+2. **Local Fonts Only**: Use `Cairo` and `Inter` from local definitions. Avoid `GoogleFonts` network calls during boot to prevent network-related rendering blocks.
+3. **Glassmorphism**: When using glassmorphism, always ensure `BackdropFilter` is wrapped in a `ClipRRect` to prevent blur leakage.
 
----
+## 🏗️ Architecture Updates
+### 1. Admin Dashboard & Projects
+- **Dynamic Milestones**: The `AdminCreateProjectScreen` now supports dynamic phase management. 
+- **Timeline Widget**: Use `EbzimProjectTimeline` for visualizing project progress. It is fully integrated into the Admin flow.
 
-## 🛠️ Technical Context
-- **Router Logic:** `app_router.dart` now handles a complex `extra` parameter that can be either a `NewsPost` (for editing) or a `Map` containing `initialCategory`.
-- **Project Statuses:** The accepted enum values are now `['PREPARING', 'LAUNCHING', 'ACTIVE', 'ON_HOLD', 'COMPLETED', 'GENERAL', 'URGENT', 'IMPORTANT']`.
-- **UI Architecture:** `AdminCreateNewsScreen` is now a hybrid screen that adjusts its "personality" based on the selected category.
+### 2. Home Screen Filtering
+- **Latest News**: Is now filtered to only show `ANNOUNCEMENT` category.
+- **Institutional Projects**: A new dynamic section using high-fidelity artistic cards is added to the Home screen, filtering for non-news categories with `progressPercentage`.
 
----
+## 🛠️ Maintenance Commands
+If the build feels "stale" or corrupted:
+```powershell
+taskkill /F /IM dart.exe
+taskkill /F /IM flutter.exe
+flutter clean
+flutter pub get
+flutter run -d web-server --web-port 8080 --release
+```
 
-## ⏭️ Next Steps for the New Agent
-1.  **End-to-End Test:** Create a project named "Test Project", set status to "Launching", add two milestones, and save. Verify that the backend accepts it without a 400 error.
-2.  **Mobile Refresh:** Since the schema changed, ensure any cached data on mobile devices is refreshed to accommodate the new `LAUNCHING` status.
-3.  **Project Timeline Visualization:** Now that the data is solid, ensure the `EbzimProjectTimeline` on the public-facing side displays the new statuses correctly.
+## 📋 Note to New Agent
+The application is currently in a **High-Stability, High-Fidelity** state. Do not introduce complex page transitions (like SlideTransitions in Router) as they have previously caused renderer hangs on Web. Keep the navigation logic simple using the standard `builder` pattern in `AppRouter`.
 
-**Message to the next agent:** We've successfully transformed a generic News CMS into a sophisticated **Project Management System**. The backend is ready, the frontend is dynamic, and the logic is sound. Respect the `initialCategory` pattern and always verify backend DTOs when adding new project states.
-
----
-*Signed: Antigravity AI - Institutional Sync Phase*
+**Handover Status: STABLE & SYNCED.**

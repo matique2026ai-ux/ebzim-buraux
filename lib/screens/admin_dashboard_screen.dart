@@ -163,7 +163,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                               Text(
                                 'الرئيسية'.toUpperCase(),
                                 style: GoogleFonts.inter(
-                                  color: Colors.white.withOpacity(),
+                                  color: Colors.white.withOpacity(0.1),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -171,12 +171,12 @@ class AdminDashboardScreen extends ConsumerWidget {
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4),
-                                child: Icon(Icons.chevron_left_rounded, size: 10, color: Colors.white.withOpacity()),
+                                child: Icon(Icons.chevron_left_rounded, size: 10, color: Colors.white.withOpacity(0.1)),
                               ),
                               Text(
                                 (isSuperAdmin ? 'إشراف المشرف العام' : 'إدارة النظام').toUpperCase(),
                                 style: GoogleFonts.inter(
-                                  color: AppTheme.accentColor.withOpacity(),
+                                  color: AppTheme.accentColor.withOpacity(0.1),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -213,7 +213,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 isSuperAdmin ? 'أهلاً بك يا مشرف النظام. جميع الصلاحيات مفعلة.' : 'المركز الرئيسي للتحكم والعمليات',
                                 style: GoogleFonts.tajawal(
                                   fontSize: 10,
-                                  color: Colors.white.withOpacity(),
+                                  color: Colors.white.withOpacity(0.1),
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -326,7 +326,7 @@ class _UsersTabState extends State<_UsersTab> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withOpacity(), blurRadius: 10, offset: const Offset(0, 4)),
+                            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
                           ],
                         ),
                         child: TextField(
@@ -395,7 +395,7 @@ class _ExportButton extends StatelessWidget {
         gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: const Color(0xFF052011).withOpacity(), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(color: const Color(0xFF052011).withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
       child: Material(
@@ -432,7 +432,7 @@ class _UserCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(), blurRadius: 15, offset: const Offset(0, 5)),
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 5)),
         ],
       ),
       child: ListTile(
@@ -441,8 +441,8 @@ class _UserCard extends ConsumerWidget {
           width: 54, height: 54,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: AppTheme.primaryColor.withOpacity(), width: 2),
-            color: AppTheme.primaryColor.withOpacity(),
+            border: Border.all(color: AppTheme.primaryColor.withOpacity(0.1), width: 2),
+            color: AppTheme.primaryColor.withOpacity(0.1),
           ),
           child: ClipOval(
             child: user.imageUrl.isNotEmpty && !user.imageUrl.contains('placehold.co')
@@ -601,7 +601,7 @@ class _MembershipTab extends ConsumerWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(), blurRadius: 15, offset: const Offset(0, 5)),
+                      BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 5)),
                     ],
                   ),
                   child: Column(
@@ -609,7 +609,7 @@ class _MembershipTab extends ConsumerWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.analytics_outlined, size: 18, color: AppTheme.primaryColor.withOpacity()),
+                          Icon(Icons.analytics_outlined, size: 18, color: AppTheme.primaryColor.withOpacity(0.1)),
                           const SizedBox(width: 8),
                           Text(
                             'نبض النظام (System Pulse)',
@@ -676,7 +676,7 @@ class _MembershipTab extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(),
+                      color: AppTheme.primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(Icons.refresh_rounded, size: 18, color: AppTheme.primaryColor),
@@ -1177,7 +1177,7 @@ class _CMSManagementCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -1196,7 +1196,7 @@ class _CMSManagementCard extends StatelessWidget {
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(),
+                    color: color.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(icon, color: color, size: 28),
@@ -1220,7 +1220,7 @@ class _CMSManagementCard extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: color.withOpacity(),
+                              color: color.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -1269,9 +1269,9 @@ class _GlassInfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.primaryColor.withOpacity(),
+        color: AppTheme.primaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.primaryColor.withOpacity()),
+        border: Border.all(color: AppTheme.primaryColor.withOpacity(0.1)),
       ),
       child: Row(
         children: [
@@ -1294,7 +1294,7 @@ class _GlassInfoCard extends StatelessWidget {
                   message,
                   style: GoogleFonts.tajawal(
                     fontSize: 11,
-                    color: AppTheme.primaryColor.withOpacity(),
+                    color: AppTheme.primaryColor.withOpacity(0.1),
                     height: 1.5,
                   ),
                 ),
@@ -1544,7 +1544,7 @@ class _AdminEventCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -1560,7 +1560,7 @@ class _AdminEventCard extends ConsumerWidget {
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
                 width: 80, height: 80,
-                color: AppTheme.primaryColor.withOpacity(),
+                color: AppTheme.primaryColor.withOpacity(0.1),
                 child: const Icon(Icons.event_rounded, color: AppTheme.primaryColor, size: 32),
               ),
             ),
@@ -1599,7 +1599,7 @@ class _AdminEventCard extends ConsumerWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: AppTheme.accentColor.withOpacity(),
+                              color: AppTheme.accentColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text('مميّزة', style: GoogleFonts.tajawal(fontSize: 9, color: AppTheme.accentColor, fontWeight: FontWeight.bold)),
@@ -1670,7 +1670,7 @@ class _AdminNewsCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -1683,11 +1683,11 @@ class _AdminNewsCard extends ConsumerWidget {
             height: 46,
             decoration: BoxDecoration(
               color: post.isPinned 
-                  ? AppTheme.heritageOrange.withOpacity() 
-                  : AppTheme.primaryColor.withOpacity(),
+                  ? AppTheme.heritageOrange.withOpacity(0.1) 
+                  : AppTheme.primaryColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
               border: post.isPinned 
-                  ? Border.all(color: AppTheme.heritageOrange.withOpacity()) 
+                  ? Border.all(color: AppTheme.heritageOrange.withOpacity(0.1)) 
                   : null,
             ),
             child: Icon(
@@ -1718,7 +1718,7 @@ class _AdminNewsCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(),
+                      color: AppTheme.primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -1817,7 +1817,7 @@ class _MembershipRequestCard extends ConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -1857,9 +1857,9 @@ class _MembershipRequestCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(),
+                  color: statusColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: statusColor.withOpacity()),
+                  border: Border.all(color: statusColor.withOpacity(0.1)),
                 ),
                 child: Text(
                   _statusLabel(request.status),
@@ -1881,7 +1881,7 @@ class _MembershipRequestCard extends ConsumerWidget {
                     label: Text('عرض التفاصيل', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13)),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppTheme.primaryColor,
-                      side: BorderSide(color: AppTheme.primaryColor.withOpacity()),
+                      side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.1)),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
@@ -1963,7 +1963,7 @@ class _MembershipDetailsDialog extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(),
+                      color: Colors.white.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.person_search_rounded, color: Colors.white, size: 28),
@@ -2126,7 +2126,7 @@ class _MembershipDetailsDialog extends StatelessWidget {
   Widget _buildSectionTitle(String title, IconData icon) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppTheme.primaryColor.withOpacity()),
+        Icon(icon, size: 18, color: AppTheme.primaryColor.withOpacity(0.1)),
         const SizedBox(width: 8),
         Text(
           title,
@@ -2152,9 +2152,9 @@ class _MembershipDetailsDialog extends StatelessWidget {
       children: labels.map((label) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: color.withOpacity(),
+          color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity()),
+          border: Border.all(color: color.withOpacity(0.1)),
         ),
         child: Text(
           label,
@@ -2242,7 +2242,7 @@ class _ReportCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
         ],
         border: Border.all(color: const Color(0xFFF1F5F9)),
       ),
@@ -2254,7 +2254,7 @@ class _ReportCard extends StatelessWidget {
             // Header with status indicator
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: statusColor.withOpacity(),
+              color: statusColor.withOpacity(0.1),
               child: Row(
                 children: [
                   Container(
@@ -2284,7 +2284,7 @@ class _ReportCard extends StatelessWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(), borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
                         child: const Icon(Icons.warning_amber_rounded, size: 18, color: AppTheme.primaryColor),
                       ),
                       const SizedBox(width: 12),
@@ -2385,9 +2385,9 @@ class _ActionButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: isActive ? color : color.withOpacity(),
+          color: isActive ? color : color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity()),
+          border: Border.all(color: color.withOpacity(0.1)),
         ),
         child: Row(
           children: [
@@ -2423,7 +2423,7 @@ class _ContributionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         children: [
@@ -2544,13 +2544,13 @@ class _StatCard extends StatelessWidget {
           gradient: gradient,
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(), blurRadius: 12, offset: const Offset(0, 4)),
+            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 12, offset: const Offset(0, 4)),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: Colors.white.withOpacity(), size: 22),
+            Icon(icon, color: Colors.white.withOpacity(0.1), size: 22),
             const SizedBox(height: 12),
             Text(
               value,
@@ -2559,7 +2559,7 @@ class _StatCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               label,
-              style: GoogleFonts.tajawal(fontSize: 10, color: Colors.white.withOpacity(), letterSpacing: 0.5),
+              style: GoogleFonts.tajawal(fontSize: 10, color: Colors.white.withOpacity(0.1), letterSpacing: 0.5),
             ),
           ],
         ),
@@ -2643,7 +2643,7 @@ class _LoadingShimmer extends StatelessWidget {
               color: const Color(0xFFF1F5F9),
               borderRadius: BorderRadius.circular(16),
             ),
-          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1200.ms, color: Colors.white.withOpacity()),
+          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1200.ms, color: Colors.white.withOpacity(0.1)),
         ),
       ),
     );
@@ -2664,7 +2664,7 @@ class _SettingsItemCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -3019,7 +3019,7 @@ class _ProjectsTab extends ConsumerWidget {
                   ],
                 ).animate().fadeIn(delay: 200.ms),
                 const SizedBox(height: 28),
-                Text('V1.2 - SYNC ACTIVE', style: TextStyle(fontSize: 9, color: Colors.grey.withOpacity())),
+                Text('V1.2 - SYNC ACTIVE', style: TextStyle(fontSize: 9, color: Colors.grey.withOpacity(0.1))),
                 const SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3098,7 +3098,7 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -3213,9 +3213,9 @@ Widget _buildSmallBadge({required String label, required Color color, bool isOut
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
     decoration: BoxDecoration(
-      color: isOutline ? Colors.transparent : color.withOpacity(),
+      color: isOutline ? Colors.transparent : color.withOpacity(0.1),
       borderRadius: BorderRadius.circular(6),
-      border: isOutline ? Border.all(color: color.withOpacity()) : null,
+      border: isOutline ? Border.all(color: color.withOpacity(0.1)) : null,
     ),
     child: Text(
       label,

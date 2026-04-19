@@ -38,4 +38,10 @@ flutter run -d web-server --web-port 8080 --release
 ## 📋 Note to New Agent
 The application is currently in a **High-Stability, High-Fidelity** state. Do not introduce complex page transitions (like SlideTransitions in Router) as they have previously caused renderer hangs on Web. Keep the navigation logic simple using the standard `builder` pattern in `AppRouter`.
 
-**Handover Status: STABLE & SYNCED.**
+## 📅 Update: April 19, 2026 - Recovery & Stability
+- **Global Migration**: Executed a global replacement of `.withValues(alpha: ...)` to `.withOpacity(...)` across the entire codebase to ensure compatibility with the web compiler.
+- **Timeline Fixes**: Updated `EbzimProjectTimeline` to correctly reference `ProjectMilestone` from `news_service.dart` and fixed field name mismatches.
+- **Backend Sync**: Confirmed backend is running locally on port 3000 and the web app is correctly pointing to it.
+- **Release Success**: Verified that the app builds and runs successfully in release mode on `http://localhost:8080`.
+
+**Handover Status: STABLE, PUSHED & TESTED.**

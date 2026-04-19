@@ -222,9 +222,9 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: _kGreen.withValues(alpha: 0.15),
+                        color: _kGreen.withOpacity(0.15),
                         shape: BoxShape.circle,
-                        border: Border.all(color: _kGreen.withValues(alpha: 0.4), width: 1.5),
+                        border: Border.all(color: _kGreen.withOpacity(0.4), width: 1.5),
                       ),
                       child: const Icon(Icons.event_rounded, size: 36, color: _kGreen),
                     ),
@@ -264,7 +264,7 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
                           border: Border.all(
                             color: (_selectedFileBytes != null || _existingImageUrl != null)
                                 ? const Color(0xFF22C55E)
-                                : _kGreen.withValues(alpha: 0.5),
+                                : _kGreen.withOpacity(0.5),
                             width: 2,
                           ),
                           color: const Color(0xFF1A2E1A),
@@ -279,7 +279,7 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                                   decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.55),
+                                    color: Colors.black.withOpacity(0.55),
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   child: const Row(
@@ -295,14 +295,14 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.add_photo_alternate_rounded, size: 42, color: _kGreen.withValues(alpha: 0.7)),
+                                  Icon(Icons.add_photo_alternate_rounded, size: 42, color: _kGreen.withOpacity(0.7)),
                                   const SizedBox(height: 8),
                                   Text(
                                     'اضغط لاختيار صورة الغلاف',
-                                    style: TextStyle(color: _kGreen.withValues(alpha: 0.9), fontWeight: FontWeight.bold, fontSize: 14),
+                                    style: TextStyle(color: _kGreen.withOpacity(0.9), fontWeight: FontWeight.bold, fontSize: 14),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text('JPG · PNG · WEBP', style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
+                                  Text('JPG · PNG · WEBP', style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
                                 ],
                               ),
                       ),
@@ -356,13 +356,13 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
                                   ? 'اختر تاريخ الفعالية'
                                   : '${_selectedDate!.day} / ${_selectedDate!.month} / ${_selectedDate!.year}',
                               style: TextStyle(
-                                color: _selectedDate == null ? Colors.white.withValues(alpha: 0.4) : Colors.white,
+                                color: _selectedDate == null ? Colors.white.withOpacity(0.4) : Colors.white,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
                               ),
                             ),
                             const Spacer(),
-                            Icon(Icons.chevron_right_rounded, color: Colors.white.withValues(alpha: 0.3), size: 20),
+                            Icon(Icons.chevron_right_rounded, color: Colors.white.withOpacity(0.3), size: 20),
                           ],
                         ),
                       ),
@@ -421,7 +421,7 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           elevation: 6,
-                          shadowColor: _kGreen.withValues(alpha: 0.4),
+                          shadowColor: _kGreen.withOpacity(0.4),
                         ),
                       ),
                     ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
@@ -454,7 +454,7 @@ class _AdminCreateEventScreenState extends ConsumerState<AdminCreateEventScreen>
         style: const TextStyle(color: Colors.white, fontSize: 14.5),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 13.5),
+          hintStyle: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 13.5),
           filled: true,
           fillColor: const Color(0xFF1E301E),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),

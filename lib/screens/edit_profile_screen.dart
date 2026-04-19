@@ -158,11 +158,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 2),
+                            border: Border.all(color: AppTheme.accentColor.withOpacity(0.3), width: 2),
                           ),
                           child: CircleAvatar(
                             radius: 60,
-                            backgroundColor: theme.colorScheme.secondary.withValues(alpha: 0.1),
+                            backgroundColor: theme.colorScheme.secondary.withOpacity(0.1),
                             backgroundImage: user?.imageUrl.isNotEmpty == true && user!.imageUrl.startsWith('http')
                                 ? NetworkImage(user.imageUrl)
                                 : null,
@@ -238,7 +238,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       elevation: 8,
-                      shadowColor: AppTheme.accentColor.withValues(alpha: 0.3),
+                      shadowColor: AppTheme.accentColor.withOpacity(0.3),
                     ),
                     child: _isSaving
                         ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2))
@@ -252,7 +252,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 const SizedBox(height: 20),
                 Text(
                   'سيتم تحديث نسبة إكمال الملف تلقائياً بعد الحفظ',
-                  style: GoogleFonts.cairo(color: theme.colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11),
+                  style: GoogleFonts.cairo(color: theme.colorScheme.onSurface.withOpacity(0.4), fontSize: 11),
                 ),
               ],
             ),
@@ -268,7 +268,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       style: GoogleFonts.inter(
         fontSize: 10,
         fontWeight: FontWeight.w900,
-        color: AppTheme.accentColor.withValues(alpha: 0.7),
+        color: AppTheme.accentColor.withOpacity(0.7),
         letterSpacing: 1.5,
       ),
     );
@@ -290,9 +290,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: isDark ? Colors.white24 : Colors.black26),
-        prefixIcon: Icon(icon, color: AppTheme.accentColor.withValues(alpha: 0.5), size: 20),
+        prefixIcon: Icon(icon, color: AppTheme.accentColor.withOpacity(0.5), size: 20),
         filled: true,
-        fillColor: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.03),
+        fillColor: isDark ? Colors.white.withOpacity(0.03) : Colors.black.withOpacity(0.03),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

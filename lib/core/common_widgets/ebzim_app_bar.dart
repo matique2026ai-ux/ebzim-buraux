@@ -39,10 +39,10 @@ class EbzimAppBar extends StatelessWidget implements PreferredSizeWidget {
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16), // High blur for premium feel
           child: Container(
             decoration: BoxDecoration(
-              color: bgColor.withValues(alpha: isDark ? 0.4 : 0.7),
+              color: bgColor.withOpacity(isDark ? 0.4 : 0.7),
               border: Border(
                 bottom: BorderSide(
-                  color: activeColor.withValues(alpha: 0.1),
+                  color: activeColor.withOpacity(0.1),
                   width: 1,
                 ),
               ),

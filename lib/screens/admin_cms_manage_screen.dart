@@ -294,7 +294,7 @@ class _HeroSlideTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
@@ -354,11 +354,11 @@ class _PartnerTile extends StatelessWidget {
               filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: Colors.white.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.4), width: 1.5),
+                  border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.5),
                   boxShadow: [
-                    BoxShadow(color: color.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4)),
+                    BoxShadow(color: color.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 4)),
                   ],
                 ),
               ),
@@ -372,9 +372,9 @@ class _PartnerTile extends StatelessWidget {
                 Container(
                   width: 52, height: 52,
                   decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1), 
+                    color: color.withOpacity(0.1), 
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: color.withValues(alpha: 0.2)),
+                    border: Border.all(color: color.withOpacity(0.2)),
                   ),
                   padding: const EdgeInsets.all(6),
                   child: CachedNetworkImage(
@@ -441,7 +441,7 @@ class _LeaderTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -449,7 +449,7 @@ class _LeaderTile extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 28,
-              backgroundColor: AppTheme.accentColor.withValues(alpha: 0.1),
+              backgroundColor: AppTheme.accentColor.withOpacity(0.1),
               backgroundImage: leader.photoUrl != null ? CachedNetworkImageProvider(leader.photoUrl!) : null,
               child: leader.photoUrl == null ? const Icon(Icons.person_rounded, color: AppTheme.accentColor, size: 28) : null,
             ),
@@ -801,7 +801,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)],
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)],
         ),
         child: Column(
           children: [
@@ -905,9 +905,9 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
               height: 120,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withValues(alpha: 0.02),
+                color: AppTheme.primaryColor.withOpacity(0.02),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1), style: BorderStyle.solid),
+                border: Border.all(color: AppTheme.primaryColor.withOpacity(0.1), style: BorderStyle.solid),
               ),
               child: isUploading 
                 ? const Center(child: CircularProgressIndicator())
@@ -1068,7 +1068,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
                               Container(
                                 width: 56, height: 56,
                                 decoration: BoxDecoration(
-                                  color: AppTheme.primaryColor.withValues(alpha: 0.08),
+                                  color: AppTheme.primaryColor.withOpacity(0.08),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -1111,7 +1111,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                   decoration: BoxDecoration(
-                                    color: AppTheme.primaryColor.withValues(alpha: 0.85),
+                                    color: AppTheme.primaryColor.withOpacity(0.85),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Row(
@@ -1135,7 +1135,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
               label: Text('اختيار من الجهاز', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppTheme.primaryColor,
-                side: BorderSide(color: AppTheme.primaryColor.withValues(alpha: 0.5)),
+                side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.5)),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 minimumSize: const Size(double.infinity, 44),

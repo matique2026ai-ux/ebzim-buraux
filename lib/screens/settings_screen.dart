@@ -45,7 +45,7 @@ class SettingsScreen extends ConsumerWidget {
                           title: Text(loc.settingsLang, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16)),
                           trailing: DropdownButton<String>(
                             value: locale.languageCode,
-                            dropdownColor: isDark ? AppTheme.primaryColor.withValues(alpha: 0.95) : Colors.white,
+                            dropdownColor: isDark ? AppTheme.primaryColor.withOpacity(0.95) : Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             underline: const SizedBox(),
                             style: const TextStyle(color: AppTheme.accentColor, fontWeight: FontWeight.bold),
@@ -124,17 +124,17 @@ class SettingsScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20),
                         child: GlassCard(
                           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-                          border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05)),
+                          border: Border.all(color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.logout_rounded, color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.5), size: 20),
+                              Icon(Icons.logout_rounded, color: isDark ? Colors.white.withOpacity(0.5) : Colors.black.withOpacity(0.5), size: 20),
                               const SizedBox(width: 12),
                               Text(
                                 loc.settingsLogout, 
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold, 
-                                  color: isDark ? Colors.white.withValues(alpha: 0.7) : Colors.black.withValues(alpha: 0.7),
+                                  color: isDark ? Colors.white.withOpacity(0.7) : Colors.black.withOpacity(0.7),
                                   fontSize: 16,
                                   letterSpacing: 1,
                                 ),

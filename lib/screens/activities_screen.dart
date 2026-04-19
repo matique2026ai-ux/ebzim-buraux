@@ -79,15 +79,15 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           fontStyle: FontStyle.italic,
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                         ),
                       ),
                       const SizedBox(height: 24),
                       Container(
                         decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
                           borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
+                          border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1)),
                         ),
                         child: TextField(
                           controller: _searchController,
@@ -95,7 +95,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                           style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                           decoration: InputDecoration(
                             hintText: loc.actSearchHint,
-                            hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 14),
+                            hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3), fontSize: 14),
                             prefixIcon: const Icon(Icons.search, color: AppTheme.accentColor),
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -144,19 +144,19 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.5,
-                                  color: isSelected ? Theme.of(context).colorScheme.onPrimary : (Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.6) : Colors.black45),
+                                  color: isSelected ? Theme.of(context).colorScheme.onPrimary : (Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.6) : Colors.black45),
                                 ),
                               ),
                             ],
                           ),
                           selected: isSelected,
                           onSelected: (_) => setState(() => _selectedCategoryIndex = index),
-                          backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                          backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
                           selectedColor: AppTheme.accentColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                             side: BorderSide(
-                              color: isSelected ? AppTheme.accentColor.withValues(alpha: 0.3) : Colors.transparent,
+                              color: isSelected ? AppTheme.accentColor.withOpacity(0.3) : Colors.transparent,
                             ),
                           ),
                           showCheckmark: false,

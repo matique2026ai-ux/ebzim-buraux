@@ -42,14 +42,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     final textColor = widget.isDarkBackground ? Colors.white : Colors.white;
-    final hintColor = widget.isDarkBackground ? Colors.white.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.3);
-    final borderColor = widget.isDarkBackground ? Colors.white.withValues(alpha: 0.1) : Colors.transparent;
+    final hintColor = widget.isDarkBackground ? Colors.white.withOpacity(0.3) : Colors.white.withOpacity(0.3);
+    final borderColor = widget.isDarkBackground ? Colors.white.withOpacity(0.1) : Colors.transparent;
     final fillColor = widget.isDarkBackground 
-        ? Colors.white.withValues(alpha: 0.05) 
-        : AppTheme.secondaryColor.withValues(alpha: 0.3);
+        ? Colors.white.withOpacity(0.05) 
+        : AppTheme.secondaryColor.withOpacity(0.3);
     final labelColor = widget.isDarkBackground 
-        ? AppTheme.secondaryColor.withValues(alpha: 0.6) 
-        : Colors.white.withValues(alpha: 0.5);
+        ? AppTheme.secondaryColor.withOpacity(0.6) 
+        : Colors.white.withOpacity(0.5);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             validator: widget.validator,
             decoration: InputDecoration(
               filled: true,
-              fillColor: _isFocused ? fillColor.withValues(alpha: 0.1) : fillColor,
+              fillColor: _isFocused ? fillColor.withOpacity(0.1) : fillColor,
               hintText: widget.hint,
               hintStyle: theme.textTheme.bodyLarge?.copyWith(color: hintColor),
               errorStyle: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.error),
@@ -102,7 +102,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: AppTheme.accentColor.withValues(alpha: 0.5)),
+                borderSide: BorderSide(color: AppTheme.accentColor.withOpacity(0.5)),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),

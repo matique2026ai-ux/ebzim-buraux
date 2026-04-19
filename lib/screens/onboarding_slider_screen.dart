@@ -47,7 +47,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
               width: 384, height: 384,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF004900).withValues(alpha: 0.05),
+                color: const Color(0xFF004900).withOpacity(0.05),
                 boxShadow: const [BoxShadow(color: Color(0xFF004900), blurRadius: 100)],
               ),
             ),
@@ -58,7 +58,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
               width: 512, height: 512,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFF0E0C8).withValues(alpha: 0.2),
+                color: const Color(0xFFF0E0C8).withOpacity(0.2),
                 boxShadow: const [BoxShadow(color: Color(0xFFF0E0C8), blurRadius: 120)],
               ),
             ),
@@ -79,7 +79,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
                         decoration: BoxDecoration(
                           color: const Color(0xFFF3F3FA),
                           borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: const Color(0xFFBFCAB7).withValues(alpha: 0.3)),
+                          border: Border.all(color: const Color(0xFFBFCAB7).withOpacity(0.3)),
                         ),
                         child: Row(
                           children: [
@@ -143,7 +143,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
             height: MediaQuery.of(context).size.height * 0.45,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
+              border: Border.all(color: Colors.white.withOpacity(0.4)),
               boxShadow: const [
                 BoxShadow(color: Color(0x1F004900), offset: Offset(0, 40), blurRadius: 60, spreadRadius: -15)
               ],
@@ -159,7 +159,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
-                        colors: [AppTheme.primaryColor.withValues(alpha: 0.3), Colors.transparent],
+                        colors: [AppTheme.primaryColor.withOpacity(0.3), Colors.transparent],
                       ),
                     ),
                   ),
@@ -175,9 +175,9 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
               margin: const EdgeInsets.symmetric(horizontal: 12),
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.8),
+                color: Colors.white.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
+                border: Border.all(color: Colors.white.withOpacity(0.8)),
                 boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 20)],
               ),
               child: Column(
@@ -188,7 +188,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                          color: AppTheme.primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(Icons.museum, color: AppTheme.primaryColor, size: 20),
@@ -214,7 +214,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
                   const SizedBox(height: 16),
                   Text(
                     'Join Association Ebzim in our mission to curate the heritage of Sétif, bridging ancestral wisdom with the digital citizenship of tomorrow.',
-                    style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.7), height: 1.5),
+                    style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.7), height: 1.5),
                   ),
                 ],
               ),
@@ -237,7 +237,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFFEDDEC5).withValues(alpha: 0.5),
+              color: const Color(0xFFEDDEC5).withOpacity(0.5),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: const Color(0xFFEDDEC5)),
             ),
@@ -256,7 +256,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
           const SizedBox(height: 12),
           Text(
             'From artisan workshops to ancestral celebrations, your journey through our shared heritage starts with your participation.',
-            style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.7), fontWeight: FontWeight.w300),
+            style: TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.w300),
           ),
           const SizedBox(height: 32),
 
@@ -300,9 +300,9 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                            border: Border.all(color: Colors.white.withOpacity(0.2)),
                           ),
                           child: const Icon(Icons.arrow_outward, color: Colors.white, size: 20),
                         )
@@ -342,7 +342,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
           const SizedBox(height: 12),
           Text(
             'Join Association Ebzim to participate in the digital preservation of Sétif\'s cultural legacy.',
-            style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.7)),
+            style: TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.7)),
           ),
           const SizedBox(height: 32),
 
@@ -351,7 +351,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
             height: 320,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(56),
-              border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+              border: Border.all(color: Colors.black.withOpacity(0.05)),
               boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 40)],
             ),
             child: ClipRRect(
@@ -365,7 +365,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
-                        colors: [AppTheme.primaryColor.withValues(alpha: 0.8), Colors.transparent],
+                        colors: [AppTheme.primaryColor.withOpacity(0.8), Colors.transparent],
                       ),
                     ),
                   ),
@@ -374,15 +374,15 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: Colors.white.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
+                        border: Border.all(color: Colors.white.withOpacity(0.5)),
                       ),
                       child: Row(
                         children: [
                           Container(
                             padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(color: AppTheme.primaryColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16)),
+                            decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(16)),
                             child: const Icon(Icons.shield, color: AppTheme.primaryColor),
                           ),
                           const SizedBox(width: 16),
@@ -391,7 +391,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Secure Digital ID', style: TextStyle(fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily, fontSize: 18, color: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
-                                Text('Verified credentials for archives.', style: TextStyle(fontSize: 11, color: Colors.white.withValues(alpha: 0.7))),
+                                Text('Verified credentials for archives.', style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.7))),
                               ],
                             ),
                           )
@@ -424,7 +424,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
               height: 6,
               width: active ? 40 : 10,
               decoration: BoxDecoration(
-                color: active ? AppTheme.primaryColor : const Color(0xFFBFCAB7).withValues(alpha: 0.4),
+                color: active ? AppTheme.primaryColor : const Color(0xFFBFCAB7).withOpacity(0.4),
                 borderRadius: BorderRadius.circular(4),
               ),
             );
@@ -439,7 +439,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
             minimumSize: const Size(double.infinity, 60),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             elevation: 10,
-            shadowColor: AppTheme.primaryColor.withValues(alpha: 0.5),
+            shadowColor: AppTheme.primaryColor.withOpacity(0.5),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -456,7 +456,7 @@ class _OnboardingSliderScreenState extends ConsumerState<OnboardingSliderScreen>
           child: Text(
             'SKIP FOR NOW',
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
+              color: Colors.white.withOpacity(0.6),
               fontSize: 12,
               fontWeight: FontWeight.bold,
               letterSpacing: 2,

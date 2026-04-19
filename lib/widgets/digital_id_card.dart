@@ -28,7 +28,7 @@ class DigitalIdCard extends StatelessWidget {
         border: Border.all(color: emerald, width: 8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
+            color: Colors.black.withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           )
@@ -145,7 +145,7 @@ class DigitalIdCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(2.5),
                               child: Image.network(user.imageUrl, fit: BoxFit.cover),
                             )
-                          : Center(child: Icon(Icons.person, color: gold.withValues(alpha: 0.5))),
+                          : Center(child: Icon(Icons.person, color: gold.withOpacity(0.5))),
                       ),
                       const SizedBox(width: 16),
                       
@@ -228,7 +228,7 @@ class DigitalIdCard extends StatelessWidget {
           style: GoogleFonts.cairo(
             fontSize: 6.5,
             fontWeight: FontWeight.bold,
-            color: emerald.withValues(alpha: 0.7),
+            color: emerald.withOpacity(0.7),
             letterSpacing: 0.5,
           ),
         ),

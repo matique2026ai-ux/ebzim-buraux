@@ -36,9 +36,9 @@ class MembershipDiscoverScreen extends StatelessWidget {
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark ? Colors.black.withValues(alpha: 0.4) : Colors.white.withValues(alpha: 0.6),
+                  color: isDark ? Colors.black.withOpacity(0.4) : Colors.white.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
+                  border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
                 ),
                 child: IconButton(
                   icon: Icon(
@@ -68,9 +68,9 @@ class MembershipDiscoverScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                       decoration: BoxDecoration(
-                        color: AppTheme.accentColor.withValues(alpha: 0.12),
+                        color: AppTheme.accentColor.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(30),
-                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.4), width: 1),
+                        border: Border.all(color: AppTheme.accentColor.withOpacity(0.4), width: 1),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -200,10 +200,10 @@ class MembershipDiscoverScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             color: isDark
-                                ? Colors.white.withValues(alpha: 0.03)
-                                : Colors.white.withValues(alpha: 0.7),
+                                ? Colors.white.withOpacity(0.03)
+                                : Colors.white.withOpacity(0.7),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.12)),
+                            border: Border.all(color: AppTheme.accentColor.withOpacity(0.12)),
                           ),
                           child: Column(
                             children: _conditions(isAr, isFr).asMap().entries.map((e) {
@@ -217,7 +217,7 @@ class MembershipDiscoverScreen extends StatelessWidget {
                                         width: 32, height: 32,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: AppTheme.accentColor.withValues(alpha: isDark ? 0.12 : 0.1),
+                                          color: AppTheme.accentColor.withOpacity(isDark ? 0.12 : 0.1),
                                         ),
                                         child: Center(
                                           child: Text(
@@ -244,7 +244,7 @@ class MembershipDiscoverScreen extends StatelessWidget {
                                   ),
                                   if (!isLast) Divider(
                                     height: 20,
-                                    color: isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.06),
+                                    color: isDark ? Colors.white10 : Colors.black.withOpacity(0.06),
                                   ),
                                 ],
                               );
@@ -267,9 +267,9 @@ class MembershipDiscoverScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF22C55E).withValues(alpha: isDark ? 0.07 : 0.05),
+                    color: const Color(0xFF22C55E).withOpacity(isDark ? 0.07 : 0.05),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFF22C55E).withValues(alpha: 0.2)),
+                    border: Border.all(color: const Color(0xFF22C55E).withOpacity(0.2)),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,7 +317,7 @@ class MembershipDiscoverScreen extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.accentColor.withValues(alpha: 0.35),
+                            color: AppTheme.accentColor.withOpacity(0.35),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -472,9 +472,9 @@ class _StatChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
         decoration: BoxDecoration(
-          color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.65),
+          color: isDark ? Colors.white.withOpacity(0.04) : Colors.white.withOpacity(0.65),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.15)),
+          border: Border.all(color: AppTheme.accentColor.withOpacity(0.15)),
         ),
         child: Column(
           children: [
@@ -547,11 +547,11 @@ class _PillarCard extends StatelessWidget {
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
             color: isDark
-                ? Colors.white.withValues(alpha: 0.03)
-                : Colors.white.withValues(alpha: 0.68),
+                ? Colors.white.withOpacity(0.03)
+                : Colors.white.withOpacity(0.68),
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: pillar.color.withValues(alpha: isDark ? 0.15 : 0.2),
+              color: pillar.color.withOpacity(isDark ? 0.15 : 0.2),
               width: 1.5,
             ),
           ),
@@ -561,7 +561,7 @@ class _PillarCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(11),
                 decoration: BoxDecoration(
-                  color: pillar.color.withValues(alpha: 0.1),
+                  color: pillar.color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(pillar.icon, color: pillar.color, size: 22),

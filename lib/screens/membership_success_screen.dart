@@ -22,7 +22,7 @@ class MembershipSuccessScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppTheme.secondaryColor.withValues(alpha: 0.1),
+                  color: AppTheme.secondaryColor.withOpacity(0.1),
                 ),
                 child: const Icon(Icons.verified, size: 64, color: AppTheme.secondaryColor),
               ),
@@ -43,7 +43,7 @@ class MembershipSuccessScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: Colors.white.withOpacity(0.7),
                   fontStyle: FontStyle.italic,
                   height: 1.5,
                 ),

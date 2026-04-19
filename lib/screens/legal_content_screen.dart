@@ -81,7 +81,7 @@ class LegalContentScreen extends ConsumerWidget {
                       width: 60,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF0E0C8).withValues(alpha: 0.3),
+                        color: const Color(0xFFF0E0C8).withOpacity(0.3),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -153,7 +153,7 @@ class LegalContentScreen extends ConsumerWidget {
             Text(
               section['body']!,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
+                color: Colors.white.withOpacity(0.7),
                 fontSize: 15,
                 height: 1.8,
                 letterSpacing: 0.3,

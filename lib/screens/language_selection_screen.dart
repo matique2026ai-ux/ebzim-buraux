@@ -32,7 +32,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
                 width: MediaQuery.of(context).size.width * 0.5,
                 height: MediaQuery.of(context).size.height * 0.4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF006400).withValues(alpha: 0.1),
+                  color: const Color(0xFF006400).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(200),
                   boxShadow: const [BoxShadow(color: Color(0xFF006400), blurRadius: 120)],
                 ),
@@ -45,7 +45,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height * 0.3,
               decoration: BoxDecoration(
-                color: const Color(0xFF005500).withValues(alpha: 0.2),
+                color: const Color(0xFF005500).withOpacity(0.2),
                 borderRadius: BorderRadius.circular(200),
                 boxShadow: const [BoxShadow(color: Color(0xFF005500), blurRadius: 100)],
               ),
@@ -73,11 +73,11 @@ class LanguageSelectionScreen extends ConsumerWidget {
                           width: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withValues(alpha: 0.03),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.0),
+                            color: Colors.white.withOpacity(0.03),
+                            border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.0),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFF0E0C8).withValues(alpha: 0.15), // Soft elegant glow
+                                color: const Color(0xFFF0E0C8).withOpacity(0.15), // Soft elegant glow
                                 blurRadius: 20,
                                 spreadRadius: 4,
                               ),
@@ -89,7 +89,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
                               child: Center(
                                 child: Image.asset('assets/images/logo.png', height: 48)
                                     .animate(onPlay: (controller) => controller.repeat())
-                                    .shimmer(duration: 3000.ms, color: Colors.white.withValues(alpha: 0.1))
+                                    .shimmer(duration: 3000.ms, color: Colors.white.withOpacity(0.1))
                                     .custom(
                                       duration: 6.seconds,
                                       builder: (context, value, child) {
@@ -113,7 +113,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: const Color(0xFFE2E2E9),
-                          border: Border.all(color: const Color(0xFFBFCAB7).withValues(alpha: 0.15)),
+                          border: Border.all(color: const Color(0xFFBFCAB7).withOpacity(0.15)),
                         ),
                         child: const Icon(Icons.person_outline, size: 20, color: Color(0xFF707A6A)),
                       ),
@@ -167,7 +167,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.white.withValues(alpha: 0.8),
+                              color: Colors.white.withOpacity(0.8),
                               height: 1.5,
                             ),
                           ),
@@ -191,7 +191,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
                                backgroundColor: AppTheme.accentColor,
                                foregroundColor: AppTheme.primaryColor,
                               elevation: 10,
-                              shadowColor: AppTheme.primaryColor.withValues(alpha: 0.25),
+                              shadowColor: AppTheme.primaryColor.withOpacity(0.25),
                               minimumSize: const Size(double.infinity, 64),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
                             ),
@@ -237,17 +237,17 @@ class LanguageSelectionScreen extends ConsumerWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.1),
+          color: isSelected ? Colors.white : Colors.white.withOpacity(0.1),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? activeColor.withValues(alpha: 0.5) : const Color(0xFFBFCAB7).withValues(alpha: 0.2),
+            color: isSelected ? activeColor.withOpacity(0.5) : const Color(0xFFBFCAB7).withOpacity(0.2),
             width: isSelected ? 2 : 1,
           ),
-          boxShadow: isSelected ? [BoxShadow(color: activeColor.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 8))] : [],
+          boxShadow: isSelected ? [BoxShadow(color: activeColor.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 8))] : [],
         ),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? activeColor : Colors.white.withValues(alpha: 0.5), size: 32),
+            Icon(icon, color: isSelected ? activeColor : Colors.white.withOpacity(0.5), size: 32),
             const SizedBox(width: 20),
             Expanded(
               child: Column(
@@ -255,7 +255,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
                 children: [
                   Text(label, style: TextStyle(fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily, fontSize: 24, color: isSelected ? activeColor : Colors.white, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 4),
-                  Text(subLabel, style: TextStyle(fontSize: 10, color: isSelected ? AppTheme.secondaryColor : Colors.white.withValues(alpha: 0.5), fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+                  Text(subLabel, style: TextStyle(fontSize: 10, color: isSelected ? AppTheme.secondaryColor : Colors.white.withOpacity(0.5), fontWeight: FontWeight.bold, letterSpacing: 1.5)),
                 ],
               ),
             ),

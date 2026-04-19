@@ -40,9 +40,9 @@ class AppTheme {
       headlineMedium:GoogleFonts.tajawal(fontSize: 28, fontWeight: FontWeight.bold,   color: isDark ? Colors.white : _lightText),
       titleLarge:    GoogleFonts.tajawal(fontSize: 22, fontWeight: FontWeight.w600,   color: isDark ? accentColor : primaryColor),
       titleMedium:   GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.w600,   color: isDark ? Colors.white : _lightText),
-      bodyLarge:     GoogleFonts.cairo(fontSize: 16,                                color: isDark ? Colors.white.withValues(alpha: 0.9) : _lightText.withValues(alpha: 0.9)),
-      bodyMedium:    GoogleFonts.cairo(fontSize: 14,                                color: isDark ? Colors.white.withValues(alpha: 0.8) : _lightSubtext),
-      bodySmall:     GoogleFonts.cairo(fontSize: 12,                                color: isDark ? Colors.white.withValues(alpha: 0.5) : _lightSubtext.withValues(alpha: 0.75)),
+      bodyLarge:     GoogleFonts.cairo(fontSize: 16,                                color: isDark ? Colors.white.withOpacity(0.9) : _lightText.withOpacity(0.9)),
+      bodyMedium:    GoogleFonts.cairo(fontSize: 14,                                color: isDark ? Colors.white.withOpacity(0.8) : _lightSubtext),
+      bodySmall:     GoogleFonts.cairo(fontSize: 12,                                color: isDark ? Colors.white.withOpacity(0.5) : _lightSubtext.withOpacity(0.75)),
       labelSmall:    GoogleFonts.cairo(fontSize: 10, fontWeight: FontWeight.bold,   color: isDark ? accentColor : accentColor, letterSpacing: 1.5),
     );
 
@@ -58,11 +58,11 @@ class AppTheme {
         brightness: isDark ? Brightness.dark : Brightness.light,
         primary: isDark ? accentColor : primaryColor,
         onPrimary: Colors.white,
-        primaryContainer: isDark ? primaryColor.withValues(alpha: 0.3) : const Color(0xFFD6EDD9),
+        primaryContainer: isDark ? primaryColor.withOpacity(0.3) : const Color(0xFFD6EDD9),
         onPrimaryContainer: isDark ? Colors.white : primaryColor,
         secondary: isDark ? accentColor : const Color(0xFF5A7A5E),
         onSecondary: Colors.white,
-        secondaryContainer: isDark ? accentColor.withValues(alpha: 0.2) : const Color(0xFFE8F0E9),
+        secondaryContainer: isDark ? accentColor.withOpacity(0.2) : const Color(0xFFE8F0E9),
         onSecondaryContainer: isDark ? Colors.white : primaryColor,
         error: heritageRed,
         onError: Colors.white,
@@ -74,19 +74,19 @@ class AppTheme {
         inverseSurface: isDark ? Colors.white : primaryColor,
         onInverseSurface: isDark ? primaryColor : Colors.white,
         inversePrimary: isDark ? primaryColor : accentColor,
-        shadow: Colors.black.withValues(alpha: 0.12),
-        scrim: Colors.black.withValues(alpha: 0.35),
+        shadow: Colors.black.withOpacity(0.12),
+        scrim: Colors.black.withOpacity(0.35),
         primaryFixed: isDark ? const Color(0xFF0A2B1A) : const Color(0xFFDFF2E5),
         onPrimaryFixed: isDark ? Colors.white : primaryColor,
-        tertiaryFixed: isDark ? accentColor.withValues(alpha: 0.1) : const Color(0xFFF5EDD4),
+        tertiaryFixed: isDark ? accentColor.withOpacity(0.1) : const Color(0xFFF5EDD4),
         onTertiaryFixed: isDark ? Colors.white : const Color(0xFF6E5A1E),
       ),
 
       appBarTheme: AppBarTheme(
-        backgroundColor: isDark ? Colors.transparent : _lightBg.withValues(alpha: 0.92),
+        backgroundColor: isDark ? Colors.transparent : _lightBg.withOpacity(0.92),
         foregroundColor: isDark ? Colors.white : _lightText,
         elevation: 0,
-        shadowColor: isDark ? Colors.transparent : Colors.black.withValues(alpha: 0.05),
+        shadowColor: isDark ? Colors.transparent : Colors.black.withOpacity(0.05),
         centerTitle: true,
         titleTextStyle: GoogleFonts.tajawal(
           fontSize: 18,
@@ -99,7 +99,7 @@ class AppTheme {
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: isDark ? backgroundDark : _lightCard,
         selectedItemColor: isDark ? accentColor : primaryColor,
-        unselectedItemColor: isDark ? Colors.white38 : _lightSubtext.withValues(alpha: 0.5),
+        unselectedItemColor: isDark ? Colors.white38 : _lightSubtext.withOpacity(0.5),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -107,7 +107,7 @@ class AppTheme {
           backgroundColor: isDark ? accentColor : primaryColor,
           foregroundColor: Colors.white,
           elevation: isDark ? 0 : 2,
-          shadowColor: isDark ? Colors.transparent : primaryColor.withValues(alpha: 0.25),
+          shadowColor: isDark ? Colors.transparent : primaryColor.withOpacity(0.25),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           textStyle: GoogleFonts.tajawal(
@@ -123,13 +123,13 @@ class AppTheme {
       ),
 
       cardTheme: CardThemeData(
-        color: isDark ? const Color(0xFF061A12).withValues(alpha: 0.6) : _lightCard,
+        color: isDark ? const Color(0xFF061A12).withOpacity(0.6) : _lightCard,
         elevation: isDark ? 0 : 3,
-        shadowColor: isDark ? Colors.transparent : Colors.black.withValues(alpha: 0.08),
+        shadowColor: isDark ? Colors.transparent : Colors.black.withOpacity(0.08),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
           side: BorderSide(
-            color: isDark ? borderGlass : _lightBorder.withValues(alpha: 0.7),
+            color: isDark ? borderGlass : _lightBorder.withOpacity(0.7),
             width: 0.8,
           ),
         ),
@@ -137,7 +137,7 @@ class AppTheme {
 
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : const Color(0xFFEDE7DB),
+        fillColor: isDark ? Colors.white.withOpacity(0.04) : const Color(0xFFEDE7DB),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: isDark ? Colors.white12 : _lightBorder),
@@ -151,7 +151,7 @@ class AppTheme {
           borderSide: BorderSide(color: isDark ? accentColor : primaryColor, width: 1.5),
         ),
         hintStyle: TextStyle(
-          color: isDark ? Colors.white30 : _lightSubtext.withValues(alpha: 0.5),
+          color: isDark ? Colors.white30 : _lightSubtext.withOpacity(0.5),
         ),
         labelStyle: TextStyle(
           color: isDark ? Colors.white54 : _lightSubtext,
@@ -159,8 +159,8 @@ class AppTheme {
       ),
 
       chipTheme: ChipThemeData(
-        backgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFE8E2D5),
-        selectedColor: isDark ? accentColor.withValues(alpha: 0.2) : primaryColor.withValues(alpha: 0.12),
+        backgroundColor: isDark ? Colors.white.withOpacity(0.05) : const Color(0xFFE8E2D5),
+        selectedColor: isDark ? accentColor.withOpacity(0.2) : primaryColor.withOpacity(0.12),
         side: BorderSide(color: isDark ? Colors.white12 : _lightBorder),
         labelStyle: GoogleFonts.cairo(
           color: isDark ? Colors.white70 : _lightText,

@@ -70,7 +70,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   return Center(
                     child: Text(
                       loc.noNotifs,
-                      style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                      style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.5)),
                     ),
                   );
                 }
@@ -91,13 +91,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                         border: Border.all(
                           color: n.isRead
                               ? theme.colorScheme.outlineVariant
-                              : theme.colorScheme.primary.withValues(alpha: 0.2),
+                              : theme.colorScheme.primary.withOpacity(0.2),
                         ),
                         boxShadow: n.isRead
                             ? []
                             : [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.05),
+                                  color: Colors.black.withOpacity(isDark ? 0.15 : 0.05),
                                   blurRadius: 10,
                                 )
                               ],
@@ -110,7 +110,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                             decoration: BoxDecoration(
                               color: n.isRead
                                   ? theme.colorScheme.surfaceContainerHighest
-                                  : theme.colorScheme.primary.withValues(alpha: 0.08),
+                                  : theme.colorScheme.primary.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Icon(
@@ -120,7 +120,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                       ? Icons.badge
                                       : Icons.notifications),
                               color: n.isRead
-                                  ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
+                                  ? theme.colorScheme.onSurface.withOpacity(0.4)
                                   : theme.colorScheme.primary,
                             ),
                           ),
@@ -146,7 +146,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                       DateFormat('MMM d').format(n.timestamp),
                                       style: TextStyle(
                                         fontSize: 10,
-                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                        color: theme.colorScheme.onSurface.withOpacity(0.4),
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -157,7 +157,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                   n.description,
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: theme.colorScheme.onSurface.withValues(alpha: n.isRead ? 0.5 : 0.75),
+                                    color: theme.colorScheme.onSurface.withOpacity(n.isRead ? 0.5 : 0.75),
                                     height: 1.4,
                                   ),
                                 ),
@@ -195,7 +195,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primary
-              : (isDark ? Colors.white.withValues(alpha: 0.07) : Colors.black.withValues(alpha: 0.05)),
+              : (isDark ? Colors.white.withOpacity(0.07) : Colors.black.withOpacity(0.05)),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
@@ -206,7 +206,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             letterSpacing: 1.5,
             color: isSelected
                 ? Colors.white
-                : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                : theme.colorScheme.onSurface.withOpacity(0.6),
           ),
         ),
       ),

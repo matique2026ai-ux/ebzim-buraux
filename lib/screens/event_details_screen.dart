@@ -51,8 +51,8 @@ class EventDetailsScreen extends ConsumerWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.black.withValues(alpha: 0.1),
-                              AppTheme.backgroundDark.withValues(alpha: 0.8),
+                              Colors.black.withOpacity(0.1),
+                              AppTheme.backgroundDark.withOpacity(0.8),
                             ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -73,9 +73,9 @@ class EventDetailsScreen extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: AppTheme.accentColor.withValues(alpha: 0.15),
+                            color: AppTheme.accentColor.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
+                            border: Border.all(color: AppTheme.accentColor.withOpacity(0.3)),
                           ),
                           child: Text(
                             category.toUpperCase(),
@@ -124,7 +124,7 @@ class EventDetailsScreen extends ConsumerWidget {
                           description,
                           style: theme.textTheme.bodyLarge?.copyWith(
                             height: 1.8,
-                            color: isDark ? Colors.white.withValues(alpha: 0.7) : Colors.black87,
+                            color: isDark ? Colors.white.withOpacity(0.7) : Colors.black87,
                           ),
                         ),
                         const SizedBox(height: 40),
@@ -133,12 +133,12 @@ class EventDetailsScreen extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
-                            color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
+                            color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05)),
+                            border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1), 
+                                color: Colors.black.withOpacity(0.1), 
                                 blurRadius: 40, 
                                 offset: const Offset(0, 10),
                               )
@@ -153,7 +153,7 @@ class EventDetailsScreen extends ConsumerWidget {
                                   fontSize: 10, 
                                   letterSpacing: 2, 
                                   fontWeight: FontWeight.bold, 
-                                  color: AppTheme.accentColor.withValues(alpha: 0.8),
+                                  color: AppTheme.accentColor.withOpacity(0.8),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -243,7 +243,7 @@ class EventDetailsScreen extends ConsumerWidget {
           style: TextStyle(
             fontSize: 12, 
             fontWeight: FontWeight.w600, 
-            color: Colors.white.withValues(alpha: 0.8),
+            color: Colors.white.withOpacity(0.8),
           ),
         ),
       ],

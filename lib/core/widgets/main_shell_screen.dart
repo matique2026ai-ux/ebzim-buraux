@@ -92,22 +92,22 @@ class _NavBar extends StatelessWidget {
     
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppTheme.backgroundDark.withValues(alpha: 0.97) : Colors.white.withValues(alpha: 0.85),
+        color: isDark ? AppTheme.backgroundDark.withOpacity(0.97) : Colors.white.withOpacity(0.85),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.08),
+            color: Colors.black.withOpacity(isDark ? 0.30 : 0.08),
             blurRadius: 20,
             offset: const Offset(0, -6),
           ),
           if (!isDark)
             BoxShadow(
-              color: Colors.white.withValues(alpha: 0.5),
+              color: Colors.white.withOpacity(0.5),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
         ],
         border: Border(
-          top: BorderSide(color: isDark ? _kNavBorder : Colors.black.withValues(alpha: 0.05), width: 1.0),
+          top: BorderSide(color: isDark ? _kNavBorder : Colors.black.withOpacity(0.05), width: 1.0),
         ),
       ),
       child: ClipRRect(

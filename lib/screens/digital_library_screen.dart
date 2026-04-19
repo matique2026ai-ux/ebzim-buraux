@@ -142,9 +142,9 @@ class _SearchAndFilterBar extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           child: Container(
             decoration: BoxDecoration(
-              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.5),
+              color: isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.5),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.1)),
+              border: Border.all(color: AppTheme.accentColor.withOpacity(0.1)),
             ),
             child: TextField(
               onChanged: onSearch,
@@ -180,7 +180,7 @@ class _SearchAndFilterBar extends StatelessWidget {
                     color: isSelected ? Colors.white : (isDark ? Colors.white70 : AppTheme.primaryColor),
                   ),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  side: BorderSide(color: isSelected ? Colors.transparent : AppTheme.accentColor.withValues(alpha: 0.2)),
+                  side: BorderSide(color: isSelected ? Colors.transparent : AppTheme.accentColor.withOpacity(0.2)),
                   showCheckmark: false,
                 ),
               );
@@ -214,20 +214,20 @@ class _PublicationCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isDark 
-                    ? AppTheme.accentColor.withValues(alpha: 0.15)
-                    : AppTheme.accentColor.withValues(alpha: 0.1),
+                    ? AppTheme.accentColor.withOpacity(0.15)
+                    : AppTheme.accentColor.withOpacity(0.1),
                 width: 1.5,
               ),
               color: isDark 
-                  ? Colors.white.withValues(alpha: 0.02)
-                  : Colors.white.withValues(alpha: 0.65),
+                  ? Colors.white.withOpacity(0.02)
+                  : Colors.white.withOpacity(0.65),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Stack(
                   children: [
                     CachedNetworkImage(
                       imageUrl: pub.thumbnailUrl,
-                      placeholder: (context, url) => Container(color: Colors.grey.withValues(alpha: 0.2)),
+                      placeholder: (context, url) => Container(color: Colors.grey.withOpacity(0.2)),
                       errorWidget: (context, url, error) => const Icon(Icons.error),
                       fit: BoxFit.cover,
                       width: double.infinity,
@@ -240,7 +240,7 @@ class _PublicationCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppTheme.accentColor.withValues(alpha: 0.9),
+                          color: AppTheme.accentColor.withOpacity(0.9),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -290,7 +290,7 @@ class _PublicationDetailsSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1A2E26) : const Color(0xFFFAF9F6),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 40)],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 40)],
       ),
       child: Stack(
         children: [
@@ -300,7 +300,7 @@ class _PublicationDetailsSheet extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(10))),
+                    Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.circular(10))),
                     Padding(
                       padding: const EdgeInsets.all(32),
                       child: Column(
@@ -355,7 +355,7 @@ class _PublicationHero extends StatelessWidget {
       height: 220,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 10))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(14),
@@ -380,8 +380,8 @@ class _ActionBottomBar extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
           decoration: BoxDecoration(
-            color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.7),
-            border: Border(top: BorderSide(color: AppTheme.accentColor.withValues(alpha: 0.2))),
+            color: (isDark ? Colors.black : Colors.white).withOpacity(0.7),
+            border: Border(top: BorderSide(color: AppTheme.accentColor.withOpacity(0.2))),
           ),
           child: Row(
             children: [
@@ -404,9 +404,9 @@ class _ActionBottomBar extends StatelessWidget {
                 width: 54,
                 height: 54,
                 decoration: BoxDecoration(
-                  color: AppTheme.accentColor.withValues(alpha: 0.1),
+                  color: AppTheme.accentColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
+                  border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
                 ),
                 child: const IconButton(
                   onPressed: null, // Share functionality could go here
@@ -431,7 +431,7 @@ class _NoResults extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.search_off_rounded, size: 64, color: AppTheme.accentColor.withValues(alpha: 0.3)),
+          Icon(Icons.search_off_rounded, size: 64, color: AppTheme.accentColor.withOpacity(0.3)),
           const SizedBox(height: 16),
           Text(
             isAr ? 'لم يتم العثور على نتائج' : 'No results found',

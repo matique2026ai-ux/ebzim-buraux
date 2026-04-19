@@ -76,7 +76,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           fontStyle: FontStyle.italic,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                          color: theme.colorScheme.onSurface.withOpacity(0.5),
                         ),
                       ),
                     ],
@@ -106,13 +106,13 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                               letterSpacing: 1,
                               color: isSelected
                                   ? theme.colorScheme.onPrimary
-                                  : (isDark ? Colors.white.withValues(alpha: 0.6) : Colors.black54),
+                                  : (isDark ? Colors.white.withOpacity(0.6) : Colors.black54),
                             ),
                           ),
                           selected: isSelected,
                           onSelected: (_) =>
                               setState(() => _selectedCategory = cat.$1),
-                          backgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                          backgroundColor: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
                           selectedColor: AppTheme.accentColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -145,7 +145,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.newspaper, size: 64, color: Colors.white.withValues(alpha: 0.1)),
+                        Icon(Icons.newspaper, size: 64, color: Colors.white.withOpacity(0.1)),
                         const SizedBox(height: 12),
                         Text(
                           lang == 'ar' ? 'لا توجد أخبار في هذه الفئة' : 'Aucune actualité dans cette catégorie',
@@ -189,8 +189,8 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.wifi_off, size: 48, color: Colors.white.withValues(alpha: 0.1)),
-                    Icon(Icons.wifi_off, size: 48, color: theme.colorScheme.onSurface.withValues(alpha: 0.1)),
+                    Icon(Icons.wifi_off, size: 48, color: Colors.white.withOpacity(0.1)),
+                    Icon(Icons.wifi_off, size: 48, color: theme.colorScheme.onSurface.withOpacity(0.1)),
                     const SizedBox(height: 12),
                     ElevatedButton.icon(
                       onPressed: () => ref.invalidate(newsProvider),
@@ -251,7 +251,7 @@ class _NewsCard extends StatelessWidget {
         border: Border.all(color: theme.colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
-            color: theme.shadowColor.withValues(alpha: 0.04),
+            color: theme.shadowColor.withOpacity(0.04),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -318,7 +318,7 @@ class _NewsCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: catColor.withValues(alpha: 0.1),
+                        color: catColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -344,7 +344,7 @@ class _NewsCard extends StatelessWidget {
                     const Spacer(),
                     Text(
                       '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
-                      style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                      style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.4)),
                     ),
                   ],
                 ),
@@ -380,7 +380,7 @@ class _NewsCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                      color: theme.colorScheme.primaryContainer.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: theme.colorScheme.primaryContainer),
                     ),

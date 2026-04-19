@@ -33,7 +33,7 @@ class EventCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -68,9 +68,9 @@ class EventCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.7),
+                          color: AppTheme.primaryColor.withOpacity(0.7),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                          border: Border.all(color: Colors.white.withOpacity(0.2)),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -88,7 +88,7 @@ class EventCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white.withValues(alpha: 0.9),
+                                color: Colors.white.withOpacity(0.9),
                               ),
                             ),
                           ],
@@ -127,8 +127,8 @@ class EventCard extends StatelessWidget {
                             letterSpacing: 0.5,
                             fontWeight: FontWeight.bold,
                             color: theme.brightness == Brightness.dark 
-                                ? Colors.white.withValues(alpha: 0.6) 
-                                : AppTheme.primaryColor.withValues(alpha: 0.5),
+                                ? Colors.white.withOpacity(0.6) 
+                                : AppTheme.primaryColor.withOpacity(0.5),
                           ),
                         ),
                       ),

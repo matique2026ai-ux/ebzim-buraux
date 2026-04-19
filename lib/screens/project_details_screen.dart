@@ -94,7 +94,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: _getStatusColor(project.projectStatus).withValues(alpha: 0.9),
+                                    color: _getStatusColor(project.projectStatus).withOpacity(0.9),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(color: Colors.white24),
                                   ),
@@ -218,11 +218,11 @@ class ProjectDetailsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white,
+        color: isDark ? Colors.white.withOpacity(0.04) : Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: isDark ? Colors.white10 : AppTheme.accentColor.withValues(alpha: 0.1)),
+        border: Border.all(color: isDark ? Colors.white10 : AppTheme.accentColor.withOpacity(0.1)),
         boxShadow: isDark ? [] : [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 10))
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10))
         ],
       ),
       child: Column(
@@ -250,7 +250,7 @@ class ProjectDetailsScreen extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 12,
-              backgroundColor: AppTheme.accentColor.withValues(alpha: 0.1),
+              backgroundColor: AppTheme.accentColor.withOpacity(0.1),
               valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.accentColor),
             ),
           ).animate().shimmer(duration: 2.seconds),
@@ -263,9 +263,9 @@ class ProjectDetailsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.accentColor.withValues(alpha: 0.08),
+        color: AppTheme.accentColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
+        border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
       ),
       child: Row(
         children: [

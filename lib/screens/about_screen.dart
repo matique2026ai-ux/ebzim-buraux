@@ -52,9 +52,9 @@ class AboutScreen extends ConsumerWidget {
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isDark ? Colors.black.withValues(alpha: 0.35) : Colors.white.withValues(alpha: 0.6),
+                        color: isDark ? Colors.black.withOpacity(0.35) : Colors.white.withOpacity(0.6),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
+                        border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
                       ),
                       child: IconButton(
                         icon: Icon(
@@ -102,9 +102,9 @@ class AboutScreen extends ConsumerWidget {
                           end: Alignment.bottomCenter,
                           stops: const [0.0, 0.35, 0.75, 1.0],
                           colors: [
-                            Colors.black.withValues(alpha: 0.3),
+                            Colors.black.withOpacity(0.3),
                             Colors.transparent,
-                            AppTheme.backgroundDark.withValues(alpha: 0.7),
+                            AppTheme.backgroundDark.withOpacity(0.7),
                             isDark ? AppTheme.backgroundDark : const Color(0xFFF3EFE6),
                           ],
                         ),
@@ -122,9 +122,9 @@ class AboutScreen extends ConsumerWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.55),
+                            color: Colors.black.withOpacity(0.55),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFF009FDA).withValues(alpha: 0.5), width: 1.5),
+                            border: Border.all(color: const Color(0xFF009FDA).withOpacity(0.5), width: 1.5),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -174,7 +174,7 @@ class AboutScreen extends ConsumerWidget {
                             color: Colors.white,
                             height: 1.15,
                             shadows: [
-                              Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 20),
+                              Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 20),
                             ],
                           ),
                         ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.15),
@@ -457,13 +457,13 @@ class AboutScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(24),
                     gradient: LinearGradient(
                       colors: [
-                        AppTheme.accentColor.withValues(alpha: 0.15),
-                        AppTheme.accentColor.withValues(alpha: 0.05),
+                        AppTheme.accentColor.withOpacity(0.15),
+                        AppTheme.accentColor.withOpacity(0.05),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1.5),
+                    border: Border.all(color: AppTheme.accentColor.withOpacity(0.3), width: 1.5),
                   ),
                   child: Column(
                     children: [
@@ -549,18 +549,18 @@ class _GlassSection extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.white.withValues(alpha: 0.72),
+                ? Colors.white.withOpacity(0.04)
+                : Colors.white.withOpacity(0.72),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: isDark
-                  ? Colors.white.withValues(alpha: 0.08)
-                  : AppTheme.accentColor.withValues(alpha: 0.12),
+                  ? Colors.white.withOpacity(0.08)
+                  : AppTheme.accentColor.withOpacity(0.12),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
+                color: Colors.black.withOpacity(isDark ? 0.2 : 0.06),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),
@@ -611,9 +611,9 @@ class _GoldPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: AppTheme.accentColor.withValues(alpha: 0.2),
+        color: AppTheme.accentColor.withOpacity(0.2),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5)),
+        border: Border.all(color: AppTheme.accentColor.withOpacity(0.5)),
       ),
       child: Text(
         label,
@@ -644,9 +644,9 @@ class _MiniCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.7),
+            color: isDark ? Colors.white.withOpacity(0.04) : Colors.white.withOpacity(0.7),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppTheme.accentColor.withValues(alpha: isDark ? 0.1 : 0.15)),
+            border: Border.all(color: AppTheme.accentColor.withOpacity(isDark ? 0.1 : 0.15)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -692,9 +692,9 @@ class _PartnerDossier extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.03) : color.withValues(alpha: 0.05),
+        color: isDark ? Colors.white.withOpacity(0.03) : color.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -708,7 +708,7 @@ class _PartnerDossier extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
                 ),
                 child: CachedNetworkImage(
                   imageUrl: partner.logoUrl,
@@ -777,7 +777,7 @@ class _ProjectShowcaseCard extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [Colors.transparent, Colors.black.withValues(alpha: 0.75)],
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.75)],
                 ),
               ),
             ),
@@ -792,7 +792,7 @@ class _ProjectShowcaseCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF22C55E).withValues(alpha: 0.9),
+                    color: const Color(0xFF22C55E).withOpacity(0.9),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -811,7 +811,7 @@ class _ProjectShowcaseCard extends StatelessWidget {
                     color: Colors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
-                    shadows: [Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 10)],
+                    shadows: [Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 10)],
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -849,8 +849,8 @@ class _DynamicLeaderCard extends StatelessWidget {
           height: 52,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppTheme.accentColor.withValues(alpha: 0.1),
-            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1),
+            color: AppTheme.accentColor.withOpacity(0.1),
+            border: Border.all(color: AppTheme.accentColor.withOpacity(0.3), width: 1),
           ),
           child: leader.photoUrl != null
               ? ClipOval(
@@ -906,9 +906,9 @@ class _ValueChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: AppTheme.accentColor.withValues(alpha: isDark ? 0.07 : 0.06),
+        color: AppTheme.accentColor.withOpacity(isDark ? 0.07 : 0.06),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: AppTheme.accentColor.withValues(alpha: isDark ? 0.2 : 0.25)),
+        border: Border.all(color: AppTheme.accentColor.withOpacity(isDark ? 0.2 : 0.25)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -955,7 +955,7 @@ class _ResourceButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: AppTheme.accentColor.withValues(alpha: isDark ? 0.2 : 0.1),
+              color: AppTheme.accentColor.withOpacity(isDark ? 0.2 : 0.1),
             ),
           ),
           child: Row(
@@ -963,7 +963,7 @@ class _ResourceButton extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppTheme.accentColor.withValues(alpha: 0.1),
+                  color: AppTheme.accentColor.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: AppTheme.accentColor, size: 18),

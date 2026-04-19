@@ -65,7 +65,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: 400, height: 400,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppTheme.accentColor.withValues(alpha: isDark ? 0.03 : 0.05),
+                  color: AppTheme.accentColor.withOpacity(isDark ? 0.03 : 0.05),
                 ),
               ),
             ),
@@ -91,8 +91,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 shape: BoxShape.circle,
                                 gradient: RadialGradient(
                                   colors: [
-                                    AppTheme.accentColor.withValues(alpha: isDark ? 0.3 : 0.4),
-                                    AppTheme.accentColor.withValues(alpha: 0),
+                                    AppTheme.accentColor.withOpacity(isDark ? 0.3 : 0.4),
+                                    AppTheme.accentColor.withOpacity(0),
                                   ],
                                 ),
                               ),
@@ -101,19 +101,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               height: 140, width: 140,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isDark ? Colors.white.withValues(alpha: 0.2) : Colors.white,
+                                color: isDark ? Colors.white.withOpacity(0.2) : Colors.white,
                                 border: Border.all(
-                                  color: AppTheme.accentColor.withValues(alpha: 0.6),
+                                  color: AppTheme.accentColor.withOpacity(0.6),
                                   width: 2.5,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppTheme.accentColor.withValues(alpha: 0.4),
+                                    color: AppTheme.accentColor.withOpacity(0.4),
                                     blurRadius: 40,
                                     spreadRadius: 8,
                                   ),
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.4),
+                                    color: Colors.black.withOpacity(0.4),
                                     blurRadius: 20,
                                     offset: const Offset(0, 10),
                                   ),
@@ -147,7 +147,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           color: AppTheme.accentColor,
                           letterSpacing: isRtl ? 0 : 2,
                           shadows: [
-                            Shadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                            Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4)),
                           ],
                         ),
                       ),
@@ -167,25 +167,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  isDark ? const Color(0xFFE2E9E5).withValues(alpha: 0.18) : Colors.white.withValues(alpha: 0.98),
-                                  isDark ? const Color(0xFFC5D4CD).withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.90),
+                                  isDark ? const Color(0xFFE2E9E5).withOpacity(0.18) : Colors.white.withOpacity(0.98),
+                                  isDark ? const Color(0xFFC5D4CD).withOpacity(0.08) : Colors.white.withOpacity(0.90),
                                 ],
                                 stops: const [0.0, 1.0],
                               ),
                               borderRadius: BorderRadius.circular(40),
                               border: Border.all(
-                                color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.white.withValues(alpha: 0.4),
+                                color: isDark ? Colors.white.withOpacity(0.12) : Colors.white.withOpacity(0.4),
                                 width: 1.2,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.1),
+                                  color: Colors.black.withOpacity(isDark ? 0.5 : 0.1),
                                   blurRadius: 50,
                                   spreadRadius: -5,
                                   offset: const Offset(0, 30),
                                 ),
                                 BoxShadow(
-                                  color: AppTheme.accentColor.withValues(alpha: isDark ? 0.03 : 0),
+                                  color: AppTheme.accentColor.withOpacity(isDark ? 0.03 : 0),
                                   blurRadius: 20,
                                   spreadRadius: 2,
                                 ),
@@ -199,7 +199,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     width: 150, height: 150,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.white.withValues(alpha: 0.03),
+                                      color: Colors.white.withOpacity(0.03),
                                     ),
                                   ),
                                 ),
@@ -215,7 +215,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           color: isDark ? Colors.white : AppTheme.primaryColor,
                                           letterSpacing: 1,
                                           shadows: [
-                                            Shadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 2)),
+                                            Shadow(color: Colors.black.withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 2)),
                                           ],
                                         ),
                                       ),
@@ -250,7 +250,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           onPressed: () => context.push('/auth/forgot-password'),
                                           child: Text(
                                             loc.authLostCredentials,
-                                            style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 11, fontWeight: FontWeight.w500),
+                                            style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w500),
                                           ),
                                         ),
                                       ),
@@ -265,9 +265,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                               child: Container(
                                                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFF8B2F2F).withValues(alpha: 0.15),
+                                                  color: const Color(0xFF8B2F2F).withOpacity(0.15),
                                                   borderRadius: BorderRadius.circular(16),
-                                                  border: Border.all(color: const Color(0xFF8B2F2F).withValues(alpha: 0.4), width: 1.5),
+                                                  border: Border.all(color: const Color(0xFF8B2F2F).withOpacity(0.4), width: 1.5),
                                                 ),
                                                 child: Row(
                                                   children: [
@@ -302,7 +302,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           color: AppTheme.accentColor,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: AppTheme.accentColor.withValues(alpha: isDark ? 0.15 : 0.3),
+                                              color: AppTheme.accentColor.withOpacity(isDark ? 0.15 : 0.3),
                                               blurRadius: 15,
                                               offset: const Offset(0, 6),
                                             ),
@@ -341,7 +341,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(loc.authNewHere, style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14)),
+                          Text(loc.authNewHere, style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.5), fontSize: 14)),
                           TextButton(
                             onPressed: () => context.go('/register'),
                             child: Text(
@@ -358,7 +358,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         onPressed: () => context.go('/home'),
                         child: Text(
                           loc.authGuestBrowse,
-                          style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 12),
+                          style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.3), fontSize: 12),
                         ),
                       ),
 
@@ -372,7 +372,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: Text(
                               loc.authPrivacyTitle,
                               style: TextStyle(
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6), 
+                                color: theme.colorScheme.onSurface.withOpacity(0.6), 
                                 fontSize: 11, 
                                 decoration: TextDecoration.underline,
                               ),
@@ -380,17 +380,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           Text(
                             ' • ',
-                            style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13),
+                            style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6), fontSize: 13),
                           ),
                           TextButton(
                             onPressed: () => context.push('/auth/terms'),
                             child: Text(
                               loc.authTermsTitle,
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.25), 
+                                color: Colors.white.withOpacity(0.25), 
                                 fontSize: 11, 
                                 decoration: TextDecoration.underline,
-                                decorationColor: Colors.white.withValues(alpha: 0.25),
+                                decorationColor: Colors.white.withOpacity(0.25),
                               ),
                             ),
                           ),
@@ -426,8 +426,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             label, 
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).brightness == Brightness.dark 
-                  ? Colors.white.withValues(alpha: 0.8) 
-                  : AppTheme.primaryColor.withValues(alpha: 0.8), 
+                  ? Colors.white.withOpacity(0.8) 
+                  : AppTheme.primaryColor.withOpacity(0.8), 
               fontWeight: FontWeight.bold, 
               letterSpacing: 0.5
             )
@@ -436,13 +436,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark 
-                ? Colors.white.withValues(alpha: 0.06) 
-                : Colors.white.withValues(alpha: 0.6),
+                ? Colors.white.withOpacity(0.06) 
+                : Colors.white.withOpacity(0.6),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: Theme.of(context).brightness == Brightness.dark 
-                  ? Colors.white.withValues(alpha: 0.08) 
-                  : AppTheme.primaryColor.withValues(alpha: 0.1)
+                  ? Colors.white.withOpacity(0.08) 
+                  : AppTheme.primaryColor.withOpacity(0.1)
             ),
           ),
           child: TextFormField(
@@ -457,18 +457,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               hintText: hint,
               hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).brightness == Brightness.dark 
-                    ? Colors.white.withValues(alpha: 0.25) 
-                    : Colors.black.withValues(alpha: 0.3), 
+                    ? Colors.white.withOpacity(0.25) 
+                    : Colors.black.withOpacity(0.3), 
               ),
               prefixIcon: Icon(
                 icon, 
-                color: AppTheme.accentColor.withValues(alpha: 0.8), 
+                color: AppTheme.accentColor.withOpacity(0.8), 
                 size: 22
               ),
               suffixIcon: isPassword ? IconButton(
                 icon: Icon(
                   isPasswordVisible ? Icons.visibility : Icons.visibility_off, 
-                  color: AppTheme.accentColor.withValues(alpha: 0.6), 
+                  color: AppTheme.accentColor.withOpacity(0.6), 
                   size: 20
                 ),
                 onPressed: onTogglePassword,

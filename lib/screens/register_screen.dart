@@ -101,7 +101,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 width: 400, height: 400,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppTheme.accentColor.withValues(alpha: 0.05),
+                  color: AppTheme.accentColor.withOpacity(0.05),
                 ),
               ),
             ),
@@ -117,7 +117,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.02),
+                          color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.02),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -143,7 +143,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         loc.regSubtitle, // "أنشئ حسابك للوصول إلى خدمات المنصة ومتابعة أنشطتك بكل سهولة."
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                           height: 1.5,
                         ),
                       ).animate().fadeIn(delay: 400.ms),
@@ -153,14 +153,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: AppTheme.accentColor.withValues(alpha: 0.05),
+                          color: AppTheme.accentColor.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.1)),
+                          border: Border.all(color: AppTheme.accentColor.withOpacity(0.1)),
                         ),
                         child: Text(
                           loc.regMembershipNote, // "إنشاء حساب في المنصة لا يعني اكتساب العضوية الرسمية في الجمعية."
                           style: TextStyle(
-                            color: AppTheme.accentColor.withValues(alpha: 0.8),
+                            color: AppTheme.accentColor.withOpacity(0.8),
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -177,10 +177,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(32),
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF061A12).withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.95),
+                              color: isDark ? const Color(0xFF061A12).withOpacity(0.6) : Colors.white.withOpacity(0.95),
                               borderRadius: BorderRadius.circular(32),
                               border: Border.all(
-                                color: isDark ? AppTheme.borderGlass : Colors.black.withValues(alpha: 0.05),
+                                color: isDark ? AppTheme.borderGlass : Colors.black.withOpacity(0.05),
                                 width: 1.2,
                               ),
                             ),
@@ -255,9 +255,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.all(12),
                                         decoration: BoxDecoration(
-                                          color: Colors.redAccent.withValues(alpha: 0.1),
+                                          color: Colors.redAccent.withOpacity(0.1),
                                           borderRadius: BorderRadius.circular(12),
-                                          border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+                                          border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
                                         ),
                                         child: Row(
                                           children: [
@@ -282,7 +282,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                       borderRadius: BorderRadius.circular(16),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: AppTheme.accentColor.withValues(alpha: 0.2),
+                                          color: AppTheme.accentColor.withOpacity(0.2),
                                           blurRadius: 15,
                                           offset: const Offset(0, 5),
                                         ),
@@ -317,7 +317,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     children: [
                                       Text(
                                         '${loc.regAlreadyHaveAccount} ',
-                                        style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13),
+                                        style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6), fontSize: 13),
                                       ),
                                       GestureDetector(
                                         onTap: () => context.go('/login'),
@@ -370,7 +370,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         Text(
           label,
           style: GoogleFonts.cairo(
-            color: isDark ? AppTheme.accentColor.withValues(alpha: 0.9) : AppTheme.primaryColor.withValues(alpha: 0.7),
+            color: isDark ? AppTheme.accentColor.withOpacity(0.9) : AppTheme.primaryColor.withOpacity(0.7),
             fontSize: 11,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
@@ -387,26 +387,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           inputFormatters: inputFormatters,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: GoogleFonts.cairo(color: theme.colorScheme.onSurface.withValues(alpha: 0.2), fontSize: 14),
-            prefixIcon: Icon(icon, color: isDark ? Colors.white38 : AppTheme.primaryColor.withValues(alpha: 0.5), size: 22),
+            hintStyle: GoogleFonts.cairo(color: theme.colorScheme.onSurface.withOpacity(0.2), fontSize: 14),
+            prefixIcon: Icon(icon, color: isDark ? Colors.white38 : AppTheme.primaryColor.withOpacity(0.5), size: 22),
             suffixIcon: onToggleObscure != null
                 ? IconButton(
                     icon: Icon(
                       obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: isDark ? Colors.white38 : AppTheme.primaryColor.withValues(alpha: 0.5),
+                      color: isDark ? Colors.white38 : AppTheme.primaryColor.withOpacity(0.5),
                     ),
                     onPressed: onToggleObscure,
                   )
                 : null,
             filled: true,
-            fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
+            fillColor: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.03),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
+              borderSide: BorderSide(color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1)),
+              borderSide: BorderSide(color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),

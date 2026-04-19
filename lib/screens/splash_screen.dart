@@ -88,17 +88,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                       colors: [
-                                        Colors.white.withValues(alpha: 0.3),
-                                        Colors.white.withValues(alpha: 0.1),
+                                        Colors.white.withOpacity(0.3),
+                                        Colors.white.withOpacity(0.1),
                                       ],
                                     ),
                                     border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.4),
+                                      color: Colors.white.withOpacity(0.4),
                                       width: 1.5,
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.2),
+                                        color: Colors.black.withOpacity(0.2),
                                         blurRadius: 30,
                                         offset: const Offset(0, 15),
                                       ),
@@ -180,7 +180,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           fontSize: 10,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 3.0,
-                          color: const Color(0xFF9DF888).withValues(alpha: 0.6),
+                          color: const Color(0xFF9DF888).withOpacity(0.6),
                         ),
                       ).animate().fadeIn(delay: 700.ms),
 
@@ -192,8 +192,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         height: 56,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(28),
-                          border: Border.all(color: const Color(0xFFF0E0C8).withValues(alpha: 0.3)),
-                          color: Colors.white.withValues(alpha: 0.05),
+                          border: Border.all(color: const Color(0xFFF0E0C8).withOpacity(0.3)),
+                          color: Colors.white.withOpacity(0.05),
                         ),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(28),
@@ -232,9 +232,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.12),
+                    color: Colors.white.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                    border: Border.all(color: Colors.white.withOpacity(0.2)),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
@@ -270,7 +270,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, AppTheme.primaryColor.withValues(alpha: 0.8)],
+                      colors: [Colors.transparent, AppTheme.primaryColor.withOpacity(0.8)],
                     ),
                   ),
                 ),

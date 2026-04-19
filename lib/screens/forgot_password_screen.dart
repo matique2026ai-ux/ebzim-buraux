@@ -116,7 +116,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.05),
+                          color: Colors.white.withOpacity(0.05),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -144,7 +144,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         Text(
                           getExplanatoryText(),
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.6),
+                            color: Colors.white.withOpacity(0.6),
                             fontSize: 15,
                             height: 1.6,
                           ),
@@ -158,7 +158,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             Text(
                               isRtl ? loc.authIdentity : loc.authIdentity.toUpperCase(),
                               style: TextStyle(
-                                color: const Color(0xFFD3C5AD).withValues(alpha: 0.6),
+                                color: const Color(0xFFD3C5AD).withOpacity(0.6),
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 2.0,
@@ -169,10 +169,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                               onFocusChange: (hasFocus) => setState(() => _isEmailFocused = hasFocus),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: _isEmailFocused ? Colors.white.withValues(alpha: 0.07) : Colors.white.withValues(alpha: 0.03),
+                                  color: _isEmailFocused ? Colors.white.withOpacity(0.07) : Colors.white.withOpacity(0.03),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: _isEmailFocused ? const Color(0x4DD3C5AD) : Colors.white.withValues(alpha: 0.1),
+                                    color: _isEmailFocused ? const Color(0x4DD3C5AD) : Colors.white.withOpacity(0.1),
                                   ),
                                 ),
                                 child: TextFormField(
@@ -180,7 +180,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                   style: const TextStyle(color: Colors.white, fontSize: 16),
                                   decoration: InputDecoration(
                                     hintText: loc.authIdentityHint,
-                                    hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.2)),
+                                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.2)),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                                   ),
@@ -223,7 +223,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         Text(
                           getConfirmationMessage(),
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.8),
+                            color: Colors.white.withOpacity(0.8),
                             fontSize: 16,
                             height: 1.6,
                           ),

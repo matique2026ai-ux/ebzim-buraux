@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:ebzim_app/core/models/news_post.dart';
+import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
+import 'package:intl/intl.dart';
 
 class EbzimProjectTimeline extends StatelessWidget {
   final List<ProjectMilestone> milestones;
+  final String lang;
 
-  const EbzimProjectTimeline({super.key, required this.milestones});
+  const EbzimProjectTimeline({
+    super.key, 
+    required this.milestones,
+    required this.lang,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (milestones.isEmpty) return const SizedBox.shrink();
+    final isAr = lang == 'ar';
 
     return Column(
       children: milestones.asMap().entries.map((entry) {
@@ -64,26 +71,23 @@ class EbzimProjectTimeline extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        milestone.titleAr,
+                        milestone.getLabel(lang),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Cairo',
-                          decoration: milestone.isCompleted ? TextDecoration.none : null,
                         ),
                       ),
-                      if (milestone.descriptionAr != null) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          milestone.descriptionAr!,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
-                            fontSize: 13,
-                            fontFamily: 'Cairo',
-                          ),
+                      const SizedBox(height: 4),
+                      Text(
+                        DateFormat.yMMMMd(isAr ? 'ar' : 'fr').format(milestone.date),
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.6),
+                          fontSize: 12,
+                          fontFamily: 'Cairo',
                         ),
-                      ],
+                      ),
                     ],
                   ),
                 ),

@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/models/news_post.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 
 class AdminCreateProjectScreen extends ConsumerStatefulWidget {
   final NewsPost? existingPost;
@@ -137,6 +138,24 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                     _buildStatusDropdown(),
                     const SizedBox(height: 24),
                     _buildProgressSlider(),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader('المحطات والجدول الزمني', Icons.timeline_rounded),
+                    const SizedBox(height: 16),
+                    _buildMilestoneEditor(),
+                    if (_milestones.isNotEmpty) ...[
+                      const SizedBox(height: 32),
+                      _buildSectionHeader('معاينة الخط الزمني', Icons.visibility_outlined),
+                      const SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.02),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white.withOpacity(0.05)),
+                        ),
+                        child: EbzimProjectTimeline(milestones: _milestones),
+                      ),
+                    ],
                     const SizedBox(height: 40),
                     _buildSubmitButton(),
                     const SizedBox(height: 60),
@@ -321,6 +340,71 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
             value: _progress,
             onChanged: (v) => setState(() => _progress = v),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMilestoneEditor() {
+    return Column(
+      children: [
+        ..._milestones.asMap().entries.map((entry) {
+          final idx = entry.key;
+          final milestone = entry.value;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.03),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white.withOpacity(0.05)),
+            ),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: milestone.isCompleted,
+                  onChanged: (v) => setState(() => _milestones[idx] = milestone.copyWith(isCompleted: v!)),
+                  activeColor: AppTheme.accentColor,
+                  checkColor: Colors.black,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        initialValue: milestone.titleAr,
+                        style: const TextStyle(color: Colors.white, fontSize: 14, fontFamily: 'Cairo'),
+                        decoration: const InputDecoration(
+                          hintText: 'عنوان المحطة...',
+                          border: InputBorder.none,
+                          isDense: true,
+                        ),
+                        onChanged: (v) => _milestones[idx] = milestone.copyWith(titleAr: v),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+                  onPressed: () => setState(() => _milestones.removeAt(idx)),
+                ),
+              ],
+            ),
+          );
+        }),
+        const SizedBox(height: 8),
+        TextButton.icon(
+          onPressed: () {
+            setState(() {
+              _milestones.add(ProjectMilestone(
+                titleAr: '',
+                titleEn: '',
+                isCompleted: false,
+              ));
+            });
+          },
+          icon: const Icon(Icons.add_circle_outline, color: AppTheme.accentColor),
+          label: const Text('إضافة محطة جديدة', style: TextStyle(color: AppTheme.accentColor, fontFamily: 'Cairo')),
         ),
       ],
     );

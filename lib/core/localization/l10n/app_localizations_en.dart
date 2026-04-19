@@ -112,7 +112,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authSecret => 'Secret';
 
   @override
-  String get authLostCredentials => 'Lost credentials?';
+  String get authLostCredentials => 'Forgot password?';
 
   @override
   String get authPasswordHint => '••••••••';
@@ -132,11 +132,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'An unexpected error occurred. Please try again later.';
 
   @override
-  String get authForgotPasswordTitle => 'Account Recovery';
+  String get authForgotPasswordTitle => 'Forgot Password?';
 
   @override
   String get authForgotPasswordDesc =>
-      'Automatic account recovery is currently under development. Please contact the association\'s administration or technical support for assistance.';
+      'Enter your email address to receive a secure code and reset your password.';
 
   @override
   String get authAssocName => 'EBZIM ASSOCIATION';

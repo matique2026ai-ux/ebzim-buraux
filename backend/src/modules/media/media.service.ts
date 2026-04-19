@@ -25,7 +25,7 @@ export class MediaService {
     }
 
     // Increased limit for institutional media content (images/videos)
-    const MAX_MB = 20;
+    const MAX_MB = 50;
     if (file.size > MAX_MB * 1024 * 1024) {
       throw new BadRequestException(
         `File size exceeds strict ${MAX_MB}MB limit.`,

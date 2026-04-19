@@ -112,7 +112,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authSecret => 'كلمة المرور';
 
   @override
-  String get authLostCredentials => 'هل نسيت بيانات الاعتماد؟';
+  String get authLostCredentials => 'نسيت كلمة المرور؟';
 
   @override
   String get authPasswordHint => '••••••••';
@@ -132,11 +132,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authErrorUnknown => 'حدث خطأ غير متوقع. يرجى المحاولة لاحقاً.';
 
   @override
-  String get authForgotPasswordTitle => 'استعادة الحساب';
+  String get authForgotPasswordTitle => 'نسيت كلمة المرور؟';
 
   @override
   String get authForgotPasswordDesc =>
-      'نظام استعادة الحساب التلقائي قيد التطوير حالياً. يرجى التواصل مع إدارة الجمعية أو إرسال بريد إلكتروني للدعم الفني للمساعدة في استعادة بياناتك.';
+      'أدخل بريدك الإلكتروني المرتبط بحسابك لتلقي رمز التحقق الذي سيمكنك من تعيين كلمة مرور جديدة آمنة.';
 
   @override
   String get authAssocName => 'جمعية إبزيم';

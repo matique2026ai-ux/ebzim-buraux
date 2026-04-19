@@ -301,7 +301,7 @@ abstract class AppLocalizations {
   /// No description provided for @authLostCredentials.
   ///
   /// In ar, this message translates to:
-  /// **'هل نسيت بيانات الاعتماد؟'**
+  /// **'نسيت كلمة المرور؟'**
   String get authLostCredentials;
 
   /// No description provided for @authPasswordHint.
@@ -337,13 +337,13 @@ abstract class AppLocalizations {
   /// No description provided for @authForgotPasswordTitle.
   ///
   /// In ar, this message translates to:
-  /// **'استعادة الحساب'**
+  /// **'نسيت كلمة المرور؟'**
   String get authForgotPasswordTitle;
 
   /// No description provided for @authForgotPasswordDesc.
   ///
   /// In ar, this message translates to:
-  /// **'نظام استعادة الحساب التلقائي قيد التطوير حالياً. يرجى التواصل مع إدارة الجمعية أو إرسال بريد إلكتروني للدعم الفني للمساعدة في استعادة بياناتك.'**
+  /// **'أدخل بريدك الإلكتروني المرتبط بحسابك لتلقي رمز التحقق الذي سيمكنك من تعيين كلمة مرور جديدة آمنة.'**
   String get authForgotPasswordDesc;
 
   /// No description provided for @authAssocName.

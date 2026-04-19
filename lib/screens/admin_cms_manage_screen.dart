@@ -528,6 +528,11 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         'goalsSummary': {'ar': '', 'en': '', 'fr': ''},
         'role': {'ar': '', 'en': '', 'fr': ''},
         'imageUrl': '',
+        'videoUrl': '',
+        'glassColor': '#000000',
+        'overlayOpacity': 0.1,
+        'buttonText': '',
+        'buttonLink': '',
         'logoUrl': '',
         'photoUrl': '',
         'color': '1A6B3A',
@@ -543,6 +548,9 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         'title': {'ar': s.titleAr, 'en': s.titleEn, 'fr': s.titleFr},
         'subtitle': {'ar': s.subtitleAr, 'en': s.subtitleEn, 'fr': s.subtitleFr},
         'imageUrl': s.imageUrl,
+        'videoUrl': s.videoUrl ?? '',
+        'glassColor': s.glassColor ?? '#000000',
+        'overlayOpacity': s.overlayOpacity,
         'buttonText': s.buttonText ?? '',
         'buttonLink': s.buttonLink ?? '',
         'order': s.order,
@@ -609,6 +617,9 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         cleanData['title'] = _ensureMultilingual(_data['title']);
         cleanData['subtitle'] = _ensureMultilingual(_data['subtitle']);
         cleanData['imageUrl'] = _data['imageUrl'] ?? '';
+        cleanData['videoUrl'] = _data['videoUrl'] ?? '';
+        cleanData['glassColor'] = _data['glassColor'] ?? '#000000';
+        cleanData['overlayOpacity'] = _data['overlayOpacity'] ?? 0.1;
         cleanData['buttonText'] = _data['buttonText'] ?? '';
         cleanData['buttonLink'] = _data['buttonLink'] ?? '';
         cleanData['order'] = _data['order'] ?? 0;
@@ -779,8 +790,33 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       const SizedBox(height: 12),
       _buildTextField('رابط الزر (URL)', 'buttonLink', _data['buttonLink'], isAr: false),
       const SizedBox(height: 20),
-      _sectionLabel('ترتيب العرض', Icons.sort_rounded),
       _buildTextField('الترتيب (رقمي)', 'order', _data['order']?.toString(), isAr: false),
+      const SizedBox(height: 24),
+      _sectionLabel('التصميم المتقدم (Super Admin)', Icons.auto_awesome_rounded),
+      const SizedBox(height: 12),
+      _buildTextField('رابط الفيديو (اختياري)', 'videoUrl', _data['videoUrl'], isAr: false, hint: 'https://example.com/video.mp4'),
+      const SizedBox(height: 12),
+      _buildColorPalette('glassColor', _data['glassColor']),
+      const SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('شفافية التغطية: ${(_data['overlayOpacity'] * 100).toInt()}%', style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                Slider(
+                  value: _data['overlayOpacity'] ?? 0.1,
+                  min: 0.0, max: 1.0,
+                  activeColor: AppTheme.accentColor,
+                  inactiveColor: AppTheme.accentColor.withOpacity(0.1),
+                  onChanged: (v) => setState(() => _data['overlayOpacity'] = v),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       const SizedBox(height: 20),
       _sectionLabel('الحالة', Icons.visibility_rounded),
       SwitchListTile(
@@ -811,7 +847,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
             // Color Palette Picker
             Text('لون العلامة التجارية', style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey.shade600)),
             const SizedBox(height: 12),
-            _buildColorPalette(),
+            _buildColorPalette('color', _data['color']),
           ],
         ),
       ),
@@ -935,40 +971,95 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
     });
   }
 
-  Widget _buildColorPalette() {
+
+  Widget _buildColorPalette(String key, String? currentHex) {
     final colors = [
-      '#0F172A', '#1E293B', '#334155', '#6366F1', '#EC4899', '#F59E0B', '#3B82F6', '#EF4444'
+      '#1A6B3A', // Emerald Ebzim
+      '#0F172A', // Slate
+      '#000000', // Black
+      '#8B0000', // Algerian Crimson
+      '#D4AF37', // Heritage Gold
+      '#1E293B', // Midnight
+      '#FFFFFF', // Glass White
     ];
-    return Wrap(
-      spacing: 12,
-      children: colors.map((hex) {
-        final isSelected = _data['color'] == hex;
-        return GestureDetector(
-          onTap: () => setState(() => _data['color'] = hex),
-          child: Container(
-            width: 36, height: 36,
-            decoration: BoxDecoration(
-              color: _hexToColor(hex),
-              shape: BoxShape.circle,
-              border: Border.all(color: isSelected ? Colors.white : Colors.transparent, width: 2.5),
-              boxShadow: isSelected ? [BoxShadow(color: Colors.black26, blurRadius: 6)] : null,
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('لوحة الألوان الملكية', style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            ...colors.map((hex) {
+              final isSelected = currentHex == hex;
+              return GestureDetector(
+                onTap: () => setState(() => _data[key] = hex),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 42, height: 42,
+                  decoration: BoxDecoration(
+                    color: _hexToColor(hex),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected ? AppTheme.accentColor : Colors.white.withOpacity(0.5),
+                      width: isSelected ? 3 : 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))
+                    ],
+                  ),
+                  child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 18) : null,
+                ),
+              );
+            }),
+            // Manual Hex Input (Small & Secondary)
+            GestureDetector(
+              onTap: () {
+                // Show a simple text input dialog for custom hex
+                _showCustomColorDialog(key);
+              },
+              child: Container(
+                width: 42, height: 42,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.shade300, width: 1.5),
+                ),
+                child: const Icon(Icons.colorize_rounded, color: Colors.grey, size: 18),
+              ),
             ),
-            child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 16) : null,
-          ),
-        );
-      }).toList(),
+          ],
+        ),
+      ],
     );
   }
 
-  Color _hexToColor(String? hex) {
-    if (hex == null || hex.isEmpty) return AppTheme.primaryColor;
-    try {
-      String h = hex.replaceFirst('#', '');
-      if (h.length == 6) h = 'FF$h';
-      return Color(int.parse(h, radix: 16));
-    } catch (_) {
-      return AppTheme.primaryColor;
-    }
+  void _showCustomColorDialog(String key) {
+    final ctrl = TextEditingController(text: _data[key]);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('لون مخصص (Hex)', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+        content: TextField(
+          controller: ctrl,
+          decoration: const InputDecoration(hintText: '#RRGGBB'),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('إلغاء', style: GoogleFonts.tajawal())),
+          ElevatedButton(
+            onPressed: () {
+              setState(() => _data[key] = ctrl.text.trim());
+              Navigator.pop(ctx);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor),
+            child: Text('تطبيق', style: GoogleFonts.tajawal(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
 
@@ -1202,7 +1293,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
     );
   }
 
-  Widget _buildTextField(String label, String key, String? initial, {bool required = false, bool isAr = true, int maxLines = 1}) {
+  Widget _buildTextField(String label, String key, String? initial, {bool required = false, bool isAr = true, int maxLines = 1, String? hint}) {
     return TextFormField(
       initialValue: initial ?? '',
       textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
@@ -1211,6 +1302,8 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       onSaved: (val) => _updateData(key, val?.trim() ?? ''),
       decoration: InputDecoration(
         labelText: label,
+        hintText: hint,
+        hintStyle: GoogleFonts.tajawal(color: Colors.grey.shade400, fontSize: 12),
         labelStyle: GoogleFonts.tajawal(color: const Color(0xFF64748B), fontSize: 13),
         filled: true,
         fillColor: Colors.white,
@@ -1230,6 +1323,20 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       ),
       validator: required ? (v) => (v == null || v.isEmpty) ? 'هذا الحقل مطلوب' : null : null,
     );
+  }
+
+  Color _hexToColor(String? hex) {
+    if (hex == null || hex.isEmpty) return AppTheme.primaryColor;
+    try {
+      String h = hex.replaceFirst('#', '');
+      if (h.length == 3) {
+        h = h.split('').map((e) => e + e).join('');
+      }
+      if (h.length == 6) h = 'FF$h';
+      return Color(int.parse(h, radix: 16));
+    } catch (_) {
+      return AppTheme.primaryColor;
+    }
   }
 }
 

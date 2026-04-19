@@ -145,12 +145,19 @@ final appRouterProvider = Provider((ref) {
       final isLoggingIn = loc == '/login';
       final isRegistering = loc == '/register';
       final isAuthFlow = loc.startsWith('/auth/');
-      final isPublicHome = loc == '/splash' || loc == '/language' || loc == '/onboarding';
+      
+      // Routes accessible without authentication
+      final publicRoutes = [
+        '/splash', '/language', '/onboarding', '/home', '/about', 
+        '/activities', '/news', '/heritage', '/leadership', 
+        '/statute', '/library', '/heritage-map'
+      ];
+      
+      final isPublicBase = publicRoutes.contains(loc);
+      final isPublicDetail = loc.startsWith('/news/') || loc.startsWith('/project/') || loc.startsWith('/event/');
+      final isAllowedUnauthenticated = isLoggingIn || isRegistering || isAuthFlow || isPublicBase || isPublicDetail;
 
       if (isInitializing) return null;
-
-      // Allowed routes for unauthenticated users
-      final isAllowedUnauthenticated = isLoggingIn || isRegistering || isAuthFlow || isPublicHome;
 
       if (!isAuthenticated && !isAllowedUnauthenticated) {
         return '/login';

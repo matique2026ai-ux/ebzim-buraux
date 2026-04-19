@@ -29,21 +29,21 @@ export class HeroController {
 
   @Get('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.SUPER_ADMIN)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
   async getAdminTable() {
     return this.heroService.getAdminTable();
   }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.SUPER_ADMIN)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
   async create(@Body() dto: CreateHeroSlideDto) {
     return this.heroService.create(dto);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.SUPER_ADMIN)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
   async update(@Param('id') id: string, @Body() dto: UpdateHeroSlideDto) {
     return this.heroService.update(id, dto);
   }
@@ -55,7 +55,7 @@ export class HeroController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.SUPER_ADMIN)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
   async delete(@Param('id') id: string) {
     return this.heroService.delete(id);
   }

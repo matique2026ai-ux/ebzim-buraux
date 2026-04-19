@@ -7,6 +7,9 @@ class HeroSlide {
   final String subtitleEn;
   final String subtitleFr;
   final String imageUrl;
+  final String? videoUrl;
+  final String? glassColor;
+  final double overlayOpacity;
   final String? buttonText;
   final String? buttonLink;
   final int order;
@@ -21,6 +24,9 @@ class HeroSlide {
     required this.subtitleEn,
     required this.subtitleFr,
     required this.imageUrl,
+    this.videoUrl,
+    this.glassColor,
+    this.overlayOpacity = 0.1,
     this.buttonText,
     this.buttonLink,
     this.order = 0,
@@ -39,6 +45,9 @@ class HeroSlide {
       subtitleEn: subtitle['en']?.toString() ?? '',
       subtitleFr: subtitle['fr']?.toString() ?? '',
       imageUrl: json['imageUrl']?.toString() ?? '',
+      videoUrl: json['videoUrl']?.toString(),
+      glassColor: json['glassColor']?.toString(),
+      overlayOpacity: (json['overlayOpacity'] is num) ? (json['overlayOpacity'] as num).toDouble() : 0.1,
       buttonText: json['buttonText']?.toString(),
       buttonLink: json['buttonLink']?.toString(),
       order: json['order'] is int ? json['order'] : 0,
@@ -49,8 +58,9 @@ class HeroSlide {
   bool _isJunk(String? text) {
     if (text == null || text.trim().isEmpty) return true;
     final t = text.trim();
-    // Simple heuristic: if it's the same character repeated many times
-    if (t.length > 3 && t.split('').every((char) => char == t[0])) return true;
+    // Only detect as junk if a single character is repeated more than 10 times
+    // This allows short tests like "ببب" while filtering out long "ببببببببببببب"
+    if (t.length > 10 && t.split('').every((char) => char == t[0])) return true;
     return false;
   }
 

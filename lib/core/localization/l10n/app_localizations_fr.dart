@@ -113,7 +113,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authSecret => 'Secret';
 
   @override
-  String get authLostCredentials => 'Oublié vos accès ?';
+  String get authLostCredentials => 'Mot de passe oublié ?';
 
   @override
   String get authPasswordHint => '••••••••';
@@ -133,11 +133,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Une erreur inattendue s\'est produite. Veuillez réessayer plus tard.';
 
   @override
-  String get authForgotPasswordTitle => 'Récupération de compte';
+  String get authForgotPasswordTitle => 'Mot de passe oublié ?';
 
   @override
   String get authForgotPasswordDesc =>
-      'La récupération automatique de compte est en cours de développement. Veuillez contacter l\'administration de l\'association pour obtenir de l\'aide.';
+      'Saisissez votre adresse e-mail pour recevoir un code de sécurité et réinitialiser votre mot de passe.';
 
   @override
   String get authAssocName => 'ASSOCIATION EBZIM';

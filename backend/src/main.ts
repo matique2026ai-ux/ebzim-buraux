@@ -11,18 +11,24 @@ async function bootstrap() {
   // Set Global API Prefix
   app.setGlobalPrefix('api/v1'); // Ensure all routes are versioned
 
-  // Enable CORS — allow web app from any origin
+  // Increase limits for large media uploads
+  const bodyParser = require('body-parser');
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+  // Enable CORS — Robust policy for local and production sync
   app.enableCors({
-    origin: true,
+    origin: '*', 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    allowedHeaders: 'Content-Type, Accept, Authorization',
   });
 
   // Set Global Validation Pipe
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // strip out unspecified properties
-      transform: true, // auto-transform payloads to DTO instances
+      whitelist: true, 
+      transform: true, 
     }),
   );
 

@@ -48,9 +48,7 @@ class EbzimProjectTimeline extends StatelessWidget {
                         )
                       ] : null,
                     ),
-                    child: milestone.isCompleted 
-                      ? const Icon(Icons.check, size: 12, color: Colors.black) 
-                      : null,
+                    child: _buildPremiumIcon(milestone, isAr),
                   ),
                   if (!isLast)
                     Expanded(
@@ -97,5 +95,30 @@ class EbzimProjectTimeline extends StatelessWidget {
         );
       }).toList(),
     );
+  }
+
+  Widget _buildPremiumIcon(ProjectMilestone milestone, bool isAr) {
+    if (!milestone.isCompleted) return const SizedBox.shrink();
+
+    final label = (isAr ? milestone.labelAr : milestone.labelFr).toLowerCase();
+    
+    IconData icon = Icons.check_rounded;
+    
+    // Premium mapping based on keywords
+    if (label.contains('دراسة') || label.contains('تصميم') || label.contains('étude') || label.contains('conception')) {
+      icon = Icons.architecture_rounded;
+    } else if (label.contains('بحث') || label.contains('علمي') || label.contains('recherche') || label.contains('scientifique')) {
+      icon = Icons.science_rounded;
+    } else if (label.contains('ترميم') || label.contains('تنفيذ') || label.contains('اشغال') || label.contains('restauration') || label.contains('travaux')) {
+      icon = Icons.construction_rounded;
+    } else if (label.contains('افتتاح') || label.contains('إطلاق') || label.contains('inauguration') || label.contains('lancement')) {
+      icon = Icons.rocket_launch_rounded;
+    } else if (label.contains('توثيق') || label.contains('أرشفة') || label.contains('documentation') || label.contains('archive')) {
+      icon = Icons.auto_stories_rounded;
+    } else if (label.contains('ميداني') || label.contains('terrain')) {
+      icon = Icons.explore_rounded;
+    }
+
+    return Icon(icon, size: 10, color: Colors.black);
   }
 }

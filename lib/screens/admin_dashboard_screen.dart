@@ -23,6 +23,7 @@ import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/cms_content_service.dart';
 import 'package:ebzim_app/core/models/cms_models.dart';
 import 'package:ebzim_app/screens/admin_cms_manage_screen.dart';
+import 'package:excel/excel.dart' hide Border;
 import 'package:cached_network_image/cached_network_image.dart';
 
 class _MiniMetric extends StatelessWidget {
@@ -98,7 +99,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         body: NestedScrollView(
           headerSliverBuilder: (_, __) => [
             SliverAppBar(
-              expandedHeight: 165,
+              expandedHeight: 200, // Increased for professional breathing room
               floating: false,
               pinned: true,
               backgroundColor: AppTheme.primaryColor,
@@ -143,27 +144,26 @@ class AdminDashboardScreen extends ConsumerWidget {
                 background: Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF020617), Color(0xFF0F172A)],
+                      colors: [Color(0xFF010A08), Color(0xFF052011)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
                   ),
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Center(
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 800),
+                      padding: const EdgeInsets.only(top: 40, bottom: 40, left: 24, right: 24),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center, // Centered horizontally
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 52), // Space for AppBar leading/actions
-                          // Breadcrumb-style indicator (Centered)
+                          // Breadcrumb-style indicator
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 'الرئيسية'.toUpperCase(),
                                 style: GoogleFonts.inter(
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: Colors.white.withOpacity(0.5),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -171,12 +171,12 @@ class AdminDashboardScreen extends ConsumerWidget {
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4),
-                                child: Icon(Icons.chevron_left_rounded, size: 10, color: Colors.white.withOpacity(0.1)),
+                                child: Icon(Icons.chevron_left_rounded, size: 10, color: Colors.white.withOpacity(0.3)),
                               ),
                               Text(
                                 (isSuperAdmin ? 'إشراف المشرف العام' : 'إدارة النظام').toUpperCase(),
                                 style: GoogleFonts.inter(
-                                  color: AppTheme.accentColor.withOpacity(0.1),
+                                  color: AppTheme.accentColor.withOpacity(0.8),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -184,37 +184,41 @@ class AdminDashboardScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
-                          // Smaller, centered bold title
+                          const SizedBox(height: 10),
+                          // Bold centered title
                           Text(
                             isSuperAdmin ? 'لوحة السيادة والتحكم' : 'لوحة الإدارة الشاملة',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.tajawal(
-                              fontSize: 22, // Decreased from 28 to 22
-                              fontWeight: FontWeight.w800,
+                              fontSize: 28, 
+                              fontWeight: FontWeight.w900,
                               color: Colors.white,
                               height: 1.1,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                width: 5,
-                                height: 5,
+                                width: 6,
+                                height: 6,
                                 decoration: const BoxDecoration(
                                   color: Color(0xFF4ADE80),
                                   shape: BoxShape.circle,
+                                  boxShadow: [BoxShadow(color: Color(0xFF4ADE80), blurRadius: 4)],
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              Text(
-                                isSuperAdmin ? 'أهلاً بك يا مشرف النظام. جميع الصلاحيات مفعلة.' : 'المركز الرئيسي للتحكم والعمليات',
-                                style: GoogleFonts.tajawal(
-                                  fontSize: 10,
-                                  color: Colors.white.withOpacity(0.1),
-                                  fontWeight: FontWeight.w400,
+                              Flexible(
+                                child: Text(
+                                  isSuperAdmin ? 'أهلاً بك يا مشرف النظام. جميع الصلاحيات مفعلة.' : 'المركز الرئيسي للتحكم والعمليات',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.tajawal(
+                                    fontSize: 11,
+                                    color: Colors.white.withOpacity(0.8),
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ],
@@ -268,24 +272,61 @@ class _UsersTabState extends State<_UsersTab> {
   String _searchQuery = '';
   bool _isExporting = false;
 
-  void _exportUsersToCSV(List<UserProfile> users) {
+  Future<void> _exportUsersToExcel(List<UserProfile> users) async {
     setState(() => _isExporting = true);
     try {
-      // Build CSV content
-      final header = 'Name,Email,Role,Status\n';
-      final rows = users.map((u) {
-        final name = u.name.replaceAll(',', ' ');
-        return '$name,${u.email},${u.membershipLevel},${u.status}';
-      }).join('\n');
-      
-      final csvContent = header + rows;
+      final excel = Excel.createExcel();
+      final String sheetName = 'Ebzim Users Export';
+      final sheet = excel[sheetName];
+      excel.delete('Sheet1');
 
-      // Web download logic (using universal_html style for stability)
-      // Note: In a real production app we'd use package:web or dart:html
-      // For this environment, we simulate the logic or use a helper
-      _triggerWebDownload(csvContent, 'ebzim_users_export_${DateTime.now().millisecondsSinceEpoch}.csv');
+      // 1. Set Headers (Column by Column)
+      final headers = ['Name', 'Name (AR)', 'Email', 'Phone', 'Role', 'Status', 'Expiry Date'];
+      for (int i = 0; i < headers.length; i++) {
+        var cell = sheet.cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0));
+        cell.value = TextCellValue(headers[i]);
+      }
+
+      // 2. Set Data Rows
+      for (int row = 0; row < users.length; row++) {
+        final u = users[row];
+        final rowIndex = row + 1;
+
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex)).value = TextCellValue(u.name);
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex)).value = TextCellValue(u.nameAr);
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex)).value = TextCellValue(u.email);
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex)).value = TextCellValue(u.phone);
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex)).value = TextCellValue(u.membershipLevel);
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex)).value = TextCellValue(u.status);
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex)).value = TextCellValue(u.membershipExpiry?.toIso8601String().split('T').first ?? 'N/A');
+      }
+
+      // 3. Save and Download
+      final bytes = excel.save();
+      if (bytes != null) {
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final filename = 'ebzim_users_export_$timestamp.xlsx';
+        
+        triggerWebDownloadBytes(Uint8List.fromList(bytes), filename);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.assignment_turned_in_rounded, color: AppTheme.accentColor),
+                  const SizedBox(width: 12),
+                  Text('تم استخراج البيانات في أعمدة منفصلة بنجاح', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                ],
+              ),
+              backgroundColor: const Color(0xFF052011),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
     } catch (e) {
-      debugPrint('Export failed: $e');
+      debugPrint('XLSX Export Error: $e');
     } finally {
       setState(() => _isExporting = false);
     }
@@ -345,7 +386,7 @@ class _UsersTabState extends State<_UsersTab> {
                     usersAsync.maybeWhen(
                       data: (users) => _ExportButton(
                         isLoading: _isExporting,
-                        onPressed: () => _exportUsersToCSV(users),
+                        onPressed: () => _exportUsersToExcel(users),
                       ),
                       orElse: () => const SizedBox(),
                     ),
@@ -1107,17 +1148,16 @@ class _CMSTab extends ConsumerWidget {
           ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
           const SizedBox(height: 24),
 
-          // Hero Management Card (SUPER_ADMIN ONLY)
-          if (isSuperAdmin)
-            _CMSManagementCard(
-              title: 'شريط الواجهة (Hero Carousel)',
-              description: 'تغيير صور العرض والنصوص الترويجية في الصفحة الرئيسية',
-              icon: Icons.view_carousel_rounded,
-              color: const Color(0xFF6366F1),
-              count: slidesAsync.when(data: (d) => '${d.length} شرائح', loading: () => '...', error: (_, __) => '0'),
-              onTap: () => context.push('/admin/cms/hero'),
-            ),
-          if (isSuperAdmin) const SizedBox(height: 16),
+          // Hero Management Card
+          _CMSManagementCard(
+            title: 'شريط الواجهة (Hero Carousel)',
+            description: 'تغيير صور العرض والنصوص الترويجية في الصفحة الرئيسية',
+            icon: Icons.view_carousel_rounded,
+            color: const Color(0xFF6366F1),
+            count: slidesAsync.when(data: (d) => '${d.length} شرائح', loading: () => '...', error: (_, __) => '0'),
+            onTap: () => context.push('/admin/cms/hero'),
+          ),
+          const SizedBox(height: 16),
 
           // Partners Management Card
           _CMSManagementCard(

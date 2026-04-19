@@ -33,15 +33,6 @@ class HeritageProjectsScreen extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/heritage-map'),
-        backgroundColor: AppTheme.accentColor,
-        icon: const Icon(Icons.map_rounded, color: Colors.white),
-        label: Text(
-          isAr ? 'عرض الخريطة' : 'Voir la carte',
-          style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ).animate().fadeIn(delay: 500.ms).slideY(begin: 1.0, curve: Curves.easeOutBack),
       body: EbzimBackground(
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -319,16 +310,50 @@ class _SearchAndFilterBar extends ConsumerWidget {
             borderRadius: BorderRadius.circular(26),
             border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : AppTheme.accentColor.withOpacity(0.2)),
           ),
-          child: TextField(
-            onChanged: (val) => ref.read(searchQueryProvider.notifier).state = val,
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-            decoration: InputDecoration(
-              hintText: isAr ? 'ابحث عن مشروع، معلم، أو شراكة...' : 'Rechercher un projet, un monument...',
-              hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13),
-              prefixIcon: Icon(Icons.search_rounded, color: AppTheme.accentColor.withOpacity(0.6)),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-            ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  onChanged: (val) => ref.read(searchQueryProvider.notifier).state = val,
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: isAr ? 'ابحث عن مشروع، معلم، أو شراكة...' : 'Rechercher un projet, un monument...',
+                    hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13),
+                    prefixIcon: Icon(Icons.search_rounded, color: AppTheme.accentColor.withOpacity(0.6)),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8, left: 8),
+                child: InkWell(
+                  onTap: () => context.push('/heritage-map'),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.accentColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.map_rounded, color: AppTheme.accentColor, size: 16),
+                        const SizedBox(width: 6),
+                        Text(
+                          isAr ? 'الخريطة' : 'Carte',
+                          style: GoogleFonts.tajawal(
+                            color: AppTheme.accentColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 16),

@@ -111,9 +111,16 @@ class HomeScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: newsAsync.when(
               data: (posts) {
-                if (posts.isEmpty) return const SizedBox.shrink();
-                final pinned = posts.where((p) => p.isPinned).take(2).toList();
-                final toShow = pinned.isNotEmpty ? pinned : posts.take(2).toList();
+                // Filter to only show general news/announcements, excluding projects
+                final newsPosts = posts.where((p) => 
+                  p.category.toUpperCase() == 'ANNOUNCEMENT' || 
+                  p.category.isEmpty
+                ).toList();
+
+                if (newsPosts.isEmpty) return const SizedBox.shrink();
+                
+                final pinned = newsPosts.where((p) => p.isPinned).take(2).toList();
+                final toShow = pinned.isNotEmpty ? pinned : newsPosts.take(2).toList();
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
                   child: Column(

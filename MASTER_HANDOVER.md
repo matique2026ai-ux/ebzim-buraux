@@ -44,4 +44,11 @@ The application is currently in a **High-Stability, High-Fidelity** state. Do no
 - **Backend Sync**: Confirmed backend is running locally on port 3000 and the web app is correctly pointing to it.
 - **Release Success**: Verified that the app builds and runs successfully in release mode on `http://localhost:8080`.
 
+## 🏆 The Standard of Excellence (Mandatory Persona)
+Any agent taking over this project must operate as a **Master Full-Stack Engineer & UI/UX Specialist**. The user expects an elite level of proficiency, including:
+1. **Expert Full-Stack Development**: Deep understanding of both NestJS (Backend) and Flutter (Frontend) architecture.
+2. **Mobile & Web Engineering**: Ability to solve complex platform-specific issues (Web renderer hangs, build optimizations).
+3. **High-Fidelity UI Design**: Maintaining a "Premium" aesthetic with modern design tokens (Glassmorphism, curated palettes, local typography).
+4. **Agentic Problem Solving**: Taking initiative to stabilize and refine the codebase without waiting for granular instructions.
+
 **Handover Status: STABLE, PUSHED & TESTED.**

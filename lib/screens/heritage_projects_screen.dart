@@ -58,9 +58,9 @@ class HeritageProjectsScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppTheme.accentColor.withValues(alpha: 0.12),
+                        color: AppTheme.accentColor.withOpacity(),
                         borderRadius: BorderRadius.circular(30),
-                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
+                        border: Border.all(color: AppTheme.accentColor.withOpacity()),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -225,10 +225,10 @@ class _PartnershipBanner extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
           decoration: BoxDecoration(
-            color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.7),
+            color: isDark ? Colors.white.withOpacity() : Colors.white.withOpacity(),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isDark ? Colors.white.withValues(alpha: 0.08) : AppTheme.accentColor.withValues(alpha: 0.15),
+              color: isDark ? Colors.white.withOpacity() : AppTheme.accentColor.withOpacity(),
             ),
           ),
           child: Column(
@@ -270,9 +270,9 @@ class _PartnerChip extends StatelessWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
+            color: color.withOpacity(),
             shape: BoxShape.circle,
-            border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
+            border: Border.all(color: color.withOpacity(), width: 1.5),
           ),
           child: Icon(icon, color: color, size: 20),
         ),
@@ -290,7 +290,7 @@ class _PartnerChip extends StatelessWidget {
         ),
         Text(
           sub,
-          style: TextStyle(color: color.withValues(alpha: 0.7), fontSize: 9),
+          style: TextStyle(color: color.withOpacity(), fontSize: 9),
         ),
       ],
     );
@@ -315,9 +315,9 @@ class _SearchAndFilterBar extends ConsumerWidget {
         Container(
           height: 52,
           decoration: BoxDecoration(
-            color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.6),
+            color: isDark ? Colors.white.withOpacity() : Colors.white.withOpacity(),
             borderRadius: BorderRadius.circular(26),
-            border: Border.all(color: isDark ? Colors.white10 : AppTheme.accentColor.withValues(alpha: 0.1)),
+            border: Border.all(color: isDark ? Colors.white10 : AppTheme.accentColor.withOpacity()),
           ),
           child: TextField(
             onChanged: (val) => ref.read(searchQueryProvider.notifier).state = val,
@@ -325,7 +325,7 @@ class _SearchAndFilterBar extends ConsumerWidget {
             decoration: InputDecoration(
               hintText: isAr ? 'ابحث عن مشروع، معلم، أو شراكة...' : 'Rechercher un projet, un monument...',
               hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13),
-              prefixIcon: Icon(Icons.search_rounded, color: AppTheme.accentColor.withValues(alpha: 0.7)),
+              prefixIcon: Icon(Icons.search_rounded, color: AppTheme.accentColor.withOpacity()),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             ),
@@ -362,9 +362,9 @@ class _SearchAndFilterBar extends ConsumerWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.5)),
+          color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white.withOpacity() : Colors.white.withOpacity()),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white10 : AppTheme.accentColor.withValues(alpha: 0.2))),
+          border: Border.all(color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white10 : AppTheme.accentColor.withOpacity())),
         ),
         child: Text(
           label,
@@ -411,7 +411,7 @@ class _ProjectCard extends StatelessWidget {
       child: GlassCard(
         padding: EdgeInsets.zero,
         border: Border.all(
-          color: isDark ? Colors.white.withValues(alpha: 0.07) : AppTheme.accentColor.withValues(alpha: 0.1),
+          color: isDark ? Colors.white.withOpacity() : AppTheme.accentColor.withOpacity(),
           width: 1.5,
         ),
         child: Column(
@@ -430,7 +430,7 @@ class _ProjectCard extends StatelessWidget {
                       height: 180,
                       width: double.infinity,
                       color: const Color(0xFF081C10),
-                      child: Icon(Icons.apartment_outlined, color: AppTheme.accentColor.withValues(alpha: 0.3), size: 60),
+                      child: Icon(Icons.apartment_outlined, color: AppTheme.accentColor.withOpacity(), size: 60),
                     ),
                   ),
                   Positioned.fill(
@@ -439,7 +439,7 @@ class _ProjectCard extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                          colors: [Colors.transparent, Colors.black.withOpacity()],
                         ),
                       ),
                     ),
@@ -450,7 +450,7 @@ class _ProjectCard extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
-                        color: _statusColor(project.category).withValues(alpha: 0.9),
+                        color: _statusColor(project.category).withOpacity(),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -488,7 +488,7 @@ class _ProjectCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: _statusColor(project.projectStatus).withValues(alpha: 0.9),
+                          color: _statusColor(project.projectStatus).withOpacity(),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: Colors.white24),
                         ),
@@ -607,7 +607,7 @@ class _ProjectDetailsSheet extends StatelessWidget {
           color: isDark ? const Color(0xFF0F1A0F) : Colors.white,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 40),
+            BoxShadow(color: Colors.black.withOpacity(), blurRadius: 40),
           ],
         ),
         child: ClipRRect(
@@ -674,7 +674,7 @@ class _ProjectDetailsSheet extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: AppTheme.accentColor.withValues(alpha: 0.15),
+                            color: AppTheme.accentColor.withOpacity(),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -701,9 +701,9 @@ class _ProjectDetailsSheet extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.03),
+                        color: Colors.white.withOpacity(),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                        border: Border.all(color: Colors.white.withOpacity()),
                       ),
                       child: Column(
                         children: [

@@ -147,6 +147,54 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           // ════════════════════════════════════════
+          // INSTITUTIONAL PROJECTS SECTION
+          // ════════════════════════════════════════
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
+              child: _SectionHeader(
+                title: lang == 'ar' ? 'المشاريع المؤسساتية' : 'Projets Institutionnels',
+                onViewAll: () => context.go('/heritage'),
+                lang: lang,
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: newsAsync.when(
+              data: (posts) {
+                // Filter specifically for projects
+                final projects = posts.where((p) => 
+                  p.category.toUpperCase() != 'ANNOUNCEMENT' && 
+                  p.category.isNotEmpty
+                ).take(4).toList();
+
+                if (projects.isEmpty) return const SizedBox.shrink();
+
+                return SizedBox(
+                  height: 360,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: projects.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 16),
+                    itemBuilder: (ctx, index) {
+                      final project = projects[index];
+                      return _HomeProjectCard(
+                        project: project,
+                        lang: lang,
+                        isDark: theme.brightness == Brightness.dark,
+                      ).animate(delay: (index * 150).ms).fadeIn(duration: 600.ms).slideX(begin: 0.1);
+                    },
+                  ),
+                );
+              },
+              loading: () => const SizedBox(height: 340, child: Center(child: CircularProgressIndicator())),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+          ),
+
+          // ════════════════════════════════════════
           // PARTNERSHIPS BANNER
           // ════════════════════════════════════════
           SliverToBoxAdapter(
@@ -1291,5 +1339,171 @@ class _PillarRow extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _HomeProjectCard extends StatelessWidget {
+  final NewsPost project;
+  final String lang;
+  final bool isDark;
+
+  const _HomeProjectCard({
+    required this.project,
+    required this.lang,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isAr = lang == 'ar';
+    return GestureDetector(
+      onTap: () => context.push('/project/${project.id}', extra: project),
+      child: Container(
+        width: 280,
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image & Progress Overlay
+              Stack(
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: project.imageUrl,
+                    height: 160,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Progress Bar on image
+                  Positioned(
+                    bottom: 12,
+                    left: 12,
+                    right: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              isAr ? 'تقدم المشروع' : 'Progrès',
+                              style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              '${(project.progressPercentage * 100).toInt()}%',
+                              style: const TextStyle(color: AppTheme.accentColor, fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        LinearProgressIndicator(
+                          value: project.progressPercentage,
+                          backgroundColor: Colors.white24,
+                          color: AppTheme.accentColor,
+                          minHeight: 4,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Status Badge
+                  Positioned(
+                    top: 12,
+                    left: isAr ? null : 12,
+                    right: isAr ? 12 : null,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.accentColor.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        _getStatusLabel(project.projectStatus, isAr),
+                        style: const TextStyle(color: Colors.black, fontSize: 9, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      project.category.toUpperCase(),
+                      style: const TextStyle(
+                        color: AppTheme.accentColor,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      project.getTitle(lang),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        height: 1.2,
+                        fontFamily: 'Cairo',
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      project.getSummary(lang),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.6),
+                        fontSize: 12,
+                        height: 1.5,
+                        fontFamily: 'Cairo',
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _getStatusLabel(String status, bool isAr) {
+    switch (status) {
+      case 'PREPARING': return isAr ? 'تحضير' : 'Prép.';
+      case 'ONGOING': return isAr ? 'جاري' : 'En cours';
+      case 'COMPLETED': return isAr ? 'مكتمل' : 'Terminé';
+      default: return isAr ? 'ميداني' : 'Terrain';
+    }
   }
 }

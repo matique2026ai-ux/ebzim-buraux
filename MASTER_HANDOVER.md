@@ -1,6 +1,7 @@
 # 👑 Ebzim Sovereign Platform: Comprehensive Master Handover (Final Edition)
 
-This is the **exclusive source of truth** for the Ebzim Digital Ecosystem. Any agent succeeding this session must adhere strictly to the protocols defined herein.
+> [!IMPORTANT]
+> **AGENTS PROTOCOL:** There is ONLY ONE handover file for this project. DO NOT create new handover documents. You MUST merge, update, and refine this existing `MASTER_HANDOVER.md` file at the end of every session. This is the **exclusive source of truth** for the Ebzim Digital Ecosystem.
 
 ---
 

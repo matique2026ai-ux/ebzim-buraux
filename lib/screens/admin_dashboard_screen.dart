@@ -744,20 +744,29 @@ class _MembershipTab extends ConsumerWidget {
                     return _MembershipRequestCard(
                       request: req,
                       onApprove: () async {
-                        await adminService.reviewRequest(req.id, 'APPROVED');
+                        await adminService.reviewRequest(req.id, 'APPROVED', userId: req.userId);
                         ref.invalidate(pendingMembershipsProvider);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            _successSnack('✅ تم قبول الطلب بنجاح'),
+                            _successSnack('✅ تم قبول الطلب وإخطار العضو'),
                           );
                         }
                       },
                       onReject: () async {
-                        await adminService.reviewRequest(req.id, 'REJECTED');
+                        await adminService.reviewRequest(req.id, 'REJECTED', userId: req.userId);
                         ref.invalidate(pendingMembershipsProvider);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            _errorSnack('❌ تم رفض الطلب'),
+                            _errorSnack('❌ تم رفض الطلب وإخطار المستخدم'),
+                          );
+                        }
+                      },
+                      onDelete: () async {
+                        await adminService.deleteRequest(req.id);
+                        ref.invalidate(pendingMembershipsProvider);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            _successSnack('🗑️ تم حذف الطلب من السجل'),
                           );
                         }
                       },
@@ -1168,7 +1177,7 @@ class _CMSTab extends ConsumerWidget {
             icon: Icons.view_carousel_rounded,
             color: const Color(0xFF6366F1),
             count: slidesAsync.when(data: (d) => '${d.length} شرائح', loading: () => '...', error: (_, __) => '0'),
-            onTap: () => context.push('/admin/cms/hero'),
+            onTap: () => context.go('/admin/cms/hero'),
           ),
           const SizedBox(height: 16),
 
@@ -1179,7 +1188,7 @@ class _CMSTab extends ConsumerWidget {
             icon: Icons.handshake_rounded,
             color: const Color(0xFF10B981),
             count: partnersAsync.when(data: (d) => '${d.length} شركاء', loading: () => '...', error: (_, __) => '0'),
-            onTap: () => context.push('/admin/cms/partner'),
+            onTap: () => context.go('/admin/cms/partner'),
           ),
           const SizedBox(height: 16),
 
@@ -1190,7 +1199,7 @@ class _CMSTab extends ConsumerWidget {
             icon: Icons.account_box_rounded,
             color: const Color(0xFFF59E0B),
             count: leadershipAsync.when(data: (d) => '${d.length} أعضاء', loading: () => '...', error: (_, __) => '0'),
-            onTap: () => context.push('/admin/cms/leadership'),
+            onTap: () => context.go('/admin/cms/leadership'),
           ),
 
           const SizedBox(height: 32),
@@ -1841,11 +1850,13 @@ class _MembershipRequestCard extends ConsumerWidget {
   final MembershipRequest request;
   final VoidCallback onApprove;
   final VoidCallback onReject;
+  final VoidCallback? onDelete;
 
   const _MembershipRequestCard({
     required this.request,
     required this.onApprove,
     required this.onReject,
+    this.onDelete,
   });
 
   Color _statusColor(String s) {
@@ -1956,6 +1967,23 @@ class _MembershipRequestCard extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+          ] else if (request.status == 'REJECTED') ...[
+            const SizedBox(height: 16),
+            const Divider(height: 1, color: Color(0xFFF1F5F9)),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: onDelete,
+                icon: const Icon(Icons.delete_outline_rounded, size: 16, color: Colors.red),
+                label: Text('حذف الطلب نهائياً', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.red)),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.red.withOpacity(0.2)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
             ),
           ],
         ],

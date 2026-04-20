@@ -832,13 +832,22 @@ class _ProfileCompletionCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Text(
-              'أكمل بياناتك للحصول على هوية رقمية معتمدة',
-              style: GoogleFonts.cairo(
-                fontSize: 11,
-                color: _textMuted(context),
-                fontWeight: FontWeight.w500,
-              ),
+            Row(
+              children: [
+                if (percentage >= 100)
+                  const Icon(Icons.verified_user_rounded, color: Colors.greenAccent, size: 14),
+                if (percentage >= 100) const SizedBox(width: 6),
+                Text(
+                  percentage >= 100 
+                    ? 'ملفك الشخصي مكتمل وموثق بنجاح' 
+                    : 'أكمل بياناتك للحصول على هوية رقمية معتمدة',
+                  style: GoogleFonts.cairo(
+                    fontSize: 11,
+                    color: percentage >= 100 ? Colors.greenAccent : _textMuted(context),
+                    fontWeight: percentage >= 100 ? FontWeight.bold : FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

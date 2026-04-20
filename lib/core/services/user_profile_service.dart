@@ -70,6 +70,36 @@ class UserProfile {
     if (languageCode == 'ar') return nameAr;
     return name;
   }
+
+  UserProfile copyWith({
+    String? id,
+    String? name,
+    String? nameAr,
+    String? email,
+    String? phone,
+    String? imageUrl,
+    String? membershipLevel,
+    String? membershipStatus,
+    DateTime? membershipExpiry,
+    int? profileCompletionPercentage,
+    String? membershipBadge,
+    String? status,
+  }) {
+    return UserProfile(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      nameAr: nameAr ?? this.nameAr,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      imageUrl: imageUrl ?? this.imageUrl,
+      membershipLevel: membershipLevel ?? this.membershipLevel,
+      membershipStatus: membershipStatus ?? this.membershipStatus,
+      membershipExpiry: membershipExpiry ?? this.membershipExpiry,
+      profileCompletionPercentage: profileCompletionPercentage ?? this.profileCompletionPercentage,
+      membershipBadge: membershipBadge ?? this.membershipBadge,
+      status: status ?? this.status,
+    );
+  }
 }
 
 /// Service class for fetching user profile from backend

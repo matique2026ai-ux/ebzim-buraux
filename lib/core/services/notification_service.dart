@@ -48,6 +48,16 @@ class NotificationService {
       ),
     ];
   }
+  Future<void> createNotification({
+    required String userId,
+    required String title,
+    required String description,
+    required String type,
+  }) async {
+    // In a real app, this would be a POST to /notifications
+    // For this institutional version, we simulate the success
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
 }
 
 final notificationServiceProvider = Provider((ref) => NotificationService());

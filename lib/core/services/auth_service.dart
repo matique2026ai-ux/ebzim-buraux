@@ -151,7 +151,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       String errorMessage = "Registration failed";
       
       if (e.response?.statusCode == 409) {
-        errorMessage = "Email already exists"; // Wait, I should use a key or proper translation if available. I'll just use 'authErrorInvalid' or leave it clean. Let's check if the raw message exists.
+        errorMessage = "authErrorConflict";
       } else if (serverMessage is List) {
         errorMessage = serverMessage.join(', ');
       } else if (serverMessage is String) {

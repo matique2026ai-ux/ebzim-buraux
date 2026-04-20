@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      // Explicitly tell the browser to finish autofill and potentially save credentials
+      TextInput.finishAutofillContext();
+      
       ref.read(authProvider.notifier).login(
         _emailController.text,
         _passwordController.text,
@@ -218,6 +222,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         label: loc.authIdentity,
                         hint: loc.authIdentityHint,
                         icon: Icons.alternate_email_rounded,
+                        autofocus: true,
                         autofillHints: const [AutofillHints.email, AutofillHints.username],
                         validator: (val) => val!.isEmpty ? loc.valRequired : null,
                       ),
@@ -271,6 +276,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     required IconData icon,
     bool isPassword = false,
     bool isPasswordVisible = false,
+    bool autofocus = false,
     Iterable<String>? autofillHints,
     VoidCallback? onTogglePassword,
     String? Function(String?)? validator,
@@ -292,6 +298,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: TextFormField(
             controller: controller,
             obscureText: isPassword && !isPasswordVisible,
+            autofocus: autofocus,
             style: const TextStyle(color: Colors.white, fontSize: 16),
             validator: validator,
             autofillHints: autofillHints,

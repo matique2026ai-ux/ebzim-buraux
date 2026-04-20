@@ -967,19 +967,33 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
                         fit: BoxFit.cover,
                         placeholder: (ctx, url) => Container(color: AppTheme.primaryColor),
                       ).animate().fadeIn(duration: 1200.ms),
-                      // Overlay Gradient
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.1),
-                              AppTheme.primaryColor.withOpacity(0.1),
-                              AppTheme.primaryColor,
-                            ],
-                          ),
-                        ),
+                      // Overlay Gradient (Dynamic based on slide design)
+                      Builder(
+                        builder: (context) {
+                          Color baseColor = AppTheme.primaryColor;
+                          if (slide.glassColor != null && slide.glassColor!.isNotEmpty) {
+                            try {
+                              String hex = slide.glassColor!.replaceFirst('#', '');
+                              if (hex.length == 3) hex = hex.split('').map((e) => e + e).join('');
+                              if (hex.length == 6) hex = 'FF' + hex;
+                              baseColor = Color(int.parse(hex, radix: 16));
+                            } catch (_) {}
+                          }
+                          
+                          return Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.2),
+                                  baseColor.withOpacity(slide.overlayOpacity),
+                                  baseColor,
+                                ],
+                              ),
+                            ),
+                          );
+                        }
                       ),
                     ],
                   );

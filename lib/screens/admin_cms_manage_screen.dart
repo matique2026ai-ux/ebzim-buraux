@@ -75,7 +75,10 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
     return AppBar(
       backgroundColor: AppTheme.primaryColor,
       elevation: 0,
-      leading: const BackButton(color: Colors.white),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+        onPressed: () => context.go('/admin'),
+      ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -645,6 +648,12 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
 
         id == null ? await service.createLeader(cleanData) : await service.updateLeader(id, cleanData);
       }
+
+      // Invalidate relevant providers to force refresh across the app
+      if (widget.type == CMSManageType.hero) ref.invalidate(heroSlidesProvider);
+      if (widget.type == CMSManageType.partner) ref.invalidate(partnersProvider);
+      if (widget.type == CMSManageType.leadership) ref.invalidate(leadershipProvider);
+
       widget.onSaved();
     } catch (e) {
       if (mounted) {

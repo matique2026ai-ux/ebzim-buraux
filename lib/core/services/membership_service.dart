@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/api_client.dart';
+import 'package:ebzim_app/core/services/notification_service.dart';
 
 class LocationModel {
   final String id;
@@ -178,6 +179,7 @@ final membershipStatusProvider = FutureProvider<String>((ref) async {
 
 class MembershipRequest {
   final String id;
+  final String? userId;
   final String fullName;
   final String status;
   final DateTime submissionDate;
@@ -185,6 +187,7 @@ class MembershipRequest {
 
   MembershipRequest({
     required this.id,
+    this.userId,
     required this.fullName,
     required this.status,
     required this.submissionDate,
@@ -195,6 +198,7 @@ class MembershipRequest {
     final applicationData = json['applicationData'] ?? {};
     return MembershipRequest(
       id: json['_id'] ?? '',
+      userId: json['userId']?.toString(),
       fullName: applicationData['fullName'] ?? 'Unknown',
       status: json['status'] ?? 'SUBMITTED',
       submissionDate: DateTime.parse(json['submissionDate'] ?? DateTime.now().toIso8601String()),
@@ -217,12 +221,42 @@ class MembershipAdminService {
   final Ref ref;
   MembershipAdminService(this.ref);
 
-  Future<void> reviewRequest(String id, String status, {String? notes}) async {
+  Future<void> reviewRequest(String id, String status, {String? notes, String? userId}) async {
     final dio = ref.read(apiClientProvider).dio;
     await dio.patch('memberships/$id/review', data: {
       'status': status,
       'internalReviewNotes': notes,
     });
+    
+    // Logic: Send notifications to user if userId is provided
+    if (userId != null) {
+      final isAr = true; // Defaulting for institutional logic
+      final title = status == 'APPROVED' 
+          ? (isAr ? 'تم قبول طلب العضوية' : 'Membership Approved')
+          : (isAr ? 'حالة طلب العضوية' : 'Membership Status Update');
+      
+      final desc = status == 'APPROVED'
+          ? (isAr ? 'مبارك! تم قبول انضمامك لجمعية إبزيم. يمكنك الآن الوصول للميزات المتقدمة.' : 'Congratulations! Your membership has been approved.')
+          : (isAr ? 'نأسف لإبلاغك بأنه تعذر قبول طلبك في الوقت الحالي. يرجى مراجعة البيانات.' : 'Your membership request could not be accepted at this time.');
+
+      await ref.read(notificationServiceProvider).createNotification(
+        userId: userId,
+        title: title,
+        description: desc,
+        type: 'membership',
+      );
+      
+      // Simulating Email Dispatch
+      // await ref.read(emailServiceProvider).sendMembershipStatus(email, status);
+    }
+
+    ref.invalidate(pendingMembershipsProvider);
+  }
+
+  Future<void> deleteRequest(String id) async {
+    final dio = ref.read(apiClientProvider).dio;
+    // Note: Assuming /memberships/:id DELETE is supported for rejected/old requests
+    await dio.delete('memberships/$id');
     ref.invalidate(pendingMembershipsProvider);
   }
 }

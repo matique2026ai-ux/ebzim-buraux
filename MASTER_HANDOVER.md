@@ -62,3 +62,20 @@ To maintain stability and cross-compiler compatibility:
 4. **Member Verification:** Audit the `DigitalIdCard` logic to ensure membership levels correctly trigger badge visibility.
 
 **Handover Status: 🏆 SOVEREIGN, STABLE & READY FOR LIVE TESTING.**
+
+---
+
+## 🛠️ 8. Testing Protocol (Crucial)
+To verify the platform without DDC compiler errors or renderer hangs:
+1. **Local Backend (Optional):**
+   ```bash
+   cd backend
+   npm run start:dev
+   # To seed admin data: npx ts-node scripts/seed.ts
+   ```
+2. **Frontend (Release Mode):**
+   ```bash
+   # Use port 8080 as it's the standard for our current web hooks
+   flutter run -d chrome --web-port 8080 --release
+   ```
+3. **Environment Sync:** Always check `lib/core/services/api_client_platform_web.dart` to ensure it points to `localhost` or `Render` according to the testing target.

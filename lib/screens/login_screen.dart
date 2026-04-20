@@ -10,6 +10,7 @@ import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
+import 'package:ebzim_app/core/services/storage_service.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -24,6 +25,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedIdentity();
+  }
+
+  Future<void> _loadSavedIdentity() async {
+    final storage = ref.read(storageServiceProvider);
+    final lastIdentity = await storage.getLastIdentity();
+    if (lastIdentity != null && mounted) {
+      _emailController.text = lastIdentity;
+    }
+  }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AdminController } from './admin.controller';
+import { PublicStatsController } from './public-stats.controller';
 import { AdminService } from './admin.service';
 import { MembershipSchema } from '../memberships/schemas/membership.schema';
 import { ReportSchema } from '../reports/schemas/report.schema';
@@ -20,7 +21,7 @@ import { UserSchema } from '../users/schemas/user.schema';
       { name: 'User', schema: UserSchema },
     ]),
   ],
-  controllers: [AdminController],
+  controllers: [AdminController, PublicStatsController],
   providers: [AdminService],
 })
 export class AdminModule {}

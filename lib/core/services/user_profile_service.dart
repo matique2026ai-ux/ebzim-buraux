@@ -18,6 +18,7 @@ class UserProfile {
   final int profileCompletionPercentage;
   final String? membershipBadge;
   final String status;
+  final DateTime? createdAt;
 
   UserProfile({
     required this.id,
@@ -32,6 +33,7 @@ class UserProfile {
     required this.profileCompletionPercentage,
     this.membershipBadge,
     this.status = 'ACTIVE',
+    this.createdAt,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -63,6 +65,7 @@ class UserProfile {
       profileCompletionPercentage: completion,
       membershipBadge: badge,
       status: json['status'] ?? 'ACTIVE',
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
 
@@ -98,6 +101,7 @@ class UserProfile {
       profileCompletionPercentage: profileCompletionPercentage ?? this.profileCompletionPercentage,
       membershipBadge: membershipBadge ?? this.membershipBadge,
       status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

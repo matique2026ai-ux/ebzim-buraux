@@ -24,6 +24,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
     // Proactive check: if session is already loaded or loads while on splash, move immediately
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndAutoRedirect();
+      // Add a slight delay for institutional branding wow-factor, then auto-redirect
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted) _redirect();
+      });
     });
   }
 

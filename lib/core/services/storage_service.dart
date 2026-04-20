@@ -25,6 +25,7 @@ class StorageService {
   }
 
   static const String _firstLaunchKey = 'is_first_launch_v1';
+  static const String _lastIdentityKey = 'last_identity';
 
   Future<bool> isFirstLaunch() async {
     final val = await _storage.read(key: _firstLaunchKey);
@@ -33,6 +34,14 @@ class StorageService {
 
   Future<void> setFirstLaunchCompleted() async {
     await _storage.write(key: _firstLaunchKey, value: 'false');
+  }
+
+  Future<void> saveLastIdentity(String identity) async {
+    await _storage.write(key: _lastIdentityKey, value: identity);
+  }
+
+  Future<String?> getLastIdentity() async {
+    return await _storage.read(key: _lastIdentityKey);
   }
 }
 

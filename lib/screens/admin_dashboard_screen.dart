@@ -42,7 +42,13 @@ class _MiniMetric extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade600)),
+        Text(
+          label,
+          style: GoogleFonts.tajawal(
+            fontSize: 10,
+            color: AppTheme.primaryColor.withOpacity(0.5),
+          ),
+        ),
         const SizedBox(height: 2),
         Text(
           value,
@@ -79,23 +85,59 @@ class AdminDashboardScreen extends ConsumerWidget {
     final isSuperAdmin = userRole == 'SUPER_ADMIN';
 
     final List<Map<String, dynamic>> allTabs = [
-      {'icon': Icons.group_add_rounded, 'text': 'العضوية', 'view': const _MembershipTab()},
-      {'icon': Icons.people_alt_rounded, 'text': 'المستخدمون', 'view': const _UsersTab()},
-      {'icon': Icons.dashboard_customize_rounded, 'text': 'المحتوى', 'view': const _CMSTab()},
-      {'icon': Icons.event_rounded, 'text': 'الأنشطة', 'view': const _EventsTab()},
-      {'icon': Icons.newspaper_rounded, 'text': 'الأخبار', 'view': const _NewsTab()},
-      {'icon': Icons.architecture_rounded, 'text': 'المشاريع', 'view': const _ProjectsTab()},
-      {'icon': Icons.flag_rounded, 'text': 'البلاغات', 'view': const _ReportsTab()},
+      {
+        'icon': Icons.group_add_rounded,
+        'text': 'العضوية',
+        'view': const _MembershipTab(),
+      },
+      {
+        'icon': Icons.people_alt_rounded,
+        'text': 'المستخدمون',
+        'view': const _UsersTab(),
+      },
+      {
+        'icon': Icons.dashboard_customize_rounded,
+        'text': 'المحتوى',
+        'view': const _CMSTab(),
+      },
+      {
+        'icon': Icons.event_rounded,
+        'text': 'الأنشطة',
+        'view': const _EventsTab(),
+      },
+      {
+        'icon': Icons.newspaper_rounded,
+        'text': 'الأخبار',
+        'view': const _NewsTab(),
+      },
+      {
+        'icon': Icons.architecture_rounded,
+        'text': 'المشاريع',
+        'view': const _ProjectsTab(),
+      },
+      {
+        'icon': Icons.flag_rounded,
+        'text': 'البلاغات',
+        'view': const _ReportsTab(),
+      },
       if (isSuperAdmin) ...[
-        {'icon': Icons.account_balance_wallet_rounded, 'text': 'المساهمات', 'view': const _FinancialsTab()},
-        {'icon': Icons.settings_rounded, 'text': 'الإعدادات', 'view': const _SettingsTab()},
+        {
+          'icon': Icons.account_balance_wallet_rounded,
+          'text': 'المساهمات',
+          'view': const _FinancialsTab(),
+        },
+        {
+          'icon': Icons.settings_rounded,
+          'text': 'الإعدادات',
+          'view': const _SettingsTab(),
+        },
       ],
     ];
 
     return DefaultTabController(
       length: allTabs.length,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF4F6F9),
+        backgroundColor: const Color(0xFFE2E9E5), // Sovereign Sage
         body: NestedScrollView(
           headerSliverBuilder: (_, __) => [
             SliverAppBar(
@@ -104,7 +146,11 @@ class AdminDashboardScreen extends ConsumerWidget {
               pinned: true,
               backgroundColor: AppTheme.primaryColor,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
                 onPressed: () => context.go('/dashboard'),
               ),
               actions: [
@@ -123,10 +169,15 @@ class AdminDashboardScreen extends ConsumerWidget {
                         title: const Text('تسجيل الخروج'),
                         content: const Text('هل تريد الخروج من لوحة الإدارة؟'),
                         actions: [
-                          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('إلغاء')),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text('إلغاء'),
+                          ),
                           ElevatedButton(
                             onPressed: () => Navigator.pop(context, true),
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
                             child: const Text('خروج'),
                           ),
                         ],
@@ -152,7 +203,12 @@ class AdminDashboardScreen extends ConsumerWidget {
                   child: Center(
                     child: Container(
                       constraints: const BoxConstraints(maxWidth: 800),
-                      padding: const EdgeInsets.only(top: 40, bottom: 40, left: 24, right: 24),
+                      padding: const EdgeInsets.only(
+                        top: 40,
+                        bottom: 40,
+                        left: 24,
+                        right: 24,
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -170,11 +226,20 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                child: Icon(Icons.chevron_left_rounded, size: 10, color: Colors.white.withOpacity(0.3)),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                                child: Icon(
+                                  Icons.chevron_left_rounded,
+                                  size: 10,
+                                  color: Colors.white.withOpacity(0.3),
+                                ),
                               ),
                               Text(
-                                (isSuperAdmin ? 'إشراف المشرف العام' : 'إدارة النظام').toUpperCase(),
+                                (isSuperAdmin
+                                        ? 'إشراف المشرف العام'
+                                        : 'إدارة النظام')
+                                    .toUpperCase(),
                                 style: GoogleFonts.inter(
                                   color: AppTheme.accentColor.withOpacity(0.8),
                                   fontSize: 8,
@@ -187,10 +252,12 @@ class AdminDashboardScreen extends ConsumerWidget {
                           const SizedBox(height: 10),
                           // Bold centered title
                           Text(
-                            isSuperAdmin ? 'لوحة السيادة والتحكم' : 'لوحة الإدارة الشاملة',
+                            isSuperAdmin
+                                ? 'لوحة السيادة والتحكم [V1.2]'
+                                : 'لوحة الإدارة الشاملة [V1.2]',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.tajawal(
-                              fontSize: 28, 
+                              fontSize: 28,
                               fontWeight: FontWeight.w900,
                               color: Colors.white,
                               height: 1.1,
@@ -206,13 +273,20 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 decoration: const BoxDecoration(
                                   color: Color(0xFF4ADE80),
                                   shape: BoxShape.circle,
-                                  boxShadow: [BoxShadow(color: Color(0xFF4ADE80), blurRadius: 4)],
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFF4ADE80),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
                                 ),
                               ),
                               const SizedBox(width: 8),
                               Flexible(
                                 child: Text(
-                                  isSuperAdmin ? 'أهلاً بك يا مشرف النظام. جميع الصلاحيات مفعلة.' : 'المركز الرئيسي للتحكم والعمليات',
+                                  isSuperAdmin
+                                      ? 'أهلاً بك يا مشرف النظام. جميع الصلاحيات مفعلة.'
+                                      : 'المركز الرئيسي للتحكم والعمليات',
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.tajawal(
                                     fontSize: 11,
@@ -241,9 +315,19 @@ class AdminDashboardScreen extends ConsumerWidget {
                     indicatorSize: TabBarIndicatorSize.label,
                     labelColor: Colors.white,
                     unselectedLabelColor: Colors.white54,
-                    labelStyle: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 12),
+                    labelStyle: GoogleFonts.tajawal(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                     unselectedLabelStyle: GoogleFonts.tajawal(fontSize: 12),
-                    tabs: allTabs.map((t) => Tab(icon: Icon(t['icon'], size: 18), text: t['text'])).toList(),
+                    tabs: allTabs
+                        .map(
+                          (t) => Tab(
+                            icon: Icon(t['icon'], size: 18),
+                            text: t['text'],
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ),
@@ -281,9 +365,20 @@ class _UsersTabState extends State<_UsersTab> {
       excel.delete('Sheet1');
 
       // 1. Set Headers (Column by Column)
-      final headers = ['Name', 'Name (AR)', 'Email', 'Phone', 'Role', 'Status', 'Expiry Date'];
+      final headers = [
+        'Name',
+        'Name (AR)',
+        'Email',
+        'Phone',
+        'Role',
+        'Status',
+        'Expiry Date',
+        'Registration Date',
+      ];
       for (int i = 0; i < headers.length; i++) {
-        var cell = sheet.cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0));
+        var cell = sheet.cell(
+          CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0),
+        );
         cell.value = TextCellValue(headers[i]);
       }
 
@@ -292,13 +387,62 @@ class _UsersTabState extends State<_UsersTab> {
         final u = users[row];
         final rowIndex = row + 1;
 
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex)).value = TextCellValue(u.name);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex)).value = TextCellValue(u.nameAr);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex)).value = TextCellValue(u.email);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex)).value = TextCellValue(u.phone);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex)).value = TextCellValue(u.membershipLevel);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex)).value = TextCellValue(u.status);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex)).value = TextCellValue(u.membershipExpiry?.toIso8601String().split('T').first ?? 'N/A');
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.name,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.nameAr,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.email,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.phone,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.membershipLevel,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.status,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.membershipExpiry?.toIso8601String().split('T').first ?? 'N/A',
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.createdAt?.toIso8601String().split('T').first ?? 'N/A',
+        );
       }
 
       // 3. Save and Download
@@ -306,7 +450,7 @@ class _UsersTabState extends State<_UsersTab> {
       if (bytes != null) {
         final timestamp = DateTime.now().millisecondsSinceEpoch;
         final filename = 'ebzim_users_export_$timestamp.xlsx';
-        
+
         triggerWebDownloadBytes(Uint8List.fromList(bytes), filename);
 
         if (mounted) {
@@ -314,9 +458,15 @@ class _UsersTabState extends State<_UsersTab> {
             SnackBar(
               content: Row(
                 children: [
-                  const Icon(Icons.assignment_turned_in_rounded, color: AppTheme.accentColor),
+                  const Icon(
+                    Icons.assignment_turned_in_rounded,
+                    color: AppTheme.accentColor,
+                  ),
                   const SizedBox(width: 12),
-                  Text('تم استخراج البيانات في أعمدة منفصلة بنجاح', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                  Text(
+                    'تم استخراج البيانات في أعمدة منفصلة بنجاح',
+                    style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
               backgroundColor: const Color(0xFF052011),
@@ -353,11 +503,12 @@ class _UsersTabState extends State<_UsersTab> {
               children: [
                 _SectionHeader(
                   title: 'إدارة المسجلين',
-                  subtitle: 'التحكم الكامل في حسابات المستخدمين، الحالة، والصلاحيات',
+                  subtitle:
+                      'التحكم الكامل في حسابات المستخدمين، الحالة، والصلاحيات',
                   icon: Icons.people_alt_rounded,
                 ).animate().fadeIn(delay: 100.ms),
                 const SizedBox(height: 24),
-                
+
                 // Search & Export Bar
                 Row(
                   children: [
@@ -367,17 +518,31 @@ class _UsersTabState extends State<_UsersTab> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
                           ],
                         ),
                         child: TextField(
-                          onChanged: (val) => setState(() => _searchQuery = val.toLowerCase()),
+                          onChanged: (val) =>
+                              setState(() => _searchQuery = val.toLowerCase()),
                           decoration: InputDecoration(
                             hintText: 'البحث عن مستخدم (اسم، بريد...)',
-                            hintStyle: GoogleFonts.tajawal(fontSize: 13, color: Colors.grey),
-                            prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.primaryColor),
+                            hintStyle: GoogleFonts.tajawal(
+                              fontSize: 13,
+                              color: AppTheme.primaryColor.withOpacity(0.4),
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.search_rounded,
+                              color: AppTheme.primaryColor,
+                            ),
                             border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 15,
+                            ),
                           ),
                         ),
                       ),
@@ -399,19 +564,27 @@ class _UsersTabState extends State<_UsersTab> {
                     final filteredUsers = users.where((u) {
                       final name = u.name.toLowerCase();
                       final email = u.email.toLowerCase();
-                      return name.contains(_searchQuery) || email.contains(_searchQuery);
+                      return name.contains(_searchQuery) ||
+                          email.contains(_searchQuery);
                     }).toList();
 
                     if (filteredUsers.isEmpty) {
-                      return const _EmptyState(message: 'لم يتم العثور على مستخدمين مطابقتين للبحث', icon: Icons.person_search_rounded);
+                      return const _EmptyState(
+                        message: 'لم يتم العثور على مستخدمين مطابقتين للبحث',
+                        icon: Icons.person_search_rounded,
+                      );
                     }
 
                     return Column(
-                      children: filteredUsers.map((user) => _UserCard(user: user)).toList(),
+                      children: filteredUsers
+                          .map((user) => _UserCard(user: user))
+                          .toList(),
                     );
                   },
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => Center(child: Text('Error loading users: $e')),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) =>
+                      Center(child: Text('Error loading users: $e')),
                 ),
                 const SizedBox(height: 100),
               ],
@@ -433,10 +606,16 @@ class _ExportButton extends StatelessWidget {
     return Container(
       height: 54,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF052011), Color(0xFF1A6B3A)],
+        ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: const Color(0xFF052011).withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: const Color(0xFF052011).withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Material(
@@ -447,8 +626,18 @@ class _ExportButton extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: isLoading
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                : const Icon(Icons.download_rounded, color: AppTheme.accentColor),
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Icon(
+                    Icons.download_rounded,
+                    color: AppTheme.accentColor,
+                  ),
           ),
         ),
       ),
@@ -463,7 +652,9 @@ class _UserCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBanned = user.status == 'BANNED';
-    final displayName = user.name.trim().isEmpty ? user.email.split('@').first : user.name;
+    final displayName = user.name.trim().isEmpty
+        ? user.email.split('@').first
+        : user.name;
     final roleColor = _getRoleColor(user.membershipLevel);
 
     return Container(
@@ -471,40 +662,72 @@ class _UserCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: AppTheme.primaryColor.withOpacity(0.05)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 5)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 10,
+        ),
         leading: Container(
-          width: 54, height: 54,
+          width: 54,
+          height: 54,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: AppTheme.primaryColor.withOpacity(0.1), width: 2),
+            border: Border.all(
+              color: AppTheme.primaryColor.withOpacity(0.1),
+              width: 2,
+            ),
             color: AppTheme.primaryColor.withOpacity(0.1),
           ),
           child: ClipOval(
-            child: user.imageUrl.isNotEmpty && !user.imageUrl.contains('placehold.co')
+            child:
+                user.imageUrl.isNotEmpty &&
+                    !user.imageUrl.contains('placehold.co')
                 ? CachedNetworkImage(
                     imageUrl: user.imageUrl,
                     fit: BoxFit.cover,
-                    placeholder: (_, __) => const CircularProgressIndicator(strokeWidth: 2),
-                    errorWidget: (_, __, ___) => const Icon(Icons.person, color: AppTheme.primaryColor, size: 28),
+                    placeholder: (_, __) =>
+                        const CircularProgressIndicator(strokeWidth: 2),
+                    errorWidget: (_, __, ___) => const Icon(
+                      Icons.person,
+                      color: AppTheme.primaryColor,
+                      size: 28,
+                    ),
                   )
-                : const Icon(Icons.person, color: AppTheme.primaryColor, size: 28),
+                : const Icon(
+                    Icons.person,
+                    color: AppTheme.primaryColor,
+                    size: 28,
+                  ),
           ),
         ),
         title: Text(
           displayName,
-          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 15, color: const Color(0xFF1A1A2E)),
+          style: GoogleFonts.tajawal(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            color: const Color(0xFF1A1A2E),
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text(user.email, style: GoogleFonts.inter(fontSize: 11, color: Colors.grey.shade500)),
+            Text(
+              user.email,
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                color: AppTheme.primaryColor.withOpacity(0.5),
+              ),
+            ),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -514,20 +737,28 @@ class _UserCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 _buildSmallBadge(
-                  label: _getLocalizedRole(user.membershipLevel, AppLocalizations.of(context)!),
+                  label: _getLocalizedRole(
+                    user.membershipLevel,
+                    AppLocalizations.of(context)!,
+                  ),
                   color: roleColor,
                   isOutline: true,
                 ),
-                if (user.membershipBadge != null && user.membershipBadge != 'NONE') ...[
+                if (user.membershipBadge != null &&
+                    user.membershipBadge != 'NONE') ...[
                   const SizedBox(width: 8),
                   Icon(
-                    user.membershipBadge == 'GOLD' ? Icons.stars_rounded : 
-                    user.membershipBadge == 'DIAMOND' ? Icons.diamond_rounded :
-                    Icons.workspace_premium_rounded,
+                    user.membershipBadge == 'GOLD'
+                        ? Icons.stars_rounded
+                        : user.membershipBadge == 'DIAMOND'
+                        ? Icons.diamond_rounded
+                        : Icons.workspace_premium_rounded,
                     size: 16,
-                    color: user.membershipBadge == 'GOLD' ? const Color(0xFFFFD700) :
-                           user.membershipBadge == 'DIAMOND' ? const Color(0xFF00E5FF) :
-                           const Color(0xFFCD7F32),
+                    color: user.membershipBadge == 'GOLD'
+                        ? const Color(0xFFFFD700)
+                        : user.membershipBadge == 'DIAMOND'
+                        ? const Color(0xFF00E5FF)
+                        : const Color(0xFFCD7F32),
                   ),
                 ],
               ],
@@ -545,28 +776,47 @@ class _UserCard extends ConsumerWidget {
                 ref.invalidate(allUsersProvider);
               }
             } else if (val == 'ban') {
-              await ref.read(adminUserServiceProvider).updateUserStatus(user.id, isBanned ? 'ACTIVE' : 'BANNED');
+              await ref
+                  .read(adminUserServiceProvider)
+                  .updateUserStatus(user.id, isBanned ? 'ACTIVE' : 'BANNED');
               ref.invalidate(allUsersProvider);
             } else if (val == 'delete') {
-              final confirm = await _confirmDelete(context, 'حذف المستخدم', user.name);
+              final confirm = await _confirmDelete(
+                context,
+                'حذف المستخدم',
+                user.name,
+              );
               if (confirm == true) {
                 await ref.read(adminUserServiceProvider).deleteUser(user.id);
                 ref.invalidate(allUsersProvider);
               }
             }
           },
-          icon: const Icon(Icons.more_vert_rounded, color: Color(0xFF64748B)),
+          icon: Icon(
+            Icons.more_vert_rounded,
+            color: AppTheme.primaryColor.withOpacity(0.4),
+          ),
           itemBuilder: (_) {
-            final currentUserRole = ref.watch(currentUserProvider).value?.membershipLevel.toUpperCase() ?? 'ADMIN';
+            final currentUserRole =
+                ref
+                    .watch(currentUserProvider)
+                    .value
+                    ?.membershipLevel
+                    .toUpperCase() ??
+                'ADMIN';
             final isSuper = currentUserRole == 'SUPER_ADMIN';
-            
+
             return [
               if (isSuper)
                 PopupMenuItem(
                   value: 'edit',
                   child: Row(
                     children: [
-                      const Icon(Icons.edit_outlined, size: 18, color: AppTheme.primaryColor),
+                      const Icon(
+                        Icons.edit_outlined,
+                        size: 18,
+                        color: AppTheme.primaryColor,
+                      ),
                       const SizedBox(width: 8),
                       Text('تعديل البيانات', style: GoogleFonts.tajawal()),
                     ],
@@ -576,9 +826,18 @@ class _UserCard extends ConsumerWidget {
                 value: 'ban',
                 child: Row(
                   children: [
-                    Icon(isBanned ? Icons.check_circle_outline : Icons.block_flipped, size: 18, color: isBanned ? Colors.green : Colors.orange),
+                    Icon(
+                      isBanned
+                          ? Icons.check_circle_outline
+                          : Icons.block_flipped,
+                      size: 18,
+                      color: isBanned ? Colors.green : Colors.orange,
+                    ),
                     const SizedBox(width: 8),
-                    Text(isBanned ? 'تفعيل الحساب' : 'حظر الحساب', style: GoogleFonts.tajawal()),
+                    Text(
+                      isBanned ? 'تفعيل الحساب' : 'حظر الحساب',
+                      style: GoogleFonts.tajawal(),
+                    ),
                   ],
                 ),
               ),
@@ -587,9 +846,16 @@ class _UserCard extends ConsumerWidget {
                   value: 'delete',
                   child: Row(
                     children: [
-                      const Icon(Icons.delete_outline, size: 18, color: Colors.red),
+                      const Icon(
+                        Icons.delete_outline,
+                        size: 18,
+                        color: Colors.red,
+                      ),
                       const SizedBox(width: 8),
-                      Text('حذف الحساب', style: GoogleFonts.tajawal(color: Colors.red)),
+                      Text(
+                        'حذف الحساب',
+                        style: GoogleFonts.tajawal(color: Colors.red),
+                      ),
                     ],
                   ),
                 ),
@@ -604,11 +870,98 @@ class _UserCard extends ConsumerWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // TAB 1: MEMBERSHIP
 // ─────────────────────────────────────────────────────────────────────────────
-class _MembershipTab extends ConsumerWidget {
+class _MembershipTab extends ConsumerStatefulWidget {
   const _MembershipTab();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_MembershipTab> createState() => _MembershipTabState();
+}
+
+class _MembershipTabState extends ConsumerState<_MembershipTab> {
+  bool _isExporting = false;
+
+  Future<void> _exportMembershipsToExcel(List<MembershipRequest> requests) async {
+    setState(() => _isExporting = true);
+    try {
+      final excel = Excel.createExcel();
+      final String sheetName = 'Ebzim Memberships';
+      final sheet = excel[sheetName];
+      excel.delete('Sheet1');
+
+      final headers = [
+        'Full Name',
+        'Email',
+        'Phone',
+        'Wilaya ID',
+        'Commune ID',
+        'Status',
+        'Submission Date',
+        'Interests',
+        'Skills',
+      ];
+      for (int i = 0; i < headers.length; i++) {
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0))
+            .value = TextCellValue(headers[i]);
+      }
+
+      for (int i = 0; i < requests.length; i++) {
+        final r = requests[i];
+        final rowIndex = i + 1;
+        final d = r.data;
+
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex))
+            .value = TextCellValue(r.fullName);
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex))
+            .value = TextCellValue(d['email'] ?? 'N/A');
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex))
+            .value = TextCellValue(d['phone'] ?? 'N/A');
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex))
+            .value = TextCellValue(d['wilayaId'] ?? 'N/A');
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex))
+            .value = TextCellValue(d['communeId'] ?? 'N/A');
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex))
+            .value = TextCellValue(r.status);
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex))
+            .value = TextCellValue(r.submissionDate.toIso8601String().split('T').first);
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex))
+            .value = TextCellValue((d['interests'] as List?)?.join(', ') ?? 'N/A');
+        sheet
+            .cell(CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: rowIndex))
+            .value = TextCellValue((d['skills'] as List?)?.join(', ') ?? 'N/A');
+      }
+
+      final bytes = excel.save();
+      if (bytes != null) {
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        triggerWebDownloadBytes(
+          Uint8List.fromList(bytes),
+          'ebzim_memberships_$timestamp.xlsx',
+        );
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            _successSnack('📊 تم تصدير طلبات العضوية بنجاح'),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Membership Export Error: $e');
+    } finally {
+      if (mounted) setState(() => _isExporting = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final pendingAsync = ref.watch(pendingMembershipsProvider);
     final adminService = ref.read(membershipAdminProvider);
 
@@ -627,75 +980,118 @@ class _MembershipTab extends ConsumerWidget {
               icon: Icons.group_add_rounded,
             ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
             const SizedBox(height: 20),
-            
+
             // --- Custom Visual Analytics Section ---
             pendingAsync.when(
               data: (requests) {
                 final total = requests.length;
-                final approved = requests.where((r) => r.status == 'APPROVED').length;
-                final pending = requests.where((r) => r.status == 'SUBMITTED').length;
+                final approved = requests
+                    .where((r) => r.status == 'APPROVED')
+                    .length;
+                final pending = requests
+                    .where((r) => r.status == 'SUBMITTED')
+                    .length;
                 final ratio = total > 0 ? (approved / total) : 0.0;
-                
+
                 return Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 5)),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.analytics_outlined, size: 18, color: AppTheme.primaryColor.withOpacity(0.1)),
-                          const SizedBox(width: 8),
-                          Text(
-                            'نبض النظام (System Pulse)',
-                            style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
-                          ),
-                          const Spacer(),
-                          Text(
-                            'معدل القبول: ${(ratio * 100).toStringAsFixed(0)}%',
-                            style: GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFF15803D)),
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      // Custom Progress Indicator
-                      Stack(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            height: 8,
-                            width: double.infinity,
-                            decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(4)),
-                          ),
-                          FractionallySizedBox(
-                            widthFactor: ratio,
-                            child: Container(
-                              height: 8,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
-                                borderRadius: BorderRadius.circular(4),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.analytics_outlined,
+                                size: 18,
+                                color: AppTheme.primaryColor.withOpacity(0.1),
                               ),
-                            ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'نبض النظام (System Pulse)',
+                                style: GoogleFonts.tajawal(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.primaryColor,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                'معدل القبول: ${(ratio * 100).toStringAsFixed(0)}%',
+                                style: GoogleFonts.tajawal(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF15803D),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          // Custom Progress Indicator
+                          Stack(
+                            children: [
+                              Container(
+                                height: 8,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF1F5F9),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: ratio,
+                                child: Container(
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFF052011),
+                                        Color(0xFF1A6B3A),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _MiniMetric(
+                                label: 'الإجمالي',
+                                value: '$total',
+                                color: AppTheme.primaryColor,
+                              ),
+                              _MiniMetric(
+                                label: 'مقبول',
+                                value: '$approved',
+                                color: const Color(0xFF15803D),
+                              ),
+                              _MiniMetric(
+                                label: 'قيد الانتظار',
+                                value: '$pending',
+                                color: const Color(0xFFB45309),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _MiniMetric(label: 'الإجمالي', value: '$total', color: AppTheme.primaryColor),
-                          _MiniMetric(label: 'مقبول', value: '$approved', color: const Color(0xFF15803D)),
-                          _MiniMetric(label: 'قيد الانتظار', value: '$pending', color: const Color(0xFFB45309)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(delay: 200.ms).scale(begin: const Offset(0.95, 0.95));
+                    )
+                    .animate()
+                    .fadeIn(delay: 200.ms)
+                    .scale(begin: const Offset(0.95, 0.95));
               },
               loading: () => const SizedBox(height: 120),
               error: (_, __) => const SizedBox(),
@@ -712,16 +1108,32 @@ class _MembershipTab extends ConsumerWidget {
                     color: const Color(0xFF1A1A2E),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () => ref.invalidate(pendingMembershipsProvider),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
+                Row(
+                  children: [
+                    pendingAsync.maybeWhen(
+                      data: (reqs) => _ExportButton(
+                        isLoading: _isExporting,
+                        onPressed: () => _exportMembershipsToExcel(reqs),
+                      ),
+                      orElse: () => const SizedBox(),
                     ),
-                    child: const Icon(Icons.refresh_rounded, size: 18, color: AppTheme.primaryColor),
-                  ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: () => ref.invalidate(pendingMembershipsProvider),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.refresh_rounded,
+                          size: 18,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -742,43 +1154,54 @@ class _MembershipTab extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final req = requests[index];
                     return _MembershipRequestCard(
-                      request: req,
-                      onApprove: () async {
-                        await adminService.reviewRequest(req.id, 'APPROVED', userId: req.userId);
-                        ref.invalidate(pendingMembershipsProvider);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            _successSnack('✅ تم قبول الطلب وإخطار العضو'),
-                          );
-                        }
-                      },
-                      onReject: () async {
-                        await adminService.reviewRequest(req.id, 'REJECTED', userId: req.userId);
-                        ref.invalidate(pendingMembershipsProvider);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            _errorSnack('❌ تم رفض الطلب وإخطار المستخدم'),
-                          );
-                        }
-                      },
-                      onDelete: () async {
-                        try {
-                          await adminService.deleteRequest(req.id);
-                          ref.invalidate(pendingMembershipsProvider);
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              _successSnack('🗑️ تم حذف الطلب من السجل'),
+                          request: req,
+                          onApprove: () async {
+                            await adminService.reviewRequest(
+                              req.id,
+                              'APPROVED',
+                              userId: req.userId,
                             );
-                          }
-                        } catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              _errorSnack('❌ فشل الحذف: ${e.toString()}'),
+                            ref.invalidate(pendingMembershipsProvider);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                _successSnack('✅ تم قبول الطلب وإخطار العضو'),
+                              );
+                            }
+                          },
+                          onReject: () async {
+                            await adminService.reviewRequest(
+                              req.id,
+                              'REJECTED',
+                              userId: req.userId,
                             );
-                          }
-                        }
-                      },
-                    ).animate(delay: (index * 80).ms).fadeIn().slideY(begin: 0.05);
+                            ref.invalidate(pendingMembershipsProvider);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                _errorSnack('❌ تم رفض الطلب وإخطار المستخدم'),
+                              );
+                            }
+                          },
+                          onDelete: () async {
+                            try {
+                              await adminService.deleteRequest(req.id);
+                              ref.invalidate(pendingMembershipsProvider);
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  _successSnack('🗑️ تم حذف الطلب من السجل'),
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  _errorSnack('❌ فشل الحذف: ${e.toString()}'),
+                                );
+                              }
+                            }
+                          },
+                        )
+                        .animate(delay: (index * 80).ms)
+                        .fadeIn()
+                        .slideY(begin: 0.05);
                   },
                 );
               },
@@ -825,14 +1248,18 @@ class _EventsTab extends ConsumerWidget {
                     label: 'أنشطة مجدولة',
                     value: '${events.length}',
                     icon: Icons.calendar_month_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF052011), Color(0xFF1A6B3A)],
+                    ),
                   ),
                   const SizedBox(width: 12),
                   _StatCard(
                     label: 'فعاليات مميزة',
                     value: events.where((e) => e.isFeatured).length.toString(),
                     icon: Icons.star_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFFD4AF37), Color(0xFFB8960C)]),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFD4AF37), Color(0xFFB8960C)],
+                    ),
                   ),
                 ],
               ).animate().fadeIn(delay: 200.ms),
@@ -845,22 +1272,42 @@ class _EventsTab extends ConsumerWidget {
               children: [
                 Text(
                   'قائمة الأنشطة',
-                  style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
+                  style: GoogleFonts.tajawal(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1A1A2E),
+                  ),
                 ),
                 GestureDetector(
                   onTap: () => context.push('/admin/events/create'),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF052011), Color(0xFF1A6B3A)],
+                      ),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.add_rounded, color: Colors.white, size: 16),
+                        const Icon(
+                          Icons.add_rounded,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                         const SizedBox(width: 6),
-                        Text('نشاط جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                        Text(
+                          'نشاط جديد',
+                          style: GoogleFonts.tajawal(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -871,7 +1318,10 @@ class _EventsTab extends ConsumerWidget {
             eventsAsync.when(
               data: (events) {
                 if (events.isEmpty) {
-                  return const _EmptyState(message: 'لا توجد أنشطة حالياً — أضف نشاطاً جديداً!', icon: Icons.event_busy_rounded);
+                  return const _EmptyState(
+                    message: 'لا توجد أنشطة حالياً — أضف نشاطاً جديداً!',
+                    icon: Icons.event_busy_rounded,
+                  );
                 }
                 return ListView.separated(
                   shrinkWrap: true,
@@ -924,22 +1374,38 @@ class _NewsTab extends ConsumerWidget {
             const SizedBox(height: 20),
             newsAsync.when(
               data: (allPosts) {
-                const newsCategories = {'ANNOUNCEMENT', 'PARTNERSHIP', 'EVENT_REPORT'};
-                final posts = allPosts.where((p) => newsCategories.contains(p.category?.toUpperCase() ?? '') || p.category == null).toList();
+                const newsCategories = {
+                  'ANNOUNCEMENT',
+                  'PARTNERSHIP',
+                  'EVENT_REPORT',
+                };
+                final posts = allPosts
+                    .where(
+                      (p) =>
+                          newsCategories.contains(
+                            p.category?.toUpperCase() ?? '',
+                          ) ||
+                          p.category == null,
+                    )
+                    .toList();
                 return Row(
                   children: [
                     _StatCard(
                       label: 'إجمالي المقالات',
                       value: '${posts.length}',
                       icon: Icons.article_outlined,
-                      gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF052011), Color(0xFF1A6B3A)],
+                      ),
                     ),
                     const SizedBox(width: 12),
                     _StatCard(
                       label: 'مقالات مثبتة',
                       value: posts.where((p) => p.isPinned).length.toString(),
                       icon: Icons.push_pin_rounded,
-                      gradient: const LinearGradient(colors: [AppTheme.heritageOrange, Color(0xFFD35400)]),
+                      gradient: const LinearGradient(
+                        colors: [AppTheme.heritageOrange, Color(0xFFD35400)],
+                      ),
                     ),
                   ],
                 ).animate().fadeIn(delay: 200.ms);
@@ -953,22 +1419,42 @@ class _NewsTab extends ConsumerWidget {
               children: [
                 Text(
                   'آخر المنشورات',
-                  style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
+                  style: GoogleFonts.tajawal(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1A1A2E),
+                  ),
                 ),
                 GestureDetector(
                   onTap: () => context.push('/admin/news/create'),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF052011), Color(0xFF1A6B3A)],
+                      ),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.post_add_rounded, color: Colors.white, size: 16),
+                        const Icon(
+                          Icons.post_add_rounded,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                         const SizedBox(width: 6),
-                        Text('خبر جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                        Text(
+                          'خبر جديد',
+                          style: GoogleFonts.tajawal(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -978,10 +1464,25 @@ class _NewsTab extends ConsumerWidget {
             const SizedBox(height: 16),
             newsAsync.when(
               data: (posts) {
-                const newsCategories = {'ANNOUNCEMENT', 'PARTNERSHIP', 'EVENT_REPORT'};
-                final newsPosts = posts.where((p) => newsCategories.contains(p.category?.toUpperCase() ?? '') || p.category == null).toList();
+                const newsCategories = {
+                  'ANNOUNCEMENT',
+                  'PARTNERSHIP',
+                  'EVENT_REPORT',
+                };
+                final newsPosts = posts
+                    .where(
+                      (p) =>
+                          newsCategories.contains(
+                            p.category?.toUpperCase() ?? '',
+                          ) ||
+                          p.category == null,
+                    )
+                    .toList();
                 if (newsPosts.isEmpty) {
-                  return const _EmptyState(message: 'لا توجد أخبار حالياً — انشر أول خبر!', icon: Icons.newspaper_rounded);
+                  return const _EmptyState(
+                    message: 'لا توجد أخبار حالياً — انشر أول خبر!',
+                    icon: Icons.newspaper_rounded,
+                  );
                 }
                 return ListView.separated(
                   shrinkWrap: true,
@@ -1036,7 +1537,10 @@ class _ReportsTab extends ConsumerWidget {
             reportsAsync.when(
               data: (reports) {
                 if (reports.isEmpty) {
-                  return const _EmptyState(message: 'لا توجد بلاغات حالياً', icon: Icons.flag_outlined);
+                  return const _EmptyState(
+                    message: 'لا توجد بلاغات حالياً',
+                    icon: Icons.flag_outlined,
+                  );
                 }
                 return ListView.separated(
                   shrinkWrap: true,
@@ -1047,18 +1551,32 @@ class _ReportsTab extends ConsumerWidget {
                     final report = reports[i];
                     return _ReportCard(
                       id: report['_id'],
-                      title: report['incidentCategory']?.toString() ?? 'بلاغ عام',
+                      title:
+                          report['incidentCategory']?.toString() ?? 'بلاغ عام',
                       description: report['description']?.toString() ?? '',
-                      location: report['locationData']?['formattedAddress'] ?? 'موقع غير محدد',
+                      location:
+                          report['locationData']?['formattedAddress'] ??
+                          'موقع غير محدد',
                       status: report['status']?.toString() ?? 'PENDING',
-                      date: DateTime.parse(report['createdAt'] ?? DateTime.now().toIso8601String()),
+                      date: DateTime.parse(
+                        report['createdAt'] ?? DateTime.now().toIso8601String(),
+                      ),
                       onUpdateStatus: (newStatus) async {
                         try {
-                          await reportService.updateReportStatus(report['_id'], newStatus);
+                          await reportService.updateReportStatus(
+                            report['_id'],
+                            newStatus,
+                          );
                           ref.invalidate(adminReportsProvider);
-                          if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم تحديث حالة البلاغ'));
+                          if (context.mounted)
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              _successSnack('✅ تم تحديث حالة البلاغ'),
+                            );
                         } catch (e) {
-                          if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('❌ خطأ: $e'));
+                          if (context.mounted)
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(_errorSnack('❌ خطأ: $e'));
                         }
                       },
                     ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05);
@@ -1105,7 +1623,10 @@ class _FinancialsTab extends ConsumerWidget {
             contributionsAsync.when(
               data: (items) {
                 if (items.isEmpty) {
-                  return const _EmptyState(message: 'لا توجد مساهمات حالياً', icon: Icons.payments_outlined);
+                  return const _EmptyState(
+                    message: 'لا توجد مساهمات حالياً',
+                    icon: Icons.payments_outlined,
+                  );
                 }
                 return ListView.separated(
                   shrinkWrap: true,
@@ -1115,23 +1636,41 @@ class _FinancialsTab extends ConsumerWidget {
                   itemBuilder: (context, i) {
                     final item = items[i];
                     final user = item['user'] is Map ? item['user'] : {};
-                    final project = item['project'] is Map ? item['project'] : {};
-                    
+                    final project = item['project'] is Map
+                        ? item['project']
+                        : {};
+
                     return _ContributionCard(
                       amount: '${item['amount']} DZD',
                       type: item['type']?.toString() ?? '',
                       status: item['status']?.toString() ?? 'PENDING',
-                      userName: user['name'] ?? user['email'] ?? 'مستخدم غير معروف',
-                      projectName: project['title']?['ar'] ?? project['title']?['fr'] ?? '',
+                      userName:
+                          user['name'] ?? user['email'] ?? 'مستخدم غير معروف',
+                      projectName:
+                          project['title']?['ar'] ??
+                          project['title']?['fr'] ??
+                          '',
                       onApprove: () async {
-                        await finService.reviewContribution(item['_id'], 'VERIFIED');
+                        await finService.reviewContribution(
+                          item['_id'],
+                          'VERIFIED',
+                        );
                         ref.invalidate(adminContributionsProvider);
-                        if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم التحقق من المساهمة'));
+                        if (context.mounted)
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            _successSnack('✅ تم التحقق من المساهمة'),
+                          );
                       },
                       onReject: () async {
-                        await finService.reviewContribution(item['_id'], 'REJECTED');
+                        await finService.reviewContribution(
+                          item['_id'],
+                          'REJECTED',
+                        );
                         ref.invalidate(adminContributionsProvider);
-                        if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('❌ تم رفض المساهمة'));
+                        if (context.mounted)
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(_errorSnack('❌ تم رفض المساهمة'));
                       },
                     ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05);
                   },
@@ -1160,8 +1699,9 @@ class _CMSTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(currentUserProvider);
-    final isSuperAdmin = userAsync.value?.membershipLevel.toUpperCase() == 'SUPER_ADMIN';
-    
+    final isSuperAdmin =
+        userAsync.value?.membershipLevel.toUpperCase() == 'SUPER_ADMIN';
+
     final slidesAsync = ref.watch(heroSlidesProvider);
     final partnersAsync = ref.watch(partnersProvider);
     final leadershipAsync = ref.watch(leadershipProvider);
@@ -1184,7 +1724,11 @@ class _CMSTab extends ConsumerWidget {
             description: 'تغيير صور العرض والنصوص الترويجية في الصفحة الرئيسية',
             icon: Icons.view_carousel_rounded,
             color: const Color(0xFF6366F1),
-            count: slidesAsync.when(data: (d) => '${d.length} شرائح', loading: () => '...', error: (_, __) => '0'),
+            count: slidesAsync.when(
+              data: (d) => '${d.length} شرائح',
+              loading: () => '...',
+              error: (_, __) => '0',
+            ),
             onTap: () => context.go('/admin/cms/hero'),
           ),
           const SizedBox(height: 16),
@@ -1195,7 +1739,11 @@ class _CMSTab extends ConsumerWidget {
             description: 'إضافة وتعديل ملفات الشركاء والاتفاقيات الاستراتيجية',
             icon: Icons.handshake_rounded,
             color: const Color(0xFF10B981),
-            count: partnersAsync.when(data: (d) => '${d.length} شركاء', loading: () => '...', error: (_, __) => '0'),
+            count: partnersAsync.when(
+              data: (d) => '${d.length} شركاء',
+              loading: () => '...',
+              error: (_, __) => '0',
+            ),
             onTap: () => context.go('/admin/cms/partner'),
           ),
           const SizedBox(height: 16),
@@ -1206,14 +1754,19 @@ class _CMSTab extends ConsumerWidget {
             description: 'إدارة أعضاء مكتب الجمعية وتحديث بياناتهم وصورهم',
             icon: Icons.account_box_rounded,
             color: const Color(0xFFF59E0B),
-            count: leadershipAsync.when(data: (d) => '${d.length} أعضاء', loading: () => '...', error: (_, __) => '0'),
+            count: leadershipAsync.when(
+              data: (d) => '${d.length} أعضاء',
+              loading: () => '...',
+              error: (_, __) => '0',
+            ),
             onTap: () => context.go('/admin/cms/leadership'),
           ),
 
           const SizedBox(height: 32),
           _GlassInfoCard(
             title: 'تنبيه أمني',
-            message: 'جميع التغييرات هنا تظهر مباشرة لجميع مستخدمي التطبيق. يرجى التأكد من جودة الصور ودقة النصوص قبل الحفظ.',
+            message:
+                'جميع التغييرات هنا تظهر مباشرة لجميع مستخدمي التطبيق. يرجى التأكد من جودة الصور ودقة النصوص قبل الحفظ.',
             icon: Icons.security_rounded,
           ),
         ],
@@ -1288,7 +1841,10 @@ class _CMSManagementCard extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: color.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
@@ -1332,7 +1888,11 @@ class _GlassInfoCard extends StatelessWidget {
   final String message;
   final IconData icon;
 
-  const _GlassInfoCard({required this.title, required this.message, required this.icon});
+  const _GlassInfoCard({
+    required this.title,
+    required this.message,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1396,7 +1956,8 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
 
   Future<void> _loadSettings() async {
     final s = await ref.read(financialServiceProvider).getSettings();
-    if (mounted) _feeController.text = (s['annualMembershipFee'] ?? 2000).toString();
+    if (mounted)
+      _feeController.text = (s['annualMembershipFee'] ?? 2000).toString();
   }
 
   @override
@@ -1420,7 +1981,14 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
           const SizedBox(height: 24),
 
           // FINANCIAL SECTION
-          Text('الإدارة المالية', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade600)),
+          Text(
+            'الإدارة المالية',
+            style: GoogleFonts.tajawal(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: Colors.grey.shade600,
+            ),
+          ),
           const SizedBox(height: 12),
           _SettingsItemCard(
             title: 'رسوم العضوية السنوية',
@@ -1435,11 +2003,20 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
                     decoration: InputDecoration(
                       hintText: '2000',
                       suffixText: 'DZD',
-                      suffixStyle: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
+                      suffixStyle: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
                       filled: true,
                       fillColor: Colors.grey.shade50,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
@@ -1447,17 +2024,30 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
                 ElevatedButton(
                   onPressed: () async {
                     final fee = int.tryParse(_feeController.text) ?? 2000;
-                    await ref.read(financialServiceProvider).updateMembershipFee(fee);
-                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم تحديث الرسوم المالية للمنصة'));
+                    await ref
+                        .read(financialServiceProvider)
+                        .updateMembershipFee(fee);
+                    if (mounted)
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        _successSnack('✅ تم تحديث الرسوم المالية للمنصة'),
+                      );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: Text('حفظ', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                  child: Text(
+                    'حفظ',
+                    style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
@@ -1466,7 +2056,14 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
           const SizedBox(height: 24),
 
           // MAINTENANCE SECTION
-          Text('صيانة النظام', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade600)),
+          Text(
+            'صيانة النظام',
+            style: GoogleFonts.tajawal(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: Colors.grey.shade600,
+            ),
+          ),
           const SizedBox(height: 12),
           _SettingsItemCard(
             title: 'العمليات التقنية',
@@ -1481,13 +2078,19 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
                   isLoading: _isClearingCache,
                   onTap: () async {
                     setState(() => _isClearingCache = true);
-                    await Future.delayed(const Duration(seconds: 1)); // Visual feedback
+                    await Future.delayed(
+                      const Duration(seconds: 1),
+                    ); // Visual feedback
                     ref.invalidate(adminEventsProvider);
                     ref.invalidate(adminNewsProvider);
                     ref.invalidate(pendingMembershipsProvider);
                     if (mounted) {
                       setState(() => _isClearingCache = false);
-                      ScaffoldMessenger.of(context).showSnackBar(_successSnack('✨ تم مسح الذاكرة المؤقتة وتحديث البيانات'));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        _successSnack(
+                          '✨ تم مسح الذاكرة المؤقتة وتحديث البيانات',
+                        ),
+                      );
                     }
                   },
                 ),
@@ -1498,7 +2101,14 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
           const SizedBox(height: 24),
 
           // EXTERNAL TOOLS SECTION
-          Text('روابط الإدارة الخارجية', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade600)),
+          Text(
+            'روابط الإدارة الخارجية',
+            style: GoogleFonts.tajawal(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: Colors.grey.shade600,
+            ),
+          ),
           const SizedBox(height: 12),
           _SettingsItemCard(
             title: 'مركز البيانات والاستضافة',
@@ -1521,7 +2131,9 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
                 _QuickLinkTile(
                   icon: Icons.code_rounded,
                   label: 'مستودع الكود (GitHub)',
-                  onTap: () => _launchURL('https://github.com/matique2026ai-ux/ebzim-buraux'),
+                  onTap: () => _launchURL(
+                    'https://github.com/matique2026ai-ux/ebzim-buraux',
+                  ),
                 ),
               ],
             ),
@@ -1535,12 +2147,19 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
               children: [
                 Text(
                   'إبزيم للتراث والفنون - نسخة المسؤول v1.2.0',
-                  style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade400),
+                  style: GoogleFonts.tajawal(
+                    fontSize: 10,
+                    color: Colors.grey.shade400,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'تم التطوير بواسطة Antigravity AI',
-                  style: GoogleFonts.inter(fontSize: 8, color: Colors.grey.shade300, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inter(
+                    fontSize: 8,
+                    color: Colors.grey.shade300,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -1558,7 +2177,11 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('فتح الرابط: $url', style: GoogleFonts.tajawal()),
-          action: SnackBarAction(label: 'إغلاق', textColor: Colors.yellow, onPressed: () {}),
+          action: SnackBarAction(
+            label: 'إغلاق',
+            textColor: Colors.yellow,
+            onPressed: () {},
+          ),
           backgroundColor: AppTheme.primaryColor,
         ),
       );
@@ -1586,14 +2209,27 @@ class _SystemActionTile extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       leading: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+          color: Colors.orange.shade50,
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Icon(icon, color: Colors.orange.shade700, size: 20),
       ),
-      title: Text(label, style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.bold)),
-      subtitle: Text(description, style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade500)),
-      trailing: isLoading 
-        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-        : const Icon(Icons.flash_on_rounded, size: 18, color: Colors.orange),
+      title: Text(
+        label,
+        style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        description,
+        style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade500),
+      ),
+      trailing: isLoading
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.flash_on_rounded, size: 18, color: Colors.orange),
       onTap: isLoading ? null : onTap,
     );
   }
@@ -1623,15 +2259,24 @@ class _AdminEventCard extends ConsumerWidget {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.only(topRight: Radius.circular(18), bottomRight: Radius.circular(18)),
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(18),
+              bottomRight: Radius.circular(18),
+            ),
             child: Image.network(
               event.imageUrl,
-              width: 80, height: 80,
+              width: 80,
+              height: 80,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
-                width: 80, height: 80,
+                width: 80,
+                height: 80,
                 color: AppTheme.primaryColor.withOpacity(0.1),
-                child: const Icon(Icons.event_rounded, color: AppTheme.primaryColor, size: 32),
+                child: const Icon(
+                  Icons.event_rounded,
+                  color: AppTheme.primaryColor,
+                  size: 32,
+                ),
               ),
             ),
           ),
@@ -1639,7 +2284,10 @@ class _AdminEventCard extends ConsumerWidget {
           Expanded(
             child: InkWell(
               onTap: () => context.push('/admin/events/create', extra: event),
-              borderRadius: const BorderRadius.only(topRight: Radius.circular(18), bottomRight: Radius.circular(18)),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(18),
+                bottomRight: Radius.circular(18),
+              ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 child: Column(
@@ -1658,21 +2306,38 @@ class _AdminEventCard extends ConsumerWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        const Icon(Icons.calendar_today_rounded, size: 12, color: AppTheme.secondaryColor),
+                        const Icon(
+                          Icons.calendar_today_rounded,
+                          size: 12,
+                          color: AppTheme.secondaryColor,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           DateFormat('dd MMM yyyy', 'ar').format(event.date),
-                          style: GoogleFonts.tajawal(fontSize: 11, color: AppTheme.secondaryColor),
+                          style: GoogleFonts.tajawal(
+                            fontSize: 11,
+                            color: AppTheme.secondaryColor,
+                          ),
                         ),
                         if (event.isFeatured) ...[
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: AppTheme.accentColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
-                            child: Text('مميّزة', style: GoogleFonts.tajawal(fontSize: 9, color: AppTheme.accentColor, fontWeight: FontWeight.bold)),
+                            child: Text(
+                              'مميّزة',
+                              style: GoogleFonts.tajawal(
+                                fontSize: 9,
+                                color: AppTheme.accentColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       ],
@@ -1683,38 +2348,72 @@ class _AdminEventCard extends ConsumerWidget {
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: Color(0xFF94A3B8), size: 22),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: Color(0xFF94A3B8),
+              size: 22,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
             elevation: 8,
             onSelected: (value) async {
               if (value == 'edit') {
                 context.push('/admin/events/create', extra: event);
               } else if (value == 'delete') {
-                final confirmed = await _confirmDelete(context, 'حذف النشاط', event.titleAr);
+                final confirmed = await _confirmDelete(
+                  context,
+                  'حذف النشاط',
+                  event.titleAr,
+                );
                 if (confirmed == true) {
                   await ref.read(eventServiceProvider).deleteEvent(event.id);
                   ref.invalidate(adminEventsProvider);
                   ref.invalidate(upcomingEventsProvider);
-                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('🗑️ تم حذف النشاط'));
+                  if (context.mounted)
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(_errorSnack('🗑️ تم حذف النشاط'));
                 }
               }
             },
             itemBuilder: (_) => [
               PopupMenuItem(
                 value: 'edit',
-                child: Row(children: [
-                  Icon(Icons.edit_outlined, size: 18, color: AppTheme.primaryColor),
-                  const SizedBox(width: 10),
-                  Text('تعديل', style: GoogleFonts.tajawal(fontWeight: FontWeight.w600)),
-                ]),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.edit_outlined,
+                      size: 18,
+                      color: AppTheme.primaryColor,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'تعديل',
+                      style: GoogleFonts.tajawal(fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
               ),
               PopupMenuItem(
                 value: 'delete',
-                child: Row(children: [
-                  const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
-                  const SizedBox(width: 10),
-                  Text('حذف', style: GoogleFonts.tajawal(fontWeight: FontWeight.w600, color: Colors.red)),
-                ]),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.delete_outline_rounded,
+                      size: 18,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'حذف',
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -1752,17 +2451,19 @@ class _AdminNewsCard extends ConsumerWidget {
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-              color: post.isPinned 
-                  ? AppTheme.heritageOrange.withOpacity(0.1) 
+              color: post.isPinned
+                  ? AppTheme.heritageOrange.withOpacity(0.1)
                   : AppTheme.primaryColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
-              border: post.isPinned 
-                  ? Border.all(color: AppTheme.heritageOrange.withOpacity(0.1)) 
+              border: post.isPinned
+                  ? Border.all(color: AppTheme.heritageOrange.withOpacity(0.1))
                   : null,
             ),
             child: Icon(
               post.isPinned ? Icons.push_pin_rounded : Icons.article_rounded,
-              color: post.isPinned ? AppTheme.heritageOrange : AppTheme.primaryColor,
+              color: post.isPinned
+                  ? AppTheme.heritageOrange
+                  : AppTheme.primaryColor,
               size: 22,
             ),
           ),
@@ -1786,14 +2487,21 @@ class _AdminNewsCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       _categoryLabel(post.category),
-                      style: GoogleFonts.tajawal(fontSize: 10, color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.tajawal(
+                        fontSize: 10,
+                        color: AppTheme.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -1801,38 +2509,72 @@ class _AdminNewsCard extends ConsumerWidget {
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: Color(0xFF94A3B8), size: 22),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: Color(0xFF94A3B8),
+              size: 22,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
             elevation: 8,
             onSelected: (value) async {
               if (value == 'edit') {
                 context.push('/admin/news/create', extra: post);
               } else if (value == 'delete') {
-                final confirmed = await _confirmDelete(context, 'حذف الخبر', post.titleAr);
+                final confirmed = await _confirmDelete(
+                  context,
+                  'حذف الخبر',
+                  post.titleAr,
+                );
                 if (confirmed == true) {
                   await ref.read(newsServiceProvider).deletePost(post.id);
                   ref.invalidate(adminNewsProvider);
                   ref.invalidate(newsProvider);
-                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('🗑️ تم حذف الخبر'));
+                  if (context.mounted)
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(_errorSnack('🗑️ تم حذف الخبر'));
                 }
               }
             },
             itemBuilder: (_) => [
               PopupMenuItem(
                 value: 'edit',
-                child: Row(children: [
-                  Icon(Icons.edit_outlined, size: 18, color: AppTheme.primaryColor),
-                  const SizedBox(width: 10),
-                  Text('تعديل', style: GoogleFonts.tajawal(fontWeight: FontWeight.w600)),
-                ]),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.edit_outlined,
+                      size: 18,
+                      color: AppTheme.primaryColor,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'تعديل',
+                      style: GoogleFonts.tajawal(fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
               ),
               PopupMenuItem(
                 value: 'delete',
-                child: Row(children: [
-                  const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
-                  const SizedBox(width: 10),
-                  Text('حذف', style: GoogleFonts.tajawal(fontWeight: FontWeight.w600, color: Colors.red)),
-                ]),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.delete_outline_rounded,
+                      size: 18,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'حذف',
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -1889,7 +2631,11 @@ class _MembershipRequestCard extends ConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
@@ -1898,15 +2644,22 @@ class _MembershipRequestCard extends ConsumerWidget {
           Row(
             children: [
               Container(
-                width: 46, height: 46,
+                width: 46,
+                height: 46,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF052011), Color(0xFF1A6B3A)],
+                  ),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
                   child: Text(
                     request.fullName.isNotEmpty ? request.fullName[0] : 'م',
-                    style: GoogleFonts.tajawal(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: GoogleFonts.tajawal(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -1917,17 +2670,27 @@ class _MembershipRequestCard extends ConsumerWidget {
                   children: [
                     Text(
                       request.fullName,
-                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14, color: const Color(0xFF1A1A2E)),
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: const Color(0xFF1A1A2E),
+                      ),
                     ),
                     Text(
                       '${request.submissionDate.day}/${request.submissionDate.month}/${request.submissionDate.year}',
-                      style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade500),
+                      style: GoogleFonts.tajawal(
+                        fontSize: 11,
+                        color: Colors.grey.shade500,
+                      ),
                     ),
                   ],
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
@@ -1935,7 +2698,11 @@ class _MembershipRequestCard extends ConsumerWidget {
                 ),
                 child: Text(
                   _statusLabel(request.status),
-                  style: GoogleFonts.tajawal(fontSize: 11, color: statusColor, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.tajawal(
+                    fontSize: 11,
+                    color: statusColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -1950,11 +2717,21 @@ class _MembershipRequestCard extends ConsumerWidget {
                   child: OutlinedButton.icon(
                     onPressed: () => _showReviewDialog(context, ref),
                     icon: const Icon(Icons.visibility_rounded, size: 16),
-                    label: Text('عرض التفاصيل', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13)),
+                    label: Text(
+                      'عرض التفاصيل',
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppTheme.primaryColor,
-                      side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.1)),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      side: BorderSide(
+                        color: AppTheme.primaryColor.withOpacity(0.1),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
@@ -1964,12 +2741,20 @@ class _MembershipRequestCard extends ConsumerWidget {
                   child: ElevatedButton.icon(
                     onPressed: onApprove,
                     icon: const Icon(Icons.check_rounded, size: 16),
-                    label: Text('قبول سريع', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13)),
+                    label: Text(
+                      'قبول سريع',
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF15803D),
                       foregroundColor: Colors.white,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
@@ -1984,11 +2769,24 @@ class _MembershipRequestCard extends ConsumerWidget {
               width: double.infinity,
               child: OutlinedButton.icon(
                 onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline_rounded, size: 16, color: Colors.red),
-                label: Text('حذف الطلب نهائياً', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.red)),
+                icon: const Icon(
+                  Icons.delete_outline_rounded,
+                  size: 16,
+                  color: Colors.red,
+                ),
+                label: Text(
+                  'حذف الطلب نهائياً',
+                  style: GoogleFonts.tajawal(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: Colors.red,
+                  ),
+                ),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: Colors.red.withOpacity(0.2)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
@@ -2002,7 +2800,11 @@ class _MembershipRequestCard extends ConsumerWidget {
   void _showReviewDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      builder: (context) => _MembershipDetailsDialog(request: request, onApprove: onApprove, onReject: onReject),
+      builder: (context) => _MembershipDetailsDialog(
+        request: request,
+        onApprove: onApprove,
+        onReject: onReject,
+      ),
     );
   }
 }
@@ -2055,7 +2857,11 @@ class _MembershipDetailsDialog extends StatelessWidget {
                       color: Colors.white.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.person_search_rounded, color: Colors.white, size: 28),
+                    child: const Icon(
+                      Icons.person_search_rounded,
+                      color: Colors.white,
+                      size: 28,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -2064,18 +2870,29 @@ class _MembershipDetailsDialog extends StatelessWidget {
                       children: [
                         Text(
                           'مراجعة طلب العضوية',
-                          style: GoogleFonts.tajawal(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.tajawal(
+                            color: Colors.white70,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text(
                           request.fullName,
-                          style: GoogleFonts.tajawal(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                          style: GoogleFonts.tajawal(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close_rounded, color: Colors.white54),
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      color: Colors.white54,
+                    ),
                   ),
                 ],
               ),
@@ -2088,28 +2905,67 @@ class _MembershipDetailsDialog extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle('المعلومات الشخصية', Icons.badge_outlined),
+                    _buildSectionTitle(
+                      'المعلومات الشخصية',
+                      Icons.badge_outlined,
+                    ),
                     const SizedBox(height: 12),
                     _buildInfoGrid([
-                      _InfoItem(label: 'رقم الهاتف', value: data['phone'] ?? 'غير متوفر', icon: Icons.phone_android_rounded),
-                      _InfoItem(label: 'البريد الإلكتروني', value: data['email'] ?? 'غير متوفر', icon: Icons.alternate_email_rounded),
-                      _InfoItem(label: 'الجنس', value: data['gender'] == 'MALE' ? 'ذكر' : 'أنثى', icon: Icons.wc_rounded),
-                      _InfoItem(label: 'تاريخ الميلاد', value: data['dob']?.toString().split('T')[0] ?? '-', icon: Icons.cake_outlined),
+                      _InfoItem(
+                        label: 'رقم الهاتف',
+                        value: data['phone'] ?? 'غير متوفر',
+                        icon: Icons.phone_android_rounded,
+                      ),
+                      _InfoItem(
+                        label: 'البريد الإلكتروني',
+                        value: data['email'] ?? 'غير متوفر',
+                        icon: Icons.alternate_email_rounded,
+                      ),
+                      _InfoItem(
+                        label: 'الجنس',
+                        value: data['gender'] == 'MALE' ? 'ذكر' : 'أنثى',
+                        icon: Icons.wc_rounded,
+                      ),
+                      _InfoItem(
+                        label: 'تاريخ الميلاد',
+                        value: data['dob']?.toString().split('T')[0] ?? '-',
+                        icon: Icons.cake_outlined,
+                      ),
                     ]),
-                    
+
                     const SizedBox(height: 24),
-                    _buildSectionTitle('الاهتمامات والمهارات', Icons.psychology_outlined),
+                    _buildSectionTitle(
+                      'الاهتمامات والمهارات',
+                      Icons.psychology_outlined,
+                    ),
                     const SizedBox(height: 12),
-                    Text('الاهتمامات:', style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                    Text(
+                      'الاهتمامات:',
+                      style: GoogleFonts.tajawal(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     _buildChips(interests, const Color(0xFF052011)),
                     const SizedBox(height: 16),
-                    Text('المهارات والمؤهلات:', style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+                    Text(
+                      'المهارات والمؤهلات:',
+                      style: GoogleFonts.tajawal(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     _buildChips(skills, const Color(0xFFD4AF37)),
 
                     const SizedBox(height: 24),
-                    _buildSectionTitle('الدافع للانضمام', Icons.edit_note_rounded),
+                    _buildSectionTitle(
+                      'الدافع للانضمام',
+                      Icons.edit_note_rounded,
+                    ),
                     const SizedBox(height: 12),
                     Container(
                       width: double.infinity,
@@ -2121,47 +2977,76 @@ class _MembershipDetailsDialog extends StatelessWidget {
                       ),
                       child: Text(
                         data['motivation'] ?? 'لا يوجد نص توضيحي',
-                        style: GoogleFonts.tajawal(fontSize: 13, color: const Color(0xFF475569), height: 1.6),
+                        style: GoogleFonts.tajawal(
+                          fontSize: 13,
+                          color: const Color(0xFF475569),
+                          height: 1.6,
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 24),
-                    _buildSectionTitle('الوثائق المرفقة', Icons.attach_file_rounded),
+                    _buildSectionTitle(
+                      'الوثائق المرفقة',
+                      Icons.attach_file_rounded,
+                    ),
                     const SizedBox(height: 12),
-                    if (data['attachments'] != null && (data['attachments'] as List).isNotEmpty)
+                    if (data['attachments'] != null &&
+                        (data['attachments'] as List).isNotEmpty)
                       SizedBox(
                         height: 100,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: (data['attachments'] as List).length,
-                          separatorBuilder: (_, __) => const SizedBox(width: 12),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(width: 12),
                           itemBuilder: (context, index) {
-                            final attachment = (data['attachments'] as List)[index];
-                            final type = attachment['type'] == 'ID_CARD' ? 'بطاقة هوية' : 'صورة شخصية';
+                            final attachment =
+                                (data['attachments'] as List)[index];
+                            final type = attachment['type'] == 'ID_CARD'
+                                ? 'بطاقة هوية'
+                                : 'صورة شخصية';
                             return Column(
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: Image.network(
                                     attachment['url'],
-                                    width: 70, height: 70,
+                                    width: 70,
+                                    height: 70,
                                     fit: BoxFit.cover,
                                     errorBuilder: (_, __, ___) => Container(
-                                      width: 70, height: 70,
+                                      width: 70,
+                                      height: 70,
                                       color: Colors.grey.shade200,
-                                      child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
+                                      child: const Icon(
+                                        Icons.broken_image_outlined,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text(type, style: GoogleFonts.tajawal(fontSize: 9, fontWeight: FontWeight.bold)),
+                                Text(
+                                  type,
+                                  style: GoogleFonts.tajawal(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ],
                             );
                           },
                         ),
                       )
                     else
-                      Text('لا توجد وثائق مرفقة', style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey)),
+                      Text(
+                        'لا توجد وثائق مرفقة',
+                        style: GoogleFonts.tajawal(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -2181,9 +3066,14 @@ class _MembershipDetailsDialog extends StatelessWidget {
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.red.shade700,
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
                       ),
-                      child: Text('رفض الطلب', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'رفض الطلب',
+                        style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -2198,9 +3088,14 @@ class _MembershipDetailsDialog extends StatelessWidget {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
                       ),
-                      child: Text('قبول العضوية', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'قبول العضوية',
+                        style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ],
@@ -2219,7 +3114,11 @@ class _MembershipDetailsDialog extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           title,
-          style: GoogleFonts.tajawal(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.primaryColor),
+          style: GoogleFonts.tajawal(
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+            color: AppTheme.primaryColor,
+          ),
         ),
       ],
     );
@@ -2234,22 +3133,34 @@ class _MembershipDetailsDialog extends StatelessWidget {
   }
 
   Widget _buildChips(List<String> labels, Color color) {
-    if (labels.isEmpty) return Text('لم يتم التحديد', style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey));
+    if (labels.isEmpty)
+      return Text(
+        'لم يتم التحديد',
+        style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey),
+      );
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-      children: labels.map((label) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.1)),
-        ),
-        child: Text(
-          label,
-          style: GoogleFonts.tajawal(fontSize: 11, color: color, fontWeight: FontWeight.bold),
-        ),
-      )).toList(),
+      children: labels
+          .map(
+            (label) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: color.withOpacity(0.1)),
+              ),
+              child: Text(
+                label,
+                style: GoogleFonts.tajawal(
+                  fontSize: 11,
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -2259,7 +3170,11 @@ class _InfoItem extends StatelessWidget {
   final String value;
   final IconData icon;
 
-  const _InfoItem({required this.label, required this.value, required this.icon});
+  const _InfoItem({
+    required this.label,
+    required this.value,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -2270,13 +3185,23 @@ class _InfoItem extends StatelessWidget {
           children: [
             Icon(icon, size: 12, color: Colors.grey),
             const SizedBox(width: 4),
-            Text(label, style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade600)),
+            Text(
+              label,
+              style: GoogleFonts.tajawal(
+                fontSize: 10,
+                color: Colors.grey.shade600,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
+          style: GoogleFonts.tajawal(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF1A1A2E),
+          ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -2284,7 +3209,6 @@ class _InfoItem extends StatelessWidget {
     );
   }
 }
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // REPORT CARD
@@ -2306,19 +3230,27 @@ class _ReportCard extends StatelessWidget {
 
   Color _statusColor(String s) {
     switch (s.toUpperCase()) {
-      case 'RESOLVED': return const Color(0xFF15803D);
-      case 'INVESTIGATING': return const Color(0xFF1D4ED8);
-      case 'REJECTED': return const Color(0xFFB91C1C);
-      default: return const Color(0xFFB45309);
+      case 'RESOLVED':
+        return const Color(0xFF15803D);
+      case 'INVESTIGATING':
+        return const Color(0xFF1D4ED8);
+      case 'REJECTED':
+        return const Color(0xFFB91C1C);
+      default:
+        return const Color(0xFFB45309);
     }
   }
 
   String _statusLabel(String s) {
     switch (s.toUpperCase()) {
-      case 'RESOLVED': return 'تم الحل';
-      case 'INVESTIGATING': return 'قيد المراجعة';
-      case 'REJECTED': return 'مرفوض';
-      default: return 'بلاغ جديد';
+      case 'RESOLVED':
+        return 'تم الحل';
+      case 'INVESTIGATING':
+        return 'قيد المراجعة';
+      case 'REJECTED':
+        return 'مرفوض';
+      default:
+        return 'بلاغ جديد';
     }
   }
 
@@ -2331,7 +3263,11 @@ class _ReportCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
         border: Border.all(color: const Color(0xFFF1F5F9)),
       ),
@@ -2347,23 +3283,34 @@ class _ReportCard extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    width: 8, height: 8,
-                    decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     _statusLabel(status),
-                    style: GoogleFonts.tajawal(fontSize: 11, fontWeight: FontWeight.bold, color: statusColor),
+                    style: GoogleFonts.tajawal(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: statusColor,
+                    ),
                   ),
                   const Spacer(),
                   Text(
                     '${date.day}/${date.month}/${date.year}',
-                    style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey.shade500),
+                    style: GoogleFonts.tajawal(
+                      fontSize: 10,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                 ],
               ),
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(18),
               child: Column(
@@ -2373,14 +3320,25 @@ class _ReportCard extends StatelessWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
-                        child: const Icon(Icons.warning_amber_rounded, size: 18, color: AppTheme.primaryColor),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.warning_amber_rounded,
+                          size: 18,
+                          color: AppTheme.primaryColor,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           title,
-                          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 15, color: const Color(0xFF1A1A2E)),
+                          style: GoogleFonts.tajawal(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: const Color(0xFF1A1A2E),
+                          ),
                         ),
                       ),
                     ],
@@ -2388,12 +3346,19 @@ class _ReportCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 14, color: Color(0xFF64748B)),
+                      const Icon(
+                        Icons.location_on_outlined,
+                        size: 14,
+                        color: Color(0xFF64748B),
+                      ),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           location,
-                          style: GoogleFonts.tajawal(fontSize: 11, color: const Color(0xFF64748B)),
+                          style: GoogleFonts.tajawal(
+                            fontSize: 11,
+                            color: const Color(0xFF64748B),
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -2403,18 +3368,29 @@ class _ReportCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(
                     description,
-                    style: GoogleFonts.tajawal(fontSize: 13, color: const Color(0xFF475569), height: 1.5),
+                    style: GoogleFonts.tajawal(
+                      fontSize: 13,
+                      color: const Color(0xFF475569),
+                      height: 1.5,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   const SizedBox(height: 20),
                   const Divider(height: 1, color: Color(0xFFF1F5F9)),
                   const SizedBox(height: 16),
-                  
+
                   Row(
                     children: [
-                      Text('تغيير الحالة:', style: GoogleFonts.tajawal(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade700)),
+                      Text(
+                        'تغيير الحالة:',
+                        style: GoogleFonts.tajawal(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade700,
+                        ),
+                      ),
                       const Spacer(),
                       _ActionButton(
                         label: 'مراجعة',
@@ -2500,7 +3476,7 @@ class _ActionButton extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // CONTRIBUTION CARD
 // ─────────────────────────────────────────────────────────────────────────────
- class _ContributionCard extends StatelessWidget {
+class _ContributionCard extends StatelessWidget {
   final String amount, type, status, userName, projectName;
   final VoidCallback onApprove, onReject;
   const _ContributionCard({
@@ -2515,10 +3491,14 @@ class _ActionButton extends StatelessWidget {
 
   String _getLocalizedType(String t) {
     switch (t.toUpperCase()) {
-      case 'ANNUAL_MEMBERSHIP': return 'اشتراك سنوي';
-      case 'GENERAL_DONATION': return 'تبرع عام';
-      case 'PROJECT_SUPPORT': return 'دعم مشروع';
-      default: return t;
+      case 'ANNUAL_MEMBERSHIP':
+        return 'اشتراك سنوي';
+      case 'GENERAL_DONATION':
+        return 'تبرع عام';
+      case 'PROJECT_SUPPORT':
+        return 'دعم مشروع';
+      default:
+        return t;
     }
   }
 
@@ -2529,47 +3509,85 @@ class _ActionButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
           Row(
             children: [
               Container(
-                width: 46, height: 46,
+                width: 46,
+                height: 46,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF6D28D9), Color(0xFF7C3AED)]),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6D28D9), Color(0xFF7C3AED)],
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.payments_rounded, color: Colors.white, size: 22),
+                child: const Icon(
+                  Icons.payments_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(amount, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 16, color: const Color(0xFF6D28D9))),
+                    Text(
+                      amount,
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: const Color(0xFF6D28D9),
+                      ),
+                    ),
                     Text(
                       '${_getLocalizedType(type)} - $userName',
-                      style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade600),
+                      style: GoogleFonts.tajawal(
+                        fontSize: 11,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                     if (projectName.isNotEmpty)
                       Text(
                         'المشروع: $projectName',
-                        style: GoogleFonts.tajawal(fontSize: 10, color: const Color(0xFF1A6B3A), fontWeight: FontWeight.bold),
+                        style: GoogleFonts.tajawal(
+                          fontSize: 10,
+                          color: const Color(0xFF1A6B3A),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                   ],
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
-                  color: status == 'VERIFIED' ? const Color(0xFFDCFCE7) : const Color(0xFFFFF7ED),
+                  color: status == 'VERIFIED'
+                      ? const Color(0xFFDCFCE7)
+                      : const Color(0xFFFFF7ED),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   status == 'VERIFIED' ? 'مُتحقق' : 'انتظار',
-                  style: GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold, color: status == 'VERIFIED' ? const Color(0xFF15803D) : const Color(0xFFB45309)),
+                  style: GoogleFonts.tajawal(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: status == 'VERIFIED'
+                        ? const Color(0xFF15803D)
+                        : const Color(0xFFB45309),
+                  ),
                 ),
               ),
             ],
@@ -2583,16 +3601,34 @@ class _ActionButton extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: onReject,
-                    style: OutlinedButton.styleFrom(foregroundColor: Colors.red, side: const BorderSide(color: Colors.red), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                    child: Text('رفض', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      side: const BorderSide(color: Colors.red),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      'رفض',
+                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: onApprove,
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF15803D), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                    child: Text('تحقق', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF15803D),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      'تحقق',
+                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
@@ -2610,7 +3646,11 @@ class _ActionButton extends StatelessWidget {
 class _SectionHeader extends StatelessWidget {
   final String title, subtitle;
   final IconData icon;
-  const _SectionHeader({required this.title, required this.subtitle, required this.icon});
+  const _SectionHeader({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -2633,8 +3673,21 @@ class _SectionHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E))),
-              Text(subtitle, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade500)),
+              Text(
+                title,
+                style: GoogleFonts.tajawal(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF1A1A2E),
+                ),
+              ),
+              Text(
+                subtitle,
+                style: GoogleFonts.tajawal(
+                  fontSize: 11,
+                  color: Colors.grey.shade500,
+                ),
+              ),
             ],
           ),
         ),
@@ -2647,7 +3700,12 @@ class _StatCard extends StatelessWidget {
   final String label, value;
   final IconData icon;
   final Gradient gradient;
-  const _StatCard({required this.label, required this.value, required this.icon, required this.gradient});
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.gradient,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -2658,7 +3716,11 @@ class _StatCard extends StatelessWidget {
           gradient: gradient,
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 12, offset: const Offset(0, 4)),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: Column(
@@ -2668,12 +3730,21 @@ class _StatCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               value,
-              style: GoogleFonts.tajawal(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white, height: 1),
+              style: GoogleFonts.tajawal(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                height: 1,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: GoogleFonts.tajawal(fontSize: 10, color: Colors.white.withOpacity(0.1), letterSpacing: 0.5),
+              style: GoogleFonts.tajawal(
+                fontSize: 10,
+                color: Colors.white.withOpacity(0.1),
+                letterSpacing: 0.5,
+              ),
             ),
           ],
         ),
@@ -2704,7 +3775,10 @@ class _EmptyState extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: GoogleFonts.tajawal(color: const Color(0xFF94A3B8), fontSize: 14),
+            style: GoogleFonts.tajawal(
+              color: const Color(0xFF94A3B8),
+              fontSize: 14,
+            ),
           ),
         ],
       ),
@@ -2727,12 +3801,19 @@ class _ErrorState extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.error_outline_rounded, color: Color(0xFFB91C1C), size: 22),
+          const Icon(
+            Icons.error_outline_rounded,
+            color: Color(0xFFB91C1C),
+            size: 22,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               'تعذّر الاتصال بالخادم. تأكد من تشغيل NestJS.\n$error',
-              style: GoogleFonts.tajawal(color: const Color(0xFFB91C1C), fontSize: 12),
+              style: GoogleFonts.tajawal(
+                color: const Color(0xFFB91C1C),
+                fontSize: 12,
+              ),
             ),
           ),
         ],
@@ -2751,13 +3832,19 @@ class _LoadingShimmer extends StatelessWidget {
         3,
         (i) => Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Container(
-            height: 80,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1200.ms, color: Colors.white.withOpacity(0.1)),
+          child:
+              Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  )
+                  .animate(onPlay: (c) => c.repeat())
+                  .shimmer(
+                    duration: 1200.ms,
+                    color: Colors.white.withOpacity(0.1),
+                  ),
         ),
       ),
     );
@@ -2769,7 +3856,12 @@ class _SettingsItemCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final Widget child;
-  const _SettingsItemCard({required this.title, required this.icon, required this.iconColor, required this.child});
+  const _SettingsItemCard({
+    required this.title,
+    required this.icon,
+    required this.iconColor,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -2778,7 +3870,13 @@ class _SettingsItemCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2787,7 +3885,14 @@ class _SettingsItemCard extends StatelessWidget {
             children: [
               Icon(icon, color: iconColor, size: 20),
               const SizedBox(width: 8),
-              Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14, color: const Color(0xFF1A1A2E))),
+              Text(
+                title,
+                style: GoogleFonts.tajawal(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: const Color(0xFF1A1A2E),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -2802,15 +3907,26 @@ class _QuickLinkTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _QuickLinkTile({required this.icon, required this.label, required this.onTap});
+  const _QuickLinkTile({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon, color: AppTheme.primaryColor, size: 20),
-      title: Text(label, style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.w500)),
-      trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Color(0xFFCBD5E1)),
+      title: Text(
+        label,
+        style: GoogleFonts.tajawal(fontSize: 13, fontWeight: FontWeight.w500),
+      ),
+      trailing: const Icon(
+        Icons.arrow_forward_ios_rounded,
+        size: 14,
+        color: Color(0xFFCBD5E1),
+      ),
       onTap: onTap,
     );
   }
@@ -2840,12 +3956,17 @@ Future<bool?> _confirmDelete(BuildContext context, String title, String name) {
     context: context,
     builder: (_) => AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      title: Row(children: [
-        const Icon(Icons.warning_amber_rounded, color: Colors.deepOrange),
-        const SizedBox(width: 8),
-        Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
-      ]),
-      content: Text('هل تريد حذف "$name" نهائياً؟ لا يمكن التراجع.', style: GoogleFonts.tajawal()),
+      title: Row(
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: Colors.deepOrange),
+          const SizedBox(width: 8),
+          Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+        ],
+      ),
+      content: Text(
+        'هل تريد حذف "$name" نهائياً؟ لا يمكن التراجع.',
+        style: GoogleFonts.tajawal(),
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
@@ -2853,8 +3974,17 @@ Future<bool?> _confirmDelete(BuildContext context, String title, String name) {
         ),
         ElevatedButton(
           onPressed: () => Navigator.pop(context, true),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-          child: Text('حذف نهائياً', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: Text(
+            'حذف نهائياً',
+            style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     ),
@@ -2902,8 +4032,13 @@ class _EditUserDialogState extends State<_EditUserDialog> {
     return Consumer(
       builder: (context, ref, child) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          title: Text('تعديل بيانات المستخدم', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          title: Text(
+            'تعديل بيانات المستخدم',
+            style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -2941,11 +4076,23 @@ class _EditUserDialogState extends State<_EditUserDialog> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryColor,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: _isLoading
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : Text('حفظ التغييرات', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(
+                      'حفظ التغييرات',
+                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+                    ),
             ),
           ],
         );
@@ -3057,25 +4204,29 @@ class _EditUserDialogState extends State<_EditUserDialog> {
     try {
       final nameParts = _nameController.text.trim().split(' ');
       final firstName = nameParts.first;
-      final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+      final lastName = nameParts.length > 1
+          ? nameParts.sublist(1).join(' ')
+          : '';
 
       final updateData = {
         'email': _emailController.text.trim(),
         'role': _selectedRole,
         'membershipBadge': _selectedBadge,
         'status': _selectedStatus,
-        'profile': {
-          'firstName': firstName,
-          'lastName': lastName,
-        }
+        'profile': {'firstName': firstName, 'lastName': lastName},
       };
 
-      await ref.read(adminUserServiceProvider).updateUser(widget.user.id, updateData);
+      await ref
+          .read(adminUserServiceProvider)
+          .updateUser(widget.user.id, updateData);
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في التعديل: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('خطأ في التعديل: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -3099,9 +4250,28 @@ class _ProjectsTab extends ConsumerWidget {
       onRefresh: () async => ref.invalidate(adminNewsProvider),
       child: newsAsync.when(
         data: (allPosts) {
-          final projectCategories = ['HERITAGE', 'PROJECT', 'RESTORATION', 'CULTURAL', 'SCIENTIFIC', 'ARTISTIC'];
-          final projects = allPosts.where((p) => projectCategories.contains(p.category?.toUpperCase() ?? '')).toList();
-          final avgProgress = projects.isEmpty ? 0 : (projects.map((p) => (p.progressPercentage)).reduce((a, b) => a + b) / projects.length * 100).toInt();
+          final projectCategories = [
+            'HERITAGE',
+            'PROJECT',
+            'RESTORATION',
+            'CULTURAL',
+            'SCIENTIFIC',
+            'ARTISTIC',
+          ];
+          final projects = allPosts
+              .where(
+                (p) =>
+                    projectCategories.contains(p.category?.toUpperCase() ?? ''),
+              )
+              .toList();
+          final avgProgress = projects.isEmpty
+              ? 0
+              : (projects
+                            .map((p) => (p.progressPercentage))
+                            .reduce((a, b) => a + b) /
+                        projects.length *
+                        100)
+                    .toInt();
 
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -3121,41 +4291,74 @@ class _ProjectsTab extends ConsumerWidget {
                       label: 'مشاريع ميدانية',
                       value: '${projects.length}',
                       icon: Icons.construction_rounded,
-                      gradient: const LinearGradient(colors: [Color(0xFF0369A1), Color(0xFF0EA5E9)]),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF0369A1), Color(0xFF0EA5E9)],
+                      ),
                     ),
                     const SizedBox(width: 12),
                     _StatCard(
                       label: 'نسبة الإنجاز العام',
-                      value: '$avgProgress%', 
+                      value: '$avgProgress%',
                       icon: Icons.trending_up_rounded,
-                      gradient: const LinearGradient(colors: [Color(0xFF15803D), Color(0xFF22C55E)]),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF15803D), Color(0xFF22C55E)],
+                      ),
                     ),
                   ],
                 ).animate().fadeIn(delay: 200.ms),
                 const SizedBox(height: 28),
-                Text('V1.2 - SYNC ACTIVE', style: TextStyle(fontSize: 9, color: Colors.grey.withOpacity(0.1))),
+                Text(
+                  'V1.2 - SYNC ACTIVE',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey.withOpacity(0.1),
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'قائمة المشاريع والتقدم',
-                      style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
+                      style: GoogleFonts.tajawal(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1A1A2E),
+                      ),
                     ),
                     GestureDetector(
-                      onTap: () => context.push('/admin/projects/create', extra: {'initialCategory': 'RESTORATION'}),
+                      onTap: () => context.push(
+                        '/admin/projects/create',
+                        extra: {'initialCategory': 'RESTORATION'},
+                      ),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(colors: [Color(0xFF0369A1), Color(0xFF0EA5E9)]),
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF0369A1), Color(0xFF0EA5E9)],
+                          ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.add_task_rounded, color: Colors.white, size: 16),
+                            const Icon(
+                              Icons.add_task_rounded,
+                              color: Colors.white,
+                              size: 16,
+                            ),
                             const SizedBox(width: 6),
-                            Text('مشروع جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                            Text(
+                              'مشروع جديد',
+                              style: GoogleFonts.tajawal(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -3164,7 +4367,10 @@ class _ProjectsTab extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 if (projects.isEmpty)
-                  const _EmptyState(message: 'لا توجد مشاريع مسجلة بعد', icon: Icons.architecture_rounded)
+                  const _EmptyState(
+                    message: 'لا توجد مشاريع مسجلة بعد',
+                    icon: Icons.architecture_rounded,
+                  )
                 else
                   ListView.separated(
                     shrinkWrap: true,
@@ -3191,15 +4397,15 @@ class _ProjectsTab extends ConsumerWidget {
   }
 }
 
-class _AdminProjectCard extends StatefulWidget {
+class _AdminProjectCard extends ConsumerStatefulWidget {
   final NewsPost post;
   const _AdminProjectCard({required this.post});
 
   @override
-  State<_AdminProjectCard> createState() => _AdminProjectCardState();
+  ConsumerState<_AdminProjectCard> createState() => _AdminProjectCardState();
 }
 
-class _AdminProjectCardState extends State<_AdminProjectCard> {
+class _AdminProjectCardState extends ConsumerState<_AdminProjectCard> {
   bool _isExpanded = false;
 
   @override
@@ -3212,7 +4418,11 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
@@ -3223,9 +4433,13 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
                 borderRadius: BorderRadius.circular(12),
                 child: CachedNetworkImage(
                   imageUrl: widget.post.imageUrl,
-                  width: 80, height: 80,
+                  width: 80,
+                  height: 80,
                   fit: BoxFit.cover,
-                  errorWidget: (_, __, ___) => Container(color: Colors.grey.shade100, child: const Icon(Icons.image_not_supported_outlined)),
+                  errorWidget: (_, __, ___) => Container(
+                    color: Colors.grey.shade100,
+                    child: const Icon(Icons.image_not_supported_outlined),
+                  ),
                 ),
               ),
               const SizedBox(width: 14),
@@ -3235,8 +4449,12 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
                   children: [
                     Text(
                       widget.post.titleAr,
-                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14),
-                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     LinearProgressIndicator(
@@ -3251,12 +4469,19 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
                       children: [
                         Text(
                           'تقدم المشروع: ${(widget.post.progressPercentage * 100).toInt()}%',
-                          style: GoogleFonts.tajawal(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+                          style: GoogleFonts.tajawal(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade700,
+                          ),
                         ),
                         const Spacer(),
                         Text(
                           'تحديث: ${DateFormat('yyyy/MM/dd').format(widget.post.publishedAt)}',
-                          style: GoogleFonts.tajawal(fontSize: 10, color: Colors.grey),
+                          style: GoogleFonts.tajawal(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
@@ -3266,12 +4491,75 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
               Column(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.edit_note_rounded, color: Colors.blue),
-                    onPressed: () => context.push('/admin/projects/create', extra: widget.post),
+                    icon: const Icon(
+                      Icons.edit_note_rounded,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () => context.push(
+                      '/admin/projects/create',
+                      extra: widget.post,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete_outline_rounded,
+                      color: Colors.redAccent,
+                    ),
+                    onPressed: () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('حذف المشروع'),
+                          content: Text(
+                            'هل أنت متأكد من حذف مشروع "${widget.post.titleAr}" نهائياً؟',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('إلغاء'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: const Text('حذف نهائي'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (confirm == true) {
+                        try {
+                          await ref
+                              .read(newsServiceProvider)
+                              .deletePost(widget.post.id);
+                          ref.invalidate(adminNewsProvider);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('✅ تم حذف المشروع بنجاح'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('❌ فشل الحذف: $e'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      }
+                    },
                   ),
                   IconButton(
                     icon: Icon(
-                      _isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                      _isExpanded
+                          ? Icons.keyboard_arrow_up_rounded
+                          : Icons.keyboard_arrow_down_rounded,
                       color: Colors.grey,
                     ),
                     onPressed: () => setState(() => _isExpanded = !_isExpanded),
@@ -3288,7 +4576,9 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F1A0F), // Dark background for the timeline to make it pop
+                color: const Color(
+                  0xFF0F1A0F,
+                ), // Dark background for the timeline to make it pop
                 borderRadius: BorderRadius.circular(14),
               ),
               child: EbzimProjectTimeline(
@@ -3305,25 +4595,39 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
 
 Color _getRoleColor(String role) {
   switch (role.toUpperCase()) {
-    case 'SUPER_ADMIN': return const Color(0xFFD4AF37); // Royal Gold
-    case 'ADMIN': return AppTheme.primaryColor;
-    case 'MEMBER': return const Color(0xFF15803D);
-    case 'AUTHORITY': return const Color(0xFFB45309);
-    default: return const Color(0xFF64748B);
+    case 'SUPER_ADMIN':
+      return const Color(0xFFD4AF37); // Royal Gold
+    case 'ADMIN':
+      return AppTheme.primaryColor;
+    case 'MEMBER':
+      return const Color(0xFF15803D);
+    case 'AUTHORITY':
+      return const Color(0xFFB45309);
+    default:
+      return const Color(0xFF64748B);
   }
 }
 
 String _getLocalizedRole(String role, AppLocalizations loc) {
   switch (role.toUpperCase()) {
-    case 'SUPER_ADMIN': return loc.dashMemberLevelSuperAdmin;
-    case 'ADMIN': return loc.dashMemberLevelAdmin;
-    case 'MEMBER': return loc.dashMemberLevelMember;
-    case 'PUBLIC': return loc.dashMemberLevelPublic;
-    default: return role;
+    case 'SUPER_ADMIN':
+      return loc.dashMemberLevelSuperAdmin;
+    case 'ADMIN':
+      return loc.dashMemberLevelAdmin;
+    case 'MEMBER':
+      return loc.dashMemberLevelMember;
+    case 'PUBLIC':
+      return loc.dashMemberLevelPublic;
+    default:
+      return role;
   }
 }
 
-Widget _buildSmallBadge({required String label, required Color color, bool isOutline = false}) {
+Widget _buildSmallBadge({
+  required String label,
+  required Color color,
+  bool isOutline = false,
+}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
     decoration: BoxDecoration(
@@ -3334,13 +4638,11 @@ Widget _buildSmallBadge({required String label, required Color color, bool isOut
     child: Text(
       label,
       style: GoogleFonts.tajawal(
-        fontSize: 9, 
-        fontWeight: FontWeight.bold, 
+        fontSize: 9,
+        fontWeight: FontWeight.bold,
         color: color,
         letterSpacing: 0.5,
       ),
     ),
   );
 }
-
-

@@ -11,6 +11,7 @@ import 'package:ebzim_app/widgets/digital_id_card.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
+import 'package:ebzim_app/widgets/stats_strip.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Design tokens for the dashboard surface layer
@@ -153,6 +154,14 @@ class DashboardScreen extends ConsumerWidget {
                       isPublic: isPublic,
                     ),
                   ),
+                  const SizedBox(height: 28),
+                  
+                  // --- LIVE PLATFORM STATS ---
+                  const StatsStrip(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    showDivider: true,
+                  ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.05),
+
                   const SizedBox(height: 28),
 
                   // ── PROFILE COMPLETION (Professional touch) ───────────────

@@ -75,6 +75,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       
       if (token != null && userData != null) {
         await _ref.read(storageServiceProvider).saveToken(token);
+        await _ref.read(storageServiceProvider).saveLastIdentity(email);
         state = AuthState(
           isAuthenticated: true,
           user: UserProfile.fromJson(userData),

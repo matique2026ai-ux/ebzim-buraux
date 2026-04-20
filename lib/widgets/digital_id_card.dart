@@ -103,16 +103,16 @@ class DigitalIdCard extends StatelessWidget {
                             letterSpacing: 1,
                           ),
                         ),
-                        if (user.membershipLevel.toUpperCase() == 'SUPER_ADMIN' || user.membershipLevel.toUpperCase() == 'ADMIN')
+                        if (['SUPER_ADMIN', 'ADMIN', 'AUTHORITY', 'MEMBER'].contains(user.membershipLevel.toUpperCase()))
                           Container(
                             margin: const EdgeInsets.only(top: 2),
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                             decoration: BoxDecoration(
-                              color: user.membershipLevel.toUpperCase() == 'SUPER_ADMIN' ? Colors.black : emerald,
+                              color: _getBadgeColor(user),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              user.membershipLevel.toUpperCase() == 'SUPER_ADMIN' ? 'SUPER ADMIN (OWNER)' : 'ASSOCIATION ADMIN',
+                              _getBadgeText(user),
                               style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontSize: 8,
@@ -170,8 +170,10 @@ class DigitalIdCard extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: _buildCardField(
-                                    loc.cardIssueDate, 
-                                    '10/04/2026', // Placeholder for now
+                                    loc.cardIssueDate,
+                                    user.createdAt != null 
+                                      ? '${user.createdAt!.day.toString().padLeft(2, '0')}/${user.createdAt!.month.toString().padLeft(2, '0')}/${user.createdAt!.year}'
+                                      : '10/04/2026', 
                                     isAr
                                   ),
                                 ),
@@ -242,5 +244,40 @@ class DigitalIdCard extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Color _getBadgeColor(UserProfile user) {
+    final level = user.membershipLevel.toUpperCase();
+    final badge = user.membershipBadge?.toUpperCase() ?? 'NONE';
+
+    if (badge == 'GOLD') return const Color(0xFFD4AF37);
+    if (badge == 'SILVER') return const Color(0xFF94A3B8);
+    if (badge == 'BRONZE') return const Color(0xFFB45309);
+    if (badge == 'HONORARY') return const Color(0xFF7C3AED);
+
+    switch (level) {
+      case 'SUPER_ADMIN': return Colors.black;
+      case 'ADMIN': return emerald;
+      case 'AUTHORITY': return const Color(0xFFB91C1C); // Deep red
+      case 'MEMBER': return const Color(0xFF0369A1); // Deep blue
+      default: return Colors.grey;
+    }
+  }
+
+  String _getBadgeText(UserProfile user) {
+    final level = user.membershipLevel.toUpperCase();
+    final badge = user.membershipBadge?.toUpperCase() ?? 'NONE';
+
+    if (badge != 'NONE' && badge.isNotEmpty) {
+      return '$level ($badge)';
+    }
+
+    switch (level) {
+      case 'SUPER_ADMIN': return 'SUPER ADMIN (OWNER)';
+      case 'ADMIN': return 'ASSOCIATION ADMIN';
+      case 'AUTHORITY': return 'OFFICIAL AUTHORITY';
+      case 'MEMBER': return 'VERIFIED MEMBER';
+      default: return 'MEMBER';
+    }
   }
 }

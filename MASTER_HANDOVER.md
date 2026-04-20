@@ -66,16 +66,18 @@ To maintain stability and cross-compiler compatibility:
 ---
 
 ## 🛠️ 8. Testing Protocol (Crucial)
-To verify the platform without DDC compiler errors or renderer hangs:
-1. **Local Backend (Optional):**
+The platform is currently optimized for **LIVE Production Testing**.
+
+### 🌍 Primary: Live Production Testing
+1. **API Pointing:** Ensure `lib/core/services/api_client_platform_web.dart` returns the production Render URL.
+2. **Launch Command:**
    ```bash
-   cd backend
-   npm run start:dev
-   # To seed admin data: npx ts-node scripts/seed.ts
-   ```
-2. **Frontend (Release Mode):**
-   ```bash
-   # Use port 8080 as it's the standard for our current web hooks
    flutter run -d chrome --web-port 8080 --release
    ```
-3. **Environment Sync:** Always check `lib/core/services/api_client_platform_web.dart` to ensure it points to `localhost` or `Render` according to the testing target.
+   *Note: Port 8080 is mandatory for consistent web session handling.*
+
+### 💻 Secondary: Local Development Testing (Optional)
+1. **API Pointing:** Switch `api_client_platform_web.dart` to `localhost:3000`.
+2. **Backend:** Run `npm run start:dev` in the `backend` folder.
+3. **Seeding:** Use `npx ts-node scripts/seed.ts` if the DB is empty.
+4. **Launch:** Same as above (`--release` mode still recommended).

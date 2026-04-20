@@ -63,6 +63,10 @@ export class AdminService {
   }
 
   async deleteUser(userId: string) {
+    const user = await this.userModel.findById(userId);
+    if (user && user.role === 'SUPER_ADMIN') {
+      throw new Error('Cannot delete a Super Admin account');
+    }
     return this.userModel.findByIdAndDelete(userId);
   }
 

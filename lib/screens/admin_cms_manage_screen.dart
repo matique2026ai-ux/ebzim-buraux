@@ -11,7 +11,7 @@ import 'package:ebzim_app/core/models/cms_models.dart';
 import 'package:ebzim_app/core/services/cms_content_service.dart';
 import 'package:ebzim_app/core/services/media_service.dart';
 
-enum CMSManageType { hero, partner, leadership }
+enum CMSManageType { hero, partner, leadership, onboarding }
 
 class AdminCmsManageScreen extends ConsumerStatefulWidget {
   final String contentType; 
@@ -20,6 +20,7 @@ class AdminCmsManageScreen extends ConsumerStatefulWidget {
   CMSManageType get type {
     if (contentType == 'partner') return CMSManageType.partner;
     if (contentType == 'leadership') return CMSManageType.leadership;
+    if (contentType == 'onboarding') return CMSManageType.onboarding;
     return CMSManageType.hero;
   }
 
@@ -33,6 +34,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       case CMSManageType.hero: return 'إدارة شريط الواجهة';
       case CMSManageType.partner: return 'إدارة الشركاء';
       case CMSManageType.leadership: return 'إدارة المكتب التنفيذي';
+      case CMSManageType.onboarding: return 'إدارة شاشة الترحيب (Onboarding)';
     }
   }
 
@@ -41,12 +43,14 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       case CMSManageType.hero: return Icons.slideshow_rounded;
       case CMSManageType.partner: return Icons.handshake_rounded;
       case CMSManageType.leadership: return Icons.people_rounded;
+      case CMSManageType.onboarding: return Icons.door_front_door_rounded;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final slidesAsync = ref.watch(heroSlidesProvider);
+    final onboardingAsync = ref.watch(onboardingSlidesProvider);
     final partnersAsync = ref.watch(partnersProvider);
     final leadershipAsync = ref.watch(leadershipProvider);
 
@@ -57,10 +61,11 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
         color: AppTheme.accentColor,
         onRefresh: () async {
           ref.invalidate(heroSlidesProvider);
+          ref.invalidate(onboardingSlidesProvider);
           ref.invalidate(partnersProvider);
           ref.invalidate(leadershipProvider);
         },
-        child: _buildList(slidesAsync, partnersAsync, leadershipAsync),
+        child: _buildList(slidesAsync, onboardingAsync, partnersAsync, leadershipAsync),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppTheme.primaryColor,
@@ -108,12 +113,35 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
     );
   }
 
-  Widget _buildList(AsyncValue<List<HeroSlide>> slides, AsyncValue<List<Partner>> partners, AsyncValue<List<EbzimLeader>> leadership) {
+  Widget _buildList(
+      AsyncValue<List<HeroSlide>> slides,
+      AsyncValue<List<HeroSlide>> onboarding,
+      AsyncValue<List<Partner>> partners,
+      AsyncValue<List<EbzimLeader>> leadership) {
     switch (widget.type) {
       case CMSManageType.hero:
         return slides.when(
           data: (list) => list.isEmpty
-              ? _EmptyState(label: 'لا توجد شرائح بعد', icon: Icons.slideshow_outlined)
+              ? _EmptyState(
+                  label: 'لا توجد شرائح بعد', icon: Icons.slideshow_outlined)
+              : ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                  itemCount: list.length,
+                  itemBuilder: (context, i) => _HeroSlideTile(
+                    slide: list[i],
+                    onEdit: () => _showEditorDialog(context, list[i]),
+                    onDelete: () => _confirmDelete(list[i].id),
+                  ),
+                ),
+          loading: () => const _LoadingState(),
+          error: (e, _) => _ErrorState(message: '$e'),
+        );
+      case CMSManageType.onboarding:
+        return onboarding.when(
+          data: (list) => list.isEmpty
+              ? _EmptyState(
+                  label: 'لا توجد شرائح ترحيب بعد',
+                  icon: Icons.door_front_door_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                   itemCount: list.length,
@@ -191,9 +219,16 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       try {
         final service = ref.read(cmsContentServiceProvider);
         switch (widget.type) {
-          case CMSManageType.hero: await service.deleteHeroSlide(id); break;
-          case CMSManageType.partner: await service.deletePartner(id); break;
-          case CMSManageType.leadership: await service.deleteLeader(id); break;
+          case CMSManageType.hero:
+          case CMSManageType.onboarding:
+            await service.deleteHeroSlide(id);
+            break;
+          case CMSManageType.partner:
+            await service.deletePartner(id);
+            break;
+          case CMSManageType.leadership:
+            await service.deleteLeader(id);
+            break;
         }
         _refresh();
         if (mounted) {
@@ -209,6 +244,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
 
   void _refresh() {
     ref.invalidate(heroSlidesProvider);
+    ref.invalidate(onboardingSlidesProvider);
     ref.invalidate(partnersProvider);
     ref.invalidate(leadershipProvider);
   }
@@ -616,7 +652,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       // Clean data based on type to match backend DTOs exactly
       final Map<String, dynamic> cleanData = {};
       
-      if (widget.type == CMSManageType.hero) {
+      if (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding) {
         cleanData['title'] = _ensureMultilingual(_data['title']);
         cleanData['subtitle'] = _ensureMultilingual(_data['subtitle']);
         cleanData['imageUrl'] = _data['imageUrl'] ?? '';
@@ -627,6 +663,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         cleanData['buttonLink'] = _data['buttonLink'] ?? '';
         cleanData['order'] = _data['order'] ?? 0;
         cleanData['isActive'] = _data['isActive'] ?? true;
+        cleanData['location'] = widget.type == CMSManageType.onboarding ? 'ONBOARDING' : 'HOME';
         
         id == null ? await service.createHeroSlide(cleanData) : await service.updateHeroSlide(id, cleanData);
       } else if (widget.type == CMSManageType.partner) {
@@ -651,6 +688,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
 
       // Invalidate relevant providers to force refresh across the app
       if (widget.type == CMSManageType.hero) ref.invalidate(heroSlidesProvider);
+      if (widget.type == CMSManageType.onboarding) ref.invalidate(onboardingSlidesProvider);
       if (widget.type == CMSManageType.partner) ref.invalidate(partnersProvider);
       if (widget.type == CMSManageType.leadership) ref.invalidate(leadershipProvider);
 
@@ -724,7 +762,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.type == CMSManageType.hero) ..._heroFields(),
+                    if (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding) ..._heroFields(),
                     if (widget.type == CMSManageType.partner) ..._partnerFields(),
                     if (widget.type == CMSManageType.leadership) ..._leaderFields(),
                     const SizedBox(height: 24),
@@ -767,6 +805,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       case CMSManageType.hero: return 'شريحة الصفحة الرئيسية';
       case CMSManageType.partner: return 'شريك مؤسسي';
       case CMSManageType.leadership: return 'عضو المكتب التنفيذي';
+      case CMSManageType.onboarding: return 'شريحة شاشة الترحيب';
     }
   }
 

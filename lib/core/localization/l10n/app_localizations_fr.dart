@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appName => 'Ebzim | إبزيم';
+  String get appName => 'Application EBZIM';
 
   @override
   String get welcome => 'Bienvenue';
@@ -56,10 +56,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get langFr => 'Français';
 
   @override
-  String get onboardingSkip => 'Passer au Patrimoine';
+  String get onboardingSkip => 'Passer';
 
   @override
-  String get onboardingNext => 'Commencer le Voyage';
+  String get onboardingNext => 'Suivant';
+
+  @override
+  String get onboardingBegin => 'Commencer l\'aventure';
+
+  @override
+  String get onboardingDone => 'Commencer';
 
   @override
   String get onb1Tag => 'Fondation du Patrimoine';
@@ -206,7 +212,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get regMembershipNote =>
-      'إنشاء حساب في المنصة لا يعني اكتساب العضوية الرسمية في الجمعية.';
+      'La création d\'un compte ne confère pas l\'adhésion officielle à l\'association.';
 
   @override
   String get regFullName => 'Nom complet';
@@ -639,10 +645,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dashMemberLevelMember => 'Membre officiel de l\'Association';
 
   @override
-  String get dashMemberLevelAdmin => 'مسؤول النظام (Admin)';
+  String get dashMemberLevelAdmin => 'Administrateur (Admin)';
 
   @override
-  String get dashMemberLevelSuperAdmin => 'المشرف العام (Super Admin)';
+  String get dashMemberLevelSuperAdmin => 'Super Administrateur (Super Admin)';
 
   @override
   String get dashAccountStatus => 'Statut du compte';

@@ -43,6 +43,10 @@ export class CreateHeroSlideDto {
   @IsNumber()
   @IsOptional()
   overlayOpacity?: number;
+
+  @IsString()
+  @IsOptional()
+  location?: string;
 }
 
 export class UpdateHeroSlideDto extends CreateHeroSlideDto {}

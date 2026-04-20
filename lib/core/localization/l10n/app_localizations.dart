@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In ar, this message translates to:
-  /// **'إبزيم | Ebzim'**
+  /// **'تطبيق إبزيم'**
   String get appName;
 
   /// No description provided for @welcome.
@@ -199,8 +199,20 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingNext.
   ///
   /// In ar, this message translates to:
-  /// **'ابدأ الرحلة'**
+  /// **'التالي'**
   String get onboardingNext;
+
+  /// No description provided for @onboardingBegin.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ الرحلة'**
+  String get onboardingBegin;
+
+  /// No description provided for @onboardingDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ الآن'**
+  String get onboardingDone;
 
   /// No description provided for @onb1Tag.
   ///

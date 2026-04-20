@@ -18,8 +18,10 @@
     "langEn": "English",
     "langFr": "Français",
 
-    "onboardingSkip": "Passer au Patrimoine",
-    "onboardingNext": "Commencer le Voyage",
+    "onboardingSkip": "Passer",
+    "onboardingNext": "Suivant",
+    "onboardingBegin": "Commencer l'aventure",
+    "onboardingDone": "Commencer",
     "onb1Tag": "Fondation du Patrimoine",
     "onb1Title1": "Un Héritage de",
     "onb1TitleHighlight": "Culture",
@@ -79,6 +81,7 @@
     "regAlreadyHaveAccount": "Vous avez déjà un compte ?",
     "regLogin": "Connexion",
     "regMembership": "Commencer l'adhésion",
+    "regMembershipNote": "La création d'un compte ne confère pas l'adhésion officielle à l'association.",
 
     "valRequired": "Ce champ est obligatoire",
     "valEmail": "Veuillez entrer un email valide",
@@ -208,6 +211,8 @@
     "dashPendingDesc": "Votre demande d'adhésion est actuellement examinée par le bureau exécutif. Nous vous informerons dès que le statut sera mis à jour.",
     "dashMemberLevelPublic": "Compte utilisateur (Plateforme EBZIM)",
     "dashMemberLevelMember": "Membre officiel de l'Association",
+    "dashMemberLevelAdmin": "Administrateur (Admin)",
+    "dashMemberLevelSuperAdmin": "Super Administrateur (Super Admin)",
     "dashAccountStatus": "Statut du compte",
     "dashAccountActive": "Compte actif",
     "dashAccountNote": "Note : La création d'un compte sur la plateforme n'ouvre pas droit à l'adhésion officielle à l'association.",
@@ -258,7 +263,6 @@
     "supportPhoneLabel": "Équipe de Support",
     "supportHqValue": "Sétif, Algérie",
 
-    "appName": "Ebzim | إبزيم",
     "search": "RECHERCHER",
     "viewAll": "VOIR TOUT",
     "culturalCurator": "LE CONSERVATEUR CULTUREL",

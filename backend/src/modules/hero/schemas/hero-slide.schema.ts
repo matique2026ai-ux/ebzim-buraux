@@ -36,6 +36,9 @@ export class HeroSlide {
   @Prop({ type: Number, default: 0 })
   order: number;
 
+  @Prop({ type: String, enum: ['HOME', 'ONBOARDING'], default: 'HOME' })
+  location: string;
+
   @Prop({ type: Boolean, default: true })
   isActive: boolean;
 }

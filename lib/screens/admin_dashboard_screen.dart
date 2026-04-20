@@ -805,6 +805,7 @@ class _UserCard extends ConsumerWidget {
                     .toUpperCase() ??
                 'ADMIN';
             final isSuper = currentUserRole == 'SUPER_ADMIN';
+            final isTargetSuper = user.membershipLevel.toUpperCase() == 'SUPER_ADMIN';
 
             return [
               if (isSuper)
@@ -822,26 +823,27 @@ class _UserCard extends ConsumerWidget {
                     ],
                   ),
                 ),
-              PopupMenuItem(
-                value: 'ban',
-                child: Row(
-                  children: [
-                    Icon(
-                      isBanned
-                          ? Icons.check_circle_outline
-                          : Icons.block_flipped,
-                      size: 18,
-                      color: isBanned ? Colors.green : Colors.orange,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      isBanned ? 'تفعيل الحساب' : 'حظر الحساب',
-                      style: GoogleFonts.tajawal(),
-                    ),
-                  ],
+              if (!isTargetSuper)
+                PopupMenuItem(
+                  value: 'ban',
+                  child: Row(
+                    children: [
+                      Icon(
+                        isBanned
+                            ? Icons.check_circle_outline
+                            : Icons.block_flipped,
+                        size: 18,
+                        color: isBanned ? Colors.green : Colors.orange,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        isBanned ? 'تفعيل الحساب' : 'حظر الحساب',
+                        style: GoogleFonts.tajawal(),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              if (isSuper)
+              if (isSuper && !isTargetSuper)
                 PopupMenuItem(
                   value: 'delete',
                   child: Row(
@@ -1703,6 +1705,7 @@ class _CMSTab extends ConsumerWidget {
         userAsync.value?.membershipLevel.toUpperCase() == 'SUPER_ADMIN';
 
     final slidesAsync = ref.watch(heroSlidesProvider);
+    final onboardingAsync = ref.watch(onboardingSlidesProvider);
     final partnersAsync = ref.watch(partnersProvider);
     final leadershipAsync = ref.watch(leadershipProvider);
 
@@ -1718,7 +1721,6 @@ class _CMSTab extends ConsumerWidget {
           ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
           const SizedBox(height: 24),
 
-          // Hero Management Card
           _CMSManagementCard(
             title: 'شريط الواجهة (Hero Carousel)',
             description: 'تغيير صور العرض والنصوص الترويجية في الصفحة الرئيسية',
@@ -1730,6 +1732,21 @@ class _CMSTab extends ConsumerWidget {
               error: (_, __) => '0',
             ),
             onTap: () => context.go('/admin/cms/hero'),
+          ),
+          const SizedBox(height: 16),
+
+          // Onboarding Management Card
+          _CMSManagementCard(
+            title: 'شاشة الترحيب (Onboarding)',
+            description: 'التحكم في الصور والنصوص التي تظهر للمستخدم الجديد',
+            icon: Icons.door_front_door_rounded,
+            color: const Color(0xFF8B5CF6),
+            count: onboardingAsync.when(
+              data: (d) => '${d.length} شرائح',
+              loading: () => '...',
+              error: (_, __) => '0',
+            ),
+            onTap: () => context.go('/admin/cms/onboarding'),
           ),
           const SizedBox(height: 16),
 

@@ -19,7 +19,9 @@
     "langFr": "Français",
 
     "onboardingSkip": "تخطي إلى التراث",
-    "onboardingNext": "ابدأ الرحلة",
+    "onboardingNext": "التالي",
+    "onboardingBegin": "ابدأ الرحلة",
+    "onboardingDone": "ابدأ الآن",
     "onb1Tag": "مؤسسة التراث",
     "onb1Title1": "إرث من",
     "onb1TitleHighlight": "الثقافة",
@@ -261,7 +263,6 @@
     "supportPhoneLabel": "التواصل الهاتفي",
     "supportHqValue": "ولاية سطيف، الجزائر",
 
-    "appName": "إبزيم | Ebzim",
     "search": "بحث",
     "viewAll": "عرض الكل",
     "culturalCurator": "قَيِّم ثقافي",

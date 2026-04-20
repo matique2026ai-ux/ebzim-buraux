@@ -13,8 +13,11 @@ export class HeroService {
     @InjectModel('HeroSlide') private slideModel: Model<HeroSlideDocument>,
   ) {}
 
-  async findAll() {
-    return this.slideModel.find({ isActive: true }).sort({ order: 1 }).exec();
+  async findAll(location: string = 'HOME') {
+    return this.slideModel
+      .find({ isActive: true, location })
+      .sort({ order: 1 })
+      .exec();
   }
 
   async getAdminTable() {

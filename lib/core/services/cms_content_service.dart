@@ -9,9 +9,12 @@ class CMSContentService {
   CMSContentService(this._ref);
 
   /// ── HERO SLIDES ──────────────────────────────────────────────────────────
-  Future<List<HeroSlide>> getHeroSlides() async {
+  Future<List<HeroSlide>> getHeroSlides({String location = 'HOME'}) async {
     try {
-      final response = await _ref.read(apiClientProvider).dio.get('hero-slides');
+      final response = await _ref.read(apiClientProvider).dio.get(
+        'hero-slides',
+        queryParameters: {'location': location},
+      );
       final List data = response.data is List ? response.data : (response.data['data'] ?? []);
       return data.map((e) => HeroSlide.fromJson(Map<String, dynamic>.from(e))).toList();
     } catch (e) {
@@ -58,7 +61,13 @@ class CMSContentService {
 final cmsContentServiceProvider = Provider((ref) => CMSContentService(ref));
 
 final heroSlidesProvider = FutureProvider<List<HeroSlide>>((ref) {
-  return ref.watch(cmsContentServiceProvider).getHeroSlides();
+  return ref.watch(cmsContentServiceProvider).getHeroSlides(location: 'HOME');
+});
+
+final onboardingSlidesProvider = FutureProvider<List<HeroSlide>>((ref) {
+  return ref
+      .watch(cmsContentServiceProvider)
+      .getHeroSlides(location: 'ONBOARDING');
 });
 
 final partnersProvider = FutureProvider<List<Partner>>((ref) {

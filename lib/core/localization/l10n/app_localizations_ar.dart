@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'إبزيم | Ebzim';
+  String get appName => 'تطبيق إبزيم';
 
   @override
   String get welcome => 'أهلاً بك';
@@ -58,7 +58,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onboardingSkip => 'تخطي إلى التراث';
 
   @override
-  String get onboardingNext => 'ابدأ الرحلة';
+  String get onboardingNext => 'التالي';
+
+  @override
+  String get onboardingBegin => 'ابدأ الرحلة';
+
+  @override
+  String get onboardingDone => 'ابدأ الآن';
 
   @override
   String get onb1Tag => 'مؤسسة التراث';

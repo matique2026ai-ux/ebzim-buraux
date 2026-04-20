@@ -13,6 +13,7 @@ class HeroSlide {
   final String? buttonText;
   final String? buttonLink;
   final int order;
+  final String location;
   final bool isActive;
 
   HeroSlide({
@@ -30,6 +31,7 @@ class HeroSlide {
     this.buttonText,
     this.buttonLink,
     this.order = 0,
+    this.location = 'HOME',
     this.isActive = true,
   });
 
@@ -51,6 +53,7 @@ class HeroSlide {
       buttonText: json['buttonText']?.toString(),
       buttonLink: json['buttonLink']?.toString(),
       order: json['order'] is int ? json['order'] : 0,
+      location: json['location']?.toString() ?? 'HOME',
       isActive: json['isActive'] ?? true,
     );
   }

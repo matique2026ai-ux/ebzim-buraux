@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
+import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
@@ -16,6 +17,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:video_player/video_player.dart';
+import 'package:ebzim_app/core/services/web_helper.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -1042,6 +1044,12 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
     final theme = Theme.of(context);
     final hasContent = slide.getTitle(widget.lang).trim().isNotEmpty || slide.getSubtitle(widget.lang).trim().isNotEmpty;
     
+    // Check membership status to conditionally show 'Join Now'
+    final userState = ref.watch(currentUserProvider);
+    final user = userState.value;
+    final role = user?.membershipLevel ?? 'PUBLIC';
+    final isMember = role == 'MEMBER' || role == 'ADMIN' || role == 'SUPER_ADMIN';
+
     // Robust color parsing for the masterpiece glass
     Color glassBaseColor = Colors.black.withOpacity(0.1);
     if (slide.glassColor != null && slide.glassColor!.isNotEmpty) {
@@ -1135,27 +1143,52 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
                     ],
 
                     // Mind-blowing Buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _HeroButton(
-                            label: widget.lang == 'ar' ? 'طلب عضوية' : 'Join Now',
-                            isPrimary: true,
-                            icon: Icons.auto_awesome_rounded,
-                            onTap: () => context.push('/membership/apply'),
-                          ).animate(key: ValueKey('btn1_${slide.id}')).scale(delay: 400.ms, duration: 600.ms, curve: Curves.elasticOut),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _HeroButton(
-                            label: widget.lang == 'ar' ? 'تصفح النشاطات' : 'Explore',
-                            isPrimary: false,
-                            icon: Icons.rocket_launch_rounded,
-                            onTap: () => context.go('/activities'),
-                          ).animate(key: ValueKey('btn2_${slide.id}')).scale(delay: 500.ms, duration: 600.ms, curve: Curves.elasticOut),
-                        ),
-                      ],
-                    ),
+                    if (slide.buttonText != null && slide.buttonText!.isNotEmpty) ...[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _HeroButton(
+                              label: slide.buttonText!,
+                              isPrimary: true,
+                              icon: Icons.auto_awesome_rounded,
+                              onTap: () {
+                                if (slide.buttonLink != null && slide.buttonLink!.isNotEmpty) {
+                                  if (slide.buttonLink!.startsWith('http')) {
+                                    WebHelper.launchURL(slide.buttonLink!);
+                                  } else {
+                                    context.push(slide.buttonLink!);
+                                  }
+                                }
+                              },
+                            ).animate(key: ValueKey('btn1_${slide.id}')).scale(delay: 400.ms, duration: 600.ms, curve: Curves.elasticOut),
+                          ),
+                        ],
+                      ),
+                    ] else ...[
+                      Row(
+                        children: [
+                          if (!isMember) ...[
+                            Expanded(
+                              child: _HeroButton(
+                                label: widget.lang == 'ar' ? 'طلب عضوية' : 'Join Now',
+                                isPrimary: true,
+                                icon: Icons.auto_awesome_rounded,
+                                onTap: () => context.push('/membership/apply'),
+                              ).animate(key: ValueKey('btn1_${slide.id}')).scale(delay: 400.ms, duration: 600.ms, curve: Curves.elasticOut),
+                            ),
+                            const SizedBox(width: 16),
+                          ],
+                          Expanded(
+                            child: _HeroButton(
+                              label: widget.lang == 'ar' ? 'تصفح النشاطات' : 'Explore',
+                              isPrimary: isMember ? true : false,
+                              icon: Icons.rocket_launch_rounded,
+                              onTap: () => context.go('/activities'),
+                            ).animate(key: ValueKey('btn2_${slide.id}')).scale(delay: 500.ms, duration: 600.ms, curve: Curves.elasticOut),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ],

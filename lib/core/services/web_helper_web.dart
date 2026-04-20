@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 void triggerWebDownload(String content, String filename) {
   // Add UTF-8 BOM to ensure Excel opens Arabic characters correctly
@@ -32,4 +33,13 @@ void triggerWebDownloadBytes(Uint8List bytes, String filename) {
   Future.delayed(const Duration(milliseconds: 1000), () {
     html.Url.revokeObjectUrl(url);
   });
+}
+
+class WebHelper {
+  static Future<void> launchURL(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
 }

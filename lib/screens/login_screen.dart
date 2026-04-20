@@ -209,25 +209,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 const SizedBox(height: 32),
 
-                _buildInputField(
-                  controller: _emailController,
-                  label: loc.authIdentity,
-                  hint: loc.authIdentityHint,
-                  icon: Icons.alternate_email_rounded,
-                  validator: (val) => val!.isEmpty ? loc.valRequired : null,
-                ),
+                AutofillGroup(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildInputField(
+                        controller: _emailController,
+                        label: loc.authIdentity,
+                        hint: loc.authIdentityHint,
+                        icon: Icons.alternate_email_rounded,
+                        autofillHints: const [AutofillHints.email, AutofillHints.username],
+                        validator: (val) => val!.isEmpty ? loc.valRequired : null,
+                      ),
+                      
+                      const SizedBox(height: 20),
                 
-                const SizedBox(height: 20),
-
-                _buildInputField(
-                  controller: _passwordController,
-                  label: loc.authSecret,
-                  hint: '••••••••',
-                  icon: Icons.lock_open_rounded,
-                  isPassword: true,
-                  isPasswordVisible: _isPasswordVisible,
-                  onTogglePassword: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
-                  validator: (val) => val!.isEmpty ? loc.valRequired : null,
+                      _buildInputField(
+                        controller: _passwordController,
+                        label: loc.authSecret,
+                        hint: '••••••••',
+                        icon: Icons.lock_open_rounded,
+                        isPassword: true,
+                        isPasswordVisible: _isPasswordVisible,
+                        autofillHints: const [AutofillHints.password],
+                        onTogglePassword: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                        validator: (val) => val!.isEmpty ? loc.valRequired : null,
+                      ),
+                    ],
+                  ),
                 ),
                 
                 Align(
@@ -262,6 +271,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     required IconData icon,
     bool isPassword = false,
     bool isPasswordVisible = false,
+    Iterable<String>? autofillHints,
     VoidCallback? onTogglePassword,
     String? Function(String?)? validator,
   }) {
@@ -284,6 +294,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             obscureText: isPassword && !isPasswordVisible,
             style: const TextStyle(color: Colors.white, fontSize: 16),
             validator: validator,
+            autofillHints: autofillHints,
+            keyboardType: isPassword ? TextInputType.visiblePassword : TextInputType.emailAddress,
+            onFieldSubmitted: (_) => _submit(),
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.2), fontSize: 14),

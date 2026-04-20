@@ -1038,26 +1038,62 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
 
   void _showCustomColorDialog(String key) {
     final ctrl = TextEditingController(text: _data[key]);
+    final hexRegex = RegExp(r'^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$');
+    
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('لون مخصص (Hex)', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
-        content: TextField(
-          controller: ctrl,
-          decoration: const InputDecoration(hintText: '#RRGGBB'),
-          autofocus: true,
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('إلغاء', style: GoogleFonts.tajawal())),
-          ElevatedButton(
-            onPressed: () {
-              setState(() => _data[key] = ctrl.text.trim());
-              Navigator.pop(ctx);
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor),
-            child: Text('تطبيق', style: GoogleFonts.tajawal(color: Colors.white)),
-          ),
-        ],
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          final currentInput = ctrl.text.trim();
+          final isValid = hexRegex.hasMatch(currentInput);
+          
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Text('لون مخصص (Hex)', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: ctrl,
+                  decoration: InputDecoration(
+                    hintText: '#RRGGBB',
+                    errorText: currentInput.isNotEmpty && !isValid ? 'تنسيق اللون غير صحيح' : null,
+                    prefixIcon: const Icon(Icons.tag, size: 16),
+                  ),
+                  onChanged: (_) => setDialogState(() {}),
+                  autofocus: true,
+                ),
+                if (isValid) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    height: 40,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: _hexToColor(currentInput.startsWith('#') ? currentInput : '#$currentInput'),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: Text('إلغاء', style: GoogleFonts.tajawal())),
+              ElevatedButton(
+                onPressed: isValid ? () {
+                  final finalHex = ctrl.text.trim();
+                  setState(() => _data[key] = finalHex.startsWith('#') ? finalHex : '#$finalHex');
+                  Navigator.pop(ctx);
+                } : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryColor,
+                  disabledBackgroundColor: Colors.grey.shade300,
+                ),
+                child: Text('تطبيق', style: GoogleFonts.tajawal(color: Colors.white)),
+              ),
+            ],
+          );
+        }
       ),
     );
   }

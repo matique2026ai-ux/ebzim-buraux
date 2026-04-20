@@ -906,23 +906,27 @@ class _NewsTab extends ConsumerWidget {
             ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
             const SizedBox(height: 20),
             newsAsync.when(
-              data: (posts) => Row(
-                children: [
-                  _StatCard(
-                    label: 'إجمالي المقالات',
-                    value: '${posts.length}',
-                    icon: Icons.article_outlined,
-                    gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
-                  ),
-                  const SizedBox(width: 12),
-                  _StatCard(
-                    label: 'مقالات مثبتة',
-                    value: posts.where((p) => p.isPinned).length.toString(),
-                    icon: Icons.push_pin_rounded,
-                    gradient: const LinearGradient(colors: [AppTheme.heritageOrange, Color(0xFFD35400)]),
-                  ),
-                ],
-              ).animate().fadeIn(delay: 200.ms),
+              data: (allPosts) {
+                const newsCategories = {'ANNOUNCEMENT', 'PARTNERSHIP', 'EVENT_REPORT'};
+                final posts = allPosts.where((p) => newsCategories.contains(p.category?.toUpperCase() ?? '') || p.category == null).toList();
+                return Row(
+                  children: [
+                    _StatCard(
+                      label: 'إجمالي المقالات',
+                      value: '${posts.length}',
+                      icon: Icons.article_outlined,
+                      gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1A6B3A)]),
+                    ),
+                    const SizedBox(width: 12),
+                    _StatCard(
+                      label: 'مقالات مثبتة',
+                      value: posts.where((p) => p.isPinned).length.toString(),
+                      icon: Icons.push_pin_rounded,
+                      gradient: const LinearGradient(colors: [AppTheme.heritageOrange, Color(0xFFD35400)]),
+                    ),
+                  ],
+                ).animate().fadeIn(delay: 200.ms);
+              },
               loading: () => const _LoadingShimmer(),
               error: (_, __) => const SizedBox(),
             ),
@@ -957,7 +961,8 @@ class _NewsTab extends ConsumerWidget {
             const SizedBox(height: 16),
             newsAsync.when(
               data: (posts) {
-                final newsPosts = posts.where((p) => p.category?.toUpperCase() == 'ANNOUNCEMENT' || p.category == null).toList();
+                const newsCategories = {'ANNOUNCEMENT', 'PARTNERSHIP', 'EVENT_REPORT'};
+                final newsPosts = posts.where((p) => newsCategories.contains(p.category?.toUpperCase() ?? '') || p.category == null).toList();
                 if (newsPosts.isEmpty) {
                   return const _EmptyState(message: 'لا توجد أخبار حالياً — انشر أول خبر!', icon: Icons.newspaper_rounded);
                 }
@@ -1090,21 +1095,29 @@ class _FinancialsTab extends ConsumerWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: items.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, i) => _ContributionCard(
-                    amount: '${items[i]['amount']} DZD',
-                    type: items[i]['type']?.toString() ?? '',
-                    status: items[i]['status']?.toString() ?? 'PENDING',
-                    onApprove: () async {
-                      await finService.reviewContribution(items[i]['_id'], 'VERIFIED');
-                      ref.invalidate(adminContributionsProvider);
-                      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم التحقق من المساهمة'));
-                    },
-                    onReject: () async {
-                      await finService.reviewContribution(items[i]['_id'], 'REJECTED');
-                      ref.invalidate(adminContributionsProvider);
-                      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('❌ تم رفض المساهمة'));
-                    },
-                  ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05),
+                  itemBuilder: (context, i) {
+                    final item = items[i];
+                    final user = item['user'] is Map ? item['user'] : {};
+                    final project = item['project'] is Map ? item['project'] : {};
+                    
+                    return _ContributionCard(
+                      amount: '${item['amount']} DZD',
+                      type: item['type']?.toString() ?? '',
+                      status: item['status']?.toString() ?? 'PENDING',
+                      userName: user['name'] ?? user['email'] ?? 'مستخدم غير معروف',
+                      projectName: project['title']?['ar'] ?? project['title']?['fr'] ?? '',
+                      onApprove: () async {
+                        await finService.reviewContribution(item['_id'], 'VERIFIED');
+                        ref.invalidate(adminContributionsProvider);
+                        if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_successSnack('✅ تم التحقق من المساهمة'));
+                      },
+                      onReject: () async {
+                        await finService.reviewContribution(item['_id'], 'REJECTED');
+                        ref.invalidate(adminContributionsProvider);
+                        if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(_errorSnack('❌ تم رفض المساهمة'));
+                      },
+                    ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05);
+                  },
                 );
               },
               loading: () => const _LoadingShimmer(),
@@ -2451,10 +2464,27 @@ class _ActionButton extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // CONTRIBUTION CARD
 // ─────────────────────────────────────────────────────────────────────────────
-class _ContributionCard extends StatelessWidget {
-  final String amount, type, status;
+ class _ContributionCard extends StatelessWidget {
+  final String amount, type, status, userName, projectName;
   final VoidCallback onApprove, onReject;
-  const _ContributionCard({required this.amount, required this.type, required this.status, required this.onApprove, required this.onReject});
+  const _ContributionCard({
+    required this.amount,
+    required this.type,
+    required this.status,
+    required this.userName,
+    this.projectName = '',
+    required this.onApprove,
+    required this.onReject,
+  });
+
+  String _getLocalizedType(String t) {
+    switch (t.toUpperCase()) {
+      case 'ANNUAL_MEMBERSHIP': return 'اشتراك سنوي';
+      case 'GENERAL_DONATION': return 'تبرع عام';
+      case 'PROJECT_SUPPORT': return 'دعم مشروع';
+      default: return t;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -2483,7 +2513,15 @@ class _ContributionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(amount, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 16, color: const Color(0xFF6D28D9))),
-                    Text(type, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade500)),
+                    Text(
+                      '${_getLocalizedType(type)} - $userName',
+                      style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade600),
+                    ),
+                    if (projectName.isNotEmpty)
+                      Text(
+                        'المشروع: $projectName',
+                        style: GoogleFonts.tajawal(fontSize: 10, color: const Color(0xFF1A6B3A), fontWeight: FontWeight.bold),
+                      ),
                   ],
                 ),
               ),
@@ -3069,7 +3107,7 @@ class _ProjectsTab extends ConsumerWidget {
                       style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A2E)),
                     ),
                     GestureDetector(
-                      onTap: () => context.push('/admin/news/create', extra: {'initialCategory': 'RESTORATION'}),
+                      onTap: () => context.push('/admin/projects/create', extra: {'initialCategory': 'RESTORATION'}),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                         decoration: BoxDecoration(
@@ -3193,7 +3231,7 @@ class _AdminProjectCardState extends State<_AdminProjectCard> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.edit_note_rounded, color: Colors.blue),
-                    onPressed: () => context.push('/admin/news/create', extra: widget.post),
+                    onPressed: () => context.push('/admin/projects/create', extra: widget.post),
                   ),
                   IconButton(
                     icon: Icon(

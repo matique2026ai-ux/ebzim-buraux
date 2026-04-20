@@ -39,17 +39,28 @@ class UserProfile {
     final role = json['role'] ?? json['membershipLevel'] ?? 'PUBLIC';
     final badge = json['membershipBadge'] ?? json['badge'] ?? profile['badge'] ?? 'NONE';
     
+    final firstName = profile['firstName'] ?? '';
+    final lastName = profile['lastName'] ?? '';
+    final phone = profile['phone'] ?? '';
+    final avatar = profile['avatarUrl'] ?? profile['imageUrl'] ?? '';
+    
+    int completion = 0;
+    if (firstName.toString().isNotEmpty) completion += 25;
+    if (lastName.toString().isNotEmpty) completion += 25;
+    if (phone.toString().isNotEmpty) completion += 25;
+    if (avatar.toString().isNotEmpty) completion += 25;
+
     return UserProfile(
       id: json['id'] ?? json['_id'] ?? '',
-      name: '${profile['firstName'] ?? ''} ${profile['lastName'] ?? ''}'.trim(),
-      nameAr: profile['firstNameAr'] ?? profile['firstName'] ?? '',
+      name: '$firstName $lastName'.trim(),
+      nameAr: profile['firstNameAr'] ?? firstName,
       email: json['email'] ?? '',
-      phone: profile['phone'] ?? '',
-      imageUrl: profile['avatarUrl'] ?? '',
+      phone: phone,
+      imageUrl: avatar,
       membershipLevel: role,
       membershipStatus: json['status'] ?? 'ACTIVE',
       membershipExpiry: json['expiryDate'] != null ? DateTime.parse(json['expiryDate']) : null,
-      profileCompletionPercentage: 40,
+      profileCompletionPercentage: completion,
       membershipBadge: badge,
       status: json['status'] ?? 'ACTIVE',
     );

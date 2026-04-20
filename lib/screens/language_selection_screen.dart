@@ -175,11 +175,11 @@ class LanguageSelectionScreen extends ConsumerWidget {
                         const SizedBox(height: 48),
 
                         // Sleek Language Cards
-                        _buildLanguageCard(context, currentLocale == 'ar', () => ref.read(localeProvider.notifier).state = const Locale('ar'), loc.langAr, isRtl ? 'الشرق الأوسط وشمال أفريقيا' : 'ARABIC', Icons.auto_awesome, AppTheme.primaryColor),
+                        _buildLanguageCard(context, currentLocale == 'ar', () => ref.read(localeProvider.notifier).setLocale(const Locale('ar')), loc.langAr, isRtl ? 'الشرق الأوسط وشمال أفريقيا' : 'ARABIC', Icons.auto_awesome, AppTheme.primaryColor),
                         const SizedBox(height: 16),
-                        _buildLanguageCard(context, currentLocale == 'en', () => ref.read(localeProvider.notifier).state = const Locale('en'), loc.langEn, isRtl ? 'المملكة المتحدة / الولايات المتحدة' : 'UNITED KINGDOM / US', Icons.public, AppTheme.primaryColor),
+                        _buildLanguageCard(context, currentLocale == 'en', () => ref.read(localeProvider.notifier).setLocale(const Locale('en')), loc.langEn, isRtl ? 'المملكة المتحدة / الولايات المتحدة' : 'UNITED KINGDOM / US', Icons.public, AppTheme.primaryColor),
                         const SizedBox(height: 16),
-                        _buildLanguageCard(context, currentLocale == 'fr', () => ref.read(localeProvider.notifier).state = const Locale('fr'), loc.langFr, isRtl ? 'فرنسا / المغرب العربي' : 'FRANCE / MAGHREB', Icons.stars, AppTheme.primaryColor),
+                        _buildLanguageCard(context, currentLocale == 'fr', () => ref.read(localeProvider.notifier).setLocale(const Locale('fr')), loc.langFr, isRtl ? 'فرنسا / المغرب العربي' : 'FRANCE / MAGHREB', Icons.stars, AppTheme.primaryColor),
 
                         const SizedBox(height: 64),
                         // Continue CTA

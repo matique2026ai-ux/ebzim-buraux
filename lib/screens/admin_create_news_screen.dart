@@ -416,6 +416,24 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _CategoryChip(
+                          label: 'شراكة',
+                          icon: Icons.handshake_rounded,
+                          isSelected: _category == 'PARTNERSHIP',
+                          onTap: () => setState(() => _category = 'PARTNERSHIP'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'تقرير نشاط',
+                          icon: Icons.assignment_rounded,
+                          isSelected: _category == 'EVENT_REPORT',
+                          onTap: () => setState(() => _category = 'EVENT_REPORT'),
+                        ),
+                      ],
+                    ),
                     
                     const SizedBox(height: 32),
                     _buildLabel(_category != 'ANNOUNCEMENT' ? 'حالة المشروع' : 'نوع الخبر'),

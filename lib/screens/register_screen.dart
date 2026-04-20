@@ -188,63 +188,73 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               key: _formKey,
                               child: Column(
                                 children: [
-                                  // 1. Full Name
-                                  _buildCustomField(
-                                    controller: _nameController,
-                                    label: loc.regFullName.toUpperCase(),
-                                    hint: loc.regFullNameHint, // "عكرور توفيق"
-                                    icon: Icons.person_outline,
-                                    textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                                    validator: (val) => val!.trim().isEmpty ? loc.valRequired : null,
-                                  ).animate().fadeIn(delay: 600.ms).slideX(begin: isRtl ? 0.1 : -0.1),
-                                  const SizedBox(height: 24),
+                                  AutofillGroup(
+                                    child: Column(
+                                      children: [
+                                        // 1. Full Name
+                                        _buildCustomField(
+                                          controller: _nameController,
+                                          label: loc.regFullName.toUpperCase(),
+                                          hint: loc.regFullNameHint, // "عكرور توفيق"
+                                          icon: Icons.person_outline,
+                                          autofillHints: const [AutofillHints.name],
+                                          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                                          validator: (val) => val!.trim().isEmpty ? loc.valRequired : null,
+                                        ).animate().fadeIn(delay: 600.ms).slideX(begin: isRtl ? 0.1 : -0.1),
+                                        const SizedBox(height: 24),
+                                        
+                                        // 2. Email Address
+                                        _buildCustomField(
+                                          controller: _emailController,
+                                          label: loc.regEmail.toUpperCase(),
+                                          hint: 'name@example.com',
+                                          icon: Icons.alternate_email,
+                                          autofillHints: const [AutofillHints.email, AutofillHints.newUsername],
+                                          keyboardType: TextInputType.emailAddress,
+                                          textDirection: TextDirection.ltr,
+                                          validator: (val) {
+                                            if (val!.trim().isEmpty) return loc.valRequired;
+                                            if (!val.contains('@')) return loc.valEmail;
+                                            return null;
+                                          },
+                                        ).animate().fadeIn(delay: 700.ms).slideX(begin: isRtl ? 0.1 : -0.1),
+                                        const SizedBox(height: 24),
                                   
-                                  // 2. Email Address
-                                  _buildCustomField(
-                                    controller: _emailController,
-                                    label: loc.regEmail.toUpperCase(),
-                                    hint: 'name@example.com',
-                                    icon: Icons.alternate_email,
-                                    keyboardType: TextInputType.emailAddress,
-                                    textDirection: TextDirection.ltr,
-                                    validator: (val) {
-                                      if (val!.trim().isEmpty) return loc.valRequired;
-                                      if (!val.contains('@')) return loc.valEmail;
-                                      return null;
-                                    },
-                                  ).animate().fadeIn(delay: 700.ms).slideX(begin: isRtl ? 0.1 : -0.1),
-                                  const SizedBox(height: 24),
-
-                                  // 3. Password
-                                  _buildCustomField(
-                                    controller: _passwordController,
-                                    label: loc.regPassword.toUpperCase(),
-                                    hint: '••••••••',
-                                    icon: Icons.lock_outline,
-                                    obscureText: _isPasswordObscured,
-                                    textDirection: TextDirection.ltr,
-                                    onToggleObscure: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
-                                    validator: (val) {
-                                      if (val == null || val.length < 8) return loc.valPassword;
-                                      return null;
-                                    },
-                                  ).animate().fadeIn(delay: 800.ms).slideX(begin: isRtl ? 0.1 : -0.1),
-                                  const SizedBox(height: 24),
-
-                                  // 4. Confirm Password
-                                  _buildCustomField(
-                                    controller: _confirmController,
-                                    label: loc.regConfirm.toUpperCase(),
-                                    hint: '••••••••',
-                                    icon: Icons.verified_user_outlined,
-                                    obscureText: _isConfirmObscured,
-                                    textDirection: TextDirection.ltr,
-                                    onToggleObscure: () => setState(() => _isConfirmObscured = !_isConfirmObscured),
-                                    validator: (val) {
-                                      if (val != _passwordController.text) return loc.valConfirm;
-                                      return null;
-                                    },
-                                  ).animate().fadeIn(delay: 900.ms).slideX(begin: isRtl ? 0.1 : -0.1),
+                                        // 3. Password
+                                        _buildCustomField(
+                                          controller: _passwordController,
+                                          label: loc.regPassword.toUpperCase(),
+                                          hint: '••••••••',
+                                          icon: Icons.lock_outline,
+                                          obscureText: _isPasswordObscured,
+                                          autofillHints: const [AutofillHints.newPassword],
+                                          textDirection: TextDirection.ltr,
+                                          onToggleObscure: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
+                                          validator: (val) {
+                                            if (val == null || val.length < 8) return loc.valPassword;
+                                            return null;
+                                          },
+                                        ).animate().fadeIn(delay: 800.ms).slideX(begin: isRtl ? 0.1 : -0.1),
+                                        const SizedBox(height: 24),
+                                  
+                                        // 4. Confirm Password
+                                        _buildCustomField(
+                                          controller: _confirmController,
+                                          label: loc.regConfirm.toUpperCase(),
+                                          hint: '••••••••',
+                                          icon: Icons.verified_user_outlined,
+                                          obscureText: _isConfirmObscured,
+                                          autofillHints: const [AutofillHints.password],
+                                          textDirection: TextDirection.ltr,
+                                          onToggleObscure: () => setState(() => _isConfirmObscured = !_isConfirmObscured),
+                                          validator: (val) {
+                                            if (val != _passwordController.text) return loc.valConfirm;
+                                            return null;
+                                          },
+                                        ).animate().fadeIn(delay: 900.ms).slideX(begin: isRtl ? 0.1 : -0.1),
+                                      ],
+                                    ),
+                                  ),
                                   
                                   const SizedBox(height: 32),
                                   
@@ -359,6 +369,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     TextInputType? keyboardType,
     TextDirection? textDirection,
     VoidCallback? onToggleObscure,
+    Iterable<String>? autofillHints,
     String? Function(String?)? validator,
     List<TextInputFormatter>? inputFormatters,
   }) {
@@ -382,6 +393,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           obscureText: obscureText,
           keyboardType: keyboardType,
           textDirection: textDirection,
+          autofillHints: autofillHints,
           style: GoogleFonts.cairo(color: theme.colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600),
           validator: validator,
           inputFormatters: inputFormatters,

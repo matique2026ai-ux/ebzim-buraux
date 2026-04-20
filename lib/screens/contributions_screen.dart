@@ -12,6 +12,7 @@ import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:ebzim_app/core/common_widgets/login_required_overlay.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
+import 'package:ebzim_app/core/services/news_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Contributions & Subscriptions Screen
@@ -32,6 +33,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
   bool _isLoadingFee = true;
   int _currentFee = 2000;
   bool _isSubmitting = false;
+  NewsPost? _selectedProject;
 
   @override
   void initState() {
@@ -163,7 +165,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                           label: isPublic ? loc.finApplyJoin : loc.finRenewNow,
                           onTap: () {
                             if (isPublic) {
-                              context.push('/membership');
+                              context.push('/membership/apply');
                             } else {
                               _handleSubmit('ANNUAL_MEMBERSHIP', _currentFee.toDouble());
                             }
@@ -253,7 +255,38 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                   
                   if (_selectedDonationType == DonationType.project) ...[
                     const SizedBox(height: 16),
-                    _ProjectSelector(isAr: isAr, isDark: isDark),
+                    ref.watch(heritageProjectsProvider).when(
+                      data: (projects) {
+                        if (projects.isEmpty) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              isAr ? 'لا توجد مشاريع نشطة حالياً' : 'No active projects available',
+                              style: GoogleFonts.tajawal(fontSize: 12, color: Colors.orange),
+                            ),
+                          );
+                        }
+                        return DropdownButtonFormField<NewsPost>(
+                          value: _selectedProject ?? (projects.isNotEmpty ? projects.first : null),
+                          decoration: InputDecoration(
+                            labelText: isAr ? 'اختر المشروع' : 'Select Project',
+                            prefixIcon: const Icon(Icons.architecture_rounded, color: AppTheme.accentColor),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                          ),
+                          items: projects.map((p) => DropdownMenuItem(
+                            value: p,
+                            child: Text(
+                              p.getTitle(isAr ? 'ar' : 'en'),
+                              style: GoogleFonts.tajawal(fontSize: 13),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )).toList(),
+                          onChanged: (val) => setState(() => _selectedProject = val),
+                        );
+                      },
+                      loading: () => const Center(child: CircularProgressIndicator()),
+                      error: (_, __) => const SizedBox(),
+                    ),
                   ],
 
                   const SizedBox(height: 24),
@@ -265,6 +298,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                         _handleSubmit(
                           _selectedDonationType == DonationType.general ? 'GENERAL_DONATION' : 'PROJECT_SUPPORT',
                           amount,
+                          projectId: _selectedDonationType == DonationType.project ? _selectedProject?.id : null,
                         );
                       }
                     },
@@ -302,7 +336,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                         const SizedBox(height: 16),
                         _PrimaryButton(
                           label: loc.finApplyJoin,
-                          onTap: () => context.push('/membership'),
+                          onTap: () => context.push('/membership/apply'),
                           isAr: isAr,
                         ),
                       ],
@@ -319,12 +353,13 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
     );
   }
 
-  void _handleSubmit(String type, double amount) async {
+  void _handleSubmit(String type, double amount, {String? projectId}) async {
     setState(() => _isSubmitting = true);
     try {
       await ref.read(financialServiceProvider).submitContribution(
         type: type,
         amount: amount,
+        projectId: projectId,
       );
       if (mounted) {
         _showSuccessDialog();
@@ -449,32 +484,4 @@ class _PrimaryButton extends StatelessWidget {
   }
 }
 
-class _ProjectSelector extends StatelessWidget {
-  final bool isAr;
-  final bool isDark;
-  const _ProjectSelector({required this.isAr, required this.isDark});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.accentColor.withOpacity(0.1)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.architecture_rounded, color: AppTheme.accentColor, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              isAr ? 'ترميم ثكنة الحامة (المشروع المفتوح)' : 'Restoration of El Hamma Barracks',
-              style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

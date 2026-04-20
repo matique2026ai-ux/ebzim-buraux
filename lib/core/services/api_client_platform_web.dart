@@ -1,14 +1,12 @@
 import 'package:dio/dio.dart';
-import 'dart:html' as html;
-
-/// Web-specific implementation of platform helpers for [ApiClient].
-bool get isPlatformTest => false;
 
 void configurePlatformProxy(Dio dio) {
-  // Browser handles proxies automatically.
+  // No-op for web platform as CORS is handled by the browser
 }
 
+bool get isPlatformTest => false;
+
 String getPlatformBaseUrl(bool isTest) {
-  // For local testing, we use the local backend
-  return 'http://localhost:3000/api/v1/';
+  // Use the production Render URL for live testing
+  return 'https://ebzim-api-prod.onrender.com/api/v1/';
 }

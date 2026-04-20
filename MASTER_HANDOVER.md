@@ -6,9 +6,9 @@ This is the **exclusive source of truth** for the Ebzim Digital Ecosystem. Any a
 
 ## 🏗️ 1. System Ecosystem & Environments
 - **Core Mission:** Official platform for the **Ebzim Association for Culture and Citizenship**.
-- **Frontend (Flutter Web):** Optimized for **Release Mode** (`--release`) on port 8080 to prevent DDC renderer hangs.
-- **Backend (NestJS):** Currently running locally on `http://localhost:3000/api/v1/`. Production is hosted on **Render**.
-- **Mobile Assets:** Final stable APKs (e.g., `ebzim-v4-final.apk`) are located in the project root for reference.
+- **Frontend (Flutter Web):** Optimized for **Release Mode** (`--release`) on port 8080 to prevent DDC renderer hangs and support browser features correctly.
+- **Backend (NestJS):** Production is hosted on **Render**. Local development uses `http://localhost:3000/api/v1/`.
+- **API Pointing:** Ensure `api_client_platform_web.dart` points to the correct environment (Production for live testing, Local for dev).
 
 ---
 
@@ -21,17 +21,19 @@ Maintain the "Institutional Prestige" using these strictly enforced design token
 
 ---
 
-## 🔐 3. Security, Auth & Guest Experience
+## 🔐 3. Security, Auth & User Experience
+- **Browser Autofill:** Login and Register screens are enhanced with `AutofillHints` and `AutofillGroup` to ensure browsers can save/fill credentials correctly.
 - **Guest Mode:** All screens support a graceful "Guest" state. If `currentUser` is null, use `LoginRequiredOverlay` or redirect to `/login`.
+- **Profile Readiness:** Dynamic calculation implemented in `UserProfile.fromJson`. Based on Name, Phone, and Avatar (25% each).
 - **Auth Guards:** Implemented in `AppRouter` and `AdminDashboardScreen`.
-- **Admin Privilege:** Super Admin level is required for Financials and System Settings.
 
 ---
 
 ## 📊 4. Data Management & Exports
 - **Real Excel (.xlsx):** Professional export is mandatory for institutional reports.
 - **Implementation:** Uses `excel` package with explicit cell-by-column mapping.
-- **Web Trigger:** Binary data is served via `triggerWebDownloadBytes` (Base64/Blob hybrid) to ensure filename integrity and `.xlsx` extension recognition.
+- **Web Trigger:** Binary data is served via `triggerWebDownloadBytes` through `WebHelper` to ensure filename integrity and `.xlsx` extension recognition.
+- **Dynamic Projects:** Contributions are now linked to dynamic projects fetched via `heritageProjectsProvider`.
 
 ---
 
@@ -44,17 +46,19 @@ To maintain stability and cross-compiler compatibility:
 
 ---
 
-## 📅 6. Status as of April 19, 2026
-- **Stability:** 100% Stable. All DDC compiler and name conflict errors resolved.
-- **Home UI:** Fully overhauled (Stats, Projects, News, About).
-- **Admin Flow:** Excel export refined and verified to open in separate columns.
-- **Git Sync:** Latest code pushed to `origin/main`.
+## 📅 6. Status as of April 20, 2026
+- **Stability:** 100% Stable. Autofill fixes applied.
+- **Financials:** Admin tracking enhanced with User/Project metadata and Arabic localization.
+- **Contributions:** Hardcoded project selectors replaced with dynamic backend-driven dropdown.
+- **Profile Logic:** Profile readiness fixed (no longer hardcoded to 40%).
+- **Git Sync:** Latest logic fixes and architectural audits committed.
 
 ---
 
 ## 📋 7. Immediate Priorities for Next Agent
-1. **Live Stats Sync:** Link the "Stats Strip" to the live backend analytics endpoints.
+1. **Live Stats Sync:** Link the "Stats Strip" in `DashboardScreen` to the live backend analytics endpoints.
 2. **Responsive Polish:** Final check on Wrap layout behavior for 1024px width screens.
-3. **Milestone Tracking:** Ensure the `EbzimProjectTimeline` correctly renders deep-linked milestones from the News/Project models.
+3. **Milestone Tracking:** Verify the `EbzimProjectTimeline` correctly renders deep-linked milestones from the News/Project models.
+4. **Member Verification:** Audit the `DigitalIdCard` logic to ensure membership levels correctly trigger badge visibility.
 
-**Handover Status: 🏆 SOVEREIGN, STABLE & READY FOR PRODUCTION.**
+**Handover Status: 🏆 SOVEREIGN, STABLE & READY FOR LIVE TESTING.**

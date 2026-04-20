@@ -164,9 +164,18 @@ final appRouterProvider = Provider((ref) {
       }
 
       // If authenticated and trying to go to login/register, go to home/admin
-      if (isAuthenticated && (isLoggingIn || isRegistering)) {
+      if (isAuthenticated) {
         final role = authState.user?.membershipLevel ?? 'USER';
-        return (role == 'ADMIN' || role == 'SUPER_ADMIN') ? '/admin' : '/home';
+        final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
+
+        if (isLoggingIn || isRegistering) {
+          return isAdmin ? '/admin' : '/home';
+        }
+
+        // Prevent normal users from accessing admin routes
+        if (loc.startsWith('/admin') && !isAdmin) {
+          return '/home';
+        }
       }
 
       return null;
@@ -312,6 +321,21 @@ final appRouterProvider = Provider((ref) {
             ));
           }
           return _slidePage(state, const AdminCreateNewsScreen());
+        },
+      ),
+      GoRoute(
+        path: '/admin/projects/create',
+        pageBuilder: (context, state) {
+          if (state.extra is NewsPost) {
+            return _slidePage(state, AdminCreateNewsScreen(existingPost: state.extra as NewsPost));
+          } else if (state.extra is Map<String, dynamic>) {
+            final map = state.extra as Map<String, dynamic>;
+            return _slidePage(state, AdminCreateNewsScreen(
+              existingPost: map['existingPost'] as NewsPost?,
+              initialCategory: map['initialCategory'] as String?,
+            ));
+          }
+          return _slidePage(state, const AdminCreateNewsScreen(initialCategory: 'RESTORATION'));
         },
       ),
       GoRoute(

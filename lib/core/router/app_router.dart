@@ -157,23 +157,35 @@ final appRouterProvider = Provider((ref) {
       final isPublicDetail = loc.startsWith('/news/') || loc.startsWith('/project/') || loc.startsWith('/event/');
       final isAllowedUnauthenticated = isLoggingIn || isRegistering || isAuthFlow || isPublicBase || isPublicDetail;
 
-      if (isInitializing) return null;
+      if (isInitializing) {
+        print('[ROUTER] Initializing... staying at $loc');
+        return null;
+      }
+
+      print('[ROUTER] Redirect check: loc=$loc, auth=$isAuthenticated');
 
       if (!isAuthenticated && !isAllowedUnauthenticated) {
+        print('[ROUTER] Not auth & not public -> /login');
         return '/login';
       }
 
-      // If authenticated and trying to go to login/register, go to home/admin
       if (isAuthenticated) {
         final role = authState.user?.membershipLevel ?? 'USER';
         final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
 
         if (isLoggingIn || isRegistering) {
+          print('[ROUTER] Auth & at login/reg -> redirect to dash');
           return isAdmin ? '/admin' : '/home';
         }
 
-        // Prevent normal users from accessing admin routes
+        final landingPages = ['/splash', '/language', '/onboarding', '/', ''];
+        if (landingPages.contains(loc) || loc == '/') {
+          print('[ROUTER] Auth & at landing -> redirect to dash');
+          return isAdmin ? '/admin' : '/home';
+        }
+
         if (loc.startsWith('/admin') && !isAdmin) {
+          print('[ROUTER] User at admin -> /home');
           return '/home';
         }
       }

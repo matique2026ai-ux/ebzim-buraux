@@ -762,12 +762,20 @@ class _MembershipTab extends ConsumerWidget {
                         }
                       },
                       onDelete: () async {
-                        await adminService.deleteRequest(req.id);
-                        ref.invalidate(pendingMembershipsProvider);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            _successSnack('🗑️ تم حذف الطلب من السجل'),
-                          );
+                        try {
+                          await adminService.deleteRequest(req.id);
+                          ref.invalidate(pendingMembershipsProvider);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              _successSnack('🗑️ تم حذف الطلب من السجل'),
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              _errorSnack('❌ فشل الحذف: ${e.toString()}'),
+                            );
+                          }
                         }
                       },
                     ).animate(delay: (index * 80).ms).fadeIn().slideY(begin: 0.05);

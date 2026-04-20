@@ -8,6 +8,7 @@ import {
   Query,
   UseGuards,
   Request,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -77,5 +78,14 @@ export class MembershipsController {
     @Request() req: { user?: any },
   ) {
     return this.membershipsService.processReview(id, updateDto, req.user);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete membership request permanently' })
+  async deleteRequest(@Param('id') id: string) {
+    return this.membershipsService.deleteRequest(id);
   }
 }

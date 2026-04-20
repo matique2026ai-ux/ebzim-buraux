@@ -7,6 +7,7 @@ import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/services/storage_service.dart';
+import 'package:ebzim_app/core/services/auth_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -20,6 +21,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
+    // Proactive check: if session is already loaded or loads while on splash, move immediately
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndAutoRedirect();
+    });
+  }
+
+  void _checkAndAutoRedirect() {
+    final auth = ref.read(authProvider);
+    if (auth.isAuthenticated && !auth.isInitializing) {
+      final role = auth.user?.membershipLevel ?? 'USER';
+      final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
+      context.go(isAdmin ? '/admin' : '/home');
+    }
   }
 
   Future<void> _redirect() async {
@@ -43,6 +57,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
+
+    // Reactive listener: if auth state completes while we are here, jump out
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next.isAuthenticated && !next.isInitializing) {
+        final role = next.user?.membershipLevel ?? 'USER';
+        final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
+        context.go(isAdmin ? '/admin' : '/home');
+      }
+    });
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,

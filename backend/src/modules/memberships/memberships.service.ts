@@ -74,4 +74,10 @@ export class MembershipsService {
 
     return membership.save();
   }
+
+  async deleteRequest(id: string) {
+    const result = await this.membershipModel.findByIdAndDelete(id);
+    if (!result) throw new NotFoundException('Application not found');
+    return { success: true, message: 'Membership request deleted permanently' };
+  }
 }

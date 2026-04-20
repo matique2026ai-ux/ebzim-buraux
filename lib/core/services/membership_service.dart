@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/services/notification_service.dart';
@@ -196,8 +197,9 @@ class MembershipRequest {
 
   factory MembershipRequest.fromJson(Map<String, dynamic> json) {
     final applicationData = json['applicationData'] ?? {};
+    print('[MEMBERSHIP DATA] Parsed Request: ID=${json['_id'] ?? json['id']}, Status=${json['status']}');
     return MembershipRequest(
-      id: json['_id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       userId: json['userId']?.toString(),
       fullName: applicationData['fullName'] ?? 'Unknown',
       status: json['status'] ?? 'SUBMITTED',
@@ -223,40 +225,54 @@ class MembershipAdminService {
 
   Future<void> reviewRequest(String id, String status, {String? notes, String? userId}) async {
     final dio = ref.read(apiClientProvider).dio;
-    await dio.patch('memberships/$id/review', data: {
-      'status': status,
-      'internalReviewNotes': notes,
-    });
-    
-    // Logic: Send notifications to user if userId is provided
-    if (userId != null) {
-      final isAr = true; // Defaulting for institutional logic
-      final title = status == 'APPROVED' 
-          ? (isAr ? 'تم قبول طلب العضوية' : 'Membership Approved')
-          : (isAr ? 'حالة طلب العضوية' : 'Membership Status Update');
+    try {
+      print('[ADMIN MEMBERSHIP] Reviewing request $id to status $status');
+      await dio.patch('memberships/$id/review', data: {
+        'status': status,
+        'internalReviewNotes': notes,
+      });
       
-      final desc = status == 'APPROVED'
-          ? (isAr ? 'مبارك! تم قبول انضمامك لجمعية إبزيم. يمكنك الآن الوصول للميزات المتقدمة.' : 'Congratulations! Your membership has been approved.')
-          : (isAr ? 'نأسف لإبلاغك بأنه تعذر قبول طلبك في الوقت الحالي. يرجى مراجعة البيانات.' : 'Your membership request could not be accepted at this time.');
+      if (userId != null) {
+        final isAr = true;
+        final title = status == 'APPROVED' 
+            ? (isAr ? 'تم قبول طلب العضوية' : 'Membership Approved')
+            : (isAr ? 'حالة طلب العضوية' : 'Membership Status Update');
+        
+        final desc = status == 'APPROVED'
+            ? (isAr ? 'مبارك! تم قبول انضمامك لجمعية إبزيم. يمكنك الآن الوصول للميزات المتقدمة.' : 'Congratulations! Your membership has been approved.')
+            : (isAr ? 'نأسف لإبلاغك بأنه تعذر قبول طلبك في الوقت الحالي. يرجى مراجعة البيانات.' : 'Your membership request could not be accepted at this time.');
 
-      await ref.read(notificationServiceProvider).createNotification(
-        userId: userId,
-        title: title,
-        description: desc,
-        type: 'membership',
-      );
-      
-      // Simulating Email Dispatch
-      // await ref.read(emailServiceProvider).sendMembershipStatus(email, status);
+        await ref.read(notificationServiceProvider).createNotification(
+          userId: userId,
+          title: title,
+          description: desc,
+          type: 'membership',
+        );
+      }
+    } catch (e) {
+      print('[ADMIN MEMBERSHIP] Error reviewing request: $e');
+      rethrow;
+    } finally {
+      ref.invalidate(pendingMembershipsProvider);
     }
-
-    ref.invalidate(pendingMembershipsProvider);
   }
 
   Future<void> deleteRequest(String id) async {
     final dio = ref.read(apiClientProvider).dio;
-    // Note: Assuming /memberships/:id DELETE is supported for rejected/old requests
-    await dio.delete('memberships/$id');
-    ref.invalidate(pendingMembershipsProvider);
+    try {
+      print('[ADMIN MEMBERSHIP] Attempting to DELETE membership request: $id');
+      print('  Target URL: ${dio.options.baseUrl}memberships/$id');
+      final response = await dio.delete('memberships/$id');
+      print('[ADMIN MEMBERSHIP] Delete Success: ${response.statusCode}');
+    } catch (e) {
+      print('[ADMIN MEMBERSHIP] Delete Failed: $e');
+      if (e is DioException) {
+        print('  Status: ${e.response?.statusCode}');
+        print('  Body: ${e.response?.data}');
+      }
+      rethrow;
+    } finally {
+      ref.invalidate(pendingMembershipsProvider);
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_logo.dart';
 import 'package:ebzim_app/core/services/admin_user_service.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:go_router/go_router.dart';
@@ -212,6 +213,8 @@ class AdminDashboardScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          const EbzimLogo(size: 40, isEngraved: true),
+                          const SizedBox(height: 12),
                           // Breadcrumb-style indicator
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

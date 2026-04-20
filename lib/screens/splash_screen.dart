@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:ebzim_app/core/common_widgets/ebzim_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,20 +25,30 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
     // Proactive check: if session is already loaded or loads while on splash, move immediately
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndAutoRedirect();
-      // Add a slight delay for institutional branding wow-factor, then auto-redirect
+      // Add a slight delay for institutional branding wow-factor, then auto-redirect if not already handled
       Future.delayed(const Duration(seconds: 3), () {
-        if (mounted) _redirect();
+        if (mounted) {
+          final auth = ref.read(authProvider);
+          if (!auth.isAuthenticated) {
+            _redirect();
+          }
+        }
       });
     });
   }
 
   void _checkAndAutoRedirect() {
     final auth = ref.read(authProvider);
+    // If we already know the user is authenticated from a previous fast-loading session
     if (auth.isAuthenticated && !auth.isInitializing) {
-      final role = auth.user?.membershipLevel ?? 'USER';
-      final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
-      context.go(isAdmin ? '/admin' : '/home');
+      _performAuthenticatedRedirect(auth);
     }
+  }
+
+  void _performAuthenticatedRedirect(AuthState auth) {
+    final role = auth.user?.membershipLevel ?? 'USER';
+    final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
+    context.go(isAdmin ? '/admin' : '/home');
   }
 
   Future<void> _redirect() async {
@@ -65,9 +76,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
     // Reactive listener: if auth state completes while we are here, jump out
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.isAuthenticated && !next.isInitializing) {
-        final role = next.user?.membershipLevel ?? 'USER';
-        final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
-        context.go(isAdmin ? '/admin' : '/home');
+        _performAuthenticatedRedirect(next);
       }
     });
 
@@ -174,10 +183,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
               color: const Color(0xFF0A1A0A).withOpacity(0.6),
               border: Border.all(color: AppTheme.accentColor.withOpacity(0.3), width: 1.5),
             ),
-            child: Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
-              color: AppTheme.accentColor.withOpacity(0.9),
+            child: const EbzimLogo(
+              size: 80,
+              color: AppTheme.accentColor,
             ),
           ).animate()
            .fadeIn(duration: 800.ms)
@@ -365,9 +373,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
       right: 0,
       child: Column(
         children: [
-          const Text(
-            'PATRIMOINE CULTUREL & CITOYENNETÉ', 
-            style: TextStyle(color: Colors.white38, fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 2.5)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const EbzimLogo(size: 16, isEngraved: true),
+              const SizedBox(width: 8),
+              const Text(
+                'PATRIMOINE CULTUREL & CITOYENNETÉ', 
+                style: TextStyle(color: Colors.white38, fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 2.5)
+              ),
+            ],
           ),
           const SizedBox(height: 4),
           const Text(

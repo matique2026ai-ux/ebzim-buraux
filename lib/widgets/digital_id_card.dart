@@ -1,3 +1,5 @@
+import 'package:ebzim_app/core/common_widgets/ebzim_logo.dart';
+import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
@@ -44,7 +46,7 @@ class DigitalIdCard extends StatelessWidget {
               bottom: -40,
               child: Opacity(
                 opacity: 0.03,
-                child: Icon(Icons.workspace_premium, size: 240, color: emerald),
+              child: const EbzimLogo(size: 240, isEngraved: true),
               ),
             ),
             
@@ -72,7 +74,7 @@ class DigitalIdCard extends StatelessWidget {
                   Center(
                     child: Column(
                       children: [
-                        const Icon(Icons.workspace_premium, color: emerald, size: 32),
+                        const EbzimLogo(size: 32, isEngraved: true),
                         const SizedBox(height: 2),
                         Text(
                           'EBZIM',

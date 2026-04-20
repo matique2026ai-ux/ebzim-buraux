@@ -34,7 +34,7 @@ async function bootstrap() {
 
   // Configure Swagger OpenAPI
   const config = new DocumentBuilder()
-    .setTitle('EBZIM API - V1.1.0-STABLE')
+    .setTitle('EBZIM API - V1.2.0-STABLE')
     .setDescription('The EBZIM Culture and Citizenship Platform API')
     .setVersion('1.0')
     .addBearerAuth()

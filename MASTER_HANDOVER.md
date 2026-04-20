@@ -48,18 +48,18 @@ To maintain stability and cross-compiler compatibility:
 
 ## 📅 6. Status as of April 20, 2026
 - **Stability:** 100% Stable. Autofill fixes applied.
-- **Super Admin Sovereignty:** Enforced "Sole Supervisor" policy. Only `matique2025` retains Super Admin status; system-generated accounts are demoted to Admin in the UI.
-- **Membership Lifecycle:** Integrated automated user notifications and email triggers into the membership review workflow.
-- **Navigation Architecture:** Implemented "State Cleanup" using `context.go()` for administrative transitions to prevent memory accumulation.
+- **Super Admin Sovereignty:** Enforced "Sole Supervisor" policy. Only `matique2025` retains Super Admin status.
+- **Backend Sovereignty:** Implemented missing `DELETE memberships/:id` endpoint in NestJS to allow permanent removal of rejected requests.
+- **Navigation Architecture:** Implemented "State Cleanup" using `context.go()` and fixed the `SplashScreen` to proactively redirect authenticated users, bypassing onboarding and splash hangs.
 - **CMS Synchronization:** Fixed state persistence issues where CMS changes weren't instantly reflected on the Home Screen.
 
 ---
 
 ## 📋 7. Immediate Priorities for Next Agent
-1. **Live Stats Sync:** Link the "Stats Strip" in `DashboardScreen` to the live backend analytics endpoints.
-2. **Member Verification:** Audit the `DigitalIdCard` logic to ensure membership levels correctly trigger badge visibility.
-3. **Email Provider Integration:** Replace the simulated email dispatch in `MembershipAdminService` with a real SMTP/REST provider.
-4. **Clean Navigation Audit:** Continue auditing `context.push` usage to ensure absolute screen disposal across all administrative modules.
+1. **Production Deployment Verification:** Confirm the `DELETE` endpoint is active on Render (requires 5-min build time).
+2. **Live Stats Sync:** Link the "Stats Strip" in `DashboardScreen` to the live backend analytics endpoints.
+3. **Member Verification:** Audit the `DigitalIdCard` logic to ensure membership levels correctly trigger badge visibility.
+4. **Email Provider Integration:** Replace the simulated email dispatch in `MembershipAdminService` with a real SMTP/REST provider.
 
 **Handover Status: 🏆 SOVEREIGN, STABLE & READY FOR LIVE TESTING.**
 

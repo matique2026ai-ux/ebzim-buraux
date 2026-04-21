@@ -184,12 +184,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         Text(
           loc.authAssocName,
-          style: GoogleFonts.cairo(
-            fontSize: 22,
-            fontWeight: FontWeight.w900,
-            color: AppTheme.accentColor,
-            letterSpacing: 0.5,
-          ),
+          style: isAr
+              ? GoogleFonts.cairo(fontSize: 22, fontWeight: FontWeight.w900, color: AppTheme.accentColor, letterSpacing: 0.5)
+              : GoogleFonts.cinzel(fontSize: 14, fontWeight: FontWeight.w700, color: AppTheme.accentColor, letterSpacing: 3.0),
         ).animate().fadeIn(delay: 200.ms),
       ],
     );
@@ -219,11 +216,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Text(
                   loc.authWelcome,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.cairo(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: isAr
+                      ? GoogleFonts.cairo(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)
+                      : GoogleFonts.playfairDisplay(fontSize: 28, fontWeight: FontWeight.w700, color: Colors.white),
                 ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
 
                 const SizedBox(height: 32),
@@ -275,7 +270,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 const SizedBox(height: 12),
                 
-                _buildSubmitButton(loc, authState),
+                _buildSubmitButton(loc, authState, isAr),
               ],
             ),
           ),
@@ -336,7 +331,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Widget _buildSubmitButton(AppLocalizations loc, AuthState authState) {
+  Widget _buildSubmitButton(AppLocalizations loc, AuthState authState, bool isAr) {
     return Container(
       height: 60,
       decoration: BoxDecoration(
@@ -358,7 +353,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
         child: authState.isLoading 
           ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-          : Text(loc.authAccessButton, style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w900)),
+          : Text(loc.authAccessButton, style: isAr
+              ? GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w900)
+              : GoogleFonts.playfairDisplay(fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: 1.5, color: Colors.white)),
       ),
     );
   }

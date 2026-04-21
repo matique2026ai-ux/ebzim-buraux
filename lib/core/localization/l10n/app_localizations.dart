@@ -193,7 +193,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSkip.
   ///
   /// In ar, this message translates to:
-  /// **'تخطي إلى التراث'**
+  /// **'تخطي'**
   String get onboardingSkip;
 
   /// No description provided for @onboardingNext.

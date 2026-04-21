@@ -75,7 +75,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                             : 'Dernières nouvelles et partenariats officiels',
                         style: TextStyle(
                           fontSize: 14,
-                          fontStyle: FontStyle.italic,
+                          // fontStyle removed for accessibility,
                           color: theme.colorScheme.onSurface.withOpacity(0.5),
                         ),
                       ),

@@ -245,7 +245,7 @@ class _PublicationCard extends StatelessWidget {
                         ),
                         child: Text(
                           pub.category.getLabel(isAr ? 'ar' : 'en').toUpperCase(),
-                          style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: GoogleFonts.playfairDisplay(fontSize: 8, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                     ),

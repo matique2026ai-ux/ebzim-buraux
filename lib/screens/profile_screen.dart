@@ -149,7 +149,7 @@ class ProfileScreen extends ConsumerWidget {
                               const SizedBox(height: 4),
                               Text(
                                 'رقم العضوية: ${user.id.substring(user.id.length - 6).toUpperCase()}',
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.playfairDisplay(
                                   color: textColor.withOpacity(0.4),
                                   fontSize: 10,
                                   letterSpacing: 1.0,
@@ -337,7 +337,7 @@ class _SectionHeader extends StatelessWidget {
         children: [
           Text(
             title.toUpperCase(),
-            style: GoogleFonts.inter(
+            style: GoogleFonts.playfairDisplay(
               color: isDark ? Colors.white.withOpacity(0.4) : Colors.black26,
               fontSize: 10,
               fontWeight: FontWeight.w900,

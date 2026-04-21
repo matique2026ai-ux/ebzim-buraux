@@ -261,7 +261,7 @@ class _NumberBadge extends StatelessWidget {
       ),
       child: Text(
         'ART. $number',
-        style: GoogleFonts.inter(
+        style: GoogleFonts.playfairDisplay(
           color: AppTheme.accentColor,
           fontWeight: FontWeight.w900,
           fontSize: 9,

@@ -265,7 +265,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   Widget _buildFieldLabel(String label) {
     return Text(
       label.toUpperCase(),
-      style: GoogleFonts.inter(
+      style: GoogleFonts.playfairDisplay(
         fontSize: 10,
         fontWeight: FontWeight.w900,
         color: AppTheme.accentColor.withOpacity(0.7),

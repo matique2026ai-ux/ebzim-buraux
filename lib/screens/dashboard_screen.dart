@@ -348,7 +348,7 @@ class _HeroSection extends StatelessWidget {
               ),
               child: Text(
                 'ID: ${user.id.substring(user.id.length > 6 ? user.id.length - 6 : 0).toUpperCase()}',
-                style: GoogleFonts.inter(
+                style: GoogleFonts.playfairDisplay(
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
                   color: _textMuted(context),
@@ -474,7 +474,7 @@ class _ActiveBadge extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             label,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.playfairDisplay(
               fontSize: 9,
               fontWeight: FontWeight.w800,
               color: const Color(0xFF4ADE80),
@@ -800,7 +800,7 @@ class _ProfileCompletionCard extends StatelessWidget {
                 const Spacer(),
                 Text(
                   '$percentage%',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.playfairDisplay(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
                     color: _kGold,

@@ -741,7 +741,7 @@ class _ProjectDetailsSheet extends StatelessWidget {
                               ),
                               Text(
                                 '${(project.progressPercentage * 100).toInt()}%',
-                                style: GoogleFonts.inter(color: AppTheme.accentColor, fontSize: 18, fontWeight: FontWeight.w900),
+                                style: GoogleFonts.playfairDisplay(color: AppTheme.accentColor, fontSize: 18, fontWeight: FontWeight.w900),
                               ),
                             ],
                           ),

@@ -192,7 +192,12 @@ class _SpotlightMemberCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(role, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.accentColor)),
                     const SizedBox(height: 16),
-                    Text('"$bio"', style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8), height: 1.5)),
+                    Text('"$bio"', style: TextStyle(
+                      fontSize: 14,
+                      // fontStyle italic removed for accessibility
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                      height: 1.5,
+                    )),
                   ],
                 ),
               )

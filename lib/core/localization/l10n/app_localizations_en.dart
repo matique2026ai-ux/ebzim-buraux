@@ -55,7 +55,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get langFr => 'Français';
 
   @override
-  String get onboardingSkip => 'Skip to Heritage';
+  String get onboardingSkip => 'Skip';
 
   @override
   String get onboardingNext => 'Next';

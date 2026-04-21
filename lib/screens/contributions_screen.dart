@@ -138,7 +138,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                                   ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                                   : Text(
                                       '$_currentFee DZD',
-                                      style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.accentColor),
+                                      style: GoogleFonts.playfairDisplay(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.accentColor),
                                     ),
                               ],
                             ),
@@ -241,7 +241,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                   TextField(
                     controller: _amountController,
                     keyboardType: TextInputType.number,
-                    style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                    style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       labelText: loc.finAmountLabel,
                       prefixIcon: const Icon(Icons.payments_outlined, color: AppTheme.accentColor),

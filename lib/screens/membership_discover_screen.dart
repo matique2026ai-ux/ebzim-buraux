@@ -83,7 +83,7 @@ class MembershipDiscoverScreen extends StatelessWidget {
                                 : isFr
                                     ? 'Adhésion Officielle'
                                     : 'Official Membership').toUpperCase(),
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.playfairDisplay(
                               color: AppTheme.accentColor,
                               fontSize: 9,
                               fontWeight: FontWeight.w800,
@@ -371,7 +371,7 @@ class MembershipDiscoverScreen extends StatelessWidget {
                               : 'Membership is separate from your app account',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        fontStyle: FontStyle.italic,
+                        // fontStyle removed for accessibility,
                         color: isDark ? Colors.white38 : Colors.black38,
                       ),
                     ).animate().fadeIn(delay: 1050.ms),
@@ -518,7 +518,7 @@ class _SectionLabel extends StatelessWidget {
         ),
         Text(
           label.toUpperCase(),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.playfairDisplay(
             color: AppTheme.accentColor,
             fontSize: 9.5,
             fontWeight: FontWeight.w800,

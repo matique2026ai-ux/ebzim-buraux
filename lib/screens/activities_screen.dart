@@ -78,7 +78,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                         loc.actSubtitle,
                         style: TextStyle(
                           fontSize: 14,
-                          fontStyle: FontStyle.italic,
+                          // fontStyle removed for accessibility,
                           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                         ),
                       ),

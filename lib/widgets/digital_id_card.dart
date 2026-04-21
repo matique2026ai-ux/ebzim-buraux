@@ -78,7 +78,7 @@ class DigitalIdCard extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           'EBZIM',
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.playfairDisplay(
                             color: slateBlack,
                             fontSize: 12,
                             fontWeight: FontWeight.w900,
@@ -115,7 +115,7 @@ class DigitalIdCard extends StatelessWidget {
                             ),
                             child: Text(
                               _getBadgeText(user),
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.playfairDisplay(
                                 color: Colors.white,
                                 fontSize: 8,
                                 fontWeight: FontWeight.bold,
@@ -238,7 +238,7 @@ class DigitalIdCard extends StatelessWidget {
         ),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.playfairDisplay(
             fontSize: 10,
             fontWeight: FontWeight.w900,
             color: slateBlack,

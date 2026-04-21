@@ -53,7 +53,7 @@ class _MiniMetric extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.playfairDisplay(
             fontSize: 18,
             fontWeight: FontWeight.w800,
             color: color,
@@ -142,7 +142,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         body: NestedScrollView(
           headerSliverBuilder: (_, __) => [
             SliverAppBar(
-              expandedHeight: 200, // Increased for professional breathing room
+              expandedHeight: 320, // Increased to fix content overflow
               floating: false,
               pinned: true,
               backgroundColor: AppTheme.primaryColor,
@@ -221,7 +221,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 'الرئيسية'.toUpperCase(),
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.playfairDisplay(
                                   color: Colors.white.withOpacity(0.5),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
@@ -243,7 +243,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                         ? 'إشراف المشرف العام'
                                         : 'إدارة النظام')
                                     .toUpperCase(),
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.playfairDisplay(
                                   color: AppTheme.accentColor.withOpacity(0.8),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
@@ -726,7 +726,7 @@ class _UserCard extends ConsumerWidget {
             const SizedBox(height: 4),
             Text(
               user.email,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.playfairDisplay(
                 fontSize: 11,
                 color: AppTheme.primaryColor.withOpacity(0.5),
               ),
@@ -2175,7 +2175,7 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
                 const SizedBox(height: 4),
                 Text(
                   'تم التطوير بواسطة Antigravity AI',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.playfairDisplay(
                     fontSize: 8,
                     color: Colors.grey.shade300,
                     fontWeight: FontWeight.bold,

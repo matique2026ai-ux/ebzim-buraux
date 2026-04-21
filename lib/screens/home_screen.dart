@@ -576,20 +576,32 @@ class _SectionHeader extends StatelessWidget {
           ],
         ),
         if (onViewAll != null)
-          GestureDetector(
-            onTap: onViewAll,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppTheme.accentColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                lang == 'ar' ? 'عرض الكل' : 'Voir tout',
-                style: GoogleFonts.cairo(
-                  color: AppTheme.accentColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+          Semantics(
+            label: lang == 'ar' ? 'عرض الكل' : 'Voir tout',
+            button: true,
+            child: GestureDetector(
+              onTap: onViewAll,
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppTheme.accentColor.withOpacity(0.5), width: 1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      lang == 'ar' ? 'عرض الكل' : 'Voir tout',
+                      style: lang == 'ar'
+                          ? GoogleFonts.cairo(color: AppTheme.accentColor, fontSize: 12, fontWeight: FontWeight.bold)
+                          : GoogleFonts.playfairDisplay(color: AppTheme.accentColor, fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(lang == 'ar' ? Icons.arrow_back_ios_rounded : Icons.arrow_forward_ios_rounded,
+                        color: AppTheme.accentColor, size: 10),
+                  ],
                 ),
               ),
             ),
@@ -690,7 +702,7 @@ class _NewsPreviewCard extends StatelessWidget {
                         ),
                         child: Text(
                           post.category.toUpperCase(),
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.playfairDisplay(
                             fontSize: 9,
                             fontWeight: FontWeight.w900,
                             color: post.isPinned ? AppTheme.accentColor : (isDark ? Colors.white70 : AppTheme.primaryColor),
@@ -1030,7 +1042,7 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
                         ),
                         child: Text(
                           widget.lang == 'ar' ? 'اكتشف إرثنا' : 'DISCOVER HERITAGE',
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.playfairDisplay(
                             color: AppTheme.accentColor,
                             fontSize: 10,
                             fontWeight: FontWeight.w900,
@@ -1157,7 +1169,7 @@ class _InstitutionalSection extends StatelessWidget {
             ),
             Text(
               (isAr ? 'ابزيم تعمل • مشاريع ميدانية' : 'Ebzim en action • Projets terrain').toUpperCase(),
-              style: GoogleFonts.inter(
+              style: GoogleFonts.playfairDisplay(
                 color: AppTheme.accentColor,
                 fontSize: 10,
                 letterSpacing: 3,
@@ -1168,15 +1180,15 @@ class _InstitutionalSection extends StatelessWidget {
         ).animate().fadeIn(delay: 520.ms),
         const SizedBox(height: 18),
 
-        // Heritage Projects Card
+        // Diverse Projects Card
         _InstitutionalCard(
           icon: Icons.apartment_outlined,
           iconColor: const Color(0xFFD4AF37),
-          tag: isAr ? 'شراكة • وزارة المجاهدين • اليونسكو' : 'Partenariat • Min. Moudjahidines • UNESCO',
-          title: isAr ? 'مشاريع الذاكرة والتراث' : 'Projets Mémoriels et Patrimoniaux',
+          tag: isAr ? 'ثقافة • مجتمع • تراث' : 'Culture • Société • Patrimoine',
+          title: isAr ? 'المشاريع' : 'Projets',
           subtitle: isAr
-              ? 'ترميم الثكنة العسكرية • شراكة المتحف الوطني • شبكة اليونسكو'
-              : 'Restauration caserne militaire • Partenariat Musée National • Réseau UNESCO',
+              ? 'مشاريع ثقافية، اجتماعية، وتطوعية متنوعة...'
+              : 'Projets culturels, sociaux et initiatives bénévoles diverses...',
           buttonLabel: isAr ? 'استعراض المشاريع' : 'Voir les projets',
           buttonIcon: Icons.arrow_outward_rounded,
           isDark: isDark,
@@ -1623,7 +1635,7 @@ class _HomeProjectCard extends StatelessWidget {
                           children: [
                             Text(
                               isAr ? 'تقدم المشروع' : 'PROGRÈS',
-                              style: GoogleFonts.inter(color: Colors.white70, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 1),
+                              style: GoogleFonts.playfairDisplay(color: Colors.white70, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 1),
                             ),
                             Text(
                               '${(project.progressPercentage * 100).toInt()}%',

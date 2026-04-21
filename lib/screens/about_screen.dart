@@ -133,7 +133,7 @@ class AboutScreen extends ConsumerWidget {
                               const SizedBox(width: 6),
                               Text(
                                 'UNESCO',
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.playfairDisplay(
                                   color: Colors.white,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w800,
@@ -230,7 +230,7 @@ class AboutScreen extends ConsumerWidget {
                                       : '"Culture is not a luxury — it is the most enduring weapon for preserving identity and building the citizen."',
                               style: GoogleFonts.cairo(
                                 fontSize: 13,
-                                fontStyle: FontStyle.italic,
+                                // fontStyle removed for accessibility,
                                 color: AppTheme.accentColor,
                                 height: 1.6,
                                 fontWeight: FontWeight.w500,
@@ -589,7 +589,7 @@ class _SectionHeader extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             label.toUpperCase(),
-            style: GoogleFonts.inter(
+            style: GoogleFonts.playfairDisplay(
               color: AppTheme.accentColor,
               fontSize: 10,
               fontWeight: FontWeight.w800,

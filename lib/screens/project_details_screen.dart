@@ -236,7 +236,7 @@ class ProjectDetailsScreen extends StatelessWidget {
               ),
               Text(
                 '$percentage%',
-                style: GoogleFonts.inter(
+                style: GoogleFonts.playfairDisplay(
                   fontSize: 22,
                   fontWeight: FontWeight.w900,
                   color: AppTheme.accentColor,

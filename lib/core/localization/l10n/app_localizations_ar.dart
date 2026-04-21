@@ -55,7 +55,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get langFr => 'Français';
 
   @override
-  String get onboardingSkip => 'تخطي إلى التراث';
+  String get onboardingSkip => 'تخطي';
 
   @override
   String get onboardingNext => 'التالي';

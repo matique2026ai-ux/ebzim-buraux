@@ -172,7 +172,7 @@ class NewsDetailScreen extends StatelessWidget {
                         post.getSummary(lang),
                         style: GoogleFonts.tajawal(
                           fontSize: 15,
-                          fontStyle: FontStyle.italic,
+                          // fontStyle removed for accessibility,
                           height: 1.7,
                           color: theme.colorScheme.onSurface.withOpacity(0.75),
                         ),

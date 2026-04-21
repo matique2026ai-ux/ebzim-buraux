@@ -250,7 +250,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
           child: Text(
             'Ebzim Association for Culture and Citizenship',
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.playfairDisplay(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: AppTheme.accentColor.withOpacity(0.8),
@@ -351,7 +351,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
                 const SizedBox(width: 8),
                 Text(
                   'EN | FR | AR', 
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.playfairDisplay(
                     color: Colors.white, 
                     fontSize: 10, 
                     fontWeight: FontWeight.w900, 

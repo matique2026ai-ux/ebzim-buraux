@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
-import 'package:ebzim_app/core/models/news_post.dart';
+import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 
@@ -63,19 +63,32 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
     
     setState(() => _isLoading = true);
     try {
+      final payload = {
+        'title': {
+          'ar': (_category != 'ANNOUNCEMENT') ? '[PROJ]${_titleController.text}' : _titleController.text,
+          'fr': _titleController.text,
+          'en': _titleController.text,
+        },
+        'summary': {
+          'ar': _summaryController.text,
+          'fr': _summaryController.text,
+          'en': _summaryController.text,
+        },
+        'content': {
+          'ar': _contentController.text,
+          'fr': _contentController.text,
+          'en': _contentController.text,
+        },
+        'category': _category,
+        'projectStatus': _status,
+        'metadata': {
+          'progressPercentage': _progress,
+          'milestones': _milestones.map((m) => m.toJson()).toList(),
+        },
+      };
+
       if (widget.existingPost != null) {
-        await ref.read(newsServiceProvider).updatePost(
-          id: widget.existingPost!.id,
-          title: _titleController.text,
-          summary: _summaryController.text,
-          content: _contentController.text,
-          category: _category,
-          projectStatus: _status,
-          metadata: {
-            'progressPercentage': _progress,
-            'milestones': _milestones.map((m) => m.toJson()).toList(),
-          },
-        );
+        await ref.read(newsServiceProvider).updatePost(widget.existingPost!.id, payload);
       } else {
         await ref.read(newsServiceProvider).createPost(
           title: _titleController.text,
@@ -153,7 +166,10 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: Colors.white.withOpacity(0.05)),
                         ),
-                        child: EbzimProjectTimeline(milestones: _milestones),
+                        child: EbzimProjectTimeline(
+                          milestones: _milestones,
+                          lang: ref.watch(localeProvider).languageCode,
+                        ),
                       ),
                     ],
                     const SizedBox(height: 40),
@@ -399,6 +415,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
               _milestones.add(ProjectMilestone(
                 titleAr: '',
                 titleEn: '',
+                date: DateTime.now(),
                 isCompleted: false,
               ));
             });

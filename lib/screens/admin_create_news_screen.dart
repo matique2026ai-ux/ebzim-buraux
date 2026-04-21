@@ -549,11 +549,11 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                                 child: Column(
                                   children: [
                                     _buildField(
-                                      controller: TextEditingController(text: milestone.labelAr)..selection = TextSelection.collapsed(offset: milestone.labelAr.length),
+                                      controller: TextEditingController(text: milestone.titleAr)..selection = TextSelection.collapsed(offset: milestone.titleAr.length),
                                       hint: 'عنوان المرحلة (مثال: انطلاق الأشغال)',
                                       onChanged: (v) => setState(() => _milestones[idx] = ProjectMilestone(
-                                        labelAr: v,
-                                        labelFr: v,
+                                        titleAr: v,
+                                        titleEn: v,
                                         date: milestone.date,
                                         isCompleted: milestone.isCompleted,
                                       )),
@@ -573,8 +573,8 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                                         Checkbox(
                                           value: milestone.isCompleted,
                                           onChanged: (v) => setState(() => _milestones[idx] = ProjectMilestone(
-                                            labelAr: milestone.labelAr,
-                                            labelFr: milestone.labelFr,
+                                            titleAr: milestone.titleAr,
+                                            titleEn: milestone.titleEn,
                                             date: milestone.date,
                                             isCompleted: v ?? false,
                                           )),
@@ -692,8 +692,8 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
   void _addMilestone() {
     setState(() {
       _milestones.add(ProjectMilestone(
-        labelAr: '',
-        labelFr: '',
+        titleAr: '',
+        titleEn: '',
         date: DateTime.now(),
         isCompleted: false,
       ));
@@ -710,8 +710,8 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
     if (picked != null) {
       setState(() {
         _milestones[idx] = ProjectMilestone(
-          labelAr: _milestones[idx].labelAr,
-          labelFr: _milestones[idx].labelFr,
+          titleAr: _milestones[idx].titleAr,
+          titleEn: _milestones[idx].titleEn,
           date: picked,
           isCompleted: _milestones[idx].isCompleted,
         );

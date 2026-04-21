@@ -122,35 +122,49 @@ class NewsPost {
 }
 
 class ProjectMilestone {
-  final String labelAr;
-  final String labelFr;
+  final String titleAr;
+  final String titleEn;
   final DateTime date;
   final bool isCompleted;
 
   ProjectMilestone({
-    required this.labelAr,
-    required this.labelFr,
+    required this.titleAr,
+    required this.titleEn,
     required this.date,
     this.isCompleted = false,
   });
 
-  String getLabel(String lang) => lang == 'ar' ? labelAr : labelFr;
+  String getLabel(String lang) => lang == 'ar' ? titleAr : titleEn;
 
   factory ProjectMilestone.fromJson(Map<String, dynamic> json) {
     return ProjectMilestone(
-      labelAr: json['labelAr']?.toString() ?? '',
-      labelFr: json['labelFr']?.toString() ?? '',
+      titleAr: json['titleAr']?.toString() ?? json['labelAr']?.toString() ?? '',
+      titleEn: json['titleEn']?.toString() ?? json['labelFr']?.toString() ?? '',
       date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime.now(),
       isCompleted: json['isCompleted'] == true,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'labelAr': labelAr,
-    'labelFr': labelFr,
+    'titleAr': titleAr,
+    'titleEn': titleEn,
     'date': date.toIso8601String(),
     'isCompleted': isCompleted,
   };
+
+  ProjectMilestone copyWith({
+    String? titleAr,
+    String? titleEn,
+    DateTime? date,
+    bool? isCompleted,
+  }) {
+    return ProjectMilestone(
+      titleAr: titleAr ?? this.titleAr,
+      titleEn: titleEn ?? this.titleEn,
+      date: date ?? this.date,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
 }
 
 class NewsService {

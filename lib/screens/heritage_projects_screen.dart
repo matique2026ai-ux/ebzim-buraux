@@ -94,13 +94,6 @@ class HeritageProjectsScreen extends ConsumerWidget {
               ),
             ),
 
-            // ── Partnership Banner ─────────────────────────────────────────
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _PartnershipBanner(isAr: isAr, isDark: isDark),
-              ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.05),
-            ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 32)),
 
@@ -177,116 +170,6 @@ class HeritageProjectsScreen extends ConsumerWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Partnership Banner
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _PartnershipBanner extends StatelessWidget {
-  final bool isAr;
-  final bool isDark;
-  const _PartnershipBanner({required this.isAr, required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    final partners = [
-      _PartnerChip(
-        icon: Icons.public_rounded,
-        label: isAr ? 'اليونسكو' : 'UNESCO',
-        sub: isAr ? 'الجزائر' : 'Algérie',
-        color: const Color(0xFF009FDA),
-      ),
-      _PartnerChip(
-        icon: Icons.account_balance_rounded,
-        label: isAr ? 'متحف الآثار' : 'Musée des Antiquités',
-        sub: isAr ? 'سطيف' : 'Sétif',
-        color: AppTheme.accentColor,
-      ),
-      _PartnerChip(
-        icon: Icons.military_tech_rounded,
-        label: isAr ? 'وز. المجاهدين' : 'Min. Moudjahidines',
-        sub: isAr ? 'عقد ترميم' : 'Contrat restauration',
-        color: const Color(0xFF22C55E),
-      ),
-    ];
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          decoration: BoxDecoration(
-            color: isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isDark ? Colors.white.withOpacity(0.1) : AppTheme.accentColor.withOpacity(0.2),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isAr ? 'شراكاتنا الاستراتيجية' : 'Nos Partenariats Stratégiques',
-                style: GoogleFonts.tajawal(
-                  color: AppTheme.accentColor,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              const SizedBox(height: 14),
-              Row(
-                children: partners.map((p) => Expanded(child: p)).toList(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PartnerChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String sub;
-  final Color color;
-  const _PartnerChip({required this.icon, required this.label, required this.sub, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            shape: BoxShape.circle,
-            border: Border.all(color: color.withOpacity(0.2), width: 1.5),
-          ),
-          child: Icon(icon, color: color, size: 20),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.cairo(
-            color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black87,
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-          ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        Text(
-          sub,
-          style: TextStyle(color: color.withOpacity(0.6), fontSize: 9),
-        ),
-      ],
-    );
-  }
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Search and Filter Bar

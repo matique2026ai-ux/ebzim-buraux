@@ -100,7 +100,7 @@ class EbzimProjectTimeline extends StatelessWidget {
   Widget _buildPremiumIcon(ProjectMilestone milestone, bool isAr) {
     if (!milestone.isCompleted) return const SizedBox.shrink();
 
-    final label = (isAr ? milestone.labelAr : milestone.labelFr).toLowerCase();
+    final label = (isAr ? milestone.titleAr : milestone.titleEn).toLowerCase();
     
     IconData icon = Icons.check_rounded;
     

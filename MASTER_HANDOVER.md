@@ -82,11 +82,11 @@ Maintain the "Institutional Prestige" using these strictly enforced design token
 
 ---
 
-*   **Architectural & Logical Audit:** 🧠 Conducted a comprehensive platform-wide audit. Created `EBZIM_LOGIC_AUDIT.md` as the definitive technical and logical source of truth.
-*   **Unified Category System:** 🏷️ Synchronized news and project categories across `NewsService`, `HeritageProjectsScreen`, and the Admin Dashboard. Added new institutional committees: `MEMORY`, `TOURISM`, and `CHILD`.
-*   **Bilingual CMS Upgrade:** 🖋️ Transformed the Admin News and Project creation screens into high-fidelity bilingual editors. Admins can now input content in Arabic, French, and English via a tabbed interface.
-*   **Filtering & Logic Stabilization:** 🔄 Fixed gaps in project filtering where certain categories (e.g., `PARTNERSHIP`) were omitted. Ensured all project types are tracked with progress sliders and milestones.
-*   **Institutional Governance:** 🏛️ Verified platform logic against Algerian Law 06/12 (Statutes). Aligned Executive Board roles and specialized committee definitions with legal requirements.
+* **Architectural & Logical Audit:** 🧠 Conducted a comprehensive platform-wide audit. Created `EBZIM_LOGIC_AUDIT.md` as the definitive technical and logical source of truth.
+* **Unified Category System:** 🏷️ Synchronized news and project categories across `NewsService`, `HeritageProjectsScreen`, and the Admin Dashboard. Added new institutional committees: `MEMORY`, `TOURISM`, and `CHILD`.
+* **Bilingual CMS Upgrade:** 🖋️ Transformed the Admin News and Project creation screens into high-fidelity bilingual editors. Admins can now input content in Arabic, French, and English via a tabbed interface.
+* **Filtering & Logic Stabilization:** 🔄 Fixed gaps in project filtering where certain categories (e.g., `PARTNERSHIP`) were omitted. Ensured all project types are tracked with progress sliders and milestones.
+* **Institutional Governance:** 🏛️ Verified platform logic against Algerian Law 06/12 (Statutes). Aligned Executive Board roles and specialized committee definitions with legal requirements.
 
 ---
 

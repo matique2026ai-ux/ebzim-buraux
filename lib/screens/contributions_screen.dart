@@ -12,6 +12,9 @@ import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:ebzim_app/core/common_widgets/login_required_overlay.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
+import 'dart:typed_data';
+import 'package:ebzim_app/core/services/api_client.dart';
+import 'package:ebzim_app/core/services/media_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -34,6 +37,8 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
   int _currentFee = 2000;
   bool _isSubmitting = false;
   NewsPost? _selectedProject;
+  String? _proofUrl;
+  bool _isUploadingProof = false;
 
   @override
   void initState() {
@@ -290,6 +295,31 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                   ],
 
                   const SizedBox(height: 24),
+                  
+                  _ProofUploadTile(
+                    onTap: () async {
+                      final file = await ref.read(apiClientProvider).pickFile();
+                      if (file == null) return;
+                      
+                      setState(() => _isUploadingProof = true);
+                      try {
+                        final result = await ref.read(mediaServiceProvider).uploadMedia(
+                          file.bytes!,
+                          file.name,
+                        );
+                        if (mounted) setState(() => _proofUrl = result);
+                      } catch (e) {
+                        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
+                      } finally {
+                        if (mounted) setState(() => _isUploadingProof = false);
+                      }
+                    },
+                    isUploaded: _proofUrl != null,
+                    isLoading: _isUploadingProof,
+                    isAr: isAr,
+                  ),
+
+                  const SizedBox(height: 24),
                   _PrimaryButton(
                     label: loc.finSend,
                     onTap: () {
@@ -299,6 +329,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                           _selectedDonationType == DonationType.general ? 'GENERAL_DONATION' : 'PROJECT_SUPPORT',
                           amount,
                           projectId: _selectedDonationType == DonationType.project ? _selectedProject?.id : null,
+                          proofUrl: _proofUrl,
                         );
                       }
                     },
@@ -353,13 +384,14 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
     );
   }
 
-  void _handleSubmit(String type, double amount, {String? projectId}) async {
+  void _handleSubmit(String type, double amount, {String? projectId, String? proofUrl}) async {
     setState(() => _isSubmitting = true);
     try {
       await ref.read(financialServiceProvider).submitContribution(
         type: type,
         amount: amount,
         projectId: projectId,
+        proofUrl: proofUrl,
       );
       if (mounted) {
         _showSuccessDialog();
@@ -485,3 +517,60 @@ class _PrimaryButton extends StatelessWidget {
 }
 
 
+class _ProofUploadTile extends StatelessWidget {
+  final VoidCallback onTap;
+  final bool isUploaded;
+  final bool isLoading;
+  final bool isAr;
+
+  const _ProofUploadTile({required this.onTap, required this.isUploaded, required this.isLoading, required this.isAr});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: isLoading ? null : onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isUploaded ? Colors.green.withOpacity(0.05) : Colors.grey.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isUploaded ? Colors.green.withOpacity(0.3) : Colors.grey.withOpacity(0.2),
+            style: BorderStyle.solid,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              isUploaded ? Icons.check_circle_rounded : Icons.receipt_long_rounded,
+              color: isUploaded ? Colors.green : AppTheme.accentColor,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isAr ? 'وصل الدفع' : 'Proof of Payment',
+                    style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  Text(
+                    isUploaded 
+                      ? (isAr ? 'تم تحميل الوصل' : 'Receipt uploaded') 
+                      : (isAr ? 'اضغط لتحميل صورة الوصل (CCP/Bank)' : 'Tap to upload receipt image'),
+                    style: TextStyle(fontSize: 11, color: isUploaded ? Colors.green : Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            if (isLoading)
+              const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+            else if (!isUploaded)
+              const Icon(Icons.cloud_upload_outlined, color: AppTheme.accentColor, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}

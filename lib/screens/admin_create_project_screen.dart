@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
+import 'package:ebzim_app/core/services/api_client.dart';
+import 'package:ebzim_app/core/services/media_service.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
+import 'package:ebzim_app/core/widgets/ebzim_background.dart';
+import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 
 class AdminCreateProjectScreen extends ConsumerStatefulWidget {
   final NewsPost? existingPost;
@@ -37,7 +41,9 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
   String _status = 'PREPARING';
   double _progress = 0.0;
   List<ProjectMilestone> _milestones = [];
+  String? _imageUrl;
   bool _isLoading = false;
+  bool _isUploadingImage = false;
 
   @override
   void initState() {
@@ -57,6 +63,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
       _status = widget.existingPost!.projectStatus;
       _progress = widget.existingPost!.progressPercentage;
       _milestones = List.from(widget.existingPost!.milestones);
+      _imageUrl = widget.existingPost!.imageUrl;
     } else if (widget.initialCategory != null) {
       _category = widget.initialCategory!;
     }
@@ -81,49 +88,59 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
     
     setState(() => _isLoading = true);
     try {
-      final payload = {
-        'title': {
-          'ar': (_category != 'ANNOUNCEMENT') ? '[PROJ]${_titleController.text}' : _titleController.text,
-          'fr': _titleController.text,
-          'en': _titleController.text,
-        },
-        'summary': {
-          'ar': _summaryController.text,
-          'fr': _summaryController.text,
-          'en': _summaryController.text,
-        },
-        'content': {
-          'ar': _contentController.text,
-          'fr': _contentController.text,
-          'en': _contentController.text,
-        },
-        'category': _category,
+      final Map<String, dynamic> metadata = {
+        'progressPercentage': _progress,
+        'milestones': _milestones.map((m) => m.toJson()).toList(),
         'projectStatus': _status,
-        'metadata': {
-          'progressPercentage': _progress,
-          'milestones': _milestones.map((m) => m.toJson()).toList(),
-        },
+        'category': _category,
       };
 
       if (widget.existingPost != null) {
+        final payload = {
+          'title': {
+            'ar': (_category != 'ANNOUNCEMENT' && !_titleArController.text.startsWith('[PROJ]')) ? '[PROJ]${_titleArController.text}' : _titleArController.text,
+            'fr': _titleFrController.text.isNotEmpty ? _titleFrController.text : _titleArController.text,
+            'en': _titleEnController.text.isNotEmpty ? _titleEnController.text : _titleArController.text,
+          },
+          'summary': {
+            'ar': _summaryArController.text,
+            'fr': _summaryFrController.text.isNotEmpty ? _summaryFrController.text : _summaryArController.text,
+            'en': _summaryEnController.text.isNotEmpty ? _summaryEnController.text : _summaryArController.text,
+          },
+          'content': {
+            'ar': _contentArController.text,
+            'fr': _contentFrController.text.isNotEmpty ? _contentFrController.text : _contentArController.text,
+            'en': _contentEnController.text.isNotEmpty ? _contentEnController.text : _contentArController.text,
+          },
+          'category': _category,
+          'projectStatus': _status,
+          'metadata': metadata,
+        };
+        
+        if (_imageUrl != null) {
+          payload['media'] = [{
+            'type': 'IMAGE',
+            'cloudinaryUrl': _imageUrl,
+            'publicId': _imageUrl!.split('/').last.split('.').first,
+          }];
+        }
+
         await ref.read(newsServiceProvider).updatePost(widget.existingPost!.id, payload);
       } else {
         await ref.read(newsServiceProvider).createPost(
           title: _titleArController.text,
-          titleFr: _titleFrController.text.isNotEmpty ? _titleFrController.text : _titleArController.text,
-          titleEn: _titleEnController.text.isNotEmpty ? _titleEnController.text : _titleArController.text,
+          titleFr: _titleFrController.text,
+          titleEn: _titleEnController.text,
           summary: _summaryArController.text,
-          summaryFr: _summaryFrController.text.isNotEmpty ? _summaryFrController.text : _summaryArController.text,
-          summaryEn: _summaryEnController.text.isNotEmpty ? _summaryEnController.text : _summaryArController.text,
+          summaryFr: _summaryFrController.text,
+          summaryEn: _summaryEnController.text,
           content: _contentArController.text,
-          contentFr: _contentFrController.text.isNotEmpty ? _contentFrController.text : _contentArController.text,
-          contentEn: _contentEnController.text.isNotEmpty ? _contentEnController.text : _contentArController.text,
+          contentFr: _contentFrController.text,
+          contentEn: _contentEnController.text,
+          imageUrl: _imageUrl,
           category: _category,
           projectStatus: _status,
-          metadata: {
-            'progressPercentage': _progress,
-            'milestones': _milestones.map((m) => m.toJson()).toList(),
-          },
+          metadata: metadata,
         );
       }
       if (mounted) context.pop();
@@ -141,37 +158,101 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF020617),
-      body: CustomScrollView(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      extendBodyBehindAppBar: true,
+      body: EbzimBackground(
+        child: CustomScrollView(
         slivers: [
           _buildAppBar(),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionHeader('المعلومات الأساسية', Icons.info_outline),
+              child: GlassCard(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    _buildImagePicker(),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader('المعلومات الأساسية (العربية)', Icons.language_rounded),
                     const SizedBox(height: 20),
                     _buildTextField(
-                      controller: _titleController,
-                      label: 'عنوان المشروع (بالعربية)',
-                      hint: 'مثال: ترميم قصر الحمراء...',
+                      controller: _titleArController,
+                      label: 'عنوان المشروع',
+                      hint: 'مثال: القافلة الطبية، المهرجان الثقافي، ترميم المعالم...',
                       icon: Icons.title_rounded,
                     ),
                     const SizedBox(height: 20),
                     _buildTextField(
-                      controller: _summaryController,
+                      controller: _summaryArController,
                       label: 'وصف مختصر',
                       hint: 'وصف سريع للمشروع يظهر في البطاقات...',
                       icon: Icons.short_text_rounded,
                       maxLines: 2,
                     ),
-                    const SizedBox(height: 32),
-                    _buildSectionHeader('حالة المشروع والتقدم', Icons.trending_up_rounded),
                     const SizedBox(height: 20),
+                    _buildTextField(
+                      controller: _contentArController,
+                      label: 'المحتوى الكامل للمشروع',
+                      hint: 'اكتب هنا كل التفاصيل والأهداف والخطوات التنفيذية...',
+                      icon: Icons.article_rounded,
+                      maxLines: 8,
+                    ),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader('الترجمة الفرنسية (French)', Icons.translate_rounded),
+                    const SizedBox(height: 20),
+                    _buildTextField(
+                      controller: _titleFrController,
+                      label: 'العنوان (FR)',
+                      hint: 'Titre du projet...',
+                      icon: Icons.title_rounded,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildTextField(
+                      controller: _summaryFrController,
+                      label: 'الوصف المختصر (FR)',
+                      hint: 'Résumé court...',
+                      icon: Icons.short_text_rounded,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildTextField(
+                      controller: _contentFrController,
+                      label: 'المحتوى الكامل (FR)',
+                      hint: 'Détails complets en français...',
+                      icon: Icons.article_rounded,
+                      maxLines: 4,
+                    ),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader('الترجمة الإنجليزية (English)', Icons.language_rounded),
+                    const SizedBox(height: 20),
+                    _buildTextField(
+                      controller: _titleEnController,
+                      label: 'العنوان (EN)',
+                      hint: 'Project Title...',
+                      icon: Icons.title_rounded,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildTextField(
+                      controller: _summaryEnController,
+                      label: 'الوصف المختصر (EN)',
+                      hint: 'Short summary...',
+                      icon: Icons.short_text_rounded,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildTextField(
+                      controller: _contentEnController,
+                      label: 'المحتوى الكامل (EN)',
+                      hint: 'Full details in English...',
+                      icon: Icons.article_rounded,
+                      maxLines: 4,
+                    ),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader('تصنيف وحالة المشروع', Icons.category_rounded),
+                    const SizedBox(height: 20),
+                    _buildCategoryDropdown(),
+                    const SizedBox(height: 16),
                     _buildStatusDropdown(),
                     const SizedBox(height: 24),
                     _buildProgressSlider(),
@@ -206,7 +287,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildAppBar() {
@@ -214,7 +295,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
       expandedHeight: 120,
       floating: false,
       pinned: true,
-      backgroundColor: const Color(0xFF0F172A),
+      backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
@@ -223,7 +304,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: const Text(
-          'إدارة مشروع مؤسساتي',
+          'إدارة الأنشطة والبرامج الجمعوية',
           style: TextStyle(
             fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
@@ -237,8 +318,8 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                AppTheme.primaryColor.withOpacity(0.8),
-                const Color(0xFF020617),
+                AppTheme.primaryColor.withOpacity(0.6),
+                Colors.transparent,
               ],
             ),
           ),
@@ -311,6 +392,53 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
     );
   }
 
+  Widget _buildCategoryDropdown() {
+    final categories = [
+      {'value': 'ASSOCIATIVE', 'label': 'نشاط جمعوي (ولائي)', 'icon': Icons.groups_rounded},
+      {'value': 'PROJECT', 'label': 'مشروع مؤسساتي', 'icon': Icons.assignment_rounded},
+      {'value': 'RESTORATION', 'label': 'حماية التراث والآثار', 'icon': Icons.museum_rounded},
+      {'value': 'CULTURAL', 'label': 'مهرجان / نشاط ثقافي', 'icon': Icons.palette_rounded},
+      {'value': 'SOCIAL', 'label': 'مبادرة اجتماعية', 'icon': Icons.favorite_rounded},
+      {'value': 'SCIENTIFIC', 'label': 'ندوة / بحث علمي', 'icon': Icons.science_rounded},
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('تصنيف المشروع', style: TextStyle(color: Colors.white70, fontSize: 14, fontFamily: 'Cairo')),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.1)),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: categories.any((c) => c['value'] == _category) ? _category : 'PROJECT',
+              dropdownColor: const Color(0xFF0F172A),
+              isExpanded: true,
+              items: categories.map((c) {
+                return DropdownMenuItem(
+                  value: c['value'] as String,
+                  child: Row(
+                    children: [
+                      Icon(c['icon'] as IconData, color: AppTheme.accentColor, size: 18),
+                      const SizedBox(width: 12),
+                      Text(c['label'] as String, style: const TextStyle(color: Colors.white, fontFamily: 'Cairo')),
+                    ],
+                  ),
+                );
+              }).toList(),
+              onChanged: (v) => setState(() => _category = v!),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildStatusDropdown() {
     final statuses = [
       {'value': 'PREPARING', 'label': 'قيد التحضير', 'color': Colors.blue},
@@ -319,39 +447,46 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
       {'value': 'SUSPENDED', 'label': 'متوقف مؤقتاً', 'color': Colors.red},
     ];
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _status,
-          dropdownColor: const Color(0xFF0F172A),
-          isExpanded: true,
-          items: statuses.map((s) {
-            return DropdownMenuItem(
-              value: s['value'] as String,
-              child: Row(
-                children: [
-                  Container(
-                    width: 12, height: 12,
-                    decoration: BoxDecoration(
-                      color: s['color'] as Color,
-                      shape: BoxShape.circle,
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('حالة المشروع الحالية', style: TextStyle(color: Colors.white70, fontSize: 14, fontFamily: 'Cairo')),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.1)),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _status,
+              dropdownColor: const Color(0xFF0F172A),
+              isExpanded: true,
+              items: statuses.map((s) {
+                return DropdownMenuItem(
+                  value: s['value'] as String,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 12, height: 12,
+                        decoration: BoxDecoration(
+                          color: s['color'] as Color,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(s['label'] as String, style: const TextStyle(color: Colors.white, fontFamily: 'Cairo')),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Text(s['label'] as String, style: const TextStyle(color: Colors.white, fontFamily: 'Cairo')),
-                ],
-              ),
-            );
-          }).toList(),
-          onChanged: (v) => setState(() => _status = v!),
+                );
+              }).toList(),
+              onChanged: (v) => setState(() => _status = v!),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -472,5 +607,77 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
               ),
       ),
     );
+  }
+
+  Widget _buildImagePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'صورة المشروع الرئيسية',
+          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
+        ),
+        const SizedBox(height: 12),
+        InkWell(
+          onTap: _isUploadingImage ? null : _uploadImage,
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
+              image: _imageUrl != null
+                  ? DecorationImage(image: NetworkImage(_imageUrl!), fit: BoxFit.cover)
+                  : null,
+            ),
+            child: _isUploadingImage
+                ? const Center(child: CircularProgressIndicator(color: AppTheme.accentColor))
+                : _imageUrl == null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_photo_alternate_outlined, color: AppTheme.accentColor.withOpacity(0.5), size: 48),
+                          const SizedBox(height: 12),
+                          const Text('اضغط لاختيار صورة للمشروع', style: TextStyle(color: Colors.white54, fontFamily: 'Cairo')),
+                        ],
+                      )
+                    : Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          margin: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(12)),
+                          child: const Icon(Icons.edit_rounded, color: Colors.white, size: 20),
+                        ),
+                      ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _uploadImage() async {
+    setState(() => _isUploadingImage = true);
+    try {
+      final mediaService = ref.read(mediaServiceProvider);
+      final file = await ref.read(apiClientProvider).pickFile();
+      if (file != null) {
+        final url = await mediaService.uploadMedia(
+          file.bytes!,
+          file.name,
+        );
+        setState(() => _imageUrl = url);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('خطأ في رفع الصورة: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isUploadingImage = false);
+    }
   }
 }

@@ -1655,6 +1655,7 @@ class _FinancialsTab extends ConsumerWidget {
                           project['title']?['ar'] ??
                           project['title']?['fr'] ??
                           '',
+                      proofUrl: item['proofUrl']?.toString(),
                       onApprove: () async {
                         await finService.reviewContribution(
                           item['_id'],
@@ -3507,6 +3508,7 @@ class _ActionButton extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 class _ContributionCard extends StatelessWidget {
   final String amount, type, status, userName, projectName;
+  final String? proofUrl;
   final VoidCallback onApprove, onReject;
   const _ContributionCard({
     required this.amount,
@@ -3514,6 +3516,7 @@ class _ContributionCard extends StatelessWidget {
     required this.status,
     required this.userName,
     this.projectName = '',
+    this.proofUrl,
     required this.onApprove,
     required this.onReject,
   });
@@ -3621,6 +3624,24 @@ class _ContributionCard extends StatelessWidget {
               ),
             ],
           ),
+          if (proofUrl != null && proofUrl!.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _viewProof(context, proofUrl!),
+                icon: const Icon(Icons.receipt_long_rounded, size: 16),
+                label: Text(
+                  'عرض وصل الدفع',
+                  style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  side: BorderSide(color: const Color(0xFF6D28D9).withOpacity(0.2)),
+                ),
+              ),
+            ),
+          ],
           if (status == 'PENDING') ...[
             const SizedBox(height: 14),
             const Divider(height: 1),
@@ -3664,6 +3685,48 @@ class _ContributionCard extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  void _viewProof(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: Text(
+                'وصل الدفع',
+                style: GoogleFonts.tajawal(color: Colors.white),
+              ),
+            ),
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error_outline_rounded,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -4312,8 +4375,8 @@ class _ProjectsTab extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _SectionHeader(
-                  title: 'إدارة المشاريع',
-                  subtitle: 'متابعة المشاريع الجديدة وتقارير الإنجاز الميداني',
+                  title: 'إدارة الأنشطة والبرامج الجمعوية',
+                  subtitle: 'إدارة مبادرات الجمعية الولائية وتقارير الإنجاز الميداني',
                   icon: Icons.architecture_rounded,
                 ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
                 const SizedBox(height: 20),

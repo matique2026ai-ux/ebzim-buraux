@@ -49,7 +49,7 @@ class HeroSlide {
       imageUrl: json['imageUrl']?.toString() ?? '',
       videoUrl: json['videoUrl']?.toString(),
       glassColor: json['glassColor']?.toString(),
-      overlayOpacity: (json['overlayOpacity'] is num) ? (json['overlayOpacity'] as num).toDouble() : 0.1,
+      overlayOpacity: json['overlayOpacity'] != null ? double.tryParse(json['overlayOpacity'].toString()) ?? 0.1 : 0.1,
       buttonText: json['buttonText']?.toString(),
       buttonLink: json['buttonLink']?.toString(),
       order: json['order'] is int ? json['order'] : 0,

@@ -30,13 +30,13 @@ flutter run -d chrome --web-port 8080 --release
 
 ## 🏗️ 1. System Ecosystem & Platform Overview
 
-* **Core Identity:** The official digital gateway for the **Ebzim Association for Culture and Citizenship** (based in Sétif, Algeria).
+* **Core Identity:** The official digital gateway for the **Ebzim Association for Culture and Citizenship** (A **Provincial Association / جمعية ولائية** based in Sétif, Algeria). The association is a **Distinguished Member of the UNESCO Network in Algeria**, holding a global reputation for heritage preservation and social development.
 * **Legal Governance:** The platform's logic is strictly derived from the association's **Statutes and Basic Law (Law 06/12)**. Every module (Membership, Committees, Projects) must align with the official legal framework defined in `StatuteService`.
-* **Platform Scope:** An institutional-grade web application designed to bridge cultural heritage with modern citizenship. It serves as:
+* **Global Mission:** A high-fidelity, trilingual (AR/FR/EN) associative management system designed to meet international standards (e.g., for presentation to UNESCO). It serves as:
   1. **Public Portal:** Showcasing the association's news, latest events, and strategic partnerships.
-  2. **Heritage Repository:** Tracking and visualizing major institutional and social development projects (e.g., restoration, cultural archiving) via dynamic timelines.
-  3. **Membership Hub:** Managing a digital community with secure authentication, profile management, and high-fidelity **Digital Member ID Cards**.
-  4. **Admin Governance:** A centralized command center for administrators to manage content, export professional reports (Excel), and oversee platform growth.
+  2. **Associative Hub:** Managing **Associative Activities and Programs (الأنشطة والبرامج الجمعوية)**, tracking field initiatives, and social development projects via dynamic timelines.
+  3. **Membership Ecosystem:** Managing a digital community with secure authentication, profile management, and high-fidelity **Digital Member ID Cards**.
+  4. **Administrative Governance:** A centralized command center for administrators to manage content, export professional reports (Excel), and oversee platform growth.
 * **Frontend (Flutter Web):** Optimized for **Release Mode** (`--release`) on port 8080 to prevent DDC renderer hangs and support browser features correctly.
 * **Backend (NestJS):** Production is hosted on **Render**. Local development uses `http://localhost:3000/api/v1/`.
 * **API Pointing:** Ensure `api_client_platform_web.dart` points to the correct environment (Production for live testing, Local for dev).
@@ -67,7 +67,8 @@ Maintain the "Institutional Prestige" using these strictly enforced design token
 ## 📊 4. Data Management & Exports
 
 * **Real-Time Analytics:** The "Stats Strip" on the home screen and admin dashboard is now linked to the backend `AdminService` via `publicStatsProvider`, showing live platform counts.
-* **Real Excel (.xlsx):** Professional export is mandatory for institutional reports.
+* **إدارة المشاريع (Project Management):** محرك مرن لإدارة كافة أنشطة الجمعية (اجتماعية، ثقافية، تراثية، علمية). التراث ليس الهدف الوحيد، بل هو جزء من منظومة أهداف متكاملة.
+* **التدقيق المالي (Financial Auditing):** نظام تتبع المساهمات مع معاينة وصولات الدفع لضمان الشفافية.
 * **Web Trigger:** Binary data is served via `triggerWebDownloadBytes` through `WebHelper`.
 * **Dynamic Projects:** Contributions are linked to live heritage projects.
 

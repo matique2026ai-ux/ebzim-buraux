@@ -593,6 +593,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         'buttonText': s.buttonText ?? '',
         'buttonLink': s.buttonLink ?? '',
         'order': s.order,
+        'isActive': s.isActive,
       };
     } else if (widget.type == CMSManageType.partner) {
       final p = item as Partner;
@@ -602,6 +603,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
         'logoUrl': p.logoUrl,
         'color': p.color,
         'order': p.order,
+        'isActive': p.isActive,
       };
     } else if (widget.type == CMSManageType.leadership) {
       final l = item as EbzimLeader;
@@ -1041,7 +1043,8 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
           runSpacing: 12,
           children: [
             ...colors.map((hex) {
-              final isSelected = currentHex == hex;
+              final normalizedCurrent = currentHex?.startsWith('#') == true ? currentHex! : (currentHex != null ? '#$currentHex' : null);
+              final isSelected = normalizedCurrent?.toUpperCase() == hex.toUpperCase();
               return GestureDetector(
                 onTap: () => setState(() => _data[key] = hex),
                 child: AnimatedContainer(

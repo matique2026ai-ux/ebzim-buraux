@@ -25,6 +25,7 @@ import 'package:ebzim_app/screens/otp_verification_screen.dart';
 import 'package:ebzim_app/screens/reset_password_screen.dart';
 import 'package:ebzim_app/screens/admin_dashboard_screen.dart';
 import 'package:ebzim_app/screens/admin_create_news_screen.dart';
+import 'package:ebzim_app/screens/admin_create_project_screen.dart';
 import 'package:ebzim_app/screens/admin_create_event_screen.dart';
 import 'package:ebzim_app/screens/admin_cms_manage_screen.dart';
 import 'package:ebzim_app/screens/news_screen.dart';
@@ -339,15 +340,15 @@ final appRouterProvider = Provider((ref) {
         path: '/admin/projects/create',
         pageBuilder: (context, state) {
           if (state.extra is NewsPost) {
-            return _slidePage(state, AdminCreateNewsScreen(existingPost: state.extra as NewsPost));
+            return _slidePage(state, AdminCreateProjectScreen(existingPost: state.extra as NewsPost));
           } else if (state.extra is Map<String, dynamic>) {
             final map = state.extra as Map<String, dynamic>;
-            return _slidePage(state, AdminCreateNewsScreen(
+            return _slidePage(state, AdminCreateProjectScreen(
               existingPost: map['existingPost'] as NewsPost?,
               initialCategory: map['initialCategory'] as String?,
             ));
           }
-          return _slidePage(state, const AdminCreateNewsScreen(initialCategory: 'RESTORATION'));
+          return _slidePage(state, const AdminCreateProjectScreen(initialCategory: 'RESTORATION'));
         },
       ),
       GoRoute(

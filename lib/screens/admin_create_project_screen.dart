@@ -23,9 +23,15 @@ class AdminCreateProjectScreen extends ConsumerStatefulWidget {
 
 class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _titleController;
-  late TextEditingController _summaryController;
-  late TextEditingController _contentController;
+  late TextEditingController _titleArController;
+  late TextEditingController _titleFrController;
+  late TextEditingController _titleEnController;
+  late TextEditingController _summaryArController;
+  late TextEditingController _summaryFrController;
+  late TextEditingController _summaryEnController;
+  late TextEditingController _contentArController;
+  late TextEditingController _contentFrController;
+  late TextEditingController _contentEnController;
   
   String _category = 'RESTORATION';
   String _status = 'PREPARING';
@@ -36,9 +42,15 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.existingPost?.titleAr ?? '');
-    _summaryController = TextEditingController(text: widget.existingPost?.summaryAr ?? '');
-    _contentController = TextEditingController(text: widget.existingPost?.bodyAr ?? '');
+    _titleArController = TextEditingController(text: widget.existingPost?.titleAr ?? '');
+    _titleFrController = TextEditingController(text: widget.existingPost?.titleFr ?? '');
+    _titleEnController = TextEditingController(text: widget.existingPost?.titleEn ?? '');
+    _summaryArController = TextEditingController(text: widget.existingPost?.summaryAr ?? '');
+    _summaryFrController = TextEditingController(text: widget.existingPost?.summaryFr ?? '');
+    _summaryEnController = TextEditingController(text: widget.existingPost?.summaryEn ?? '');
+    _contentArController = TextEditingController(text: widget.existingPost?.bodyAr ?? '');
+    _contentFrController = TextEditingController(text: widget.existingPost?.bodyFr ?? '');
+    _contentEnController = TextEditingController(text: widget.existingPost?.bodyEn ?? '');
     
     if (widget.existingPost != null) {
       _category = widget.existingPost!.category;
@@ -52,9 +64,15 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _summaryController.dispose();
-    _contentController.dispose();
+    _titleArController.dispose();
+    _titleFrController.dispose();
+    _titleEnController.dispose();
+    _summaryArController.dispose();
+    _summaryFrController.dispose();
+    _summaryEnController.dispose();
+    _contentArController.dispose();
+    _contentFrController.dispose();
+    _contentEnController.dispose();
     super.dispose();
   }
 
@@ -91,9 +109,15 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
         await ref.read(newsServiceProvider).updatePost(widget.existingPost!.id, payload);
       } else {
         await ref.read(newsServiceProvider).createPost(
-          title: _titleController.text,
-          summary: _summaryController.text,
-          content: _contentController.text,
+          title: _titleArController.text,
+          titleFr: _titleFrController.text.isNotEmpty ? _titleFrController.text : _titleArController.text,
+          titleEn: _titleEnController.text.isNotEmpty ? _titleEnController.text : _titleArController.text,
+          summary: _summaryArController.text,
+          summaryFr: _summaryFrController.text.isNotEmpty ? _summaryFrController.text : _summaryArController.text,
+          summaryEn: _summaryEnController.text.isNotEmpty ? _summaryEnController.text : _summaryArController.text,
+          content: _contentArController.text,
+          contentFr: _contentFrController.text.isNotEmpty ? _contentFrController.text : _contentArController.text,
+          contentEn: _contentEnController.text.isNotEmpty ? _contentEnController.text : _contentArController.text,
           category: _category,
           projectStatus: _status,
           metadata: {

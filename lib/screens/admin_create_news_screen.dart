@@ -24,8 +24,14 @@ class AdminCreateNewsScreen extends ConsumerStatefulWidget {
 class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleArController = TextEditingController();
+  final _titleFrController = TextEditingController();
+  final _titleEnController = TextEditingController();
   final _summaryArController = TextEditingController();
+  final _summaryFrController = TextEditingController();
+  final _summaryEnController = TextEditingController();
   final _contentArController = TextEditingController();
+  final _contentFrController = TextEditingController();
+  final _contentEnController = TextEditingController();
 
   Uint8List? _selectedFileBytes;
   String? _selectedFileName;
@@ -46,8 +52,14 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
     if (widget.existingPost != null) {
       final p = widget.existingPost!;
       _titleArController.text = p.titleAr;
+      _titleFrController.text = p.titleFr;
+      _titleEnController.text = p.titleEn;
       _summaryArController.text = p.summaryAr;
+      _summaryFrController.text = p.summaryFr;
+      _summaryEnController.text = p.summaryEn;
       _contentArController.text = p.bodyAr;
+      _contentFrController.text = p.bodyFr;
+      _contentEnController.text = p.bodyEn;
       _existingImageUrl = p.imageUrl;
       _isPinned = p.isPinned;
       _category = p.category;
@@ -103,18 +115,18 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         'categoryId': NewsService.newsCategoryId,
         'title': {
           'ar': _titleArController.text,
-          'fr': _titleArController.text.isNotEmpty ? _titleArController.text : ' ',
-          'en': _titleArController.text.isNotEmpty ? _titleArController.text : ' ',
+          'fr': _titleFrController.text.isNotEmpty ? _titleFrController.text : _titleArController.text,
+          'en': _titleEnController.text.isNotEmpty ? _titleEnController.text : _titleArController.text,
         },
         'summary': {
-          'ar': _summaryArController.text.isNotEmpty ? _summaryArController.text : ' ',
-          'fr': _summaryArController.text.isNotEmpty ? _summaryArController.text : ' ',
-          'en': _summaryArController.text.isNotEmpty ? _summaryArController.text : ' ',
+          'ar': _summaryArController.text,
+          'fr': _summaryFrController.text.isNotEmpty ? _summaryFrController.text : _summaryArController.text,
+          'en': _summaryEnController.text.isNotEmpty ? _summaryEnController.text : _summaryArController.text,
         },
         'content': {
           'ar': _contentArController.text,
-          'fr': _contentArController.text.isNotEmpty ? _contentArController.text : ' ',
-          'en': _contentArController.text.isNotEmpty ? _contentArController.text : ' ',
+          'fr': _contentFrController.text.isNotEmpty ? _contentFrController.text : _contentArController.text,
+          'en': _contentEnController.text.isNotEmpty ? _contentEnController.text : _contentArController.text,
         },
         'status': 'PUBLISHED',
         'isFeatured': false,
@@ -142,8 +154,14 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       } else {
         await ref.read(newsServiceProvider).createPost(
               title: _titleArController.text,
+              titleFr: _titleFrController.text.isNotEmpty ? _titleFrController.text : _titleArController.text,
+              titleEn: _titleEnController.text.isNotEmpty ? _titleEnController.text : _titleArController.text,
               summary: _summaryArController.text,
+              summaryFr: _summaryFrController.text.isNotEmpty ? _summaryFrController.text : _summaryArController.text,
+              summaryEn: _summaryEnController.text.isNotEmpty ? _summaryEnController.text : _summaryArController.text,
               content: _contentArController.text,
+              contentFr: _contentFrController.text.isNotEmpty ? _contentFrController.text : _contentArController.text,
+              contentEn: _contentEnController.text.isNotEmpty ? _contentEnController.text : _contentArController.text,
               imageUrl: finalImageUrl,
               isPinned: _isPinned,
               category: _category,
@@ -194,8 +212,14 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
   @override
   void dispose() {
     _titleArController.dispose();
+    _titleFrController.dispose();
+    _titleEnController.dispose();
     _summaryArController.dispose();
+    _summaryFrController.dispose();
+    _summaryEnController.dispose();
     _contentArController.dispose();
+    _contentFrController.dispose();
+    _contentEnController.dispose();
     super.dispose();
   }
 
@@ -330,33 +354,72 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 28),
 
-                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'عنوان الخبر *' : 'عنوان المشروع *'),
+                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'عنوان الخبر (متعدد اللغات) *' : 'عنوان المشروع (متعدد اللغات) *'),
                     const SizedBox(height: 8),
-                    _buildField(
-                      controller: _titleArController,
-                      hint: _category == 'ANNOUNCEMENT' ? 'أدخل عنوان الخبر...' : 'أدخل عنوان المشروع...',
-                      validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null,
+                    DefaultTabController(
+                      length: 3,
+                      child: Column(
+                        children: [
+                          _buildLanguageTabs(),
+                          SliverToBoxAdapter(child: SizedBox(height: 10)), // Dummy spacer
+                          Container(
+                            height: 60,
+                            child: TabBarView(
+                              children: [
+                                _buildField(controller: _titleArController, hint: 'العربية...', validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null),
+                                _buildField(controller: _titleFrController, hint: 'Français...'),
+                                _buildField(controller: _titleEnController, hint: 'English...'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ).animate().fadeIn(delay: 150.ms).slideX(begin: 0.04),
 
                     const SizedBox(height: 20),
 
-                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'ملخص سريع (للبطاقات)' : 'ملخص المشروع (للبطاقات)'),
+                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'ملخص سريع (متعدد اللغات)' : 'ملخص المشروع (متعدد اللغات)'),
                     const SizedBox(height: 8),
-                    _buildField(
-                      controller: _summaryArController,
-                      hint: _category == 'ANNOUNCEMENT' ? 'وصف موجز يظهر في قائمة الأخبار...' : 'وصف موجز للمشروع...',
-                      maxLines: 2,
+                    DefaultTabController(
+                      length: 3,
+                      child: Column(
+                        children: [
+                          _buildLanguageTabs(),
+                          Container(
+                            height: 100,
+                            child: TabBarView(
+                              children: [
+                                _buildField(controller: _summaryArController, hint: 'العربية...', maxLines: 2),
+                                _buildField(controller: _summaryFrController, hint: 'Français...', maxLines: 2),
+                                _buildField(controller: _summaryEnController, hint: 'English...', maxLines: 2),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ).animate().fadeIn(delay: 200.ms).slideX(begin: 0.04),
 
                     const SizedBox(height: 20),
 
-                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'نص الخبر الكامل *' : 'وصف المشروع بالتفصيل *'),
+                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'المحتوى التفصيلي (متعدد اللغات) *' : 'وصف المشروع (متعدد اللغات) *'),
                     const SizedBox(height: 8),
-                    _buildField(
-                      controller: _contentArController,
-                      hint: _category == 'ANNOUNCEMENT' ? 'اكتب محتوى الخبر هنا بالتفصيل...' : 'اكتب تفاصيل المشروع هنا...',
-                      maxLines: 9,
-                      validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null,
+                    DefaultTabController(
+                      length: 3,
+                      child: Column(
+                        children: [
+                          _buildLanguageTabs(),
+                          Container(
+                            height: 250,
+                            child: TabBarView(
+                              children: [
+                                _buildField(controller: _contentArController, hint: 'العربية...', maxLines: 9, validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null),
+                                _buildField(controller: _contentFrController, hint: 'Français...', maxLines: 9),
+                                _buildField(controller: _contentEnController, hint: 'English...', maxLines: 9),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ).animate().fadeIn(delay: 250.ms).slideX(begin: 0.04),
                     
                     const SizedBox(height: 24),
@@ -431,6 +494,42 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                           icon: Icons.assignment_rounded,
                           isSelected: _category == 'EVENT_REPORT',
                           onTap: () => setState(() => _category = 'EVENT_REPORT'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _CategoryChip(
+                          label: 'ذاكرة وطنية',
+                          icon: Icons.history_edu_rounded,
+                          isSelected: _category == 'MEMORY',
+                          onTap: () => setState(() => _category = 'MEMORY'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'سياحة ثقافية',
+                          icon: Icons.map_rounded,
+                          isSelected: _category == 'TOURISM',
+                          onTap: () => setState(() => _category = 'TOURISM'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                         _CategoryChip(
+                          label: 'لجنة الطفل',
+                          icon: Icons.child_care_rounded,
+                          isSelected: _category == 'CHILD',
+                          onTap: () => setState(() => _category = 'CHILD'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'مشروع مؤسساتي',
+                          icon: Icons.business_rounded,
+                          isSelected: _category == 'PROJECT',
+                          onTap: () => setState(() => _category = 'PROJECT'),
                         ),
                       ],
                     ),
@@ -698,6 +797,29 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         isCompleted: false,
       ));
     });
+  }
+
+  Widget _buildLanguageTabs() {
+    return Container(
+      height: 36,
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TabBar(
+        indicatorColor: _kGold,
+        indicatorSize: TabBarIndicatorSize.label,
+        labelColor: _kGold,
+        unselectedLabelColor: Colors.white38,
+        labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+        tabs: const [
+          Tab(text: 'العربية'),
+          Tab(text: 'Français'),
+          Tab(text: 'English'),
+        ],
+      ),
+    );
   }
 
   Future<void> _selectMilestoneDate(int idx) async {

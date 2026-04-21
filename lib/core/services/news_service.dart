@@ -233,8 +233,14 @@ class NewsService {
 
   Future<void> createPost({
     required String title,
+    String? titleFr,
+    String? titleEn,
     required String summary,
+    String? summaryFr,
+    String? summaryEn,
     required String content,
+    String? contentFr,
+    String? contentEn,
     String? imageUrl,
     bool isPinned = false,
     String category = 'ANNOUNCEMENT',
@@ -246,19 +252,19 @@ class NewsService {
       'category': category,
       'projectStatus': projectStatus,
       'title': {
-        'ar': (category != 'ANNOUNCEMENT') ? '[PROJ]$title' : title,
-        'fr': title,
-        'en': title,
+        'ar': (category != 'ANNOUNCEMENT' && !title.startsWith('[PROJ]')) ? '[PROJ]$title' : title,
+        'fr': titleFr ?? title,
+        'en': titleEn ?? title,
       },
       'summary': {
         'ar': summary,
-        'fr': summary,
-        'en': summary,
+        'fr': summaryFr ?? summary,
+        'en': summaryEn ?? summary,
       },
       'content': {
         'ar': content,
-        'fr': content,
-        'en': content,
+        'fr': contentFr ?? content,
+        'en': contentEn ?? content,
       },
       'status': 'PUBLISHED',
       'isPinned': isPinned,
@@ -306,8 +312,18 @@ final adminNewsProvider = FutureProvider<List<NewsPost>>((ref) {
 
 final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
   final news = await ref.watch(newsServiceProvider).getNews();
-  const projectCategories = {'HERITAGE', 'PROJECT', 'RESTORATION', 'SCIENTIFIC', 'CULTURAL', 'ARTISTIC'};
-  return news.where((p) => projectCategories.contains(p.category)).toList();
+  const projectCategories = {
+    'HERITAGE', 
+    'PROJECT', 
+    'RESTORATION', 
+    'SCIENTIFIC', 
+    'CULTURAL', 
+    'ARTISTIC',
+    'MEMORY',
+    'TOURISM',
+    'CHILD'
+  };
+  return news.where((p) => projectCategories.contains(p.category.toUpperCase())).toList();
 });
 
 final postDetailsProvider = FutureProvider.family<NewsPost?, String>((ref, id) {

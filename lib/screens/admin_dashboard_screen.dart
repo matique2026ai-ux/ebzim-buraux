@@ -2608,8 +2608,17 @@ class _AdminNewsCard extends ConsumerWidget {
       'ANNOUNCEMENT': 'إعلان',
       'PARTNERSHIP': 'شراكة رسمية',
       'EVENT_REPORT': 'تقرير نشاط',
+      'HERITAGE': 'تراث وطني',
+      'RESTORATION': 'ترميم معالم',
+      'PROJECT': 'مشروع مؤسساتي',
+      'SCIENTIFIC': 'بحث علمي',
+      'CULTURAL': 'نشاط ثقافي',
+      'ARTISTIC': 'إبداع فني',
+      'MEMORY': 'ذاكرة وطنية',
+      'TOURISM': 'سياحة ثقافية',
+      'CHILD': 'لجنة الطفل',
     };
-    return map[cat] ?? 'عام';
+    return map[cat.toUpperCase()] ?? 'عام';
   }
 }
 
@@ -4277,6 +4286,9 @@ class _ProjectsTab extends ConsumerWidget {
             'CULTURAL',
             'SCIENTIFIC',
             'ARTISTIC',
+            'MEMORY',
+            'TOURISM',
+            'CHILD',
           ];
           final projects = allPosts
               .where(

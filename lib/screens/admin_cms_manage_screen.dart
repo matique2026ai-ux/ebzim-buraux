@@ -552,7 +552,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
 
   String? _getInitialPreviewUrl() {
     if (widget.item == null) return null;
-    if (widget.type == CMSManageType.hero) return (widget.item as HeroSlide).imageUrl;
+    if (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding) return (widget.item as HeroSlide).imageUrl;
     if (widget.type == CMSManageType.partner) return (widget.item as Partner).logoUrl;
     if (widget.type == CMSManageType.leadership) return (widget.item as EbzimLeader).photoUrl;
     return null;
@@ -581,7 +581,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       return;
     }
     final item = widget.item;
-    if (widget.type == CMSManageType.hero) {
+    if (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding) {
       final s = item as HeroSlide;
       _data = {
         'title': {'ar': s.titleAr, 'en': s.titleEn, 'fr': s.titleFr},

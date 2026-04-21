@@ -18,13 +18,13 @@ flutter run -d chrome --web-port 8080
 
 * **Note:** Use 'r' in the terminal for Hot Reload or 'R' for Hot Restart.
 
-3. **Final Production Check (Standard):** Before concluding a session or for final UI verification, use Release mode:
+1. **Final Production Check (Standard):** Before concluding a session or for final UI verification, use Release mode:
 
 ```bash
 flutter run -d chrome --web-port 8080 --release
 ```
 
-4. **Status:** The app is optimized for port 8080. Debug mode is preferred for development speed.
+1. **Status:** The app is optimized for port 8080. Debug mode is preferred for development speed.
 
 ---
 
@@ -109,4 +109,4 @@ To maintain stability and cross-compiler compatibility:
 flutter run -d chrome --web-port 8080 --release
 ```
 
-2. **API Verification:** Ensure `api_client_platform_web.dart` is in "Production" mode for live testing.
+1. **API Verification:** Ensure `api_client_platform_web.dart` is in "Production" mode for live testing.

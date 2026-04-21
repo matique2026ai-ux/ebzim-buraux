@@ -10,7 +10,7 @@
 To run the Ebzim platform correctly in this environment, follow these steps:
 
 1. **Configure API:** Go to `lib/core/services/api_client_platform_web.dart` and ensure `getPlatformBaseUrl` returns the **Production URL**: `https://ebzim-api-prod.onrender.com/api/v1/`. This connects the app to the **Live Backend Server** and **Active Database**.
-2. **Development/Testing (Hot Reload):** Use this command for fast iteration:
+1. **Development/Testing (Hot Reload):** Use this command for fast iteration:
 
 ```bash
 flutter run -d chrome --web-port 8080
@@ -69,8 +69,6 @@ Maintain the "Institutional Prestige" using these strictly enforced design token
 
 ## 🚨 5. Technical Taboos (Do NOT Use)
 
-To maintain stability and cross-compiler compatibility:
-
 1. **NO `.withValues()`**: Always use `.withOpacity()` for colors.
 2. **NO `SlideTransitions` in Router**: Causes infinite loading hangs on Web.
 3. **NO Border Conflicts**: Always import `excel.dart` using `hide Border`.
@@ -84,7 +82,7 @@ To maintain stability and cross-compiler compatibility:
 * **UI Refinement:** 🧹 Removed the "Strategic Partnerships" banner from the `HeritageProjectsScreen` as requested.
 * **Model Synchronization:** 🔄 Realigned the `ProjectMilestone` model (renaming legacy fields to `titleAr`/`titleEn`) and updated all administrative screens to restore build stability.
 * **Documentation Quality:** 📝 Fixed all markdown linting issues in this handover file to maintain professional standards.
-* **Bilingual Typography System:** 🖋️ Deployed `Playfair Display` as the institutional serif font for all FR/EN headings and titles. `Tajawal` is preserved for Arabic. `Cinzel` used for the association name label on the login screen in FR/EN.
+* **Bilingual Typography System:** 🖋️ Deployed `Playfair Display` as the institutional serif font for all FR/EN headings and titles.
 * **Accessibility Hardening:** Removed `fontStyle: italic` from `SectionHeader` and bio text for WCAG compliance.
 * **CMS Governance:** Launched a centralized management screen for Carousel and Onboarding slides.
 * **Build Stability:** Fixed the fatal `dart2js` build error for web production.

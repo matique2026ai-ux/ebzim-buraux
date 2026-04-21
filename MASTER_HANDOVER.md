@@ -1,130 +1,280 @@
-# 👑 Ebzim Sovereign Platform: Comprehensive Master Handover (Final Edition)
+# 👑 Ebzim Sovereign Platform — Comprehensive Master Handover
 
 > [!IMPORTANT]
-> **AGENTS PROTOCOL:** There is ONLY ONE handover file for this project. DO NOT create new handover documents. You MUST merge, update, and refine this existing `MASTER_HANDOVER.md` file at the end of every session. This is the **exclusive source of truth** for the Ebzim Digital Ecosystem.
+> **AGENTS PROTOCOL:** There is ONLY ONE handover file for this project. DO NOT create new handover documents. You MUST merge, update, and refine this existing `MASTER_HANDOVER.md` at the end of every session. This is the **exclusive source of truth** for the Ebzim Digital Ecosystem.
 
 ---
 
 ## ⚡ QUICK START: AI AGENT LAUNCH PROTOCOL (MANDATORY)
 
-**🚨 TO ALL FUTURE AI AGENTS: READ THIS BEFORE DOING ANYTHING 🚨**
-The user requires a very specific workflow for testing the application live in development mode. If you do not follow this, the environment will break.
+**🚨 TO ALL FUTURE AI AGENTS: READ THIS ENTIRE SECTION BEFORE TOUCHING ANYTHING 🚨**
 
-1. **Configure API for Live Testing:**
-   Go to `lib/core/services/api_client_platform_web.dart` and ensure `getPlatformBaseUrl` returns the **Production URL**: `https://ebzim-api-prod.onrender.com/api/v1/`. We test live data even in development mode!
+### Step 1 — Understand the Monorepo Structure
 
-2. **Clear the Port (Crucial Step):**
-   Before running the app, you **MUST** ensure port 8080 is free, as orphaned Dart processes often block it.
+This is a **MONOREPO** containing both the frontend and backend:
 
-   ```powershell
-   netstat -ano | findstr :8080
-   taskkill /PID <PID_NUMBER> /F
-   ```
+```
+c:\ebzim-buraux\
+├── lib/                        ← Flutter Web (Frontend)
+├── backend/                    ← NestJS API (Backend) ← DO NOT IGNORE THIS
+│   ├── src/modules/            ← All API modules
+│   └── src/modules/hero/       ← Example: Hero CMS module
+├── MASTER_HANDOVER.md          ← YOU ARE HERE
+└── render.yaml                 ← Render deployment config (backend)
+```
 
-3. **Launch in Development Mode on Fixed Port:**
-   We always test on a fixed port (8080). Use exactly this command:
+> [!CAUTION]
+> The backend at `c:\ebzim-buraux\backend\` is the **same repository**. Never tell the user "I cannot find the backend" — it is right here. Any change to the backend + `git push` triggers an automatic redeploy on Render.
 
-   ```bash
-   flutter run -d chrome --web-port 8080
-   ```
+### Step 2 — Configure API for Live Testing
 
-   * **Note:** Use 'r' in the terminal for Hot Reload or 'R' for Hot Restart. Do not close the terminal while the user is testing.
+Go to `lib/core/services/api_client_platform_web.dart` and ensure `getPlatformBaseUrl` returns the **Production URL**:
 
-4. **Final Production Check (Standard):**
-   Before concluding a session or for final UI verification, use Release mode to bypass any DevFS quirks:
+```
+https://ebzim-api-prod.onrender.com/api/v1/
+```
 
-   ```bash
-   flutter run -d chrome --web-port 8080 --release
-   ```
+We always test against live data even in development mode.
 
----
+### Step 3 — Clear Port 8080
 
-## 🏗️ 1. System Ecosystem & Platform Overview
+Before running, ensure port 8080 is free (orphaned Dart processes block it):
 
-* **Core Identity:** The official digital gateway for the **Ebzim Association for Culture and Citizenship** (A **Provincial Association / جمعية ولائية** based in Sétif, Algeria). The association is a **Distinguished Member of the UNESCO Network in Algeria**, holding a global reputation for heritage preservation and social development.
-* **Legal Governance:** The platform's logic is strictly derived from the association's **Statutes and Basic Law (Law 06/12)**. Every module (Membership, Committees, Projects) must align with the official legal framework defined in `StatuteService`.
-* **Global Mission:** A high-fidelity, trilingual (AR/FR/EN) associative management system designed to meet international standards (e.g., for presentation to UNESCO). It serves as:
-  1. **Public Portal:** Showcasing the association's news, latest events, and strategic partnerships.
-  2. **Associative Hub:** Managing **Associative Activities and Programs (الأنشطة والبرامج الجمعوية)**, tracking field initiatives, and social development projects via dynamic timelines.
-  3. **Membership Ecosystem:** Managing a digital community with secure authentication, profile management, and high-fidelity **Digital Member ID Cards**.
-  4. **Administrative Governance:** A centralized command center for administrators to manage content, export professional reports (Excel), and oversee platform growth.
-* **Frontend (Flutter Web):** Optimized for **Release Mode** (`--release`) on port 8080 to prevent DDC renderer hangs and support browser features correctly.
-* **Backend (NestJS) — ⚠️ MONOREPO — INSIDE THIS SAME PROJECT:**
-  The backend code is located at **`c:\ebzim-buraux\backend\`** (NestJS + MongoDB via Mongoose).
-  Do NOT search elsewhere. The folder structure is:
-  - `backend/src/modules/` → All API modules (hero, partners, leadership, etc.)
-  - `backend/src/modules/hero/dto/` → DTOs for validation
-  - `backend/src/modules/hero/schemas/` → Mongoose schemas
-  - Production is auto-deployed to **Render** via `git push` to the `main` branch.
-  - Local backend dev: `http://localhost:3000/api/v1/` (run `npm run start:dev` inside `/backend`).
-* **API Pointing:** Ensure `api_client_platform_web.dart` points to the correct environment (Production for live testing, Local for dev).
+```powershell
+netstat -ano | findstr :8080
+taskkill /PID <PID_NUMBER> /F
+```
 
----
+### Step 4 — Launch the App
 
-## 🎨 2. Design Excellence (The Ebzim Standard)
+```bash
+flutter run -d chrome --web-port 8080
+```
 
-Maintain the "Institutional Prestige" using these strictly enforced design tokens:
+- Use `r` for Hot Reload, `R` for Hot Restart.
+- Do not close the terminal while the user is testing.
 
-* **Visual Style:** High-fidelity **Glassmorphism**. Always wrap `BackdropFilter` in `ClipRRect`.
-* **Colors:** Deep Obsidian (`#010A08`), Emerald Green (`#052011`), and Moroccan Gold (`#D4AF37`).
-* **Typography:** **Bilingual font system** — `Tajawal` (AR) / `Playfair Display` (FR/EN) for all headings and titles. `Cairo` for body text. `Cinzel` for the association name label in FR/EN on the login screen. Applied conditionally via `isAr` flag in `app_theme.dart`.
-* **Animations:** "Soulful" micro-interactions only. Use `flutter_animate` with `fadeIn`, `shimmer`, and `slideY`. Standard duration: `600ms`.
-* **Institutional Branding:** Replaced generic icons with a **stone-engraved logo** effect in the footer/branding areas to evoke heritage and permanence.
-
----
-
-## 🔐 3. Security, Auth & User Experience
-
-* **Intelligent Auto-Login:** `SplashScreen` now proactively checks and reacts to authentication states. If a session is valid, it skips the manual "Explore" step and redirects immediately to the appropriate dashboard (Admin or Home).
-* **Credential Recall:** `LoginScreen` pre-fills the last used identity from `StorageService`, reducing repetitive effort for returning users.
-* **Engraved Institutional Identity:** Replaced generic icons/medals with the official association logo styled as a **stone engraving** (via `EbzimLogo`) in the Splash footer, Digital ID Card, and Admin Dashboard.
-* **Browser Autofill:** Login and Register screens are enhanced with `AutofillHints` and `AutofillGroup`.
-
----
-
-## 📊 4. Data Management & Exports
-
-* **Real-Time Analytics:** The "Stats Strip" on the home screen and admin dashboard is now linked to the backend `AdminService` via `publicStatsProvider`, showing live platform counts.
-* **إدارة المشاريع (Project Management):** محرك مرن لإدارة كافة أنشطة الجمعية (اجتماعية، ثقافية، تراثية، علمية). التراث ليس الهدف الوحيد، بل هو جزء من منظومة أهداف متكاملة.
-* **التدقيق المالي (Financial Auditing):** نظام تتبع المساهمات مع معاينة وصولات الدفع لضمان الشفافية.
-* **Web Trigger:** Binary data is served via `triggerWebDownloadBytes` through `WebHelper`.
-* **Dynamic Projects:** Contributions are linked to live heritage projects.
-
----
-
-## 🚨 5. Technical Taboos (Do NOT Use)
-
-1. **NO `.withValues()`**: Always use `.withOpacity()` for colors.
-2. **NO `SlideTransitions` in Router**: Causes infinite loading hangs on Web.
-3. **NO Border Conflicts**: Always import `excel.dart` using `hide Border`.
-4. **NO Network Fonts at Boot**: Prevents rendering blocks on slow connections.
-
----
-
-* **Architectural & Logical Audit:** 🧠 Conducted a comprehensive platform-wide audit. Created `EBZIM_LOGIC_AUDIT.md` as the definitive technical and logical source of truth.
-* **Unified Category System:** 🏷️ Synchronized news and project categories across `NewsService`, `HeritageProjectsScreen`, and the Admin Dashboard. Added new institutional committees: `MEMORY`, `TOURISM`, and `CHILD`.
-* **Bilingual CMS Upgrade:** 🖋️ Transformed the Admin News and Project creation screens into high-fidelity bilingual editors. Admins can now input content in Arabic, French, and English via a tabbed interface.
-* **Filtering & Logic Stabilization:** 🔄 Fixed gaps in project filtering where certain categories (e.g., `PARTNERSHIP`) were omitted. Ensured all project types are tracked with progress sliders and milestones.
-* **Institutional Governance:** 🏛️ Verified platform logic against Algerian Law 06/12 (Statutes). Aligned Executive Board roles and specialized committee definitions with legal requirements.
-
----
-
-## 📋 7. Immediate Priorities for Next Agent
-
-1. **Email Provider Integration:** Replace the simulated email dispatch in `MembershipAdminService` with a real SMTP/REST provider (SendGrid/Mailgun).
-2. **Financial Audit:** Finalize the "Contributions" logic to ensure multi-currency handling for international donors.
-3. **Dedicated Guide Expansion:** Continue populating `EBZIM_LOGIC_AUDIT.md` with edge-case handling for storage and retrieval as the platform scales.
-
-**Handover Status: 🏁 MISSION COMPLETED. THE PLATFORM IS PRODUCTION-READY & SECURE.**
-
----
-
-## 🛠️ 8. Testing Protocol (Crucial)
-
-1. **Launch Command:**
+### Step 5 — Final Production Verification
 
 ```bash
 flutter run -d chrome --web-port 8080 --release
 ```
 
-1. **API Verification:** Ensure `api_client_platform_web.dart` is in "Production" mode for live testing.
+---
+
+## 🏗️ 1. Project Identity & Platform Overview
+
+| Field | Value |
+|---|---|
+| **Association** | Ebzim Association for Culture and Citizenship (جمعية إبزيم للثقافة والمواطنة) |
+| **Type** | Provincial Association — Sétif, Algeria (Law 06/12) |
+| **UNESCO Status** | Distinguished Member of the UNESCO Network in Algeria |
+| **Platform Language** | Trilingual: Arabic (AR), French (FR), English (EN) |
+| **Frontend** | Flutter Web (Dart) |
+| **Backend** | NestJS (TypeScript) — `c:\ebzim-buraux\backend\` |
+| **Database** | MongoDB Atlas (via Mongoose) |
+| **Media Storage** | Cloudinary |
+| **Production Hosting** | Render (auto-deploy from `main` branch via `git push`) |
+| **Frontend Dev Port** | **8080 (FIXED — never change this)** |
+| **Backend Local Dev** | `http://localhost:3000/api/v1/` (run `npm run start:dev` inside `/backend`) |
+| **Production API** | `https://ebzim-api-prod.onrender.com/api/v1/` |
+
+### Platform Roles
+
+The platform serves 4 audiences:
+
+1. **Public Portal** — News, events, partnerships, institutional projects.
+2. **Associative Hub** — Activity and project management with dynamic timelines.
+3. **Membership Ecosystem** — Secure auth, profiles, digital ID cards.
+4. **Admin Governance** — CMS control, member management, Excel exports, reports.
+
+---
+
+## 🗂️ 2. Backend Architecture (NestJS — `c:\ebzim-buraux\backend\`)
+
+### All Backend Modules (`backend/src/modules/`)
+
+| Module | Purpose |
+|---|---|
+| `auth` | JWT-based authentication (Login, Register, OTP, Password Reset) |
+| `users` | User profiles, roles (`SUPER_ADMIN`, `ADMIN`, `AUTHORITY`, `MEMBER`) |
+| `memberships` | Membership applications, approval workflow, status tracking |
+| `hero` | CMS for Home & Onboarding carousel slides |
+| `partners` | Institutional partner management with branding colors |
+| `leadership` | Executive board member management |
+| `posts` | News & institutional project posts (trilingual) |
+| `events` | Event creation and management |
+| `contributions` | Financial contributions linked to projects |
+| `categories` | Shared category taxonomy for posts/projects |
+| `media` | Cloudinary image upload service |
+| `admin` | Admin dashboard stats, member management actions |
+| `reports` | Excel export generation for admin |
+| `settings` | Platform-level configuration |
+| `institutions` | Institution records (shared `MultilingualText` schema) |
+| `mail` | Email dispatch (currently simulated — needs real SMTP) |
+
+### Key Backend Rules
+
+- **Validation:** `ValidationPipe` with `whitelist: true` is active globally. Any field sent from Flutter that is **not declared in the DTO** will be silently stripped. Always verify DTOs when adding new fields.
+- **Update Pattern:** Always use `{ $set: dto }` in `findByIdAndUpdate` to guarantee correct field-level updates in MongoDB.
+- **Schema Defaults:** All optional design fields in `HeroSlide` schema have defaults (`glassColor: '#000000'`, `overlayOpacity: 0.1`).
+- **Redeploy:** Backend changes go live automatically after `git push` to `main` (Render auto-deploy). Wait ~3–5 minutes for the new build.
+
+---
+
+## 📱 3. Frontend Architecture (Flutter Web — `c:\ebzim-buraux\lib\`)
+
+### Key Screens (`lib/screens/`)
+
+| Screen | Route | Notes |
+|---|---|---|
+| `splash_screen.dart` | `/` | Auto-login check — redirects to admin or home if session is valid |
+| `language_selection_screen.dart` | `/lang` | First-run language picker |
+| `onboarding_slider_screen.dart` | `/onboarding` | Intro slides (uses `HeroSlide` with `location: ONBOARDING`) |
+| `login_screen.dart` | `/login` | Pre-fills last used credential |
+| `register_screen.dart` | `/register` | Registration with OTP |
+| `home_screen.dart` | `/home` | Main public portal with Hero carousel, stats, news, projects |
+| `admin_dashboard_screen.dart` | `/admin` | Full admin control center |
+| `admin_cms_manage_screen.dart` | `/admin/cms/...` | CMS CRUD for Hero, Partners, Leadership, Onboarding |
+| `admin_create_news_screen.dart` | `/admin/news/create` | Trilingual news/project editor |
+| `admin_create_project_screen.dart` | `/admin/project/create` | Project with milestones timeline |
+| `dashboard_screen.dart` | `/dashboard` | Member personal dashboard |
+| `profile_screen.dart` | `/profile` | Member profile + Digital ID Card |
+| `heritage_projects_screen.dart` | `/heritage` | All institutional projects |
+| `membership_flow_screen.dart` | `/membership` | Membership application flow |
+| `contributions_screen.dart` | `/contributions` | Financial contributions |
+| `news_screen.dart` | `/news` | News listing |
+| `activities_screen.dart` | `/activities` | Events listing |
+
+### Key Services (`lib/core/services/`)
+
+| Service | Purpose |
+|---|---|
+| `api_client.dart` | Central Dio HTTP client with JWT interceptors |
+| `api_client_platform_web.dart` | **Edit this to switch between Production/Local API** |
+| `auth_service.dart` | Authentication logic and Riverpod providers |
+| `cms_content_service.dart` | Hero slides, partners, leadership CRUD |
+| `news_service.dart` | Posts and projects (with category filtering) |
+| `event_service.dart` | Events CRUD |
+| `member_service.dart` | Member management for admins |
+| `media_service.dart` | Cloudinary upload |
+| `public_stats_service.dart` | Live platform stats (member count, etc.) |
+| `storage_service.dart` | Local storage (SharedPreferences) |
+| `statute_service.dart` | Algerian Law 06/12 statutes |
+| `web_helper_web.dart` | Web-only file download trigger |
+
+---
+
+## 🎨 4. Design System (The Ebzim Institutional Standard)
+
+> [!IMPORTANT]
+> All new UI components MUST follow these rules. Deviating from them is unacceptable.
+
+- **Visual Style:** High-fidelity **Glassmorphism**. Always wrap `BackdropFilter` in `ClipRRect`.
+- **Background:** Use `EbzimBackground` widget for all admin and public screens.
+- **Cards:** Use `GlassCard` widget — never raw `Container` with manual glass effects.
+- **Colors:**
+  - Deep Obsidian: `#010A08`
+  - Emerald Green: `#052011`
+  - Moroccan Gold / Accent: `#D4AF37`
+- **Typography (Bilingual):**
+  - Arabic: `Tajawal` (headings) / `Cairo` (body)
+  - French/English: `Playfair Display` (headings) / system (body)
+  - Login screen association name: `Cinzel`
+  - Applied via `isAr` flag in `app_theme.dart`
+- **Animations:** Use `flutter_animate` — `fadeIn`, `shimmer`, `slideY`. Duration: `600ms` standard.
+- **Logo:** `EbzimLogo` widget — stone-engraved style. Used in Splash, Admin Dashboard, Digital ID Card.
+- **Hero Carousel Design Fields:** Each `HeroSlide` has `glassColor` (hex string, e.g. `#8B0000`) and `overlayOpacity` (double 0.0–1.0) for per-slide gradient customization.
+
+---
+
+## 🔐 5. Security & Auth
+
+- **JWT Auth:** Tokens stored via `StorageService`. Intercepted automatically by `ApiClient`.
+- **Roles:** `SUPER_ADMIN` > `ADMIN` > `AUTHORITY` > `MEMBER`. `SUPER_ADMIN` accounts are protected — they cannot be deleted or demoted.
+- **Auto-Login:** `SplashScreen` reads the stored JWT and redirects automatically on valid sessions.
+- **Credential Recall:** `LoginScreen` pre-fills last used email from `StorageService`.
+- **OTP Verification:** Used for registration and password reset flows.
+- **Browser Autofill:** Both Login and Register use `AutofillHints` and `AutofillGroup`.
+
+---
+
+## 🚨 6. Technical Taboos (NEVER Do These)
+
+1. **NO `.withValues()`** — Always use `.withOpacity()` for colors.
+2. **NO `SlideTransition` in Router** — Causes infinite loading hangs on Flutter Web.
+3. **NO `import 'excel.dart'` without hiding Border** — Always: `import 'package:excel/excel.dart' hide Border;`
+4. **NO Google Fonts loaded at boot over the network** — Pre-bundle or use `GoogleFonts.config.allowRuntimeFetching = false` carefully.
+5. **NO raw `findByIdAndUpdate(id, dto)` in Mongoose** — Always use `findByIdAndUpdate(id, { $set: dto }, { new: true })`.
+6. **NO new handover documents** — Only update THIS file.
+
+---
+
+## 📋 7. CMS Module — Special Notes
+
+The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageType`:
+
+| Type | Schema | Backend Route |
+|---|---|---|
+| `hero` | `HeroSlide` | `PATCH /hero-slides/:id` |
+| `onboarding` | `HeroSlide` (location: ONBOARDING) | `PATCH /hero-slides/:id` |
+| `partner` | `Partner` | `PATCH /partners/:id` |
+| `leadership` | `EbzimLeader` | `PATCH /leadership/:id` |
+
+**Important CMS fixes already applied (April 2026):**
+
+- `_initData` now correctly handles both `hero` AND `onboarding` types (previously only `hero`).
+- `overlayOpacity` is parsed robustly from both `String` and `double` backend responses.
+- `glassColor` hex normalization handles `#` prefix presence/absence.
+- Backend `hero.service.ts` now uses `{ $set: dto }` to correctly persist `glassColor` and `overlayOpacity`.
+
+---
+
+## 📊 8. Data Management
+
+- **News & Projects:** Use the `posts` module with a `category` field. Categories: `ANNOUNCEMENT`, `HERITAGE`, `SOCIAL`, `CULTURAL`, `SCIENTIFIC`, `PARTNERSHIP`, `MEMORY`, `TOURISM`, `CHILD`.
+- **Projects** are filtered on the frontend where `category != ANNOUNCEMENT`.
+- **News** is filtered where `category == ANNOUNCEMENT` or `category` is empty.
+- **Excel Export:** Admin can export member lists to `.xlsx`. Uses the `excel` package (with `hide Border`). Data served via `WebHelper.triggerWebDownloadBytes`.
+- **Financial Contributions:** Linked to projects. Payment receipts tracked.
+- **Live Stats:** `publicStatsProvider` feeds the `StatsStrip` widget on both Home and Admin screens.
+
+---
+
+## 🛠️ 9. Deployment & Git Workflow
+
+```
+Developer Machine
+       │
+       │ git push origin main
+       ▼
+GitHub (matique2026ai-ux/ebzim-buraux)
+       │
+       ├──▶ Render (Backend auto-deploy — wait 3–5 min)
+       │       rootDirectory: backend
+       │       build: npm install && npm run build
+       │       start: npm run start:prod
+       │
+       └──▶ Flutter Web (Manual build or dev mode on port 8080)
+```
+
+**Environment Variables on Render (set in dashboard, never commit):**
+
+- `MONGODB_URI` — MongoDB Atlas connection string
+- `JWT_SECRET` — Auth signing key
+- `JWT_EXPIRES_IN` — `7d`
+- `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET`
+- `MAIL_HOST` / `MAIL_USER` / `MAIL_PASS`
+
+---
+
+## 📌 10. Immediate Priorities for the Next Agent
+
+1. **Email Provider Integration:** Replace simulated email in `mail` module with real SMTP (SendGrid or Mailgun).
+2. **CMS Persistence Verification:** After the April 2026 fix to `hero.service.ts` (`$set` operator), verify in production that `glassColor` and `overlayOpacity` save and reload correctly.
+3. **Financial Audit:** Finalize `contributions` module for multi-currency support (international donors).
+4. **Onboarding CMS:** Verify editing existing Onboarding slides works after the `_initData` fix.
+
+---
+
+**Handover Status: 🔄 IN ACTIVE DEVELOPMENT — Last updated: April 22, 2026**

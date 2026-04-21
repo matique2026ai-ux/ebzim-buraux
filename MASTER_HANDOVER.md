@@ -10,11 +10,12 @@
 **🚨 TO ALL FUTURE AI AGENTS: READ THIS BEFORE DOING ANYTHING 🚨**
 The user requires a very specific workflow for testing the application live in development mode. If you do not follow this, the environment will break.
 
-1. **Configure API for Live Testing:** 
+1. **Configure API for Live Testing:**
    Go to `lib/core/services/api_client_platform_web.dart` and ensure `getPlatformBaseUrl` returns the **Production URL**: `https://ebzim-api-prod.onrender.com/api/v1/`. We test live data even in development mode!
 
 2. **Clear the Port (Crucial Step):**
    Before running the app, you **MUST** ensure port 8080 is free, as orphaned Dart processes often block it.
+
    ```powershell
    netstat -ano | findstr :8080
    taskkill /PID <PID_NUMBER> /F
@@ -22,13 +23,16 @@ The user requires a very specific workflow for testing the application live in d
 
 3. **Launch in Development Mode on Fixed Port:**
    We always test on a fixed port (8080). Use exactly this command:
+
    ```bash
    flutter run -d chrome --web-port 8080
    ```
+
    * **Note:** Use 'r' in the terminal for Hot Reload or 'R' for Hot Restart. Do not close the terminal while the user is testing.
 
-4. **Final Production Check (Standard):** 
+4. **Final Production Check (Standard):**
    Before concluding a session or for final UI verification, use Release mode to bypass any DevFS quirks:
+
    ```bash
    flutter run -d chrome --web-port 8080 --release
    ```

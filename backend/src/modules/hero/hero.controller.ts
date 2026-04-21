@@ -35,6 +35,13 @@ export class HeroController {
     return this.heroService.getAdminTable();
   }
 
+  @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
+  async getAdminByLocation(@Query('location') location: string = 'HOME') {
+    return this.heroService.getAdminByLocation(location);
+  }
+
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN, Role.ADMIN)

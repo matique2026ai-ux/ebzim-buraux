@@ -24,6 +24,10 @@ export class HeroService {
     return this.slideModel.find().sort({ order: 1 }).exec();
   }
 
+  async getAdminByLocation(location: string = 'HOME') {
+    return this.slideModel.find({ location }).sort({ order: 1 }).exec();
+  }
+
   async create(dto: CreateHeroSlideDto) {
     return this.slideModel.create(dto);
   }

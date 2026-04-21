@@ -283,7 +283,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                   ],
                 ),
               ),
-            ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1),
+            )).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1),
           ),
         ],
       ),

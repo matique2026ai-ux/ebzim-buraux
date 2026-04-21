@@ -49,8 +49,8 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final slidesAsync = ref.watch(heroSlidesProvider);
-    final onboardingAsync = ref.watch(onboardingSlidesProvider);
+    final slidesAsync = ref.watch(adminHeroSlidesProvider);
+    final onboardingAsync = ref.watch(adminOnboardingSlidesProvider);
     final partnersAsync = ref.watch(partnersProvider);
     final leadershipAsync = ref.watch(leadershipProvider);
 
@@ -60,6 +60,8 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       body: RefreshIndicator(
         color: AppTheme.accentColor,
         onRefresh: () async {
+          ref.invalidate(adminHeroSlidesProvider);
+          ref.invalidate(adminOnboardingSlidesProvider);
           ref.invalidate(heroSlidesProvider);
           ref.invalidate(onboardingSlidesProvider);
           ref.invalidate(partnersProvider);
@@ -243,6 +245,8 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
   }
 
   void _refresh() {
+    ref.invalidate(adminHeroSlidesProvider);
+    ref.invalidate(adminOnboardingSlidesProvider);
     ref.invalidate(heroSlidesProvider);
     ref.invalidate(onboardingSlidesProvider);
     ref.invalidate(partnersProvider);
@@ -689,8 +693,14 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTicke
       }
 
       // Invalidate relevant providers to force refresh across the app
-      if (widget.type == CMSManageType.hero) ref.invalidate(heroSlidesProvider);
-      if (widget.type == CMSManageType.onboarding) ref.invalidate(onboardingSlidesProvider);
+      if (widget.type == CMSManageType.hero) {
+        ref.invalidate(heroSlidesProvider);
+        ref.invalidate(adminHeroSlidesProvider);
+      }
+      if (widget.type == CMSManageType.onboarding) {
+        ref.invalidate(onboardingSlidesProvider);
+        ref.invalidate(adminOnboardingSlidesProvider);
+      }
       if (widget.type == CMSManageType.partner) ref.invalidate(partnersProvider);
       if (widget.type == CMSManageType.leadership) ref.invalidate(leadershipProvider);
 

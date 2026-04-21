@@ -49,7 +49,14 @@ The user requires a very specific workflow for testing the application live in d
   3. **Membership Ecosystem:** Managing a digital community with secure authentication, profile management, and high-fidelity **Digital Member ID Cards**.
   4. **Administrative Governance:** A centralized command center for administrators to manage content, export professional reports (Excel), and oversee platform growth.
 * **Frontend (Flutter Web):** Optimized for **Release Mode** (`--release`) on port 8080 to prevent DDC renderer hangs and support browser features correctly.
-* **Backend (NestJS):** Production is hosted on **Render**. Local development uses `http://localhost:3000/api/v1/`.
+* **Backend (NestJS) — ⚠️ MONOREPO — INSIDE THIS SAME PROJECT:**
+  The backend code is located at **`c:\ebzim-buraux\backend\`** (NestJS + MongoDB via Mongoose).
+  Do NOT search elsewhere. The folder structure is:
+  - `backend/src/modules/` → All API modules (hero, partners, leadership, etc.)
+  - `backend/src/modules/hero/dto/` → DTOs for validation
+  - `backend/src/modules/hero/schemas/` → Mongoose schemas
+  - Production is auto-deployed to **Render** via `git push` to the `main` branch.
+  - Local backend dev: `http://localhost:3000/api/v1/` (run `npm run start:dev` inside `/backend`).
 * **API Pointing:** Ensure `api_client_platform_web.dart` points to the correct environment (Production for live testing, Local for dev).
 
 ---

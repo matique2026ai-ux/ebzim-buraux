@@ -29,7 +29,9 @@ export class HeroService {
   }
 
   async update(id: string, dto: UpdateHeroSlideDto) {
-    return this.slideModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+    return this.slideModel
+      .findByIdAndUpdate(id, { $set: dto }, { new: true })
+      .exec();
   }
 
   async findOne(id: string) {

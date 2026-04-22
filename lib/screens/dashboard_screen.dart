@@ -28,14 +28,8 @@ Color _textMuted(BuildContext context) => Theme.of(context).brightness == Bright
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
-  String _getLocalizedLevel(UserProfile user, AppLocalizations loc) {
-    switch (user.membershipLevel.toUpperCase()) {
-      case 'SUPER_ADMIN': return loc.dashMemberLevelSuperAdmin;
-      case 'ADMIN': return loc.dashMemberLevelAdmin;
-      case 'PUBLIC': return loc.dashMemberLevelPublic;
-      case 'MEMBER': return loc.dashMemberLevelMember;
-      default: return user.membershipLevel;
-    }
+  String _getLocalizedLevel(UserProfile user, String lang) {
+    return user.role.getLabel(lang);
   }
 
   @override
@@ -75,7 +69,7 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                 );
               }
-              final isAdmin = user.membershipLevel == 'ADMIN' || user.membershipLevel == 'SUPER_ADMIN';
+              final isAdmin = user.role == EbzimRole.admin || user.role == EbzimRole.superAdmin;
               return Row(
                 children: [
                   if (isAdmin)
@@ -93,11 +87,11 @@ class DashboardScreen extends ConsumerWidget {
                       onTap: () => context.push('/profile/edit'),
                       child: CircleAvatar(
                         backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.14),
-                        backgroundImage: user.imageUrl.isNotEmpty && user.imageUrl.startsWith('http')
-                            ? NetworkImage(user.imageUrl)
+                        backgroundImage: (user.imageUrl?.isNotEmpty ?? false) && user.imageUrl!.startsWith('http')
+                            ? NetworkImage(user.imageUrl!)
                             : null,
                         radius: 19,
-                        child: user.imageUrl.isEmpty || !user.imageUrl.startsWith('http')
+                        child: (user.imageUrl?.isEmpty ?? true) || !user.imageUrl!.startsWith('http')
                             ? const Icon(Icons.person_outline_rounded, color: _kGold, size: 20)
                             : null,
                       ),
@@ -117,22 +111,22 @@ class DashboardScreen extends ConsumerWidget {
             // Provide a fallback Guest profile if unauthenticated
             final displayUser = user ?? UserProfile(
               id: 'guest',
-              name: 'Guest User',
-              nameAr: 'زائر',
+              firstName: 'Guest',
+              lastName: 'User',
+              firstNameAr: 'زائر',
+              lastNameAr: '',
               email: '',
               phone: '',
               imageUrl: '',
-              membershipLevel: 'PUBLIC',
-              membershipStatus: 'ACTIVE',
-              profileCompletionPercentage: 0,
+              role: EbzimRole.public,
+              status: 'ACTIVE',
             );
 
             final langCode = Localizations.localeOf(context).languageCode;
             final fullName = displayUser.getName(langCode);
             final firstName = fullName.isNotEmpty ? fullName.split(' ').first : '';
-            final isPublic = displayUser.membershipLevel == 'PUBLIC';
-            final isMember = ['MEMBER', 'ADMIN', 'AUTHORITY', 'SUPER_ADMIN']
-                .contains(displayUser.membershipLevel.toUpperCase());
+            final isPublic = displayUser.role == EbzimRole.public;
+            final isMember = displayUser.role != EbzimRole.public;
 
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -147,8 +141,7 @@ class DashboardScreen extends ConsumerWidget {
                       user: displayUser,
                       firstName: firstName,
                       fullName: fullName,
-                      profileCompletionPercentage: displayUser.profileCompletionPercentage,
-                      levelLabel: _getLocalizedLevel(displayUser, loc),
+                      levelLabel: _getLocalizedLevel(displayUser, langCode),
                       loc: loc,
                       isRtl: isRtl,
                       isPublic: isPublic,
@@ -169,7 +162,7 @@ class DashboardScreen extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: _ProfileCompletionCard(
-                        percentage: displayUser.profileCompletionPercentage,
+                        percentage: (displayUser.profileCompletionPercentage * 100).toInt(),
                         loc: loc,
                       ),
                     ),
@@ -247,13 +240,11 @@ class _HeroSection extends StatelessWidget {
   final bool isPublic;
 
   final String fullName;
-  final int profileCompletionPercentage;
 
   const _HeroSection({
     required this.user,
     required this.firstName,
     required this.fullName,
-    required this.profileCompletionPercentage,
     required this.levelLabel,
     required this.loc,
     required this.isRtl,
@@ -291,10 +282,10 @@ class _HeroSection extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 54,
                   backgroundColor: textColor.withOpacity(0.05),
-                  backgroundImage: user.imageUrl.isNotEmpty && user.imageUrl.startsWith('http')
-                      ? NetworkImage(user.imageUrl)
+                  backgroundImage: (user.imageUrl?.isNotEmpty ?? false) && user.imageUrl!.startsWith('http')
+                      ? NetworkImage(user.imageUrl!)
                       : null,
-                  child: user.imageUrl.isEmpty || !user.imageUrl.startsWith('http')
+                  child: (user.imageUrl?.isEmpty ?? true) || !user.imageUrl!.startsWith('http')
                       ? const Icon(Icons.person_rounded, color: _kGold, size: 48)
                       : null,
                 ),
@@ -337,7 +328,7 @@ class _HeroSection extends StatelessWidget {
             _StatusBadge(
               label: levelLabel, 
               isPublic: isPublic, 
-              rawLevel: user.membershipLevel,
+              role: user.role,
             ),
             const SizedBox(width: 8),
             Container(
@@ -362,7 +353,8 @@ class _HeroSection extends StatelessWidget {
         const SizedBox(height: 16),
         
         // --- LOGICAL NOTE ---
-        if (profileCompletionPercentage < 100)
+        // --- LOGICAL NOTE ---
+        if (isPublic)
           Text(
             'أكمل بياناتك الشخصية للوصول إلى كافة ميزات المنصة',
             style: GoogleFonts.cairo(
@@ -382,18 +374,18 @@ class _HeroSection extends StatelessWidget {
 class _StatusBadge extends StatelessWidget {
   final String label;
   final bool isPublic;
-  final String rawLevel;
+  final EbzimRole role;
 
   const _StatusBadge({
     required this.label, 
     required this.isPublic,
-    required this.rawLevel,
+    required this.role,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isSuperAdmin = rawLevel.toUpperCase() == 'SUPER_ADMIN';
-    final isAdmin = rawLevel.toUpperCase() == 'ADMIN';
+    final isSuperAdmin = role == EbzimRole.superAdmin;
+    final isAdmin = role == EbzimRole.admin;
     
     Color color = isPublic ? _textSecondary(context) : _kGold;
     IconData icon = isPublic ? Icons.person_outline_rounded : Icons.verified_outlined;

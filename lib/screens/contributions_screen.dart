@@ -116,7 +116,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
             // Move Membership section based on role
             ...(() {
               final user = ref.watch(currentUserProvider).asData?.value;
-              final isPublic = user?.membershipLevel.toUpperCase() == 'PUBLIC';
+              final isPublic = user?.role == EbzimRole.public;
 
               final membershipWidget = Column(
                 children: [
@@ -369,7 +369,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
             // If PUBLIC, show membership as an optional secondary action at the bottom
             ...(() {
               final user = ref.watch(currentUserProvider).asData?.value;
-              final isPublic = user?.membershipLevel.toUpperCase() == 'PUBLIC';
+              final isPublic = user?.role == EbzimRole.public;
               
               if (isPublic) {
                 return [

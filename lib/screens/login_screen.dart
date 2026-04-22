@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ebzim_app/core/models/user_profile.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,8 +63,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.isAuthenticated) {
-        final role = next.user?.membershipLevel ?? 'USER';
-        if (role == 'ADMIN' || role == 'SUPER_ADMIN') {
+        final role = next.user?.role ?? EbzimRole.public;
+        if (role == EbzimRole.admin || role == EbzimRole.superAdmin) {
           context.go('/admin');
         } else {
           context.go('/home');

@@ -29,9 +29,9 @@ class AdminUserService {
       
       if (hasPrimary) {
         return users.map((u) {
-          if (u.membershipLevel.toUpperCase() == 'SUPER_ADMIN' && u.email.toLowerCase() != primaryEmail) {
+          if (u.role == EbzimRole.superAdmin && u.email.toLowerCase() != primaryEmail) {
             // Demote system admin or others to ADMIN role to resolve the "Defect" of multiple supervisors
-            return u.copyWith(membershipLevel: 'ADMIN');
+            return u.copyWith(role: EbzimRole.admin);
           }
           return u;
         }).toList();

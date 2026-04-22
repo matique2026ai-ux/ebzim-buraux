@@ -4,6 +4,7 @@ import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/services/storage_service.dart';
 
 import 'package:ebzim_app/core/services/user_profile_service.dart';
+export 'package:ebzim_app/core/models/user_profile.dart';
 
 class AuthState {
   final bool isAuthenticated;
@@ -40,7 +41,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (token != null) {
         print('[DEBUG AUTH] Fetching user profile...');
         final user = await _ref.read(userProfileServiceProvider).fetchUserProfile();
-        print('[DEBUG AUTH] User profile fetched: ${user.name}');
+        print('[DEBUG AUTH] User profile fetched: ${user.getName('en')}');
         state = AuthState(isAuthenticated: true, user: user, isInitializing: false);
       } else {
         print('[DEBUG AUTH] No token, setting initializing to false');

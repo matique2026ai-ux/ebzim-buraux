@@ -291,7 +291,7 @@ class _Step1IdentityForm extends ConsumerWidget {
       if (state.fullName.isEmpty) {
         userAsync.whenData((user) {
           if (user != null) {
-            notifier.updateField('fullName', user.name);
+            notifier.updateField('fullName', user.getName('en'));
             notifier.updateField('email', user.email);
             notifier.updateField('phone', user.phone);
           }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ebzim_app/core/models/user_profile.dart';
 import 'package:ebzim_app/screens/splash_screen.dart';
 import 'package:ebzim_app/screens/language_selection_screen.dart';
 import 'package:ebzim_app/screens/onboarding_slider_screen.dart';
@@ -59,14 +60,11 @@ CustomTransitionPage<T> _slidePage<T>(GoRouterState state, Widget child) {
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       final curve = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
       final reverseCurve = CurvedAnimation(parent: secondaryAnimation, curve: Curves.easeInCubic);
-      return SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero).animate(curve),
+      return FadeTransition(
+        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
         child: FadeTransition(
-          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
-          child: FadeTransition(
-            opacity: Tween<double>(begin: 1.0, end: 0.85).animate(reverseCurve),
-            child: child,
-          ),
+          opacity: Tween<double>(begin: 1.0, end: 0.85).animate(reverseCurve),
+          child: child,
         ),
       );
     },
@@ -84,12 +82,9 @@ CustomTransitionPage<T> _slideHoriz<T>(GoRouterState state, Widget child, {bool 
       final isAr = Directionality.of(context) == TextDirection.rtl;
       final dir = (isAr || rtl) ? -1.0 : 1.0;
       final curve = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
-      return SlideTransition(
-        position: Tween<Offset>(begin: Offset(0.06 * dir, 0), end: Offset.zero).animate(curve),
-        child: FadeTransition(
-          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
-          child: widget,
-        ),
+      return FadeTransition(
+        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
+        child: widget,
       );
     },
   );
@@ -171,8 +166,8 @@ final appRouterProvider = Provider((ref) {
       }
 
       if (isAuthenticated) {
-        final role = authState.user?.membershipLevel ?? 'USER';
-        final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
+        final role = authState.user?.role ?? EbzimRole.public;
+        final isAdmin = role == EbzimRole.admin || role == EbzimRole.superAdmin;
 
         if (isLoggingIn || isRegistering) {
           print('[ROUTER] Auth & at login/reg -> redirect to dash');

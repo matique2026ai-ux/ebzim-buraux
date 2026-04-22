@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:ebzim_app/core/common_widgets/ebzim_logo.dart';
+import 'package:ebzim_app/core/models/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -46,8 +47,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
   }
 
   void _performAuthenticatedRedirect(AuthState auth) {
-    final role = auth.user?.membershipLevel ?? 'USER';
-    final isAdmin = role == 'ADMIN' || role == 'SUPER_ADMIN';
+    final role = auth.user?.role ?? EbzimRole.public;
+    final isAdmin = role == EbzimRole.admin || role == EbzimRole.superAdmin;
     context.go(isAdmin ? '/admin' : '/home');
   }
 

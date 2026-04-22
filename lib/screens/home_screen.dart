@@ -979,8 +979,8 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
     // Check membership status to conditionally show 'Join Now'
     final userState = ref.watch(currentUserProvider);
     final user = userState.value;
-    final role = user?.membershipLevel ?? 'PUBLIC';
-    final isMember = role == 'MEMBER' || role == 'ADMIN' || role == 'SUPER_ADMIN';
+    final role = user?.role ?? EbzimRole.public;
+    final isMember = role != EbzimRole.public;
 
     // Robust color parsing for the masterpiece glass
     Color glassBaseColor = Colors.black.withOpacity(0.1);

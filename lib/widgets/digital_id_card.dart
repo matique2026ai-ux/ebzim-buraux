@@ -105,16 +105,23 @@ class DigitalIdCard extends StatelessWidget {
                             letterSpacing: 1,
                           ),
                         ),
-                        if (['SUPER_ADMIN', 'ADMIN', 'AUTHORITY', 'MEMBER'].contains(user.membershipLevel.toUpperCase()))
+                        if (user.role != EbzimRole.public)
                           Container(
                             margin: const EdgeInsets.only(top: 2),
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                             decoration: BoxDecoration(
-                              color: _getBadgeColor(user),
+                              color: user.role.getBadgeColor(),
                               borderRadius: BorderRadius.circular(4),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: user.role.getBadgeColor().withOpacity(0.3),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                )
+                              ],
                             ),
                             child: Text(
-                              _getBadgeText(user),
+                              user.getInstitutionalTitle(Localizations.localeOf(context).languageCode).toUpperCase(),
                               style: GoogleFonts.playfairDisplay(
                                 color: Colors.white,
                                 fontSize: 8,
@@ -142,10 +149,10 @@ class DigitalIdCard extends StatelessWidget {
                           border: Border.all(color: gold, width: 1.5),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: user.imageUrl.isNotEmpty 
+                        child: user.imageUrl != null && user.imageUrl!.isNotEmpty 
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(2.5),
-                              child: Image.network(user.imageUrl, fit: BoxFit.cover),
+                              child: Image.network(user.imageUrl!, fit: BoxFit.cover),
                             )
                           : Center(child: Icon(Icons.person, color: gold.withOpacity(0.5))),
                       ),
@@ -164,7 +171,7 @@ class DigitalIdCard extends StatelessWidget {
                             const SizedBox(height: 6),
                             _buildCardField(
                               loc.cardMemberId, 
-                              'ID-${user.id.substring(user.id.length - 6).toUpperCase()}',
+                              'ID-${user.id.substring(user.id.length.clamp(0, 6)).toUpperCase()}',
                               isAr
                             ),
                             const SizedBox(height: 6),
@@ -246,40 +253,5 @@ class DigitalIdCard extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Color _getBadgeColor(UserProfile user) {
-    final level = user.membershipLevel.toUpperCase();
-    final badge = user.membershipBadge?.toUpperCase() ?? 'NONE';
-
-    if (badge == 'GOLD') return const Color(0xFFD4AF37);
-    if (badge == 'SILVER') return const Color(0xFF94A3B8);
-    if (badge == 'BRONZE') return const Color(0xFFB45309);
-    if (badge == 'HONORARY') return const Color(0xFF7C3AED);
-
-    switch (level) {
-      case 'SUPER_ADMIN': return Colors.black;
-      case 'ADMIN': return emerald;
-      case 'AUTHORITY': return const Color(0xFFB91C1C); // Deep red
-      case 'MEMBER': return const Color(0xFF0369A1); // Deep blue
-      default: return Colors.grey;
-    }
-  }
-
-  String _getBadgeText(UserProfile user) {
-    final level = user.membershipLevel.toUpperCase();
-    final badge = user.membershipBadge?.toUpperCase() ?? 'NONE';
-
-    if (badge != 'NONE' && badge.isNotEmpty) {
-      return '$level ($badge)';
-    }
-
-    switch (level) {
-      case 'SUPER_ADMIN': return 'SUPER ADMIN (OWNER)';
-      case 'ADMIN': return 'ASSOCIATION ADMIN';
-      case 'AUTHORITY': return 'OFFICIAL AUTHORITY';
-      case 'MEMBER': return 'VERIFIED MEMBER';
-      default: return 'MEMBER';
-    }
   }
 }

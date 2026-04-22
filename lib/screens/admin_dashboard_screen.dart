@@ -82,8 +82,9 @@ class AdminDashboardScreen extends ConsumerWidget {
     }
 
     final userAsync = ref.watch(currentUserProvider);
-    final userRole = userAsync.value?.membershipLevel.toUpperCase() ?? 'ADMIN';
-    final isSuperAdmin = userRole == 'SUPER_ADMIN';
+    final user = userAsync.value;
+    final isSuperAdmin = user?.role == EbzimRole.superAdmin;
+    final isAdmin = user?.role == EbzimRole.admin || isSuperAdmin;
 
     final List<Map<String, dynamic>> allTabs = [
       {
@@ -395,14 +396,14 @@ class _UsersTabState extends State<_UsersTab> {
               CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex),
             )
             .value = TextCellValue(
-          u.name,
+          u.getName('en'),
         );
         sheet
             .cell(
               CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex),
             )
             .value = TextCellValue(
-          u.nameAr,
+          u.getName('ar'),
         );
         sheet
             .cell(
@@ -416,14 +417,14 @@ class _UsersTabState extends State<_UsersTab> {
               CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex),
             )
             .value = TextCellValue(
-          u.phone,
+          u.phone ?? '',
         );
         sheet
             .cell(
               CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex),
             )
             .value = TextCellValue(
-          u.membershipLevel,
+          u.getInstitutionalTitle('en'),
         );
         sheet
             .cell(
@@ -565,9 +566,11 @@ class _UsersTabState extends State<_UsersTab> {
                 usersAsync.when(
                   data: (users) {
                     final filteredUsers = users.where((u) {
-                      final name = u.name.toLowerCase();
+                      final fullName = u.getName('en').toLowerCase();
+                      final fullNameAr = u.getName('ar').toLowerCase();
                       final email = u.email.toLowerCase();
-                      return name.contains(_searchQuery) ||
+                      return fullName.contains(_searchQuery) ||
+                          fullNameAr.contains(_searchQuery) ||
                           email.contains(_searchQuery);
                     }).toList();
 
@@ -655,10 +658,8 @@ class _UserCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBanned = user.status == 'BANNED';
-    final displayName = user.name.trim().isEmpty
-        ? user.email.split('@').first
-        : user.name;
-    final roleColor = _getRoleColor(user.membershipLevel);
+    final displayName = user.getName(Localizations.localeOf(context).languageCode);
+    final roleColor = user.role.getBadgeColor();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -692,10 +693,10 @@ class _UserCard extends ConsumerWidget {
           ),
           child: ClipOval(
             child:
-                user.imageUrl.isNotEmpty &&
-                    !user.imageUrl.contains('placehold.co')
+                (user.imageUrl?.isNotEmpty ?? false) &&
+                    !user.imageUrl!.contains('placehold.co')
                 ? CachedNetworkImage(
-                    imageUrl: user.imageUrl,
+                    imageUrl: user.imageUrl!,
                     fit: BoxFit.cover,
                     placeholder: (_, __) =>
                         const CircularProgressIndicator(strokeWidth: 2),
@@ -740,10 +741,7 @@ class _UserCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 _buildSmallBadge(
-                  label: _getLocalizedRole(
-                    user.membershipLevel,
-                    AppLocalizations.of(context)!,
-                  ),
+                  label: user.getInstitutionalTitle(Localizations.localeOf(context).languageCode),
                   color: roleColor,
                   isOutline: true,
                 ),
@@ -787,7 +785,7 @@ class _UserCard extends ConsumerWidget {
               final confirm = await _confirmDelete(
                 context,
                 'حذف المستخدم',
-                user.name,
+                user.getName('en'),
               );
               if (confirm == true) {
                 await ref.read(adminUserServiceProvider).deleteUser(user.id);
@@ -800,15 +798,9 @@ class _UserCard extends ConsumerWidget {
             color: AppTheme.primaryColor.withOpacity(0.4),
           ),
           itemBuilder: (_) {
-            final currentUserRole =
-                ref
-                    .watch(currentUserProvider)
-                    .value
-                    ?.membershipLevel
-                    .toUpperCase() ??
-                'ADMIN';
-            final isSuper = currentUserRole == 'SUPER_ADMIN';
-            final isTargetSuper = user.membershipLevel.toUpperCase() == 'SUPER_ADMIN';
+            final currentUserRole = ref.watch(currentUserProvider).value?.role ?? EbzimRole.admin;
+            final isSuper = currentUserRole == EbzimRole.superAdmin;
+            final isTargetSuper = user.role == EbzimRole.superAdmin;
 
             return [
               if (isSuper)
@@ -1706,7 +1698,7 @@ class _CMSTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(currentUserProvider);
     final isSuperAdmin =
-        userAsync.value?.membershipLevel.toUpperCase() == 'SUPER_ADMIN';
+        userAsync.value?.role == EbzimRole.superAdmin;
 
     final slidesAsync = ref.watch(heroSlidesProvider);
     final onboardingAsync = ref.watch(onboardingSlidesProvider);
@@ -4105,11 +4097,11 @@ class _EditUserDialogState extends State<_EditUserDialog> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.user.name);
+    _nameController = TextEditingController(text: '${widget.user.firstName} ${widget.user.lastName}'.trim());
     _emailController = TextEditingController(text: widget.user.email);
-    _selectedRole = widget.user.membershipLevel;
+    _selectedRole = widget.user.role.apiValue;
     _selectedBadge = widget.user.membershipBadge ?? 'NONE';
-    _selectedStatus = widget.user.membershipStatus;
+    _selectedStatus = widget.user.status;
   }
 
   @override
@@ -4690,34 +4682,12 @@ class _AdminProjectCardState extends ConsumerState<_AdminProjectCard> {
   }
 }
 
-Color _getRoleColor(String role) {
-  switch (role.toUpperCase()) {
-    case 'SUPER_ADMIN':
-      return const Color(0xFFD4AF37); // Royal Gold
-    case 'ADMIN':
-      return AppTheme.primaryColor;
-    case 'MEMBER':
-      return const Color(0xFF15803D);
-    case 'AUTHORITY':
-      return const Color(0xFFB45309);
-    default:
-      return const Color(0xFF64748B);
-  }
+Color _getRoleColor(EbzimRole role) {
+  return role.getBadgeColor();
 }
 
-String _getLocalizedRole(String role, AppLocalizations loc) {
-  switch (role.toUpperCase()) {
-    case 'SUPER_ADMIN':
-      return loc.dashMemberLevelSuperAdmin;
-    case 'ADMIN':
-      return loc.dashMemberLevelAdmin;
-    case 'MEMBER':
-      return loc.dashMemberLevelMember;
-    case 'PUBLIC':
-      return loc.dashMemberLevelPublic;
-    default:
-      return role;
-  }
+String _getLocalizedRole(EbzimRole role, String lang) {
+  return role.getLabel(lang);
 }
 
 Widget _buildSmallBadge({

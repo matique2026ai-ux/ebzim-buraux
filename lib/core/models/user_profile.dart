@@ -35,19 +35,19 @@ enum EbzimRole {
   String getLabel(String lang) {
     if (lang == 'ar') {
       switch (this) {
-        case superAdmin: return 'رئيس المنصة (سيادي)';
-        case admin: return 'إدارة تنفيذية';
-        case authority: return 'سلطة عمومية';
-        case member: return 'عضو منخرط';
-        case public: return 'زائر';
+        case superAdmin: return 'رئيس الجمعية';
+        case admin: return 'عضو المكتب التنفيذي';
+        case authority: return 'شريك مؤسساتي';
+        case member: return 'عضو عامل';
+        case public: return 'زائر المنصة';
       }
     } else {
       switch (this) {
-        case superAdmin: return 'Super Admin (Sovereign)';
-        case admin: return 'Executive Admin';
-        case authority: return 'Public Authority';
-        case member: return 'Verified Member';
-        case public: return 'Guest';
+        case superAdmin: return 'President of Association';
+        case admin: return 'Executive Board Member';
+        case authority: return 'Institutional Partner';
+        case member: return 'Active Member';
+        case public: return 'Platform Guest';
       }
     }
   }

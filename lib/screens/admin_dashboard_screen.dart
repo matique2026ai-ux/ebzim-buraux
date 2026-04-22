@@ -718,7 +718,7 @@ class _UserCard extends ConsumerWidget {
           style: GoogleFonts.tajawal(
             fontWeight: FontWeight.bold,
             fontSize: 15,
-            color: const Color(0xFF1A1A2E),
+            color: const Color(0xFF052011),
           ),
         ),
         subtitle: Column(
@@ -753,12 +753,24 @@ class _UserCard extends ConsumerWidget {
                         ? Icons.stars_rounded
                         : user.membershipBadge == 'DIAMOND'
                         ? Icons.diamond_rounded
+                        : user.membershipBadge == 'SILVER'
+                        ? Icons.emoji_events_rounded
+                        : user.membershipBadge == 'PRESIDENT'
+                        ? Icons.gavel_rounded
+                        : user.membershipBadge == 'SECRETARY'
+                        ? Icons.history_edu_rounded
                         : Icons.workspace_premium_rounded,
                     size: 16,
                     color: user.membershipBadge == 'GOLD'
                         ? const Color(0xFFFFD700)
                         : user.membershipBadge == 'DIAMOND'
                         ? const Color(0xFF00E5FF)
+                        : user.membershipBadge == 'SILVER'
+                        ? const Color(0xFFC0C0C0)
+                        : user.membershipBadge == 'PRESIDENT'
+                        ? const Color(0xFFD4AF37)
+                        : user.membershipBadge == 'SECRETARY'
+                        ? const Color(0xFF052011)
                         : const Color(0xFFCD7F32),
                   ),
                 ],
@@ -1102,7 +1114,7 @@ class _MembershipTabState extends ConsumerState<_MembershipTab> {
                   style: GoogleFonts.tajawal(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1A1A2E),
+                    color: const Color(0xFF052011),
                   ),
                 ),
                 Row(
@@ -1272,7 +1284,7 @@ class _EventsTab extends ConsumerWidget {
                   style: GoogleFonts.tajawal(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1A1A2E),
+                    color: const Color(0xFF052011),
                   ),
                 ),
                 GestureDetector(
@@ -1371,20 +1383,7 @@ class _NewsTab extends ConsumerWidget {
             const SizedBox(height: 20),
             newsAsync.when(
               data: (allPosts) {
-                const newsCategories = {
-                  'ANNOUNCEMENT',
-                  'PARTNERSHIP',
-                  'EVENT_REPORT',
-                };
-                final posts = allPosts
-                    .where(
-                      (p) =>
-                          newsCategories.contains(
-                            p.category?.toUpperCase() ?? '',
-                          ) ||
-                          p.category == null,
-                    )
-                    .toList();
+                final posts = allPosts.where((p) => p.isInstitutionalNews).toList();
                 return Row(
                   children: [
                     _StatCard(
@@ -1419,7 +1418,7 @@ class _NewsTab extends ConsumerWidget {
                   style: GoogleFonts.tajawal(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1A1A2E),
+                    color: const Color(0xFF052011),
                   ),
                 ),
                 GestureDetector(
@@ -2311,7 +2310,7 @@ class _AdminEventCard extends ConsumerWidget {
                       style: GoogleFonts.tajawal(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: const Color(0xFF1A1A2E),
+                        color: const Color(0xFF052011),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -2493,7 +2492,7 @@ class _AdminNewsCard extends ConsumerWidget {
                     style: GoogleFonts.tajawal(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
-                      color: const Color(0xFF1A1A2E),
+                      color: const Color(0xFF052011),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -2695,7 +2694,7 @@ class _MembershipRequestCard extends ConsumerWidget {
                       style: GoogleFonts.tajawal(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: const Color(0xFF1A1A2E),
+                        color: const Color(0xFF052011),
                       ),
                     ),
                     Text(
@@ -3222,7 +3221,7 @@ class _InfoItem extends StatelessWidget {
           style: GoogleFonts.tajawal(
             fontSize: 12,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF1A1A2E),
+            color: const Color(0xFF052011),
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -3359,7 +3358,7 @@ class _ReportCard extends StatelessWidget {
                           style: GoogleFonts.tajawal(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
-                            color: const Color(0xFF1A1A2E),
+                            color: const Color(0xFF052011),
                           ),
                         ),
                       ),
@@ -3762,7 +3761,7 @@ class _SectionHeader extends StatelessWidget {
                 style: GoogleFonts.tajawal(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1A1A2E),
+                  color: const Color(0xFF052011),
                 ),
               ),
               Text(
@@ -3974,7 +3973,7 @@ class _SettingsItemCard extends StatelessWidget {
                 style: GoogleFonts.tajawal(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: const Color(0xFF1A1A2E),
+                  color: const Color(0xFF052011),
                 ),
               ),
             ],
@@ -4206,11 +4205,11 @@ class _EditUserDialogState extends State<_EditUserDialog> {
   Widget _buildRoleDropdown() {
     final roles = ['PUBLIC', 'MEMBER', 'ADMIN', 'SUPER_ADMIN', 'AUTHORITY'];
     final roleLabels = {
-      'PUBLIC': 'زائر',
-      'MEMBER': 'عضو مشارك',
-      'ADMIN': 'مسؤول نظام',
-      'SUPER_ADMIN': 'مدير عام (Super Admin)',
-      'AUTHORITY': 'سلطة محلية',
+      'PUBLIC': 'زائر المنصة',
+      'MEMBER': 'عضو عامل',
+      'ADMIN': 'عضو المكتب التنفيذي',
+      'SUPER_ADMIN': 'رئيس الجمعية',
+      'AUTHORITY': 'شريك مؤسساتي',
     };
     return DropdownButtonFormField<String>(
       value: _selectedRole,
@@ -4231,13 +4230,29 @@ class _EditUserDialogState extends State<_EditUserDialog> {
   }
 
   Widget _buildBadgeDropdown() {
-    final badges = ['NONE', 'NORMAL', 'BRONZE', 'GOLD', 'DIAMOND'];
+    final badges = [
+      'NONE',
+      'NORMAL',
+      'BRONZE',
+      'SILVER',
+      'GOLD',
+      'DIAMOND',
+      'PRESIDENT',
+      'SECRETARY',
+      'TREASURER',
+      'VICE_PRESIDENT'
+    ];
     final labels = {
       'NONE': 'بدون وسام',
-      'NORMAL': 'مستخدم عادي',
-      'BRONZE': 'مستخدم برونزي',
-      'GOLD': 'مستخدم ذهبي',
-      'DIAMOND': 'مستخدم ماسي',
+      'NORMAL': 'عضو عادي',
+      'BRONZE': 'عضو برونزي',
+      'SILVER': 'عضو فضي',
+      'GOLD': 'عضو ذهبي',
+      'DIAMOND': 'عضو ماسي',
+      'PRESIDENT': 'رئيس الجمعية (Badge)',
+      'SECRETARY': 'الكاتب العام (Badge)',
+      'TREASURER': 'أمين المال (Badge)',
+      'VICE_PRESIDENT': 'نائب الرئيس (Badge)',
     };
     return DropdownButtonFormField<String>(
       value: _selectedBadge,
@@ -4334,25 +4349,7 @@ class _ProjectsTab extends ConsumerWidget {
       onRefresh: () async => ref.invalidate(adminNewsProvider),
       child: newsAsync.when(
         data: (allPosts) {
-          final projectCategories = [
-            'HERITAGE',
-            'PROJECT',
-            'RESTORATION',
-            'CULTURAL',
-            'SCIENTIFIC',
-            'ARTISTIC',
-            'MEMORY',
-            'TOURISM',
-            'CHILD',
-            'PARTNERSHIP',
-            'EVENT_REPORT',
-          ];
-          final projects = allPosts
-              .where(
-                (p) =>
-                    projectCategories.contains(p.category?.toUpperCase() ?? ''),
-              )
-              .toList();
+          final projects = allPosts.where((p) => p.isFieldProject).toList();
           final avgProgress = projects.isEmpty
               ? 0
               : (projects
@@ -4412,7 +4409,7 @@ class _ProjectsTab extends ConsumerWidget {
                       style: GoogleFonts.tajawal(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1A1A2E),
+                        color: const Color(0xFF052011),
                       ),
                     ),
                     GestureDetector(

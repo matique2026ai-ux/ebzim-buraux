@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MembershipDocument } from '../memberships/schemas/membership.schema';
 import { ReportDocument } from '../reports/schemas/report.schema';
-import { EventDocument } from '../events/schemas/event.schema';
+import { EventDocument, EventRsvpDocument } from '../events/schemas/event.schema';
 import { ContributionDocument } from '../contributions/schemas/contribution.schema';
 import { PostDocument } from '../posts/schemas/post.schema';
 import { UserDocument } from '../users/schemas/user.schema';
@@ -15,6 +15,8 @@ export class AdminService {
     private membershipModel: Model<MembershipDocument>,
     @InjectModel('Report') private reportModel: Model<ReportDocument>,
     @InjectModel('Event') private eventModel: Model<EventDocument>,
+    @InjectModel('EventRsvp')
+    private eventRsvpModel: Model<EventRsvpDocument>,
     @InjectModel('Contribution')
     private contributionModel: Model<ContributionDocument>,
     @InjectModel('Post') private postModel: Model<PostDocument>,
@@ -68,10 +70,12 @@ export class AdminService {
       throw new Error('Cannot delete a Super Admin account');
     }
     
-    // Cleanup associated records to avoid orphaned data
+    // Cleanup associated records to avoid orphaned data (Ebzim Logic Audit compliance)
     await Promise.all([
       this.membershipModel.deleteMany({ userId }),
       this.contributionModel.deleteMany({ userId }),
+      this.reportModel.deleteMany({ reporterId: userId }),
+      this.eventRsvpModel.deleteMany({ userId }),
     ]);
 
     return this.userModel.findByIdAndDelete(userId);

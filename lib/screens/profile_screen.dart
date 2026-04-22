@@ -533,6 +533,11 @@ class _HonoraryMedal extends StatelessWidget {
         icon = Icons.workspace_premium_rounded;
         label = 'برونزي';
         break;
+      case 'SILVER':
+        color = const Color(0xFFC0C0C0); // Silver
+        icon = Icons.emoji_events_rounded;
+        label = 'فضي';
+        break;
       case 'GOLD':
         color = const Color(0xFFFFD700);
         icon = Icons.stars_rounded;
@@ -547,6 +552,26 @@ class _HonoraryMedal extends StatelessWidget {
         color = const Color(0xFFA8A29E);
         icon = Icons.shield_rounded;
         label = 'عادي';
+        break;
+      case 'PRESIDENT':
+        color = const Color(0xFFD4AF37); // Gold
+        icon = Icons.gavel_rounded;
+        label = 'الرئيس';
+        break;
+      case 'SECRETARY':
+        color = const Color(0xFF052011); // Emerald
+        icon = Icons.history_edu_rounded;
+        label = 'الكاتب العام';
+        break;
+      case 'TREASURER':
+        color = const Color(0xFF15803D); // Green
+        icon = Icons.account_balance_wallet_rounded;
+        label = 'أمين المال';
+        break;
+      case 'VICE_PRESIDENT':
+        color = const Color(0xFF0EA5E9); // Blue
+        icon = Icons.groups_rounded;
+        label = 'نائب الرئيس';
         break;
       default: return const SizedBox();
     }

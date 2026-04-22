@@ -26,15 +26,16 @@ c:\ebzim-buraux\
 > [!CAUTION]
 > The backend at `c:\ebzim-buraux\backend\` is the **same repository**. Never tell the user "I cannot find the backend" — it is right here. Any change to the backend + `git push` triggers an automatic redeploy on Render.
 
-### Step 2 — Configure API for Live Testing
+### Step 2 — Configure API for Live Testing (THE GOLDEN RULE)
+
+> [!CAUTION]
+> **MANDATORY:** We ALWAYS test against LIVE data even in development mode. NEVER switch to localhost unless you are explicitly debugging a local backend change.
 
 Go to `lib/core/services/api_client_platform_web.dart` and ensure `getPlatformBaseUrl` returns the **Production URL**:
 
-```
+```dart
 https://ebzim-api-prod.onrender.com/api/v1/
 ```
-
-We always test against live data even in development mode.
 
 ### Step 3 — Clear Port 8080
 
@@ -45,20 +46,23 @@ netstat -ano | findstr :8080
 taskkill /PID <PID_NUMBER> /F
 ```
 
-### Step 4 — Launch the App
+### Step 4 — Launch the App (The "Zero Spinner" Way)
 
 ```bash
-flutter run -d chrome --web-port 8080
+# 1. First, clear the port (crucial for Windows)
+netstat -ano | findstr :8080
+taskkill /PID <PID_NUMBER> /F
+
+# 2. Run in Release mode with fixed port to bypass Debug/WebSocket hangs
+flutter run -d web-server --web-port 8080 --release
 ```
 
-- Use `r` for Hot Reload, `R` for Hot Restart.
-- Do not close the terminal while the user is testing.
+- **Note:** We forced `window.flutterWebRenderer = "html"` in `index.html` to guarantee stability.
+- Use `web-server` for headless hosting or `chrome` for local interaction.
 
-### Step 5 — Final Production Verification
+### Step 5 — Production Sync (Backend Deployment)
 
-```bash
-flutter run -d chrome --web-port 8080 --release
-```
+Every `git push origin main` triggers a redeploy of the **NestJS Backend** on Render. Wait 3-5 mins for the "Live Deletion Cleanup" logic to take effect.
 
 ---
 
@@ -282,3 +286,4 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 
 **Handover Status: 🏁 STABLE & VERIFIED — Last updated: April 22, 2026**
 **Current State: Platform fully synchronized. Admin access secured. Profile completion at 100%.**
+**🚨 FINAL MANDATE: LIVE TESTING IS NON-NEGOTIABLE. TEST AGAINST THE PRODUCTION API.**

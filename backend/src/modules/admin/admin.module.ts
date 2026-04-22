@@ -5,7 +5,7 @@ import { PublicStatsController } from './public-stats.controller';
 import { AdminService } from './admin.service';
 import { MembershipSchema } from '../memberships/schemas/membership.schema';
 import { ReportSchema } from '../reports/schemas/report.schema';
-import { EventSchema } from '../events/schemas/event.schema';
+import { EventSchema, EventRsvpSchema } from '../events/schemas/event.schema';
 import { ContributionSchema } from '../contributions/schemas/contribution.schema';
 import { PostSchema } from '../posts/schemas/post.schema';
 import { UserSchema } from '../users/schemas/user.schema';
@@ -16,6 +16,7 @@ import { UserSchema } from '../users/schemas/user.schema';
       { name: 'Membership', schema: MembershipSchema },
       { name: 'Report', schema: ReportSchema },
       { name: 'Event', schema: EventSchema },
+      { name: 'EventRsvp', schema: EventRsvpSchema },
       { name: 'Contribution', schema: ContributionSchema },
       { name: 'Post', schema: PostSchema },
       { name: 'User', schema: UserSchema },

@@ -146,6 +146,31 @@ class NewsPost {
     );
   }
 
+  bool get isFieldProject {
+    const fieldCategories = {
+      'HERITAGE',
+      'PROJECT',
+      'RESTORATION',
+      'CULTURAL',
+      'SCIENTIFIC',
+      'ARTISTIC',
+      'MEMORY',
+      'TOURISM',
+      'CHILD',
+    };
+    return fieldCategories.contains(category.toUpperCase());
+  }
+
+  bool get isInstitutionalNews {
+    const institutionalCategories = {
+      'ANNOUNCEMENT',
+      'PARTNERSHIP',
+      'PRESS_RELEASE',
+      'EVENT_REPORT',
+    };
+    return institutionalCategories.contains(category.toUpperCase());
+  }
+
   String getTitle(String lang) {
     if (lang == 'ar') return titleAr;
     if (lang == 'fr' && titleFr.isNotEmpty) return titleFr;

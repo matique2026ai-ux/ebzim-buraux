@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/models/news_post.dart';
@@ -11,10 +12,18 @@ class NewsService {
   Future<List<NewsPost>> getNews() async {
     try {
       final response = await _ref.read(apiClientProvider).dio.get('posts');
-      final List data = response.data;
-      return data.map((e) => NewsPost.fromJson(e)).toList();
+      final dynamic responseData = response.data;
+      List rawList = [];
+      
+      if (responseData is List) {
+        rawList = responseData;
+      } else if (responseData is Map && responseData['data'] is List) {
+        rawList = responseData['data'];
+      }
+      
+      return rawList.map((e) => NewsPost.fromJson(e)).toList();
     } catch (e) {
-      print('DEBUG: NewsService error: $e');
+      if (kDebugMode) print('DEBUG: NewsService error: $e');
       return [];
     }
   }
@@ -22,9 +31,16 @@ class NewsService {
   Future<List<NewsPost>> getAdminNews() async {
     try {
       final response = await _ref.read(apiClientProvider).dio.get('posts');
-      final List data = response.data;
-      // In admin we might want to see all posts including drafts if the backend supports it
-      return data.map((e) => NewsPost.fromJson(e)).toList();
+      final dynamic responseData = response.data;
+      List rawList = [];
+      
+      if (responseData is List) {
+        rawList = responseData;
+      } else if (responseData is Map && responseData['data'] is List) {
+        rawList = responseData['data'];
+      }
+      
+      return rawList.map((e) => NewsPost.fromJson(e)).toList();
     } catch (e) {
       return [];
     }

@@ -27,8 +27,8 @@ export class HeroSlide {
   @Prop({ type: String, default: '' })
   videoUrl?: string;
 
-  @Prop({ type: String, default: '#000000' })
-  glassColor?: string;
+  @Prop({ type: String, default: '#1A6B3A' })
+  overlayColor?: string;
 
   @Prop({ type: Number, default: 0.1 })
   overlayOpacity: number;

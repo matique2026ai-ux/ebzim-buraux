@@ -38,7 +38,7 @@ export class CreateHeroSlideDto {
 
   @IsString()
   @IsOptional()
-  glassColor?: string;
+  overlayColor?: string;
 
   @IsNumber()
   @IsOptional()

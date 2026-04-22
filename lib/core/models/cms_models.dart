@@ -8,7 +8,7 @@ class HeroSlide {
   final String subtitleFr;
   final String imageUrl;
   final String? videoUrl;
-  final String? glassColor;
+  final String? overlayColor;
   final double overlayOpacity;
   final String? buttonText;
   final String? buttonLink;
@@ -26,7 +26,7 @@ class HeroSlide {
     required this.subtitleFr,
     required this.imageUrl,
     this.videoUrl,
-    this.glassColor,
+    this.overlayColor,
     this.overlayOpacity = 0.1,
     this.buttonText,
     this.buttonLink,
@@ -48,8 +48,8 @@ class HeroSlide {
       subtitleFr: subtitle['fr']?.toString() ?? '',
       imageUrl: json['imageUrl']?.toString() ?? '',
       videoUrl: json['videoUrl']?.toString(),
-      glassColor: json['glassColor']?.toString(),
-      overlayOpacity: json['overlayOpacity'] != null ? double.tryParse(json['overlayOpacity'].toString()) ?? 0.1 : 0.1,
+      overlayColor: (json['overlayColor'] ?? json['overlay_color'] ?? json['glassColor'] ?? json['glass_color'])?.toString(),
+      overlayOpacity: _parseOpacity(json),
       buttonText: json['buttonText']?.toString(),
       buttonLink: json['buttonLink']?.toString(),
       order: json['order'] is int ? json['order'] : 0,
@@ -83,6 +83,12 @@ class HeroSlide {
     else if (!_isJunk(subtitleEn)) val = subtitleEn;
     else val = lang == 'ar' ? 'جمعية إبزيم هي المساحة الولائية لتسخير المعارف والوسائل في سبيل حماية الهوية الجزائرية.' : 'L\'association Ebzim est l\'espace pour la protection de l\'identité algérienne.';
     return val;
+  }
+
+  static double _parseOpacity(Map<String, dynamic> json) {
+    final val = json['overlayOpacity'] ?? json['overlay_opacity'] ?? json['opacity'];
+    if (val == null) return 0.1;
+    return double.tryParse(val.toString()) ?? 0.1;
   }
 }
 

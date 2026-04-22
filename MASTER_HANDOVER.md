@@ -5,6 +5,28 @@
 
 ---
 
+## 🚨 CRITICAL STABILITY LESSONS (APRIL 2026) — READ FIRST
+
+### 1. The "Infinite Spinner" Incident
+- **Issue:** A custom CSS/HTML loader in `index.html` caused an infinite hang because it didn't account for Flutter initialization failures or environment mismatches.
+- **Lesson:** **NEVER** modify the low-level `index.html` or `main.dart` boot sequence unless testing incrementally. We have restored the **Classic Flutter Web Loader** for maximum compatibility.
+- **Rule:** If the app stays white or spins forever, the root cause is usually a **Data Parsing Error** (Crash) in `main.dart` or `home_screen.dart` before the first frame is rendered.
+
+### 2. Defensive Data Parsing (Cloud vs Local)
+- **The Bug:** The production cloud API (Render) returns data wrapped in a `{"data": [...]}` object, while local/mock code might return a raw `List`.
+- **Lesson:** **ALWAYS** use defensive parsing in services (like `NewsService`). 
+- **Code Pattern:** 
+  ```dart
+  final responseData = response.data;
+  List rawList = (responseData is Map) ? (responseData['data'] ?? []) : (responseData as List);
+  ```
+- **Failure Consequence:** If a `Provider` throws an unhandled error during `HomeScreen` build, the UI will freeze or stay in a loading state (infinite spinner).
+
+### 3. CanvasKit Rendering
+- **Lesson:** For premium glassmorphism and images, **ALWAYS** recommend `canvaskit` renderer, though `html` is safer for low-end compatibility.
+
+---
+
 ## ⚡ QUICK START: AI AGENT LAUNCH PROTOCOL (MANDATORY)
 
 **🚨 TO ALL FUTURE AI AGENTS: READ THIS ENTIRE SECTION BEFORE TOUCHING ANYTHING 🚨**
@@ -256,6 +278,12 @@ GitHub (matique2026ai-ux/ebzim-buraux)
        │
        ├──▶ Render (Backend auto-deploy — wait 3–5 min)
        │       rootDirectory: backend
+       │### **🚨 دروس الاستقرار الحرجة (أبريل 2026)**
+
+1.  **تسلسل الإقلاع (Boot Sequence):** يمنع منعاً باتاً تعديل `index.html` أو البنية الأساسية للبوت (`main.dart`) دون نسخة احتياطية؛ فقد تسبب ذلك سابقاً في "الشاشة البيضاء".
+2.  **تحصين البيانات (Defensive Parsing):** السيرفر السحابي قد يرسل البيانات كـ `List` أو `Map { data: [] }`. تم تعديل `NewsService` و `CMSContentService` ليدعم كلا الحالتين.
+3.  **مزامنة التصميم (Design Token Sync):** تم تحويل حقل اللون من `glassColor` إلى `overlayColor` لتجنب مشاكل التخزين في السيرفر. يجب استخدام `HeroSlide.overlayColor` و `HeroSlide.overlayOpacity` دائماً لبناء البطاقات الزجاجية.
+4.  **القيم الافتراضية:** في حالة فشل السيرفر في إعادة لون، يتم استخدام اللون الأخضر الزمردي `#1A6B3A` كقيمة افتراضية مؤسسية بدلاً من الأسود.
        │       build: npm install && npm run build
        │       start: npm run start:prod
        │

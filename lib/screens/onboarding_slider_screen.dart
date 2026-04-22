@@ -287,38 +287,77 @@ class _OnboardingSliderScreenState
               ),
             ).animate(key: ValueKey('tag_$index')).fadeIn(delay: 200.ms).slideX(begin: -0.1),
 
-            const SizedBox(height: 24),
-
-            // Main Title
-            Text(
-              slide.getTitle(locale),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 42,
-                fontWeight: FontWeight.w900,
-                height: 1.1,
-                letterSpacing: -1,
-              ),
-            ).animate(key: ValueKey('title_$index')).fadeIn(delay: 400.ms).slideY(begin: 0.1),
-
-            const SizedBox(height: 20),
-
-            // Description
-            Text(
-              slide.getSubtitle(locale),
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
-                fontSize: 16,
-                height: 1.6,
-                fontWeight: FontWeight.w300,
-              ),
-            ).animate(key: ValueKey('desc_$index')).fadeIn(delay: 600.ms).slideY(begin: 0.1),
-
-            const SizedBox(height: 160), // Spacer for bottom actions
+            // Glass Card for Content
+            _buildGlassCard(slide, locale, index),
+            
+            const SizedBox(height: 120), // Spacer for bottom actions
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildGlassCard(HeroSlide slide, String locale, int index) {
+    // Standardize design token parsing (Copy-pasted logic from HomeScreen for consistency)
+    final double finalOpacity = slide.overlayOpacity;
+    Color glassBaseColor = Colors.black;
+
+    if (slide.overlayColor != null && slide.overlayColor!.trim().isNotEmpty) {
+      try {
+        String hex = slide.overlayColor!.trim().toUpperCase().replaceFirst('#', '');
+        if (hex.length == 3) hex = hex.split('').map((c) => c + c).join('');
+        if (hex.length == 6) hex = 'FF$hex';
+        if (hex.length == 8) glassBaseColor = Color(int.parse(hex, radix: 16));
+      } catch (e) {
+        glassBaseColor = AppTheme.primaryColor;
+      }
+    }
+    
+    final Color finaloverlayColor = glassBaseColor.withOpacity(finalOpacity);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(32),
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            color: finaloverlayColor,
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.5),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Main Title
+              Text(
+                slide.getTitle(locale),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  height: 1.1,
+                  letterSpacing: -1,
+                ),
+              ).animate(key: ValueKey('title_$index')).fadeIn(delay: 400.ms).slideY(begin: 0.1),
+
+              const SizedBox(height: 16),
+
+              // Description
+              Text(
+                slide.getSubtitle(locale),
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.85),
+                  fontSize: 15,
+                  height: 1.6,
+                  fontWeight: FontWeight.w400,
+                ),
+              ).animate(key: ValueKey('desc_$index')).fadeIn(delay: 600.ms).slideY(begin: 0.1),
+            ],
+          ),
+        ),
+      ),
+    ).animate(key: ValueKey('glass_$index')).fadeIn(delay: 300.ms).slideY(begin: 0.1);
   }
 
   Widget _buildFooter(int totalPages, AppLocalizations loc, bool isAr) {

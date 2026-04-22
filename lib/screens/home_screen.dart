@@ -968,19 +968,38 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
     final role = user?.role ?? EbzimRole.public;
     final isMember = role != EbzimRole.public;
 
-    // Standardize glass card color and opacity from slide design tokens
-    Color glassBaseColor = Colors.black.withOpacity(0.2); // Default fallback
-    if (slide.glassColor != null && slide.glassColor!.isNotEmpty) {
+    // 🛡️ Robust Design Token Parsing
+    // 1. Determine definitive opacity (fallback to 0.1)
+    final double finalOpacity = slide.overlayOpacity;
+    
+    // 2. Determine base color (fallback to black)
+    Color glassBaseColor = Colors.black;
+    
+    if (slide.overlayColor != null && slide.overlayColor!.trim().isNotEmpty) {
       try {
-        String hex = slide.glassColor!.replaceFirst('#', '');
-        if (hex.length == 3) hex = hex.split('').map((e) => e + e).join('');
-        if (hex.length == 6) hex = 'FF' + hex;
-        // Use the picked color with the specified opacity for the card background
-        glassBaseColor = Color(int.parse(hex, radix: 16)).withOpacity(slide.overlayOpacity);
-      } catch (_) {
-        glassBaseColor = AppTheme.primaryColor.withOpacity(0.2);
+        String hex = slide.overlayColor!.trim().toUpperCase().replaceFirst('#', '');
+        
+        // Handle short hex (3 digits)
+        if (hex.length == 3) {
+          hex = hex.split('').map((c) => c + c).join('');
+        }
+        
+        // Ensure 8-digit hex for Color (ARGB)
+        if (hex.length == 6) {
+          hex = 'FF$hex';
+        }
+        
+        if (hex.length == 8) {
+          glassBaseColor = Color(int.parse(hex, radix: 16));
+        }
+      } catch (e) {
+        if (kDebugMode) print('🚨 [CMS_RENDER] Error parsing hex "${slide.overlayColor}": $e');
+        glassBaseColor = AppTheme.primaryColor; // Safe fallback
       }
     }
+    
+    // 3. Final color with definitive opacity applied
+    final Color finaloverlayColor = glassBaseColor.withOpacity(finalOpacity);
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 600),
@@ -991,7 +1010,7 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
           child: Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: glassBaseColor,
+              color: finaloverlayColor,
               borderRadius: BorderRadius.circular(32),
               border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.5),
               boxShadow: [

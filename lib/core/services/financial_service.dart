@@ -31,6 +31,7 @@ class FinancialService {
   Future<void> submitContribution({
     required String type,
     required double amount,
+    String currency = 'DZD',
     String? projectId,
     String? proofUrl,
     String? notes,
@@ -39,6 +40,7 @@ class FinancialService {
       await _apiClient.dio.post('/contributions', data: {
         'type': type,
         'amount': amount,
+        'currency': currency,
         'projectId': projectId,
         'proofUrl': proofUrl,
         'notes': notes,

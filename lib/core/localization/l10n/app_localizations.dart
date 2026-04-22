@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In ar, this message translates to:
-  /// **'تطبيق إبزيم'**
+  /// **'إبزيم'**
   String get appName;
 
   /// No description provided for @welcome.

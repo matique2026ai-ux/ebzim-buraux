@@ -67,6 +67,13 @@ export class AdminService {
     if (user && user.role === 'SUPER_ADMIN') {
       throw new Error('Cannot delete a Super Admin account');
     }
+    
+    // Cleanup associated records to avoid orphaned data
+    await Promise.all([
+      this.membershipModel.deleteMany({ userId }),
+      this.contributionModel.deleteMany({ userId }),
+    ]);
+
     return this.userModel.findByIdAndDelete(userId);
   }
 

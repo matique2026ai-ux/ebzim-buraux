@@ -1,215 +1,31 @@
-import 'package:ebzim_app/core/services/api_client.dart';
-import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-/// Represents a single news post / announcement from the association.
-class NewsPost {
-  final String id;
-  final String titleAr;
-  final String titleFr;
-  final String titleEn;
-  final String summaryAr;
-  final String summaryFr;
-  final String summaryEn;
-  final String bodyAr;
-  final String bodyFr;
-  final String bodyEn;
-  final String imageUrl;
-  final DateTime publishedAt;
-  final String category;
-  final String? partnerName;
-  final bool isPinned;
-  final double progressPercentage; // 0.0 to 1.0
-  final List<ProjectMilestone> milestones;
-  final String projectStatus;
-
-  NewsPost({
-    required this.id,
-    required this.titleAr,
-    required this.titleFr,
-    required this.titleEn,
-    required this.summaryAr,
-    required this.summaryFr,
-    required this.summaryEn,
-    required this.bodyAr,
-    required this.bodyFr,
-    required this.bodyEn,
-    required this.imageUrl,
-    required this.publishedAt,
-    required this.category,
-    this.partnerName,
-    this.isPinned = false,
-    this.progressPercentage = 0.0,
-    this.milestones = const [],
-    this.projectStatus = 'GENERAL',
-  });
-
-  String getTitle(String lang) {
-    if (lang == 'ar') return titleAr;
-    if (lang == 'fr') return titleFr;
-    return titleEn;
-  }
-
-  String getSummary(String lang) {
-    if (lang == 'ar') return summaryAr;
-    if (lang == 'fr') return summaryFr;
-    return summaryEn;
-  }
-
-  String getBody(String lang) {
-    if (lang == 'ar') return bodyAr;
-    if (lang == 'fr') return bodyFr;
-    return bodyEn;
-  }
-
-  factory NewsPost.fromJson(Map<String, dynamic> json) {
-    final title = json['title'] is Map ? json['title'] : {};
-    final summary = json['summary'] is Map ? json['summary'] : {};
-    final content = json['content'] is Map ? json['content'] : {};
-    
-    // Get image from media array or fallback to imageUrl
-    String img = json['imageUrl']?.toString() ?? '';
-    if (img.isEmpty && json['media'] is List && (json['media'] as List).isNotEmpty) {
-      final firstMedia = (json['media'] as List).first;
-      img = firstMedia['cloudinaryUrl']?.toString() ?? '';
-    }
-
-    // Parse metadata for project-specific fields
-    final metadata = json['metadata'] is Map ? json['metadata'] : {};
-    final progress = (metadata['progressPercentage'] != null) 
-        ? double.tryParse(metadata['progressPercentage'].toString()) ?? 0.0 
-        : 0.0;
-    
-    final milestonesList = (metadata['milestones'] is List)
-        ? (metadata['milestones'] as List)
-            .map((m) => ProjectMilestone.fromJson(Map<String, dynamic>.from(m)))
-            .toList()
-        : <ProjectMilestone>[];
-
-    final titleArRaw = title['ar']?.toString() ?? '';
-    final isProjectTagged = titleArRaw.startsWith('[PROJ]');
-    final cleanTitleAr = isProjectTagged ? titleArRaw.replaceFirst('[PROJ]', '') : titleArRaw;
-
-    // Final category determination (Top-level > Metadata > Tag > Default)
-    String categoryStr = json['category']?.toString() ?? metadata['category']?.toString() ?? 'ANNOUNCEMENT';
-    if (categoryStr == 'ANNOUNCEMENT' && isProjectTagged) {
-      categoryStr = 'PROJECT'; // Force project categorization if tag found
-    }
-
-    final pStatus = json['projectStatus']?.toString() ?? metadata['projectStatus']?.toString() ?? 'GENERAL';
-
-    return NewsPost(
-      id: json['_id']?.toString() ?? '',
-      titleAr: cleanTitleAr,
-      titleFr: title['fr']?.toString() ?? '',
-      titleEn: title['en']?.toString() ?? '',
-      summaryAr: summary['ar']?.toString() ?? '',
-      summaryFr: summary['fr']?.toString() ?? '',
-      summaryEn: summary['en']?.toString() ?? '',
-      bodyAr: content['ar']?.toString() ?? '',
-      bodyFr: content['fr']?.toString() ?? '',
-      bodyEn: content['en']?.toString() ?? '',
-      imageUrl: img,
-      publishedAt: DateTime.tryParse(json['publishedAt']?.toString() ?? json['createdAt']?.toString() ?? '') ?? DateTime.now(),
-      category: categoryStr,
-      projectStatus: pStatus,
-      partnerName: metadata['partnerName']?.toString() ?? json['partnerName']?.toString(),
-      isPinned: json['isPinned'] == true,
-      progressPercentage: progress,
-      milestones: milestonesList,
-    );
-  }
-}
-
-class ProjectMilestone {
-  final String titleAr;
-  final String titleEn;
-  final DateTime date;
-  final bool isCompleted;
-
-  ProjectMilestone({
-    required this.titleAr,
-    required this.titleEn,
-    required this.date,
-    this.isCompleted = false,
-  });
-
-  String getLabel(String lang) => lang == 'ar' ? titleAr : titleEn;
-
-  factory ProjectMilestone.fromJson(Map<String, dynamic> json) {
-    return ProjectMilestone(
-      titleAr: json['titleAr']?.toString() ?? json['labelAr']?.toString() ?? '',
-      titleEn: json['titleEn']?.toString() ?? json['labelFr']?.toString() ?? '',
-      date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime.now(),
-      isCompleted: json['isCompleted'] == true,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'titleAr': titleAr,
-    'titleEn': titleEn,
-    'date': date.toIso8601String(),
-    'isCompleted': isCompleted,
-  };
-
-  ProjectMilestone copyWith({
-    String? titleAr,
-    String? titleEn,
-    DateTime? date,
-    bool? isCompleted,
-  }) {
-    return ProjectMilestone(
-      titleAr: titleAr ?? this.titleAr,
-      titleEn: titleEn ?? this.titleEn,
-      date: date ?? this.date,
-      isCompleted: isCompleted ?? this.isCompleted,
-    );
-  }
-}
+import 'package:ebzim_app/core/services/api_client.dart';
+import 'package:ebzim_app/core/models/news_post.dart';
+export 'package:ebzim_app/core/models/news_post.dart';
 
 class NewsService {
   final Ref _ref;
+
   NewsService(this._ref);
 
   Future<List<NewsPost>> getNews() async {
     try {
-      final lang = _ref.read(localeProvider).languageCode;
-      final response = await _ref.read(apiClientProvider).dio.get(
-        'posts',
-        queryParameters: {'lang': lang},
-      );
-      final data = response.data;
-      List rawList = [];
-      if (data is List) {
-        rawList = data;
-      } else if (data is Map && data['data'] is List) {
-        rawList = data['data'];
-      }
-
-      return rawList
-          .whereType<Map>()
-          .map((e) => NewsPost.fromJson(Map<String, dynamic>.from(e)))
-          .toList();
-    } catch (_) {
+      final response = await _ref.read(apiClientProvider).dio.get('posts');
+      final List data = response.data;
+      return data.map((e) => NewsPost.fromJson(e)).toList();
+    } catch (e) {
+      print('DEBUG: NewsService error: $e');
       return [];
     }
   }
 
   Future<List<NewsPost>> getAdminNews() async {
     try {
-      final response = await _ref.read(apiClientProvider).dio.get('posts/admin');
-      final data = response.data;
-      List rawList = [];
-      if (data is Map && data['data'] is List) {
-        rawList = data['data'];
-      } else if (data is List) {
-        rawList = data;
-      }
-      return rawList
-          .whereType<Map>()
-          .map((e) => NewsPost.fromJson(Map<String, dynamic>.from(e)))
-          .toList();
-    } catch (_) {
+      final response = await _ref.read(apiClientProvider).dio.get('posts');
+      final List data = response.data;
+      // In admin we might want to see all posts including drafts if the backend supports it
+      return data.map((e) => NewsPost.fromJson(e)).toList();
+    } catch (e) {
       return [];
     }
   }
@@ -217,13 +33,8 @@ class NewsService {
   Future<NewsPost?> getPost(String id) async {
     try {
       final response = await _ref.read(apiClientProvider).dio.get('posts/$id');
-      final data = response.data;
-      if (data != null && (data is Map || data['data'] is Map)) {
-        final postData = data['data'] ?? data;
-        return NewsPost.fromJson(Map<String, dynamic>.from(postData));
-      }
-      return null;
-    } catch (_) {
+      return NewsPost.fromJson(response.data);
+    } catch (e) {
       return null;
     }
   }
@@ -253,18 +64,18 @@ class NewsService {
       'projectStatus': projectStatus,
       'title': {
         'ar': (category != 'ANNOUNCEMENT' && !title.startsWith('[PROJ]')) ? '[PROJ]$title' : title,
-        'fr': titleFr ?? title,
-        'en': titleEn ?? title,
+        'fr': titleFr ?? '',
+        'en': titleEn ?? '',
       },
       'summary': {
         'ar': summary,
-        'fr': summaryFr ?? summary,
-        'en': summaryEn ?? summary,
+        'fr': summaryFr ?? '',
+        'en': summaryEn ?? '',
       },
       'content': {
         'ar': content,
-        'fr': contentFr ?? content,
-        'en': contentEn ?? content,
+        'fr': contentFr ?? '',
+        'en': contentEn ?? '',
       },
       'status': 'PUBLISHED',
       'isPinned': isPinned,
@@ -321,7 +132,9 @@ final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
     'ARTISTIC',
     'MEMORY',
     'TOURISM',
-    'CHILD'
+    'CHILD',
+    'PARTNERSHIP',
+    'EVENT_REPORT'
   };
   return news.where((p) => projectCategories.contains(p.category.toUpperCase())).toList();
 });

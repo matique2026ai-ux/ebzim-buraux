@@ -4352,6 +4352,8 @@ class _ProjectsTab extends ConsumerWidget {
             'MEMORY',
             'TOURISM',
             'CHILD',
+            'PARTNERSHIP',
+            'EVENT_REPORT',
           ];
           final projects = allPosts
               .where(

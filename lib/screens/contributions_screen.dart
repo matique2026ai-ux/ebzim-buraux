@@ -32,6 +32,7 @@ class ContributionsScreen extends ConsumerStatefulWidget {
 
 class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
   DonationType _selectedDonationType = DonationType.general;
+  String _selectedCurrency = 'DZD';
   final _amountController = TextEditingController();
   bool _isLoadingFee = true;
   int _currentFee = 2000;
@@ -242,20 +243,43 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                   
                   const SizedBox(height: 24),
                   
-                  // Amount Field
-                  TextField(
-                    controller: _amountController,
-                    keyboardType: TextInputType.number,
-                    style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                      labelText: loc.finAmountLabel,
-                      prefixIcon: const Icon(Icons.payments_outlined, color: AppTheme.accentColor),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppTheme.accentColor, width: 2),
+                  // Amount Field & Currency Selector
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: TextField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold),
+                          decoration: InputDecoration(
+                            labelText: loc.finAmountLabel,
+                            prefixIcon: const Icon(Icons.payments_outlined, color: AppTheme.accentColor),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              borderSide: const BorderSide(color: AppTheme.accentColor, width: 2),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButtonFormField<String>(
+                          value: _selectedCurrency,
+                          decoration: InputDecoration(
+                            labelText: isAr ? 'العملة' : 'Currency',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                          ),
+                          items: ['DZD', 'EUR', 'USD'].map((c) => DropdownMenuItem(
+                            value: c,
+                            child: Text(c, style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+                          )).toList(),
+                          onChanged: (val) => setState(() => _selectedCurrency = val ?? 'DZD'),
+                        ),
+                      ),
+                    ],
                   ),
                   
                   if (_selectedDonationType == DonationType.project) ...[
@@ -328,6 +352,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                         _handleSubmit(
                           _selectedDonationType == DonationType.general ? 'GENERAL_DONATION' : 'PROJECT_SUPPORT',
                           amount,
+                          currency: _selectedCurrency,
                           projectId: _selectedDonationType == DonationType.project ? _selectedProject?.id : null,
                           proofUrl: _proofUrl,
                         );
@@ -384,12 +409,13 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
     );
   }
 
-  void _handleSubmit(String type, double amount, {String? projectId, String? proofUrl}) async {
+  void _handleSubmit(String type, double amount, {String currency = 'DZD', String? projectId, String? proofUrl}) async {
     setState(() => _isSubmitting = true);
     try {
       await ref.read(financialServiceProvider).submitContribution(
         type: type,
         amount: amount,
+        currency: currency,
         projectId: projectId,
         proofUrl: proofUrl,
       );

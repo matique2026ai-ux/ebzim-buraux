@@ -60,8 +60,8 @@ The `HeritageProjectsScreen` MUST use a centralized filter list synchronized wit
 ---
 
 ## 4. Required Stabilization Fixes
-1. **Unified Category List:** Synchronize `news_service.dart`, `HeritageProjectsScreen`, and `AdminDashboard` categories.
-2. **Bilingual Entry:** Upgrade `AdminCreateNewsScreen` to allow Arabic, French, and English titles/summaries (currently it clones Arabic to all).
+1. **✅ [DONE] Unified Category List:** Synchronize `news_service.dart`, `HeritageProjectsScreen`, and `AdminDashboard` categories.
+2. **✅ [DONE] Bilingual Entry:** Upgrade `AdminCreateNewsScreen` to allow Arabic, French, and English titles/summaries.
 3. **Institutional Badges:** Ensure `UserProfile` status labels and badges strictly follow the `StatuteService` hierarchy.
 4. **Delete Workflow:** Ensure `MembershipAdminService` permanent deletion is verified to avoid orphaned database records.
 

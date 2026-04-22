@@ -230,11 +230,11 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 
 ---
 
-## 📊 8. Data Management
+## 📊 8. Data Management & Logic Synchronization (April 2026 Audit)
 
-- **News & Projects:** Use the `posts` module with a `category` field. Categories: `ANNOUNCEMENT`, `HERITAGE`, `SOCIAL`, `CULTURAL`, `SCIENTIFIC`, `PARTNERSHIP`, `MEMORY`, `TOURISM`, `CHILD`.
-- **Projects** are filtered on the frontend where `category != ANNOUNCEMENT`.
-- **News** is filtered where `category == ANNOUNCEMENT` or `category` is empty.
+- **Synchronized Categories:** News and Projects now share a unified taxonomy. Categories: `ANNOUNCEMENT`, `HERITAGE`, `PROJECT`, `RESTORATION`, `CULTURAL`, `SCIENTIFIC`, `ARTISTIC`, `PARTNERSHIP`, `EVENT_REPORT`, `MEMORY`, `TOURISM`, `CHILD`.
+- **Project Visibility Logic:** `heritageProjectsProvider` and the Admin Dashboard `_ProjectsTab` now share the exact same filter set (includes `PARTNERSHIP` and `EVENT_REPORT` as institutional initiatives).
+- **Independent Trilingual Input:** `AdminCreateNewsScreen` and `NewsService` have been upgraded to support independent entry for Arabic, French, and English. The previous "Arabic-to-all" cloning logic has been removed. Empty fields now remain empty rather than being overwritten by Arabic fallbacks.
 - **Excel Export:** Admin can export member lists to `.xlsx`. Uses the `excel` package (with `hide Border`). Data served via `WebHelper.triggerWebDownloadBytes`.
 - **Financial Contributions:** Linked to projects. Payment receipts tracked.
 - **Live Stats:** `publicStatsProvider` feeds the `StatsStrip` widget on both Home and Admin screens.
@@ -270,10 +270,11 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 
 ## 📌 10. Immediate Priorities for the Next Agent
 
-1. **Email Provider Integration:** Replace simulated email in `mail` module with real SMTP (SendGrid or Mailgun).
-2. **CMS Persistence Verification:** After the April 2026 fix to `hero.service.ts` (`$set` operator), verify in production that `glassColor` and `overlayOpacity` save and reload correctly.
-3. **Financial Audit:** Finalize `contributions` module for multi-currency support (international donors).
-4. **Onboarding CMS:** Verify editing existing Onboarding slides works after the `_initData` fix.
+1. **✅ [DONE] SMTP Readiness:** `MailModule` is now hardened with dynamic port/secure settings. Gmail App Password is live. Next step: replace with institutional SMTP (SendGrid) when credentials are provided.
+2. **✅ [DONE] Multi-currency Support:** `contributions` module and UI now support DZD, EUR, and USD for international donors.
+3. **✅ [DONE] Orphan Record Cleanup:** `AdminService.deleteUser` now implements cascading delete for memberships and contributions.
+4. **Institutional Badges:** Verify `UserProfile` status labels and badges strictly follow the `StatuteService` hierarchy (next priority).
+5. **Onboarding CMS:** Verify editing existing Onboarding slides works after the `_initData` fix.
 
 ---
 

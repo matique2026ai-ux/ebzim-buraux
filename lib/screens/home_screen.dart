@@ -885,33 +885,19 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
                         fit: BoxFit.cover,
                         placeholder: (ctx, url) => Container(color: AppTheme.primaryColor),
                       ).animate().fadeIn(duration: 1200.ms),
-                      // Overlay Gradient (Dynamic based on slide design)
-                      Builder(
-                        builder: (context) {
-                          Color baseColor = AppTheme.primaryColor;
-                          if (slide.glassColor != null && slide.glassColor!.isNotEmpty) {
-                            try {
-                              String hex = slide.glassColor!.replaceFirst('#', '');
-                              if (hex.length == 3) hex = hex.split('').map((e) => e + e).join('');
-                              if (hex.length == 6) hex = 'FF' + hex;
-                              baseColor = Color(int.parse(hex, radix: 16));
-                            } catch (_) {}
-                          }
-                          
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.black.withOpacity(0.2),
-                                  baseColor.withOpacity(slide.overlayOpacity),
-                                  baseColor,
-                                ],
-                              ),
-                            ),
-                          );
-                        }
+                      // Standard subtle overlay for readability (Fixed, not using slide tokens)
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.4),
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.6),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   );
@@ -982,17 +968,17 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
     final role = user?.role ?? EbzimRole.public;
     final isMember = role != EbzimRole.public;
 
-    // Robust color parsing for the masterpiece glass
-    Color glassBaseColor = Colors.black.withOpacity(0.1);
+    // Standardize glass card color and opacity from slide design tokens
+    Color glassBaseColor = Colors.black.withOpacity(0.2); // Default fallback
     if (slide.glassColor != null && slide.glassColor!.isNotEmpty) {
       try {
         String hex = slide.glassColor!.replaceFirst('#', '');
-        if (hex.length == 3) hex = hex.split('').map((e) => e + e).join(''); // Handle #F00 -> #FF0000
+        if (hex.length == 3) hex = hex.split('').map((e) => e + e).join('');
         if (hex.length == 6) hex = 'FF' + hex;
+        // Use the picked color with the specified opacity for the card background
         glassBaseColor = Color(int.parse(hex, radix: 16)).withOpacity(slide.overlayOpacity);
       } catch (_) {
-        // Fallback to primary if invalid
-        glassBaseColor = AppTheme.primaryColor.withOpacity(slide.overlayOpacity);
+        glassBaseColor = AppTheme.primaryColor.withOpacity(0.2);
       }
     }
 

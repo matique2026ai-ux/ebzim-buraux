@@ -270,11 +270,12 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 
 ## 📌 10. Immediate Priorities for the Next Agent
 
-1. **✅ [DONE] Branding Standardization:** The platform identifier has been condensed to **"EBZIM"** (إبزيم) across all UI widgets for a premium minimalist aesthetic. Formal names remain in legal docs.
-2. **✅ [DONE] Model Restoration:** Missing `NewsPost` and `ProjectMilestone` models in `lib/core/models/news_post.dart` have been reconstructed and restored to the repo.
-3. **✅ [DONE] SMTP Readiness:** `MailModule` is hardened. Next step: replace with institutional SMTP (SendGrid).
-4. **✅ [DONE] Multi-currency Support:** DZD, EUR, and USD supported.
-5. **Institutional Badges:** Verify `UserProfile` status labels and badges strictly follow the `StatuteService` hierarchy (Next Priority).
+1. **✅ [DONE] Identity Architecture Migration:** Replaced the string-based `membershipLevel` with a type-safe `EbzimRole` enum across all authentication, routing, and administrative modules.
+2. **✅ [DONE] Branding Simplification:** Condensed the platform title to "إبزيم | Ebzim" across `main.dart`, `web/index.html`, and all UI surfaces.
+3. **✅ [DONE] Null-Safety Hardening:** Applied project-wide null-safety fixes for user data (especially `imageUrl` and `phone`) to prevent runtime crashes.
+4. **✅ [DONE] infinite Loading Resolution:** Eliminated all `SlideTransition` usage in the router as it was confirmed to cause infinite hangs on Flutter Web.
+5. **✅ [DONE] Model Enhancement:** Added `profileCompletionPercentage` and `getName(lang)` methods to `UserProfile` for a professional UI experience.
+6. **✅ [DONE] Admin Lockout Prevention:** Updated backend `AuthService` to allow login for both `ACTIVE` and `APPROVED` statuses, preventing lockout when admins update their own membership status.
 
 ---
 

@@ -208,6 +208,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                       label: 'العنوان (FR)',
                       hint: 'Titre du projet...',
                       icon: Icons.title_rounded,
+                      isRequired: false,
                     ),
                     const SizedBox(height: 12),
                     _buildTextField(
@@ -215,6 +216,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                       label: 'الوصف المختصر (FR)',
                       hint: 'Résumé court...',
                       icon: Icons.short_text_rounded,
+                      isRequired: false,
                     ),
                     const SizedBox(height: 12),
                     _buildTextField(
@@ -223,6 +225,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                       hint: 'Détails complets en français...',
                       icon: Icons.article_rounded,
                       maxLines: 4,
+                      isRequired: false,
                     ),
                     const SizedBox(height: 32),
                     _buildSectionHeader('الترجمة الإنجليزية (English)', Icons.language_rounded),
@@ -232,6 +235,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                       label: 'العنوان (EN)',
                       hint: 'Project Title...',
                       icon: Icons.title_rounded,
+                      isRequired: false,
                     ),
                     const SizedBox(height: 12),
                     _buildTextField(
@@ -239,6 +243,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                       label: 'الوصف المختصر (EN)',
                       hint: 'Short summary...',
                       icon: Icons.short_text_rounded,
+                      isRequired: false,
                     ),
                     const SizedBox(height: 12),
                     _buildTextField(
@@ -247,6 +252,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                       hint: 'Full details in English...',
                       icon: Icons.article_rounded,
                       maxLines: 4,
+                      isRequired: false,
                     ),
                     const SizedBox(height: 32),
                     _buildSectionHeader('تصنيف وحالة المشروع', Icons.category_rounded),
@@ -354,6 +360,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
     required String hint,
     required IconData icon,
     int maxLines = 1,
+    bool isRequired = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,7 +393,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
               borderSide: const BorderSide(color: AppTheme.accentColor),
             ),
           ),
-          validator: (v) => v == null || v.isEmpty ? 'هذا الحقل مطلوب' : null,
+          validator: isRequired ? (v) => v == null || v.isEmpty ? 'هذا الحقل مطلوب' : null : null,
         ),
       ],
     );
@@ -554,7 +561,11 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                           border: InputBorder.none,
                           isDense: true,
                         ),
-                        onChanged: (v) => _milestones[idx] = milestone.copyWith(titleAr: v),
+                        onChanged: (v) {
+                          _milestones[idx] = milestone.copyWith(titleAr: v);
+                          // Trigger UI update for timeline preview
+                          setState(() {});
+                        },
                       ),
                     ],
                   ),

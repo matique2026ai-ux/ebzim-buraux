@@ -270,12 +270,13 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 
 ## 📌 10. Immediate Priorities for the Next Agent
 
-1. **✅ [DONE] SMTP Readiness:** `MailModule` is now hardened with dynamic port/secure settings. Gmail App Password is live. Next step: replace with institutional SMTP (SendGrid) when credentials are provided.
-2. **✅ [DONE] Multi-currency Support:** `contributions` module and UI now support DZD, EUR, and USD for international donors.
-3. **✅ [DONE] Orphan Record Cleanup:** `AdminService.deleteUser` now implements cascading delete for memberships and contributions.
-4. **Institutional Badges:** Verify `UserProfile` status labels and badges strictly follow the `StatuteService` hierarchy (next priority).
-5. **Onboarding CMS:** Verify editing existing Onboarding slides works after the `_initData` fix.
+1. **✅ [DONE] Branding Standardization:** The platform identifier has been condensed to **"EBZIM"** (إبزيم) across all UI widgets for a premium minimalist aesthetic. Formal names remain in legal docs.
+2. **✅ [DONE] Model Restoration:** Missing `NewsPost` and `ProjectMilestone` models in `lib/core/models/news_post.dart` have been reconstructed and restored to the repo.
+3. **✅ [DONE] SMTP Readiness:** `MailModule` is hardened. Next step: replace with institutional SMTP (SendGrid).
+4. **✅ [DONE] Multi-currency Support:** DZD, EUR, and USD supported.
+5. **Institutional Badges:** Verify `UserProfile` status labels and badges strictly follow the `StatuteService` hierarchy (Next Priority).
 
 ---
 
 **Handover Status: 🔄 IN ACTIVE DEVELOPMENT — Last updated: April 22, 2026**
+**Current State: App running on Chrome port 8080. Latest changes pushed to GitHub.**

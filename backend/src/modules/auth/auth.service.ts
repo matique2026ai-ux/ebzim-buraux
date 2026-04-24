@@ -128,7 +128,7 @@ export class AuthService {
       user = this.memoryStore.get(loginDto.email);
     }
 
-    if (!user || user.status !== 'ACTIVE') {
+    if (!user || (user.status !== 'ACTIVE' && user.status !== 'APPROVED')) {
       throw new UnauthorizedException(
         'Invalid credentials or inactive account',
       );

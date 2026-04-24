@@ -13,7 +13,7 @@ import {
 export class PostsService {
   constructor(@InjectModel('Post') private postModel: Model<PostDocument>) {}
 
-  async getPublicFeed(locale: string, options: any) {
+  async getPublicFeedSystemFixed(locale: string, options: any) {
     const pagination = buildCursorPagination(options);
     const query: Record<string, any> = pagination.query;
     const limit = pagination.limit;
@@ -28,16 +28,25 @@ export class PostsService {
       .exec();
 
     // Multilingual payload map: Strip unneeded languages to save mobile parsing speed
-    const localizedPosts = posts.map((post) => ({
-      _id: post._id,
-      title: post.title,
-      summary: post.summary,
-      content: post.content,
-      imageUrl: post.media.find((m) => m.type === 'IMAGE')?.cloudinaryUrl || '',
-      publishedAt: post.publishedAt,
-    }));
+    const localizedPosts = posts.map((post) => {
+      const p = post.toObject();
+      return {
+        _id: p._id,
+        title: p.title,
+        summary: p.summary,
+        content: p.content,
+        imageUrl: p.media?.find((m: any) => m.type === 'IMAGE')?.cloudinaryUrl || '',
+        publishedAt: p.publishedAt || (p as any).createdAt,
+        category: p.category || 'ANNOUNCEMENT',
+        projectStatus: p.projectStatus || 'GENERAL',
+        metadata: p.metadata || {},
+      };
+    });
 
-    return formatCursorPaginatedResponse(localizedPosts);
+    return {
+      version: '1.2.1-metadata-fix',
+      ...formatCursorPaginatedResponse(localizedPosts)
+    };
   }
 
   async getAdminTable(options: any) {

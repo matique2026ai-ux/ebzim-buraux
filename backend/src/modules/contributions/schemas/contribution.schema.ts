@@ -13,6 +13,13 @@ export class Contribution {
 
   @Prop({
     type: String,
+    enum: ['DZD', 'EUR', 'USD'],
+    default: 'DZD',
+  })
+  currency: string;
+
+  @Prop({
+    type: String,
     enum: ['ANNUAL_MEMBERSHIP', 'GENERAL_DONATION', 'PROJECT_SUPPORT'],
     required: true,
   })

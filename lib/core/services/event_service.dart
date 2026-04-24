@@ -142,7 +142,7 @@ class EventService {
       final response = await _ref
           .read(apiClientProvider)
           .dio
-          .get('events', options: Options(headers: {'Accept-Language': lang}));
+          .get('activities', options: Options(headers: {'Accept-Language': lang}));
 
       final dynamic responseData = response.data;
       List rawList = [];
@@ -184,7 +184,7 @@ class EventService {
       final response = await _ref
           .read(apiClientProvider)
           .dio
-          .get('events/admin');
+          .get('activities/admin');
 
       final dynamic responseData = response.data;
       List rawList = [];
@@ -210,7 +210,7 @@ class EventService {
         .read(apiClientProvider)
         .dio
         .get(
-          '/events/$id',
+          'activities/detail/$id',
           options: Options(headers: {'Accept-Language': lang}),
         );
 
@@ -269,15 +269,15 @@ class EventService {
       };
     }
 
-    await _ref.read(apiClientProvider).dio.post('events', data: data);
+    await _ref.read(apiClientProvider).dio.post('activities', data: data);
   }
 
   Future<void> updateEvent(String id, Map<String, dynamic> data) async {
-    await _ref.read(apiClientProvider).dio.patch('events/$id', data: data);
+    await _ref.read(apiClientProvider).dio.patch('activities/$id', data: data);
   }
 
   Future<void> deleteEvent(String id) async {
-    await _ref.read(apiClientProvider).dio.delete('events/$id');
+    await _ref.read(apiClientProvider).dio.delete('activities/$id');
   }
 }
 

@@ -63,4 +63,32 @@ export class MailService {
       `,
     });
   }
+
+  async sendMembershipDecisionEmail(
+    email: string,
+    status: string,
+    name: string,
+  ) {
+    const isApproved = status === 'APPROVED';
+    const subject = isApproved
+      ? 'قبول طلب العضوية - جمعية إبزيم'
+      : 'تحديث حول طلب العضوية - جمعية إبزيم';
+    const body = isApproved
+      ? `<p>مرحباً ${name}،</p><p>يسعدنا إبلاغك بأنه قد تم قبول طلب عضويتك بنجاح. يمكنك الآن الدخول إلى لوحة التحكم والوصول لكافة الميزات المخصصة للأعضاء المعتمدين.</p>`
+      : `<p>مرحباً ${name}،</p><p>نأسف لإبلاغك بأنه تعذر قبول طلب عضويتك في الوقت الحالي. يمكنك التواصل مع الإدارة لمزيد من الاستفسارات.</p>`;
+
+    await this.mailerService.sendMail({
+      to: email,
+      subject: subject,
+      html: `
+        <div style="direction: rtl; font-family: Arial, sans-serif; padding: 20px;">
+          <h2 style="color: #006654;">${subject}</h2>
+          ${body}
+          <br/>
+          <p>مع تحيات،</p>
+          <p><b>المكتب التنفيذي للجمعية</b></p>
+        </div>
+      `,
+    });
+  }
 }

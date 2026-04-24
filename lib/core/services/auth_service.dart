@@ -4,6 +4,7 @@ import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/services/storage_service.dart';
 
 import 'package:ebzim_app/core/services/user_profile_service.dart';
+export 'package:ebzim_app/core/models/user_profile.dart';
 
 class AuthState {
   final bool isAuthenticated;
@@ -40,7 +41,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (token != null) {
         print('[DEBUG AUTH] Fetching user profile...');
         final user = await _ref.read(userProfileServiceProvider).fetchUserProfile();
-        print('[DEBUG AUTH] User profile fetched: ${user.name}');
+        print('[DEBUG AUTH] User profile fetched: ${user.getName('en')}');
         state = AuthState(isAuthenticated: true, user: user, isInitializing: false);
       } else {
         print('[DEBUG AUTH] No token, setting initializing to false');
@@ -75,6 +76,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       
       if (token != null && userData != null) {
         await _ref.read(storageServiceProvider).saveToken(token);
+        await _ref.read(storageServiceProvider).saveLastIdentity(email);
         state = AuthState(
           isAuthenticated: true,
           user: UserProfile.fromJson(userData),
@@ -151,7 +153,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       String errorMessage = "Registration failed";
       
       if (e.response?.statusCode == 409) {
-        errorMessage = "Email already exists"; // Wait, I should use a key or proper translation if available. I'll just use 'authErrorInvalid' or leave it clean. Let's check if the raw message exists.
+        errorMessage = "authErrorConflict";
       } else if (serverMessage is List) {
         errorMessage = serverMessage.join(', ');
       } else if (serverMessage is String) {

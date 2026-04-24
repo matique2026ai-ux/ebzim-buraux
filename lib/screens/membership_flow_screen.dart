@@ -11,6 +11,8 @@ import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
+import 'package:ebzim_app/core/services/media_service.dart';
+import 'package:ebzim_app/core/services/api_client.dart';
 
 class MembershipFlowScreen extends ConsumerStatefulWidget {
   const MembershipFlowScreen({super.key});
@@ -289,7 +291,7 @@ class _Step1IdentityForm extends ConsumerWidget {
       if (state.fullName.isEmpty) {
         userAsync.whenData((user) {
           if (user != null) {
-            notifier.updateField('fullName', user.name);
+            notifier.updateField('fullName', user.getName('en'));
             notifier.updateField('email', user.email);
             notifier.updateField('phone', user.phone);
           }
@@ -595,7 +597,7 @@ class _Step3AttachmentsForm extends ConsumerWidget {
     final state = ref.watch(membershipProvider);
     final notifier = ref.read(membershipProvider.notifier);
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+
 
     final hasId = state.attachments.any((a) => a['type'] == 'ID_CARD');
     final hasPhoto = state.attachments.any((a) => a['type'] == 'PHOTO');
@@ -622,11 +624,23 @@ class _Step3AttachmentsForm extends ConsumerWidget {
             'ID_CARD',
             hasId,
             Icons.badge_outlined,
-            () {
-              // Simulating upload for now
-              final newList = List<Map<String, String>>.from(state.attachments);
-              newList.add({'url': 'https://mock.url/id.jpg', 'type': 'ID_CARD'});
-              notifier.updateField('attachments', newList);
+            () async {
+              try {
+                final file = await ref.read(apiClientProvider).pickFile();
+                if (file == null) return;
+                
+                final result = await ref.read(mediaServiceProvider).uploadMedia(
+                  file.bytes!,
+                  file.name,
+                );
+                if (result.isNotEmpty) {
+                  final newList = List<Map<String, String>>.from(state.attachments);
+                  newList.add({'url': result, 'type': 'ID_CARD'});
+                  notifier.updateField('attachments', newList);
+                }
+              } catch (e) {
+                if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
+              }
             }
           ),
           
@@ -638,11 +652,23 @@ class _Step3AttachmentsForm extends ConsumerWidget {
             'PHOTO',
             hasPhoto,
             Icons.face_retouching_natural_rounded,
-            () {
-              // Simulating upload
-              final newList = List<Map<String, String>>.from(state.attachments);
-              newList.add({'url': 'https://mock.url/photo.jpg', 'type': 'PHOTO'});
-              notifier.updateField('attachments', newList);
+            () async {
+              try {
+                final file = await ref.read(apiClientProvider).pickFile();
+                if (file == null) return;
+                
+                final result = await ref.read(mediaServiceProvider).uploadMedia(
+                  file.bytes!,
+                  file.name,
+                );
+                if (result.isNotEmpty) {
+                  final newList = List<Map<String, String>>.from(state.attachments);
+                  newList.add({'url': result, 'type': 'PHOTO'});
+                  notifier.updateField('attachments', newList);
+                }
+              } catch (e) {
+                if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
+              }
             }
           ),
         ],

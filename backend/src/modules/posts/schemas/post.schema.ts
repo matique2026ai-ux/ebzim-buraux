@@ -50,6 +50,31 @@ export class Post {
   @Prop({ type: Boolean, default: false })
   isFeatured: boolean;
 
+  @Prop({ type: Boolean, default: false })
+  isPinned: boolean;
+
+  @Prop({ type: String, default: 'ANNOUNCEMENT' })
+  category: string;
+
+  @Prop({
+    type: String,
+    enum: [
+      'PREPARING',
+      'LAUNCHING',
+      'ACTIVE',
+      'ON_HOLD',
+      'COMPLETED',
+      'GENERAL',
+      'URGENT',
+      'IMPORTANT',
+    ],
+    default: 'GENERAL',
+  })
+  projectStatus: string;
+
+  @Prop({ type: Object, default: {} })
+  metadata: Record<string, any>;
+
   @Prop({ type: Date })
   publishedAt?: Date;
 }

@@ -1,117 +1,29 @@
-import 'package:ebzim_app/core/services/api_client.dart';
-import 'package:ebzim_app/core/providers/locale_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-/// Represents a single news post / announcement from the association.
-class NewsPost {
-  final String id;
-  final String titleAr;
-  final String titleFr;
-  final String titleEn;
-  final String summaryAr;
-  final String summaryFr;
-  final String summaryEn;
-  final String bodyAr;
-  final String bodyFr;
-  final String bodyEn;
-  final String imageUrl;
-  final DateTime publishedAt;
-  final String category; // 'ANNOUNCEMENT' | 'PARTNERSHIP' | 'EVENT_REPORT' | 'GENERAL'
-  final String? partnerName; // e.g. "المتحف الوطني للآثار" or "جامعة سطيف"
-  final bool isPinned;
-
-  NewsPost({
-    required this.id,
-    required this.titleAr,
-    required this.titleFr,
-    required this.titleEn,
-    required this.summaryAr,
-    required this.summaryFr,
-    required this.summaryEn,
-    required this.bodyAr,
-    required this.bodyFr,
-    required this.bodyEn,
-    required this.imageUrl,
-    required this.publishedAt,
-    required this.category,
-    this.partnerName,
-    this.isPinned = false,
-  });
-
-  String getTitle(String lang) {
-    if (lang == 'ar') return titleAr;
-    if (lang == 'fr') return titleFr;
-    return titleEn;
-  }
-
-  String getSummary(String lang) {
-    if (lang == 'ar') return summaryAr;
-    if (lang == 'fr') return summaryFr;
-    return summaryEn;
-  }
-
-  String getBody(String lang) {
-    if (lang == 'ar') return bodyAr;
-    if (lang == 'fr') return bodyFr;
-    return bodyEn;
-  }
-
-  factory NewsPost.fromJson(Map<String, dynamic> json) {
-    final title = json['title'] is Map ? json['title'] : {};
-    final summary = json['summary'] is Map ? json['summary'] : {};
-    final content = json['content'] is Map ? json['content'] : {};
-    
-    // Get image from media array or fallback to imageUrl
-    String img = json['imageUrl']?.toString() ?? '';
-    if (img.isEmpty && json['media'] is List && (json['media'] as List).isNotEmpty) {
-      final firstMedia = (json['media'] as List).first;
-      img = firstMedia['cloudinaryUrl']?.toString() ?? '';
-    }
-
-    return NewsPost(
-      id: json['_id']?.toString() ?? '',
-      titleAr: title['ar']?.toString() ?? '',
-      titleFr: title['fr']?.toString() ?? '',
-      titleEn: title['en']?.toString() ?? '',
-      summaryAr: summary['ar']?.toString() ?? '',
-      summaryFr: summary['fr']?.toString() ?? '',
-      summaryEn: summary['en']?.toString() ?? '',
-      bodyAr: content['ar']?.toString() ?? '',
-      bodyFr: content['fr']?.toString() ?? '',
-      bodyEn: content['en']?.toString() ?? '',
-      imageUrl: img,
-      publishedAt: DateTime.tryParse(json['publishedAt']?.toString() ?? json['createdAt']?.toString() ?? '') ?? DateTime.now(),
-      category: json['category']?.toString() ?? 'GENERAL',
-      partnerName: json['partnerName']?.toString(),
-      isPinned: json['isPinned'] == true,
-    );
-  }
-}
+import 'package:ebzim_app/core/services/api_client.dart';
+import 'package:ebzim_app/core/models/news_post.dart';
+export 'package:ebzim_app/core/models/news_post.dart';
 
 class NewsService {
   final Ref _ref;
+
   NewsService(this._ref);
 
   Future<List<NewsPost>> getNews() async {
     try {
-      final lang = _ref.read(localeProvider).languageCode;
-      final response = await _ref.read(apiClientProvider).dio.get(
-        'posts',
-        queryParameters: {'lang': lang},
-      );
-      final data = response.data;
+      final response = await _ref.read(apiClientProvider).dio.get('posts');
+      final dynamic responseData = response.data;
       List rawList = [];
-      if (data is List) {
-        rawList = data;
-      } else if (data is Map && data['data'] is List) {
-        rawList = data['data'];
+      
+      if (responseData is List) {
+        rawList = responseData;
+      } else if (responseData is Map && responseData['data'] is List) {
+        rawList = responseData['data'];
       }
-
-      return rawList
-          .whereType<Map>()
-          .map((e) => NewsPost.fromJson(Map<String, dynamic>.from(e)))
-          .toList();
-    } catch (_) {
+      
+      return rawList.map((e) => NewsPost.fromJson(e)).toList();
+    } catch (e) {
+      if (kDebugMode) print('DEBUG: NewsService error: $e');
       return [];
     }
   }
@@ -119,18 +31,17 @@ class NewsService {
   Future<List<NewsPost>> getAdminNews() async {
     try {
       final response = await _ref.read(apiClientProvider).dio.get('posts/admin');
-      final data = response.data;
+      final dynamic responseData = response.data;
       List rawList = [];
-      if (data is Map && data['data'] is List) {
-        rawList = data['data'];
-      } else if (data is List) {
-        rawList = data;
+      
+      if (responseData is List) {
+        rawList = responseData;
+      } else if (responseData is Map && responseData['data'] is List) {
+        rawList = responseData['data'];
       }
-      return rawList
-          .whereType<Map>()
-          .map((e) => NewsPost.fromJson(Map<String, dynamic>.from(e)))
-          .toList();
-    } catch (_) {
+      
+      return rawList.map((e) => NewsPost.fromJson(e)).toList();
+    } catch (e) {
       return [];
     }
   }
@@ -138,13 +49,8 @@ class NewsService {
   Future<NewsPost?> getPost(String id) async {
     try {
       final response = await _ref.read(apiClientProvider).dio.get('posts/$id');
-      final data = response.data;
-      if (data != null && (data is Map || data['data'] is Map)) {
-        final postData = data['data'] ?? data;
-        return NewsPost.fromJson(Map<String, dynamic>.from(postData));
-      }
-      return null;
-    } catch (_) {
+      return NewsPost.fromJson(response.data);
+    } catch (e) {
       return null;
     }
   }
@@ -154,31 +60,47 @@ class NewsService {
 
   Future<void> createPost({
     required String title,
+    String? titleFr,
+    String? titleEn,
     required String summary,
+    String? summaryFr,
+    String? summaryEn,
     required String content,
+    String? contentFr,
+    String? contentEn,
     String? imageUrl,
     bool isPinned = false,
+    String category = 'ANNOUNCEMENT',
+    String projectStatus = 'GENERAL',
+    Map<String, dynamic>? metadata,
   }) async {
     final Map<String, dynamic> data = {
       'categoryId': newsCategoryId,
+      'category': category,
+      'projectStatus': projectStatus,
       'title': {
-        'ar': title,
-        'fr': title,
-        'en': title,
+        'ar': (category != 'ANNOUNCEMENT' && !title.startsWith('[PROJ]')) ? '[PROJ]$title' : title,
+        'fr': (titleFr != null && titleFr.isNotEmpty) ? titleFr : title,
+        'en': (titleEn != null && titleEn.isNotEmpty) ? titleEn : title,
       },
       'summary': {
         'ar': summary,
-        'fr': summary,
-        'en': summary,
+        'fr': (summaryFr != null && summaryFr.isNotEmpty) ? summaryFr : summary,
+        'en': (summaryEn != null && summaryEn.isNotEmpty) ? summaryEn : summary,
       },
       'content': {
         'ar': content,
-        'fr': content,
-        'en': content,
+        'fr': (contentFr != null && contentFr.isNotEmpty) ? contentFr : content,
+        'en': (contentEn != null && contentEn.isNotEmpty) ? contentEn : content,
       },
       'status': 'PUBLISHED',
       'isPinned': isPinned,
       'isFeatured': false,
+      'metadata': {
+        ...?metadata,
+        'category': category, // Fallback for stale backend
+        'projectStatus': projectStatus, // Fallback for stale backend
+      },
     };
 
     if (imageUrl != null && imageUrl.isNotEmpty) {
@@ -190,6 +112,8 @@ class NewsService {
         }
       ];
     }
+
+    if (kDebugMode) print('DEBUG: Sending createPost data: $data');
 
     await _ref.read(apiClientProvider).dio.post('posts', data: data);
   }
@@ -215,7 +139,22 @@ final adminNewsProvider = FutureProvider<List<NewsPost>>((ref) {
 
 final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
   final news = await ref.watch(newsServiceProvider).getNews();
-  return news.where((p) => p.category == 'HERITAGE' || p.category == 'PROJECT').toList();
+  const projectCategories = {
+    'HERITAGE', 
+    'PROJECT', 
+    'RESTORATION', 
+    'SCIENTIFIC', 
+    'CULTURAL', 
+    'ARTISTIC',
+    'MEMORY',
+    'TOURISM',
+    'CHILD',
+    'PARTNERSHIP',
+    'EVENT_REPORT',
+    'ASSOCIATIVE',
+    'SOCIAL'
+  };
+  return news.where((p) => projectCategories.contains(p.category.toUpperCase())).toList();
 });
 
 final postDetailsProvider = FutureProvider.family<NewsPost?, String>((ref, id) {

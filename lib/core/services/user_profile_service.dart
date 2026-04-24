@@ -5,61 +5,8 @@ import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
 import 'package:ebzim_app/core/services/media_service.dart';
 
-class UserProfile {
-  final String id;
-  final String name;
-  final String nameAr;
-  final String email;
-  final String phone;
-  final String imageUrl;
-  final String membershipLevel;
-  final String membershipStatus;
-  final DateTime? membershipExpiry;
-  final int profileCompletionPercentage;
-  final String? membershipBadge;
-  final String status;
-
-  UserProfile({
-    required this.id,
-    required this.name,
-    required this.nameAr,
-    required this.email,
-    required this.phone,
-    required this.imageUrl,
-    required this.membershipLevel,
-    required this.membershipStatus,
-    this.membershipExpiry,
-    required this.profileCompletionPercentage,
-    this.membershipBadge,
-    this.status = 'ACTIVE',
-  });
-
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    final profile = json['profile'] ?? {};
-    final role = json['role'] ?? json['membershipLevel'] ?? 'PUBLIC';
-    final badge = json['membershipBadge'] ?? json['badge'] ?? profile['badge'] ?? 'NONE';
-    
-    return UserProfile(
-      id: json['id'] ?? json['_id'] ?? '',
-      name: '${profile['firstName'] ?? ''} ${profile['lastName'] ?? ''}'.trim(),
-      nameAr: profile['firstNameAr'] ?? profile['firstName'] ?? '',
-      email: json['email'] ?? '',
-      phone: profile['phone'] ?? '',
-      imageUrl: profile['avatarUrl'] ?? '',
-      membershipLevel: role,
-      membershipStatus: json['status'] ?? 'ACTIVE',
-      membershipExpiry: json['expiryDate'] != null ? DateTime.parse(json['expiryDate']) : null,
-      profileCompletionPercentage: 40,
-      membershipBadge: badge,
-      status: json['status'] ?? 'ACTIVE',
-    );
-  }
-
-  String getName(String languageCode) {
-    if (languageCode == 'ar') return nameAr;
-    return name;
-  }
-}
+import 'package:ebzim_app/core/models/user_profile.dart';
+export 'package:ebzim_app/core/models/user_profile.dart';
 
 /// Service class for fetching user profile from backend
 class UserProfileService {

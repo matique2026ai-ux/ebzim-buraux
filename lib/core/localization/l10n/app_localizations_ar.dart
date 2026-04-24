@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'إبزيم | Ebzim';
+  String get appName => 'إبزيم';
 
   @override
   String get welcome => 'أهلاً بك';
@@ -55,10 +55,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get langFr => 'Français';
 
   @override
-  String get onboardingSkip => 'تخطي إلى التراث';
+  String get onboardingSkip => 'تخطي';
 
   @override
-  String get onboardingNext => 'ابدأ الرحلة';
+  String get onboardingNext => 'التالي';
+
+  @override
+  String get onboardingBegin => 'ابدأ الرحلة';
+
+  @override
+  String get onboardingDone => 'ابدأ الآن';
 
   @override
   String get onb1Tag => 'مؤسسة التراث';
@@ -112,7 +118,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authSecret => 'كلمة المرور';
 
   @override
-  String get authLostCredentials => 'هل نسيت بيانات الاعتماد؟';
+  String get authLostCredentials => 'نسيت كلمة المرور؟';
 
   @override
   String get authPasswordHint => '••••••••';
@@ -132,11 +138,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authErrorUnknown => 'حدث خطأ غير متوقع. يرجى المحاولة لاحقاً.';
 
   @override
-  String get authForgotPasswordTitle => 'استعادة الحساب';
+  String get authForgotPasswordTitle => 'نسيت كلمة المرور؟';
 
   @override
   String get authForgotPasswordDesc =>
-      'نظام استعادة الحساب التلقائي قيد التطوير حالياً. يرجى التواصل مع إدارة الجمعية أو إرسال بريد إلكتروني للدعم الفني للمساعدة في استعادة بياناتك.';
+      'أدخل بريدك الإلكتروني المرتبط بحسابك لتلقي رمز التحقق الذي سيمكنك من تعيين كلمة مرور جديدة آمنة.';
 
   @override
   String get authAssocName => 'جمعية إبزيم';
@@ -631,6 +637,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dashMemberLevelMember => 'عضو رسمي بالجمعية';
+
+  @override
+  String get dashMemberLevelAdmin => 'مسؤول النظام (Admin)';
+
+  @override
+  String get dashMemberLevelSuperAdmin => 'المشرف العام (Super Admin)';
 
   @override
   String get dashAccountStatus => 'حالة الحساب';

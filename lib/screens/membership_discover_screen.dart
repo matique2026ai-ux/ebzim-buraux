@@ -6,17 +6,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
+import 'package:ebzim_app/core/services/membership_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Membership Discover Screen — Premium institutional join page
 // Tri-lingual: AR / EN / FR
 // ─────────────────────────────────────────────────────────────────────────────
 
-class MembershipDiscoverScreen extends StatelessWidget {
+class MembershipDiscoverScreen extends ConsumerWidget {
   const MembershipDiscoverScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
     final isFr = Localizations.localeOf(context).languageCode == 'fr';
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -83,7 +85,7 @@ class MembershipDiscoverScreen extends StatelessWidget {
                                 : isFr
                                     ? 'Adhésion Officielle'
                                     : 'Official Membership').toUpperCase(),
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.playfairDisplay(
                               color: AppTheme.accentColor,
                               fontSize: 9,
                               fontWeight: FontWeight.w800,
@@ -302,63 +304,74 @@ class MembershipDiscoverScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     // Primary CTA
-                    Container(
-                      height: 62,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        gradient: LinearGradient(
-                          colors: [
-                            AppTheme.accentColor,
-                            const Color(0xFFB8941E),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.accentColor.withValues(alpha: 0.35),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
+                    ref.watch(membershipStatusProvider).when(
+                      data: (status) {
+                        final isSubmitted = status == 'SUBMITTED' || status == 'INVESTIGATING';
+                        final isApproved = status == 'APPROVED';
+                        
+                        return Container(
+                          height: 62,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                            gradient: LinearGradient(
+                              colors: isApproved 
+                                ? [const Color(0xFF15803D), const Color(0xFF166534)]
+                                : isSubmitted
+                                  ? [const Color(0xFFB45309), const Color(0xFF92400E)]
+                                  : [AppTheme.accentColor, const Color(0xFFB8941E)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: (isApproved ? const Color(0xFF15803D) : isSubmitted ? const Color(0xFFB45309) : AppTheme.accentColor).withValues(alpha: 0.35),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            HapticFeedback.mediumImpact();
-                            context.push('/membership/apply');
-                          },
-                          borderRadius: BorderRadius.circular(18),
-                          child: Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.how_to_reg_rounded, color: Colors.white, size: 20),
-                                const SizedBox(width: 10),
-                                Text(
-                                  isAr
-                                      ? 'قدّم طلب الانخراط'
-                                      : isFr
-                                          ? 'Déposer une adhésion'
-                                          : 'Apply for Membership',
-                                  style: GoogleFonts.tajawal(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: 0.3,
-                                  ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: isSubmitted || isApproved ? null : () {
+                                HapticFeedback.mediumImpact();
+                                context.push('/membership/apply');
+                              },
+                              borderRadius: BorderRadius.circular(18),
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      isApproved ? Icons.verified_user_rounded : isSubmitted ? Icons.pending_actions_rounded : Icons.how_to_reg_rounded, 
+                                      color: Colors.white, 
+                                      size: 20
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      isApproved 
+                                        ? (isAr ? 'عضوية مفعلة' : 'Adhésion Activée')
+                                        : isSubmitted
+                                          ? (isAr ? 'الطلب قيد المراجعة' : 'Demande en cours')
+                                          : (isAr ? 'قدّم طلب الانخراط' : isFr ? 'Déposer une adhésion' : 'Apply for Membership'),
+                                      style: GoogleFonts.tajawal(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 0.3,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    )
-                        .animate()
-                        .fadeIn(delay: 950.ms)
-                        .scale(begin: const Offset(0.96, 0.96), curve: Curves.easeOutBack),
+                        ).animate().fadeIn(delay: 950.ms).scale(begin: const Offset(0.96, 0.96), curve: Curves.easeOutBack);
+                      },
+                      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.accentColor)),
+                      error: (_, __) => const SizedBox(),
+                    ),
 
                     const SizedBox(height: 14),
 
@@ -371,7 +384,7 @@ class MembershipDiscoverScreen extends StatelessWidget {
                               : 'Membership is separate from your app account',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        fontStyle: FontStyle.italic,
+                        // fontStyle removed for accessibility,
                         color: isDark ? Colors.white38 : Colors.black38,
                       ),
                     ).animate().fadeIn(delay: 1050.ms),
@@ -518,7 +531,7 @@ class _SectionLabel extends StatelessWidget {
         ),
         Text(
           label.toUpperCase(),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.playfairDisplay(
             color: AppTheme.accentColor,
             fontSize: 9.5,
             fontWeight: FontWeight.w800,

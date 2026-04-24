@@ -31,6 +31,22 @@ export class CreateHeroSlideDto {
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
+
+  @IsString()
+  @IsOptional()
+  videoUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  overlayColor?: string;
+
+  @IsNumber()
+  @IsOptional()
+  overlayOpacity?: number;
+
+  @IsString()
+  @IsOptional()
+  location?: string;
 }
 
 export class UpdateHeroSlideDto extends CreateHeroSlideDto {}

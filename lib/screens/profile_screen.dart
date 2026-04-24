@@ -26,7 +26,7 @@ class ProfileScreen extends ConsumerWidget {
     
     // Safety check for user profile data
     final UserProfile? userProfile = userAsync.value;
-    final isAdmin = userProfile?.membershipLevel == 'ADMIN' || userProfile?.membershipLevel == 'SUPER_ADMIN';
+    final isAdmin = userProfile?.role == EbzimRole.admin || userProfile?.role == EbzimRole.superAdmin;
 
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
     final accentColor = AppTheme.accentColor;
@@ -42,9 +42,10 @@ class ProfileScreen extends ConsumerWidget {
                 icon: Icons.account_circle_outlined,
               );
             }
-            final isRtl = Localizations.localeOf(context).languageCode == 'ar';
-            final displayName = isRtl ? user.nameAr : user.name;
-            final isPublic = user.membershipLevel == 'PUBLIC';
+            final lang = Localizations.localeOf(context).languageCode;
+            final isRtl = lang == 'ar';
+            final displayName = user.getName(lang);
+            final isPublic = user.role == EbzimRole.public;
 
             return CustomScrollView(
               physics: const BouncingScrollPhysics(),
@@ -94,17 +95,17 @@ class ProfileScreen extends ConsumerWidget {
                                 child: CircleAvatar(
                                   radius: 60,
                                   backgroundColor: textColor.withValues(alpha: 0.05),
-                                  backgroundImage: user.imageUrl.startsWith('http') 
-                                      ? NetworkImage(user.imageUrl) 
+                                  backgroundImage: (user.imageUrl?.startsWith('http') ?? false)
+                                      ? NetworkImage(user.imageUrl!) 
                                       : null,
-                                  child: !user.imageUrl.startsWith('http')
+                                  child: !(user.imageUrl?.startsWith('http') ?? false)
                                       ? const Icon(Icons.person, color: AppTheme.accentColor, size: 40)
                                       : null,
                                 ),
                               ),
                               Positioned(
                                 bottom: -15,
-                                child: _RoleBadge(role: user.membershipLevel),
+                                child: _RoleBadge(role: user.role),
                               ),
                               // --- HONORARY MEDAL (CUSTOM BADGES) ---
                               if (user.membershipBadge != null && user.membershipBadge != 'NONE')
@@ -128,39 +129,34 @@ class ProfileScreen extends ConsumerWidget {
 
                         const SizedBox(height: 8),
 
-                        statusAsync.when(
-                          data: (statusStr) {
-                            // Logic Fix: Admins/SuperAdmins are ALWAYS Active
-                            final displayStatus = (user.membershipLevel == 'SUPER_ADMIN' || user.membershipLevel == 'ADMIN') 
-                                ? 'نشط (صلاحية إدارية)' 
-                                : statusStr;
-                            
-                            return Column(
-                              children: [
-                                Text(
-                                  '${isPublic ? loc.dashMemberLevelPublic : loc.dashMemberLevelMember} • $displayStatus',
-                                style: GoogleFonts.cairo(
-                                  color: AppTheme.accentColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5,
+                                statusAsync.when(
+                                  data: (statusStr) {
+                                    return Column(
+                                      children: [
+                                        Text(
+                                          '${user.role.getLabel(Localizations.localeOf(context).languageCode)} • $statusStr',
+                                          style: GoogleFonts.cairo(
+                                            color: AppTheme.accentColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'رقم العضوية: ${user.id.substring(user.id.length.clamp(0, 6)).toUpperCase()}',
+                                          style: GoogleFonts.playfairDisplay(
+                                            color: textColor.withValues(alpha: 0.4),
+                                            fontSize: 10,
+                                            letterSpacing: 1.0,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  loading: () => const SizedBox(height: 16),
+                                  error: (err, stack) => const SizedBox(height: 16),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'رقم العضوية: ${user.id.substring(user.id.length - 6).toUpperCase()}',
-                                style: GoogleFonts.inter(
-                                  color: textColor.withValues(alpha: 0.4),
-                                  fontSize: 10,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                              ],
-                            );
-                          },
-                          loading: () => const SizedBox(height: 16),
-                          error: (err, stack) => const SizedBox(height: 16),
-                        ),
 
                         const SizedBox(height: 40),
 
@@ -180,16 +176,14 @@ class ProfileScreen extends ConsumerWidget {
                               _ProfileTile(
                                 icon: Icons.phone_android,
                                 label: loc.profilePhone,
-                                value: user.phone.isNotEmpty ? user.phone : '—',
+                                value: (user.phone?.isNotEmpty ?? false) ? user.phone! : '—',
                               ),
                               if (!isPublic) ...[
                                 Divider(color: isDark ? Colors.white10 : Colors.black12),
                                 _ProfileTile(
                                   icon: Icons.verified_user_outlined,
-                                  label: loc.profileActiveSince,
-                                  value: user.membershipExpiry != null 
-                                      ? '${user.membershipExpiry!.year - 1}' 
-                                      : '—',
+                                  label: isRtl ? 'صلاحية العضوية لغاية' : 'Membership Valid Until',
+                                  value: user.getFormattedExpiry(lang),
                                 ),
                               ],
                             ],
@@ -287,7 +281,7 @@ class ProfileScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(20),
                             child: GlassCard(
                               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-                              border: Border.all(color: textColor.withValues(alpha: 0.05)),
+                                border: Border.all(color: textColor.withValues(alpha: 0.05)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -337,7 +331,7 @@ class _SectionHeader extends StatelessWidget {
         children: [
           Text(
             title.toUpperCase(),
-            style: GoogleFonts.inter(
+            style: GoogleFonts.playfairDisplay(
               color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black26,
               fontSize: 10,
               fontWeight: FontWeight.w900,
@@ -471,48 +465,23 @@ class _Sk extends StatelessWidget {
 }
 
 class _RoleBadge extends StatelessWidget {
-  final String role;
+  final EbzimRole role;
   const _RoleBadge({required this.role});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final lang = Localizations.localeOf(context).languageCode;
+    final bgColor = role.getBadgeColor();
+    final textColor = role == EbzimRole.superAdmin || role == EbzimRole.admin || role == EbzimRole.authority ? Colors.white : Colors.black87;
+    final label = role.getLabel(lang);
     
-    Color bgColor;
-    Color textColor;
-    String label;
     IconData? icon;
-
-    switch (role.toUpperCase()) {
-      case 'SUPER_ADMIN':
-        bgColor = const Color(0xFFFFD700); // Gold
-        textColor = Colors.black;
-        label = 'مدير عام';
-        icon = Icons.stars_rounded;
-        break;
-      case 'ADMIN':
-        bgColor = AppTheme.accentColor;
-        textColor = Colors.black;
-        label = 'مسؤول نظام';
-        icon = Icons.admin_panel_settings_rounded;
-        break;
-      case 'AUTHORITY':
-        bgColor = const Color(0xFF2196F3); // Blue
-        textColor = Colors.white;
-        label = 'سلطة محلية';
-        icon = Icons.account_balance_rounded;
-        break;
-      case 'MEMBER':
-        bgColor = const Color(0xFF1A6B3A); // Deep Green
-        textColor = Colors.white;
-        label = 'عضو مشارك';
-        icon = Icons.verified_rounded;
-        break;
-      default:
-        bgColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05);
-        textColor = isDark ? Colors.white70 : Colors.black54;
-        label = 'مستخدم مسجل'; // More accurate than 'Guest' for a logged-in user
-        icon = Icons.person_outline_rounded;
+    switch (role) {
+      case EbzimRole.superAdmin: icon = Icons.stars_rounded; break;
+      case EbzimRole.admin: icon = Icons.admin_panel_settings_rounded; break;
+      case EbzimRole.authority: icon = Icons.account_balance_rounded; break;
+      case EbzimRole.member: icon = Icons.verified_rounded; break;
+      case EbzimRole.public: icon = Icons.person_outline_rounded; break;
     }
 
     return Container(
@@ -521,7 +490,7 @@ class _RoleBadge extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 3)),
+          BoxShadow(color: bgColor.withValues(alpha: 0.4), blurRadius: 8, offset: const Offset(0, 3)),
         ],
       ),
       child: Row(
@@ -562,6 +531,11 @@ class _HonoraryMedal extends StatelessWidget {
         icon = Icons.workspace_premium_rounded;
         label = 'برونزي';
         break;
+      case 'SILVER':
+        color = const Color(0xFFC0C0C0); // Silver
+        icon = Icons.emoji_events_rounded;
+        label = 'فضي';
+        break;
       case 'GOLD':
         color = const Color(0xFFFFD700);
         icon = Icons.stars_rounded;
@@ -576,6 +550,26 @@ class _HonoraryMedal extends StatelessWidget {
         color = const Color(0xFFA8A29E);
         icon = Icons.shield_rounded;
         label = 'عادي';
+        break;
+      case 'PRESIDENT':
+        color = const Color(0xFFD4AF37); // Gold
+        icon = Icons.gavel_rounded;
+        label = 'الرئيس';
+        break;
+      case 'SECRETARY':
+        color = const Color(0xFF052011); // Emerald
+        icon = Icons.history_edu_rounded;
+        label = 'الكاتب العام';
+        break;
+      case 'TREASURER':
+        color = const Color(0xFF15803D); // Green
+        icon = Icons.account_balance_wallet_rounded;
+        label = 'أمين المال';
+        break;
+      case 'VICE_PRESIDENT':
+        color = const Color(0xFF0EA5E9); // Blue
+        icon = Icons.groups_rounded;
+        label = 'نائب الرئيس';
         break;
       default: return const SizedBox();
     }

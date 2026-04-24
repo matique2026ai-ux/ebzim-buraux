@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,13 +26,13 @@ import 'package:ebzim_app/screens/otp_verification_screen.dart';
 import 'package:ebzim_app/screens/reset_password_screen.dart';
 import 'package:ebzim_app/screens/admin_dashboard_screen.dart';
 import 'package:ebzim_app/screens/admin_create_news_screen.dart';
+import 'package:ebzim_app/screens/admin_create_project_screen.dart';
 import 'package:ebzim_app/screens/admin_create_event_screen.dart';
 import 'package:ebzim_app/screens/admin_cms_manage_screen.dart';
 import 'package:ebzim_app/screens/news_screen.dart';
 import 'package:ebzim_app/screens/membership_discover_screen.dart';
 import 'package:ebzim_app/screens/help_support_screen.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
-import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/screens/heritage_projects_screen.dart';
@@ -42,6 +43,7 @@ import 'package:ebzim_app/screens/digital_library_screen.dart';
 import 'package:ebzim_app/screens/contributions_screen.dart';
 import 'package:ebzim_app/screens/news_detail_screen.dart';
 import 'package:ebzim_app/screens/edit_profile_screen.dart';
+import 'package:ebzim_app/screens/project_details_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Premium Page Transition Builders
@@ -57,14 +59,11 @@ CustomTransitionPage<T> _slidePage<T>(GoRouterState state, Widget child) {
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       final curve = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
       final reverseCurve = CurvedAnimation(parent: secondaryAnimation, curve: Curves.easeInCubic);
-      return SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero).animate(curve),
+      return FadeTransition(
+        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
         child: FadeTransition(
-          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
-          child: FadeTransition(
-            opacity: Tween<double>(begin: 1.0, end: 0.85).animate(reverseCurve),
-            child: child,
-          ),
+          opacity: Tween<double>(begin: 1.0, end: 0.85).animate(reverseCurve),
+          child: child,
         ),
       );
     },
@@ -80,14 +79,10 @@ CustomTransitionPage<T> _slideHoriz<T>(GoRouterState state, Widget child, {bool 
     reverseTransitionDuration: const Duration(milliseconds: 260),
     transitionsBuilder: (context, animation, secondaryAnimation, widget) {
       final isAr = Directionality.of(context) == TextDirection.rtl;
-      final dir = (isAr || rtl) ? -1.0 : 1.0;
       final curve = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
-      return SlideTransition(
-        position: Tween<Offset>(begin: Offset(0.06 * dir, 0), end: Offset.zero).animate(curve),
-        child: FadeTransition(
-          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
-          child: widget,
-        ),
+      return FadeTransition(
+        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
+        child: widget,
       );
     },
   );
@@ -144,21 +139,49 @@ final appRouterProvider = Provider((ref) {
       final isLoggingIn = loc == '/login';
       final isRegistering = loc == '/register';
       final isAuthFlow = loc.startsWith('/auth/');
-      final isPublicHome = loc == '/splash' || loc == '/language' || loc == '/onboarding';
+      
+      // Routes accessible without authentication
+      final publicRoutes = [
+        '/splash', '/language', '/onboarding', '/home', '/about', 
+        '/activities', '/news', '/heritage', '/leadership', 
+        '/statute', '/library', '/heritage-map'
+      ];
+      
+      final isPublicBase = publicRoutes.contains(loc);
+      final isPublicDetail = loc.startsWith('/news/') || loc.startsWith('/project/') || loc.startsWith('/event/');
+      final isAllowedUnauthenticated = isLoggingIn || isRegistering || isAuthFlow || isPublicBase || isPublicDetail;
 
-      if (isInitializing) return null;
+      if (isInitializing) {
+        if (kDebugMode) print('[ROUTER] Initializing... staying at $loc');
+        return null;
+      }
 
-      // Allowed routes for unauthenticated users
-      final isAllowedUnauthenticated = isLoggingIn || isRegistering || isAuthFlow || isPublicHome;
+      if (kDebugMode) print('[ROUTER] Redirect check: loc=$loc, auth=$isAuthenticated');
 
       if (!isAuthenticated && !isAllowedUnauthenticated) {
+        if (kDebugMode) print('[ROUTER] Not auth & not public -> /login');
         return '/login';
       }
 
-      // If authenticated and trying to go to login/register, go to home/admin
-      if (isAuthenticated && (isLoggingIn || isRegistering)) {
-        final role = authState.user?.membershipLevel ?? 'USER';
-        return (role == 'ADMIN' || role == 'SUPER_ADMIN') ? '/admin' : '/home';
+      if (isAuthenticated) {
+        final role = authState.user?.role ?? EbzimRole.public;
+        final isAdmin = role == EbzimRole.admin || role == EbzimRole.superAdmin;
+
+        if (isLoggingIn || isRegistering) {
+          if (kDebugMode) print('[ROUTER] Auth & at login/reg -> redirect to dash');
+          return isAdmin ? '/admin' : '/home';
+        }
+
+        final landingPages = ['/splash', '/language', '/onboarding', '/', ''];
+        if (landingPages.contains(loc) || loc == '/') {
+          if (kDebugMode) print('[ROUTER] Auth & at landing -> redirect to dash');
+          return isAdmin ? '/admin' : '/home';
+        }
+
+        if (loc.startsWith('/admin') && !isAdmin) {
+          if (kDebugMode) print('[ROUTER] User at admin -> /home');
+          return '/home';
+        }
       }
 
       return null;
@@ -166,7 +189,7 @@ final appRouterProvider = Provider((ref) {
     routes: [
       GoRoute(
         path: '/',
-        redirect: (_, __) => '/splash',
+        redirect: (_, _) => '/splash',
       ),
       GoRoute(
         path: '/splash',
@@ -294,8 +317,31 @@ final appRouterProvider = Provider((ref) {
       GoRoute(
         path: '/admin/news/create',
         pageBuilder: (context, state) {
-          final existingPost = state.extra as NewsPost?;
-          return _slidePage(state, AdminCreateNewsScreen(existingPost: existingPost));
+          if (state.extra is NewsPost) {
+            return _slidePage(state, AdminCreateNewsScreen(existingPost: state.extra as NewsPost));
+          } else if (state.extra is Map<String, dynamic>) {
+            final map = state.extra as Map<String, dynamic>;
+            return _slidePage(state, AdminCreateNewsScreen(
+              existingPost: map['existingPost'] as NewsPost?,
+              initialCategory: map['initialCategory'] as String?,
+            ));
+          }
+          return _slidePage(state, const AdminCreateNewsScreen());
+        },
+      ),
+      GoRoute(
+        path: '/admin/projects/create',
+        pageBuilder: (context, state) {
+          if (state.extra is NewsPost) {
+            return _slidePage(state, AdminCreateProjectScreen(existingPost: state.extra as NewsPost));
+          } else if (state.extra is Map<String, dynamic>) {
+            final map = state.extra as Map<String, dynamic>;
+            return _slidePage(state, AdminCreateProjectScreen(
+              existingPost: map['existingPost'] as NewsPost?,
+              initialCategory: map['initialCategory'] as String?,
+            ));
+          }
+          return _slidePage(state, const AdminCreateProjectScreen(initialCategory: 'RESTORATION'));
         },
       ),
       GoRoute(
@@ -345,6 +391,32 @@ final appRouterProvider = Provider((ref) {
         pageBuilder: (context, state) => _fadePage(state, const OnboardingSliderScreen()),
       ),
       GoRoute(
+        path: '/project/:id',
+        pageBuilder: (context, state) {
+          final project = state.extra as NewsPost?;
+          final id = state.pathParameters['id']!;
+          
+          if (project != null) {
+            return _slidePage(state, ProjectDetailsScreen(project: project));
+          }
+
+          // Fallback for direct links / deep links
+          return CustomTransitionPage(
+            child: Consumer(
+              builder: (context, ref, _) {
+                final postAsync = ref.watch(postDetailsProvider(id));
+                return postAsync.when(
+                  data: (p) => p != null ? ProjectDetailsScreen(project: p) : const Scaffold(body: Center(child: Text('Project not found'))),
+                  loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+                  error: (_, _) => const Scaffold(body: Center(child: Text('Error loading project'))),
+                );
+              },
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child),
+          );
+        },
+      ),
+      GoRoute(
         path: '/news/:id',
         pageBuilder: (context, state) {
           final post = state.extra as NewsPost?;
@@ -359,6 +431,6 @@ final appRouterProvider = Provider((ref) {
 /// A notifier that forces GoRouter to refresh when auth state changes.
 class _AuthStateNotifier extends ChangeNotifier {
   _AuthStateNotifier(Ref ref) {
-    ref.listen(authProvider, (_, __) => notifyListeners());
+    ref.listen(authProvider, (_, _) => notifyListeners());
   }
 }

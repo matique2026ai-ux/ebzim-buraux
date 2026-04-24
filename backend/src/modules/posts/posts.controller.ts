@@ -48,7 +48,7 @@ export class PostsController {
     @Query('limit') limit: number,
   ) {
     const locale = ['ar', 'fr', 'en'].includes(lang) ? lang : 'en'; // Default fallback
-    return this.postsService.getPublicFeed(locale, {
+    return this.postsService.getPublicFeedSystemFixed(locale, {
       cursor,
       limit: Number(limit),
     });

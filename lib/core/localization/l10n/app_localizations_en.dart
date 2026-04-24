@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Ebzim | إبزيم';
+  String get appName => 'EBZIM';
 
   @override
   String get welcome => 'Welcome';
@@ -55,10 +55,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get langFr => 'Français';
 
   @override
-  String get onboardingSkip => 'Skip to Heritage';
+  String get onboardingSkip => 'Skip';
 
   @override
-  String get onboardingNext => 'Begin Journey';
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingBegin => 'Begin Journey';
+
+  @override
+  String get onboardingDone => 'Get Started';
 
   @override
   String get onb1Tag => 'Heritage Foundation';
@@ -112,7 +118,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authSecret => 'Secret';
 
   @override
-  String get authLostCredentials => 'Lost credentials?';
+  String get authLostCredentials => 'Forgot password?';
 
   @override
   String get authPasswordHint => '••••••••';
@@ -132,11 +138,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'An unexpected error occurred. Please try again later.';
 
   @override
-  String get authForgotPasswordTitle => 'Account Recovery';
+  String get authForgotPasswordTitle => 'Forgot Password?';
 
   @override
   String get authForgotPasswordDesc =>
-      'Automatic account recovery is currently under development. Please contact the association\'s administration or technical support for assistance.';
+      'Enter your email address to receive a secure code and reset your password.';
 
   @override
   String get authAssocName => 'EBZIM ASSOCIATION';
@@ -151,7 +157,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authNewHere => 'New to Ebzim?';
 
   @override
-  String get authCreateAccount => 'Create User Account';
+  String get authCreateAccount => 'Create user account';
 
   @override
   String get authPrivacy => 'Privacy';
@@ -163,7 +169,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authPrivacyTitle => 'Privacy Policy';
 
   @override
-  String get authTermsTitle => 'Terms & Conditions';
+  String get authTermsTitle => 'Terms and Conditions';
 
   @override
   String get authResetPassword => 'Reset Password';
@@ -175,10 +181,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authEmailSent => 'Instructions Sent';
 
   @override
-  String get authEmailSentDesc => 'Please check your inbox for recovery steps.';
+  String get authEmailSentDesc => 'Please check your email for recovery steps.';
 
   @override
-  String get authOtpTitle => 'Verify Identity';
+  String get authOtpTitle => 'Identity Verification';
 
   @override
   String get authOtpDesc => 'Enter the verification code sent to your email.';
@@ -187,27 +193,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authNewPassword => 'New Password';
 
   @override
-  String get authConfirmNewPassword => 'Confirm New Password';
+  String get authConfirmNewPassword => 'Confirm Password';
 
   @override
-  String get authPasswordResetSuccess => 'Password Reset Successfully';
+  String get authPasswordResetSuccess => 'Password reset successfully';
 
   @override
   String get regTitle => 'Create New Account';
 
   @override
   String get regSubtitle =>
-      'Create your account to access the platform services and easily track your activities.';
+      'Create your account to access platform services and track your activities easily.';
 
   @override
   String get regMembershipNote =>
-      'Creating an account on the platform does not grant official membership in the association.';
+      'Creating a platform account does not mean official membership in the association.';
 
   @override
   String get regFullName => 'Full Name';
 
   @override
-  String get regFullNameHint => 'Akrouf Toufik';
+  String get regFullNameHint => 'John Doe';
 
   @override
   String get regPhone => 'Phone Number';
@@ -219,7 +225,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get regEmail => 'Email Address';
 
   @override
-  String get regEmailHint => 'salim@example.com';
+  String get regEmailHint => 'john@example.com';
 
   @override
   String get regPassword => 'Password';
@@ -240,7 +246,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get regLogin => 'Login';
 
   @override
-  String get regMembership => 'Start Membership Application';
+  String get regMembership => 'Submit Written Membership Request';
 
   @override
   String get valRequired => 'This field is required';
@@ -268,10 +274,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeSubtitle =>
-      'Preserving the spirit of Sétif through artisanal crafts, historical dialogue, and the silent wisdom of our heritage.';
+      'Preserving the spirit of Sétif through craftsmanship, historical dialogue, and the silent wisdom of our heritage.';
 
   @override
-  String get homeActionJoin => 'BECOME A MEMBER';
+  String get homeActionJoin => 'Join Us';
 
   @override
   String get homeActionExplore => 'Explore Archive';
@@ -280,18 +286,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homePillars => 'Our Pillars';
 
   @override
-  String get homeWorkshopTitle => 'Traditional Workshops';
+  String get homeWorkshopTitle => 'Traditional Craft Workshops';
 
   @override
   String get homeWorkshopDesc =>
-      'Master ancestral crafts through guided sessions.';
+      'Master the crafts of our ancestors through practical sessions.';
 
   @override
-  String get homeHistoryTitle => 'History Circles';
+  String get homeHistoryTitle => 'Sétif History Circles';
 
   @override
   String get homeHistoryDesc =>
-      'A deep dive into the urban evolution of Sétif.';
+      'Deep dive into the urban evolution and history of Sétif.';
 
   @override
   String get homeUpcomingEvents => 'Upcoming Events';
@@ -300,16 +306,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeLatestHighlights => 'Latest Highlights';
 
   @override
-  String get navDashboard => 'Home';
+  String get navDashboard => 'Dashboard';
 
   @override
-  String get navDirectory => 'Association Members';
+  String get navDirectory => 'Members';
 
   @override
   String get navActivities => 'Activities';
 
   @override
-  String get navProfile => 'My Account';
+  String get navProfile => 'Profile';
 
   @override
   String get navNews => 'News';
@@ -321,10 +327,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventDetailsLink => 'View Program Details';
 
   @override
-  String get eventAboutGathering => 'About the Gathering';
+  String get eventAboutGathering => 'About this Gathering';
 
   @override
-  String get eventCuratedBy => 'Curated By';
+  String get eventCuratedBy => 'Curated by';
 
   @override
   String get eventShare => 'Share Event';
@@ -333,7 +339,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventCalendar => 'Add to Calendar';
 
   @override
-  String get eventVenue => 'Venue & Location';
+  String get eventVenue => 'Venue and Location';
 
   @override
   String get eventOpenMaps => 'Open in Maps';
@@ -342,43 +348,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventDiscoverMore => 'Discover More';
 
   @override
-  String get eventRegister => 'Register to Attend';
+  String get eventRegister => 'Register Attendance';
 
   @override
   String get aboutHeroTitle =>
-      'Preserving Heritage & Developing Cultural Awareness';
+      'Preserving Heritage and Developing Cultural Awareness';
 
   @override
   String get aboutHeroSubtitle =>
-      'EBZIM is a provincial space for mobilizing knowledge and resources to protect the Algerian identity.';
+      'Ebzim Association is the provincial space for harnessing knowledge and means to protect Algerian identity.';
 
   @override
-  String get aboutStoryBadge => 'ABOUT THE ASSOCIATION';
+  String get aboutStoryBadge => 'About Association';
 
   @override
-  String get aboutStoryTitle => 'Sétif’s Legacy, A Nation’s Identity';
+  String get aboutStoryTitle => 'Sétif Heritage, National Identity';
 
   @override
   String get aboutStoryText1 =>
-      'Founded by decision of the General Assembly, EBZIM works to protect the tangible and intangible treasures of Sétif, serving as an institutional bridge between authenticity and modernity.';
+      'Ebzim was founded to protect the material and intangible treasures of Sétif, acting as an institutional bridge between authenticity and modernity.';
 
   @override
   String get aboutStoryQuote =>
-      '\"EBZIM is not just a cultural entity, but a voluntary covenant to preserve memory and promote meaningful cultural action.\"';
+      '\"Ebzim is not just a cultural body, but a voluntary covenant to preserve memory and promote meaningful cultural action.\"';
 
   @override
-  String get aboutMission => 'Our Mission (By-laws)';
+  String get aboutMission => 'Our Statutory Mission';
 
   @override
   String get aboutMissionText =>
-      'Protecting historical landmarks, documenting heritage techniques, and integrating citizenship concepts through field-based cultural action.';
+      'Working to protect historical monuments, document heritage techniques, and integrate citizenship concepts through field cultural work.';
 
   @override
   String get aboutVision => 'Strategic Vision';
 
   @override
   String get aboutVisionText =>
-      'To make EBZIM the reference model for protecting cultural heritage and national memory in North Africa.';
+      'To be the reference model in protecting cultural heritage and national memory in North Africa.';
 
   @override
   String get aboutValues => 'Core Principles';
@@ -390,7 +396,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutValue2 => 'Institutional Integrity';
 
   @override
-  String get aboutValue3 => 'Authenticity & Identity';
+  String get aboutValue3 => 'Authenticity and Identity';
 
   @override
   String get aboutValue4 => 'Digital Citizenship';
@@ -403,10 +409,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutHqText =>
-      'The operative center of the association is located in the historical pulse of Sétif, where cultural actions and memory protection initiatives are managed.';
+      'The operational center is located in the historical pulse of Sétif, managing cultural action and memory protection initiatives.';
 
   @override
-  String get aboutHqAction1 => 'View Map';
+  String get aboutHqAction1 => 'Location Maps';
 
   @override
   String get aboutHqAction2 => 'Contact Us';
@@ -416,14 +422,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Cultural action is the infrastructure of our national identity. In every symbol and historical detail, we find our roadmap to the future.';
 
   @override
-  String get aboutQuoteAuthor => 'EBZIM EXECUTIVE OFFICE';
+  String get aboutQuoteAuthor => 'Ebzim Executive Board';
 
   @override
   String get actTitle => 'Cultural Calendar';
 
   @override
   String get actSubtitle =>
-      'Discover the initiatives, workshops, and gatherings shaping the Ebzim community.';
+      'Discover initiatives, workshops, and gatherings that shape the Ebzim community.';
 
   @override
   String get actSearchHint => 'Search for events or workshops...';
@@ -471,10 +477,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memFemale => 'Female';
 
   @override
-  String get memWilaya => 'Wilaya';
+  String get memWilaya => 'Province';
 
   @override
-  String get memCommune => 'Commune';
+  String get memCommune => 'Municipality';
 
   @override
   String get memPhone => 'Phone Number';
@@ -483,62 +489,62 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memPhoneHint => '+213 XXX XX XX XX';
 
   @override
-  String get memInterests => 'Areas of Interest';
+  String get memInterests => 'Fields of Interest';
 
   @override
-  String get memMotivation => 'Motivation for Joining';
+  String get memMotivation => 'Motivation to Join';
 
   @override
   String get memConsent =>
-      'I agree to the terms and privacy policy of Association Ebzim.';
+      'I agree to the terms and privacy policy of Ebzim Association.';
 
   @override
   String get memNext => 'Next Step';
 
   @override
-  String get memBack => 'Go Back';
+  String get memBack => 'Back';
 
   @override
-  String get memSubmit => 'Submit Application';
+  String get memSubmit => 'Submit Request';
 
   @override
   String get memPrivacyNote =>
-      'Your information is securely processed and preserved in accordance with Association Ebzim\'s archival standards.';
+      'Your information is processed and maintained securely according to Ebzim\'s archival standards.';
 
   @override
-  String get memSuccessTitle => 'Welcome to the Journey';
+  String get memSuccessTitle => 'Request Submitted';
 
   @override
   String get memSuccessSub =>
-      'Your application has been received and is under review.';
+      'Your request is under review by the Executive Board';
 
   @override
-  String get memSuccessHome => 'Return to Home';
+  String get memSuccessHome => 'Back to Home';
 
   @override
-  String get memStatusNone => 'No membership application registered';
+  String get memStatusNone => 'No active membership request';
 
   @override
-  String get memStatusSubmitted => 'Under review by the Executive Office';
+  String get memStatusSubmitted => 'Under review by the Executive Board';
 
   @override
   String get memStatusNeedsInfo => 'Requires additional information';
 
   @override
-  String get memStatusApproved => 'Approved - Welcome to Ebzim';
+  String get memStatusApproved => 'Approved - Welcome as a member';
 
   @override
-  String get memStatusRejected => 'Not accepted at this time';
+  String get memStatusRejected => 'Rejected at this time';
 
   @override
-  String get leadHeroBadge => 'Leadership & Governance';
+  String get leadHeroBadge => 'Leadership and Governance';
 
   @override
-  String get leadHeroTitle => 'Our Curators of Heritage.';
+  String get leadHeroTitle => 'Guardians of Our Heritage.';
 
   @override
   String get leadHeroSub =>
-      'Preserving the legacy of Ebzim through institutional wisdom and cultural stewardship.';
+      'Preserving Ebzim\'s legacy through institutional wisdom and cultural oversight.';
 
   @override
   String get leadSearchHint => 'Search by name or role...';
@@ -550,57 +556,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leadCatBoard => 'Board Members';
 
   @override
-  String get leadCatExec => 'Executive';
+  String get leadCatExec => 'Executive Management';
 
   @override
-  String get leadJoinTitle => 'Interested in joining our advisory?';
+  String get leadJoinTitle => 'Interested in joining our advisory board?';
 
   @override
   String get leadJoinSub =>
-      'We are always seeking experts in heritage, technology, and cultural anthropology to guide our mission.';
+      'We are always looking for experts in heritage, technology, and cultural anthropology to guide our mission.';
 
   @override
   String get leadJoinBtn => 'Submit Candidacy';
 
   @override
   String dashboardWelcome(Object name) {
-    return 'Welcome to the EBZIM Platform, $name';
+    return 'Welcome to Ebzim Platform, $name';
   }
 
   @override
   String get dashboardWelcomePublic =>
-      'Welcome to the EBZIM Platform, a space for citizenship and culture.';
+      'Welcome to Ebzim Platform, the space for citizenship and culture.';
 
   @override
-  String get dashboardWelcomeBack => 'Welcome back to the EBZIM gateway';
+  String get dashboardWelcomeBack => 'Welcome back to Ebzim';
 
   @override
   String get dashboardStatus => 'Membership Status';
 
   @override
-  String get dashboardValidUntil => 'Valid until';
+  String get dashboardValidUntil => 'Valid Until';
 
   @override
-  String get dashboardQuickPay => 'Fees';
+  String get dashboardQuickPay => 'Pay Fees';
 
   @override
-  String get dashboardQuickCard => 'ID Card';
+  String get dashboardQuickCard => 'Identity Card';
 
   @override
-  String get dashboardQuickReg => 'Activities';
+  String get dashboardQuickReg => 'Our Activities';
 
   @override
-  String get dashboardProgress => 'Profile Progress';
+  String get dashboardProgress => 'Complete Profile';
 
   @override
   String get dashboardProgressDesc =>
-      'EBZIM Gateway: Complete your profile to access full citizenship features.';
+      'Ebzim Portal: Complete your personal data to access full citizenship features.';
 
   @override
   String get dashboardUpcoming => 'Upcoming Events';
 
   @override
-  String get dashboardBookmarked => 'Bookmarked';
+  String get dashboardBookmarked => 'Saved Items';
 
   @override
   String get dashLoading => 'Loading...';
@@ -609,27 +615,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashViewAll => 'View All';
 
   @override
-  String get dashJoinTitle => 'Join Association EBZIM';
+  String get dashJoinTitle => 'Join Ebzim Association';
 
   @override
   String get dashJoinDesc =>
-      'Help protect our heritage and promote cultural citizenship by applying for official membership now.';
+      'Contribute to protecting our heritage and enhancing cultural citizenship by requesting official membership now.';
 
   @override
-  String get dashJoinAction => 'Apply for Membership Now';
+  String get dashJoinAction => 'Request Membership Now';
 
   @override
-  String get dashPendingTitle => 'Your Application is Under Review';
+  String get dashPendingTitle => 'Request Under Review';
 
   @override
   String get dashPendingDesc =>
-      'Your membership application is currently being reviewed by the executive office. We will notify you once the status is updated.';
+      'Your membership request is currently being reviewed. We will notify you once the status is updated.';
 
   @override
-  String get dashMemberLevelPublic => 'User Account (EBZIM Platform)';
+  String get dashMemberLevelPublic => 'User Account (Ebzim Platform)';
 
   @override
   String get dashMemberLevelMember => 'Official Member';
+
+  @override
+  String get dashMemberLevelAdmin => 'System Administrator';
+
+  @override
+  String get dashMemberLevelSuperAdmin => 'General Supervisor';
 
   @override
   String get dashAccountStatus => 'Account Status';
@@ -639,23 +651,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashAccountNote =>
-      'Note: Creating a platform account does not grant official association membership.';
+      'Note: Creating a platform account does not mean official membership in the association.';
 
   @override
   String get dashQuickProfile => 'Profile';
 
   @override
-  String get dashNoEvents => 'No scheduled events currently';
+  String get dashNoEvents => 'No events scheduled';
 
   @override
   String get dashErrorData => 'Error loading data';
 
   @override
-  String get dashPublicIntroTitle => 'Ebzim Digital Hub';
+  String get dashPublicIntroTitle => 'Ebzim\'s Digital Home';
 
   @override
   String get dashPublicIntroDesc =>
-      'Your discovery space for cultural activities, association initiatives, and the local identity of Sétif.';
+      'Your space to discover cultural activities, explore association initiatives, and connect with Sétif\'s local identity.';
 
   @override
   String get dashQuickAbout => 'About Association';
@@ -664,40 +676,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashMembershipInvite => 'Join the Association';
 
   @override
-  String get dashMembershipLearnMore => 'Discover membership terms & benefits';
+  String get dashMembershipLearnMore => 'Discover membership terms';
 
   @override
   String get dashMembershipDiscover => 'Official Membership Benefits';
 
   @override
-  String get dashStatusActive => 'ACTIVE';
+  String get dashStatusActive => 'Active';
 
   @override
-  String get dashPillar1 => 'Culture & Arts';
+  String get dashPillar1 => 'Culture and Arts';
 
   @override
-  String get dashPillar2 => 'Heritage & National Memory';
+  String get dashPillar2 => 'Heritage and National Memory';
 
   @override
-  String get dashPillar3 => 'Citizenship & Society';
+  String get dashPillar3 => 'Citizenship and Society';
 
   @override
-  String get cardTitle => 'MEMBERSHIP CARD';
+  String get cardTitle => 'Membership Card';
 
   @override
-  String get cardFullName => 'FULL NAME';
+  String get cardFullName => 'Full Name';
 
   @override
-  String get cardMemberId => 'MEMBER ID';
+  String get cardMemberId => 'Member ID';
 
   @override
-  String get cardIssueDate => 'ISSUE DATE';
+  String get cardIssueDate => 'Issue Date';
 
   @override
-  String get cardExpiryDate => 'EXPIRY DATE';
+  String get cardExpiryDate => 'Expiry Date';
 
   @override
-  String get cardScanMe => 'SCAN ME';
+  String get cardScanMe => 'Scan Me';
 
   @override
   String get profilePersonal => 'Personal Information';
@@ -712,7 +724,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePhone => 'Phone Number';
 
   @override
-  String get profileLang => 'Language Preference';
+  String get profileLang => 'Language Preferences';
 
   @override
   String get profileInterests => 'Cultural Interests';
@@ -724,7 +736,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileEdit => 'Edit Profile';
 
   @override
-  String get profileActiveSince => 'Active since';
+  String get profileActiveSince => 'Active Since';
 
   @override
   String get settingsTitle => 'App Settings';
@@ -754,10 +766,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDeleteAcc => 'Delete Account';
 
   @override
-  String get supportSubtitle => 'How can we assist you today?';
+  String get supportSubtitle => 'How can we serve you today?';
 
   @override
-  String get supportFaqTitle => 'General Questions';
+  String get supportFaqTitle => 'FAQ';
 
   @override
   String get supportContactTitle => 'Official Channels';
@@ -766,25 +778,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supportEmailLabel => 'Email Us';
 
   @override
-  String get supportLocationLabel => 'Our Office';
+  String get supportLocationLabel => 'Association HQ';
 
   @override
-  String get supportPhoneLabel => 'Call Support';
+  String get supportPhoneLabel => 'Phone Support';
 
   @override
-  String get supportHqValue => 'Sétif, Algeria';
+  String get supportHqValue => 'Sétif Province, Algeria';
 
   @override
-  String get search => 'SEARCH';
+  String get search => 'Search';
 
   @override
-  String get viewAll => 'VIEW ALL';
+  String get viewAll => 'View All';
 
   @override
-  String get culturalCurator => 'THE CULTURAL CURATOR';
+  String get culturalCurator => 'Cultural Curator';
 
   @override
-  String get ebzimBadge => 'EBZIM BADGE';
+  String get ebzimBadge => 'Ebzim Badge';
 
   @override
   String get noNotifs => 'No notifications here.';
@@ -802,7 +814,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifUpdates => 'Updates';
 
   @override
-  String get authAccountCreated => 'Account Created!';
+  String get authAccountCreated => 'Account created successfully!';
 
   @override
   String get authLoginSuccess => 'Logged in successfully!';
@@ -814,7 +826,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get libSearchHint => 'Search publications and research...';
 
   @override
-  String get libCatArt => 'Arts & Archaeology';
+  String get libCatArt => 'Arts & Archeology';
 
   @override
   String get libCatResearch => 'Research & Studies';
@@ -823,7 +835,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get libCatReports => 'Institutional Reports';
 
   @override
-  String get libOpenPdf => 'Open PDF File';
+  String get libOpenPdf => 'Open PDF';
 
   @override
   String get libSummary => 'Work Summary';
@@ -838,16 +850,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get finMembershipFee => 'Membership Fee';
 
   @override
-  String get finNeedsRenewal => 'Needs Renewal';
+  String get finNeedsRenewal => 'Renewal Needed';
 
   @override
-  String get finApplyJoin => 'Apply to Join';
+  String get finApplyJoin => 'Submit Membership Request';
 
   @override
-  String get finRenewNow => 'Renew Membership Now';
+  String get finRenewNow => 'Renew Now';
 
   @override
-  String get finSupportProjects => 'Support Association Projects';
+  String get finSupportProjects => 'Support Projects';
 
   @override
   String get finChooseType => 'Choose contribution type:';
@@ -866,24 +878,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get finJoinInvite =>
-      'Would you like to get an official membership card and participate in decisions?';
+      'Do you want to get an official membership card and participate in decisions?';
 
   @override
-  String get repTitle => 'Civic Reporting';
+  String get repTitle => 'Civic Reports';
 
   @override
   String get repIncidentCat => 'Incident Category';
 
   @override
-  String get repDescription => 'Observation Description';
+  String get repDescription => 'Description of observed situation';
 
   @override
-  String get repLocation => 'Geographic Location';
+  String get repLocation => 'Geographical Location';
 
   @override
   String get repSubmit => 'Submit Report';
 
   @override
   String get repSuccess =>
-      'Thank you for helping protect our heritage. Your report will be reviewed immediately.';
+      'Thank you for contributing to heritage protection. Your report will be reviewed immediately.';
 }

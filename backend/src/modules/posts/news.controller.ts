@@ -28,6 +28,6 @@ export class NewsController {
     const locale = ['ar', 'fr', 'en'].includes(lang) ? lang : 'en';
 
     // We call the same public feed as posts
-    return this.postsService.getPublicFeed(locale, { limit: 10 });
+    return this.postsService.getPublicFeedSystemFixed(locale, { limit: 10 });
   }
 }

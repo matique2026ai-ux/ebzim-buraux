@@ -5,12 +5,14 @@ class SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onTrailingPressed;
   final Widget? trailing;
+  final String? trailingLabel;
 
   const SectionHeader({
     super.key,
     required this.title,
     this.onTrailingPressed,
     this.trailing,
+    this.trailingLabel,
   });
 
   @override
@@ -28,15 +30,23 @@ class SectionHeader extends StatelessWidget {
                 fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily,
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
+                // No italic — accessibility requirement for readability
                 color: AppTheme.primaryColor,
               ),
             ),
           ),
           if (trailing != null)
-            InkWell(
-              onTap: onTrailingPressed,
-              child: trailing!,
+            Semantics(
+              label: trailingLabel ?? title,
+              button: onTrailingPressed != null,
+              child: InkWell(
+                onTap: onTrailingPressed,
+                borderRadius: BorderRadius.circular(8),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  child: Center(child: trailing!),
+                ),
+              ),
             ),
         ],
       ),

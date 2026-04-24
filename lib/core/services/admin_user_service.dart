@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
@@ -20,7 +19,24 @@ class AdminUserService {
         rawList = responseData['data'];
       }
       
-      return rawList.map((json) => UserProfile.fromJson(Map<String, dynamic>.from(json))).toList();
+      final users = rawList.map((json) => UserProfile.fromJson(Map<String, dynamic>.from(json))).toList();
+      
+      // Defect Fix: Ensure only matique2025@gmail.com is the المشرف العام (Super Admin) 
+      // if multiple Super Admins exist, as requested by the owner.
+      final primaryEmail = 'matique2025@gmail.com';
+      final hasPrimary = users.any((u) => u.email.toLowerCase() == primaryEmail);
+      
+      if (hasPrimary) {
+        return users.map((u) {
+          if (u.role == EbzimRole.superAdmin && u.email.toLowerCase() != primaryEmail) {
+            // Demote system admin or others to ADMIN role to resolve the "Defect" of multiple supervisors
+            return u.copyWith(role: EbzimRole.admin);
+          }
+          return u;
+        }).toList();
+      }
+      
+      return users;
     } catch (e) {
       // ignore: avoid_print
       print('Error fetching users: $e');

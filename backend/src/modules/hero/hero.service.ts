@@ -13,12 +13,19 @@ export class HeroService {
     @InjectModel('HeroSlide') private slideModel: Model<HeroSlideDocument>,
   ) {}
 
-  async findAll() {
-    return this.slideModel.find({ isActive: true }).sort({ order: 1 }).exec();
+  async findAll(location: string = 'HOME') {
+    return this.slideModel
+      .find({ isActive: true, location })
+      .sort({ order: 1 })
+      .exec();
   }
 
   async getAdminTable() {
     return this.slideModel.find().sort({ order: 1 }).exec();
+  }
+
+  async getAdminByLocation(location: string = 'HOME') {
+    return this.slideModel.find({ location }).sort({ order: 1 }).exec();
   }
 
   async create(dto: CreateHeroSlideDto) {
@@ -26,7 +33,9 @@ export class HeroService {
   }
 
   async update(id: string, dto: UpdateHeroSlideDto) {
-    return this.slideModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+    return this.slideModel
+      .findByIdAndUpdate(id, { $set: dto }, { new: true })
+      .exec();
   }
 
   async findOne(id: string) {

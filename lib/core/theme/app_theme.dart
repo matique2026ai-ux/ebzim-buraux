@@ -36,13 +36,21 @@ class AppTheme {
     final Color textColor  = isDark ? Colors.white    : _lightText;
 
     final TextTheme textTheme = TextTheme(
-      headlineLarge: GoogleFonts.tajawal(fontSize: 40, fontWeight: FontWeight.bold,   color: isDark ? Colors.white : _lightText,             height: 1.2),
-      headlineMedium:GoogleFonts.tajawal(fontSize: 28, fontWeight: FontWeight.bold,   color: isDark ? Colors.white : _lightText),
-      titleLarge:    GoogleFonts.tajawal(fontSize: 22, fontWeight: FontWeight.w600,   color: isDark ? accentColor : primaryColor),
-      titleMedium:   GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.w600,   color: isDark ? Colors.white : _lightText),
-      bodyLarge:     GoogleFonts.cairo(fontSize: 16,                                color: isDark ? Colors.white.withValues(alpha: 0.9) : _lightText.withValues(alpha: 0.9)),
-      bodyMedium:    GoogleFonts.cairo(fontSize: 14,                                color: isDark ? Colors.white.withValues(alpha: 0.8) : _lightSubtext),
-      bodySmall:     GoogleFonts.cairo(fontSize: 12,                                color: isDark ? Colors.white.withValues(alpha: 0.5) : _lightSubtext.withValues(alpha: 0.75)),
+      headlineLarge: isAr
+          ? GoogleFonts.tajawal(fontSize: 40, fontWeight: FontWeight.bold,   color: isDark ? Colors.white : _lightText, height: 1.2)
+          : GoogleFonts.playfairDisplay(fontSize: 40, fontWeight: FontWeight.w700, color: isDark ? Colors.white : _lightText, height: 1.2),
+      headlineMedium: isAr
+          ? GoogleFonts.tajawal(fontSize: 28, fontWeight: FontWeight.bold,   color: isDark ? Colors.white : _lightText)
+          : GoogleFonts.playfairDisplay(fontSize: 28, fontWeight: FontWeight.w700, color: isDark ? Colors.white : _lightText),
+      titleLarge: isAr
+          ? GoogleFonts.tajawal(fontSize: 22, fontWeight: FontWeight.w600,   color: isDark ? accentColor : primaryColor)
+          : GoogleFonts.playfairDisplay(fontSize: 22, fontWeight: FontWeight.w600, color: isDark ? accentColor : primaryColor),
+      titleMedium: isAr
+          ? GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.w600,   color: isDark ? Colors.white : _lightText)
+          : GoogleFonts.playfairDisplay(fontSize: 18, fontWeight: FontWeight.w600, color: isDark ? Colors.white : _lightText),
+      bodyLarge:     GoogleFonts.cairo(fontSize: 16, color: isDark ? Colors.white.withValues(alpha: 0.9) : _lightText.withValues(alpha: 0.9)),
+      bodyMedium:    GoogleFonts.cairo(fontSize: 14, color: isDark ? Colors.white.withValues(alpha: 0.8) : _lightSubtext),
+      bodySmall:     GoogleFonts.cairo(fontSize: 12, color: isDark ? Colors.white.withValues(alpha: 0.5) : _lightSubtext.withValues(alpha: 0.75)),
       labelSmall:    GoogleFonts.cairo(fontSize: 10, fontWeight: FontWeight.bold,   color: isDark ? accentColor : accentColor, letterSpacing: 1.5),
     );
 
@@ -52,7 +60,7 @@ class AppTheme {
       primaryColor: primaryColor,
       scaffoldBackgroundColor: scaffoldBg,
       textTheme: textTheme,
-      fontFamily: isAr ? GoogleFonts.tajawal().fontFamily : 'Inter',
+      fontFamily: isAr ? GoogleFonts.tajawal().fontFamily : GoogleFonts.playfairDisplay().fontFamily,
 
       colorScheme: ColorScheme(
         brightness: isDark ? Brightness.dark : Brightness.light,

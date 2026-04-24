@@ -75,7 +75,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                             : 'Dernières nouvelles et partenariats officiels',
                         style: TextStyle(
                           fontSize: 14,
-                          fontStyle: FontStyle.italic,
+                          // fontStyle removed for accessibility,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         ),
                       ),
@@ -134,7 +134,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
           newsAsync.when(
             data: (posts) {
               final filtered = _selectedCategory == 'ALL'
-                  ? posts
+                  ? posts.where((p) => const {'ANNOUNCEMENT', 'PARTNERSHIP', 'EVENT_REPORT'}.contains(p.category.toUpperCase()) || p.category.isEmpty).toList()
                   : posts
                       .where((p) => p.category == _selectedCategory)
                       .toList();

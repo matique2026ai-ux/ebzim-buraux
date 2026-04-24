@@ -6,6 +6,14 @@ import {
   ContributionDocument,
 } from './schemas/contribution.schema';
 import { SettingsService } from '../settings/settings.service';
+import { UsersService } from '../users/users.service';
+
+interface ContributionDto {
+  amount: number;
+  type: string;
+  proofUrl?: string;
+  projectId?: string;
+}
 
 @Injectable()
 export class ContributionsService {
@@ -13,11 +21,15 @@ export class ContributionsService {
     @InjectModel(Contribution.name)
     private contributionModel: Model<ContributionDocument>,
     private readonly settingsService: SettingsService,
+    private readonly usersService: UsersService,
   ) {}
 
-  async submitContribution(userId: string, dto: any) {
+  async submitContribution(userId: string, dto: ContributionDto) {
     return this.contributionModel.create({
-      ...dto,
+      amount: dto.amount,
+      type: dto.type,
+      proofUrl: dto.proofUrl,
+      projectId: dto.projectId,
       userId: new Types.ObjectId(userId),
       status: 'PENDING',
     });
@@ -53,8 +65,16 @@ export class ContributionsService {
     contribution.internalReviewNotes = notes;
 
     if (status === 'VERIFIED' && contribution.type === 'ANNUAL_MEMBERSHIP') {
-      // TODO: Update user membership expiry date.
-      // This would involve linking to the UsersService or MembershipsService
+      const now = new Date();
+      const expiry = new Date(
+        now.getFullYear() + 1,
+        now.getMonth(),
+        now.getDate(),
+      );
+      await this.usersService.update(contribution.userId.toString(), {
+        membershipExpiry: expiry,
+        status: 'APPROVED', // Ensure member is approved upon payment verification
+      });
     }
 
     return contribution.save();

@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { HeroService } from './hero.service';
@@ -23,8 +24,8 @@ export class HeroController {
   constructor(private readonly heroService: HeroService) {}
 
   @Get()
-  async findAll() {
-    return this.heroService.findAll();
+  async findAll(@Query('location') location: string = 'HOME') {
+    return this.heroService.findAll(location);
   }
 
   @Get('admin')
@@ -32,6 +33,13 @@ export class HeroController {
   @Roles(Role.SUPER_ADMIN, Role.ADMIN)
   async getAdminTable() {
     return this.heroService.getAdminTable();
+  }
+
+  @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN)
+  async getAdminByLocation(@Query('location') location: string = 'HOME') {
+    return this.heroService.getAdminByLocation(location);
   }
 
   @Post()

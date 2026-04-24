@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In ar, this message translates to:
-  /// **'إبزيم | Ebzim'**
+  /// **'إبزيم'**
   String get appName;
 
   /// No description provided for @welcome.
@@ -193,14 +193,26 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSkip.
   ///
   /// In ar, this message translates to:
-  /// **'تخطي إلى التراث'**
+  /// **'تخطي'**
   String get onboardingSkip;
 
   /// No description provided for @onboardingNext.
   ///
   /// In ar, this message translates to:
-  /// **'ابدأ الرحلة'**
+  /// **'التالي'**
   String get onboardingNext;
+
+  /// No description provided for @onboardingBegin.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ الرحلة'**
+  String get onboardingBegin;
+
+  /// No description provided for @onboardingDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ الآن'**
+  String get onboardingDone;
 
   /// No description provided for @onb1Tag.
   ///
@@ -301,7 +313,7 @@ abstract class AppLocalizations {
   /// No description provided for @authLostCredentials.
   ///
   /// In ar, this message translates to:
-  /// **'هل نسيت بيانات الاعتماد؟'**
+  /// **'نسيت كلمة المرور؟'**
   String get authLostCredentials;
 
   /// No description provided for @authPasswordHint.
@@ -337,13 +349,13 @@ abstract class AppLocalizations {
   /// No description provided for @authForgotPasswordTitle.
   ///
   /// In ar, this message translates to:
-  /// **'استعادة الحساب'**
+  /// **'نسيت كلمة المرور؟'**
   String get authForgotPasswordTitle;
 
   /// No description provided for @authForgotPasswordDesc.
   ///
   /// In ar, this message translates to:
-  /// **'نظام استعادة الحساب التلقائي قيد التطوير حالياً. يرجى التواصل مع إدارة الجمعية أو إرسال بريد إلكتروني للدعم الفني للمساعدة في استعادة بياناتك.'**
+  /// **'أدخل بريدك الإلكتروني المرتبط بحسابك لتلقي رمز التحقق الذي سيمكنك من تعيين كلمة مرور جديدة آمنة.'**
   String get authForgotPasswordDesc;
 
   /// No description provided for @authAssocName.
@@ -1281,6 +1293,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'عضو رسمي بالجمعية'**
   String get dashMemberLevelMember;
+
+  /// No description provided for @dashMemberLevelAdmin.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسؤول النظام (Admin)'**
+  String get dashMemberLevelAdmin;
+
+  /// No description provided for @dashMemberLevelSuperAdmin.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشرف العام (Super Admin)'**
+  String get dashMemberLevelSuperAdmin;
 
   /// No description provided for @dashAccountStatus.
   ///

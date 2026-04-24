@@ -56,7 +56,7 @@ class SettingsScreen extends ConsumerWidget {
                             ],
                             onChanged: (val) {
                               if (val != null) {
-                                ref.read(localeProvider.notifier).state = Locale(val);
+                                ref.read(localeProvider.notifier).setLocale(Locale(val));
                               }
                             },
                           ),

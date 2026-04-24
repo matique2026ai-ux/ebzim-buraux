@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
@@ -82,10 +83,11 @@ class NewsDetailScreen extends StatelessWidget {
               onPressed: () => context.pop(),
             ),
             background: post.imageUrl.isNotEmpty
-                ? Image.network(
-                    post.imageUrl,
+                ? CachedNetworkImage(
+                    imageUrl: post.imageUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    placeholder: (context, url) => Container(color: Colors.black12),
+                    errorWidget: (context, url, error) => Container(
                       color: theme.colorScheme.surfaceContainerHighest,
                       child: Icon(Icons.image_outlined, size: 64, color: theme.colorScheme.primary),
                     ),
@@ -172,7 +174,7 @@ class NewsDetailScreen extends StatelessWidget {
                         post.getSummary(lang),
                         style: GoogleFonts.tajawal(
                           fontSize: 15,
-                          fontStyle: FontStyle.italic,
+                          // fontStyle removed for accessibility,
                           height: 1.7,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
                         ),

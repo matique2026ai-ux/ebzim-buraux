@@ -58,7 +58,7 @@ void main() {
       
       debugPrint('DEBUG: AuthState - Authenticated: ${state.isAuthenticated}, Error: ${state.error}');
       if (state.user != null) {
-        debugPrint('DEBUG: Logged in as: ${state.user!.name} (${state.user!.email})');
+        debugPrint('DEBUG: Logged in as: ${state.user!.getName('en')} (${state.user!.email})');
       }
 
       expect(state.isAuthenticated, isTrue);

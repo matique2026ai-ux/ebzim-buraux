@@ -7,6 +7,7 @@ import {
   ContributionSchema,
 } from './schemas/contribution.schema';
 import { SettingsModule } from '../settings/settings.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { SettingsModule } from '../settings/settings.module';
       { name: Contribution.name, schema: ContributionSchema },
     ]),
     SettingsModule,
+    UsersModule,
   ],
   controllers: [ContributionsController],
   providers: [ContributionsService],

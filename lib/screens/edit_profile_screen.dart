@@ -22,6 +22,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _phoneController;
+  late TextEditingController _bioController;
   bool _isSaving = false;
   bool _isUploading = false;
 
@@ -29,16 +30,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   void initState() {
     super.initState();
     final user = ref.read(authProvider).user;
-    
-    // Splitting the name for the form fields
-    // Our UserProfile.name is firstName + lastName
-    // We'll try to guess or just use what we have.
-    // In a real app, the backend should provide firstName and lastName separately.
-    // For now, we use a simple split.
-    final nameParts = user?.name.split(' ') ?? [''];
-    _firstNameController = TextEditingController(text: nameParts.first);
-    _lastNameController = TextEditingController(text: nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '');
+    _firstNameController = TextEditingController(text: user?.firstName ?? '');
+    _lastNameController = TextEditingController(text: user?.lastName ?? '');
     _phoneController = TextEditingController(text: user?.phone ?? '');
+    _bioController = TextEditingController(text: user?.bio ?? '');
   }
 
   Future<void> _pickImage() async {
@@ -79,6 +74,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _phoneController.dispose();
+    _bioController.dispose();
     super.dispose();
   }
 
@@ -92,6 +88,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         'firstName': _firstNameController.text.trim(),
         'lastName': _lastNameController.text.trim(),
         'phone': _phoneController.text.trim(),
+        'bio': _bioController.text.trim(),
       });
 
       if (mounted) {
@@ -163,12 +160,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           child: CircleAvatar(
                             radius: 60,
                             backgroundColor: theme.colorScheme.secondary.withValues(alpha: 0.1),
-                            backgroundImage: user?.imageUrl.isNotEmpty == true && user!.imageUrl.startsWith('http')
-                                ? NetworkImage(user.imageUrl)
+                            backgroundImage: (user?.imageUrl?.isNotEmpty ?? false) && user!.imageUrl!.startsWith('http')
+                                ? NetworkImage(user.imageUrl!)
                                 : null,
                             child: _isUploading 
                                 ? const CircularProgressIndicator(color: AppTheme.accentColor)
-                                : ((user?.imageUrl.isEmpty ?? true) || !user!.imageUrl.startsWith('http')
+                                : ((user?.imageUrl?.isEmpty ?? true) || !user!.imageUrl!.startsWith('http')
                                     ? const Icon(Icons.person, color: AppTheme.accentColor, size: 40)
                                     : null),
                           ),
@@ -221,6 +218,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         icon: Icons.phone_android_rounded,
                         keyboardType: TextInputType.phone,
                       ),
+                      const SizedBox(height: 20),
+                      _buildFieldLabel('النبذة الشخصية (Bio)'),
+                      const SizedBox(height: 8),
+                      _buildTextField(
+                        controller: _bioController,
+                        hint: 'اكتب نبذة مختصرة عن مسارك المهني أو صفتك في الجمعية...',
+                        icon: Icons.description_outlined,
+                        maxLines: 4,
+                      ),
                     ],
                   ),
                 ).animate().slideY(begin: 0.1, delay: 200.ms).fadeIn(),
@@ -265,7 +271,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   Widget _buildFieldLabel(String label) {
     return Text(
       label.toUpperCase(),
-      style: GoogleFonts.inter(
+      style: GoogleFonts.playfairDisplay(
         fontSize: 10,
         fontWeight: FontWeight.w900,
         color: AppTheme.accentColor.withValues(alpha: 0.7),
@@ -280,12 +286,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     required IconData icon,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
+    int maxLines = 1,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return TextFormField(
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
+      maxLines: maxLines,
       style: GoogleFonts.tajawal(fontSize: 16, color: isDark ? Colors.white : Colors.black),
       decoration: InputDecoration(
         hintText: hint,

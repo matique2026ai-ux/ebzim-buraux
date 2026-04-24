@@ -7,9 +7,13 @@ class HeroSlide {
   final String subtitleEn;
   final String subtitleFr;
   final String imageUrl;
+  final String? videoUrl;
+  final String? overlayColor;
+  final double overlayOpacity;
   final String? buttonText;
   final String? buttonLink;
   final int order;
+  final String location;
   final bool isActive;
 
   HeroSlide({
@@ -21,9 +25,13 @@ class HeroSlide {
     required this.subtitleEn,
     required this.subtitleFr,
     required this.imageUrl,
+    this.videoUrl,
+    this.overlayColor,
+    this.overlayOpacity = 0.1,
     this.buttonText,
     this.buttonLink,
     this.order = 0,
+    this.location = 'HOME',
     this.isActive = true,
   });
 
@@ -39,9 +47,13 @@ class HeroSlide {
       subtitleEn: subtitle['en']?.toString() ?? '',
       subtitleFr: subtitle['fr']?.toString() ?? '',
       imageUrl: json['imageUrl']?.toString() ?? '',
+      videoUrl: json['videoUrl']?.toString(),
+      overlayColor: (json['overlayColor'] ?? json['overlay_color'] ?? json['glassColor'] ?? json['glass_color'])?.toString(),
+      overlayOpacity: _parseOpacity(json),
       buttonText: json['buttonText']?.toString(),
       buttonLink: json['buttonLink']?.toString(),
       order: json['order'] is int ? json['order'] : 0,
+      location: json['location']?.toString() ?? 'HOME',
       isActive: json['isActive'] ?? true,
     );
   }
@@ -49,8 +61,9 @@ class HeroSlide {
   bool _isJunk(String? text) {
     if (text == null || text.trim().isEmpty) return true;
     final t = text.trim();
-    // Simple heuristic: if it's the same character repeated many times
-    if (t.length > 3 && t.split('').every((char) => char == t[0])) return true;
+    // Only detect as junk if a single character is repeated more than 10 times
+    // This allows short tests like "ببب" while filtering out long "ببببببببببببب"
+    if (t.length > 10 && t.split('').every((char) => char == t[0])) return true;
     return false;
   }
 
@@ -70,6 +83,12 @@ class HeroSlide {
     else if (!_isJunk(subtitleEn)) val = subtitleEn;
     else val = lang == 'ar' ? 'جمعية إبزيم هي المساحة الولائية لتسخير المعارف والوسائل في سبيل حماية الهوية الجزائرية.' : 'L\'association Ebzim est l\'espace pour la protection de l\'identité algérienne.';
     return val;
+  }
+
+  static double _parseOpacity(Map<String, dynamic> json) {
+    final val = json['overlayOpacity'] ?? json['overlay_opacity'] ?? json['opacity'];
+    if (val == null) return 0.1;
+    return double.tryParse(val.toString()) ?? 0.1;
   }
 }
 

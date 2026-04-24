@@ -12,6 +12,10 @@ import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:ebzim_app/core/common_widgets/login_required_overlay.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
+import 'dart:typed_data';
+import 'package:ebzim_app/core/services/api_client.dart';
+import 'package:ebzim_app/core/services/media_service.dart';
+import 'package:ebzim_app/core/services/news_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Contributions & Subscriptions Screen
@@ -28,10 +32,14 @@ class ContributionsScreen extends ConsumerStatefulWidget {
 
 class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
   DonationType _selectedDonationType = DonationType.general;
+  String _selectedCurrency = 'DZD';
   final _amountController = TextEditingController();
   bool _isLoadingFee = true;
   int _currentFee = 2000;
   bool _isSubmitting = false;
+  NewsPost? _selectedProject;
+  String? _proofUrl;
+  bool _isUploadingProof = false;
 
   @override
   void initState() {
@@ -108,7 +116,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
             // Move Membership section based on role
             ...(() {
               final user = ref.watch(currentUserProvider).asData?.value;
-              final isPublic = user?.membershipLevel.toUpperCase() == 'PUBLIC';
+              final isPublic = user?.role == EbzimRole.public;
 
               final membershipWidget = Column(
                 children: [
@@ -136,7 +144,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                                   ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                                   : Text(
                                       '$_currentFee DZD',
-                                      style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.accentColor),
+                                      style: GoogleFonts.playfairDisplay(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.accentColor),
                                     ),
                               ],
                             ),
@@ -163,7 +171,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                           label: isPublic ? loc.finApplyJoin : loc.finRenewNow,
                           onTap: () {
                             if (isPublic) {
-                              context.push('/membership');
+                              context.push('/membership/apply');
                             } else {
                               _handleSubmit('ANNUAL_MEMBERSHIP', _currentFee.toDouble());
                             }
@@ -235,26 +243,105 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                   
                   const SizedBox(height: 24),
                   
-                  // Amount Field
-                  TextField(
-                    controller: _amountController,
-                    keyboardType: TextInputType.number,
-                    style: GoogleFonts.inter(fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                      labelText: loc.finAmountLabel,
-                      prefixIcon: const Icon(Icons.payments_outlined, color: AppTheme.accentColor),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppTheme.accentColor, width: 2),
+                  // Amount Field & Currency Selector
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: TextField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold),
+                          decoration: InputDecoration(
+                            labelText: loc.finAmountLabel,
+                            prefixIcon: const Icon(Icons.payments_outlined, color: AppTheme.accentColor),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              borderSide: const BorderSide(color: AppTheme.accentColor, width: 2),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButtonFormField<String>(
+                          value: _selectedCurrency,
+                          decoration: InputDecoration(
+                            labelText: isAr ? 'العملة' : 'Currency',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                          ),
+                          items: ['DZD', 'EUR', 'USD'].map((c) => DropdownMenuItem(
+                            value: c,
+                            child: Text(c, style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+                          )).toList(),
+                          onChanged: (val) => setState(() => _selectedCurrency = val ?? 'DZD'),
+                        ),
+                      ),
+                    ],
                   ),
                   
                   if (_selectedDonationType == DonationType.project) ...[
                     const SizedBox(height: 16),
-                    _ProjectSelector(isAr: isAr, isDark: isDark),
+                    ref.watch(heritageProjectsProvider).when(
+                      data: (projects) {
+                        if (projects.isEmpty) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              isAr ? 'لا توجد مشاريع نشطة حالياً' : 'No active projects available',
+                              style: GoogleFonts.tajawal(fontSize: 12, color: Colors.orange),
+                            ),
+                          );
+                        }
+                        return DropdownButtonFormField<NewsPost>(
+                          value: _selectedProject ?? (projects.isNotEmpty ? projects.first : null),
+                          decoration: InputDecoration(
+                            labelText: isAr ? 'اختر المشروع' : 'Select Project',
+                            prefixIcon: const Icon(Icons.architecture_rounded, color: AppTheme.accentColor),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                          ),
+                          items: projects.map((p) => DropdownMenuItem(
+                            value: p,
+                            child: Text(
+                              p.getTitle(isAr ? 'ar' : 'en'),
+                              style: GoogleFonts.tajawal(fontSize: 13),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )).toList(),
+                          onChanged: (val) => setState(() => _selectedProject = val),
+                        );
+                      },
+                      loading: () => const Center(child: CircularProgressIndicator()),
+                      error: (_, __) => const SizedBox(),
+                    ),
                   ],
+
+                  const SizedBox(height: 24),
+                  
+                  _ProofUploadTile(
+                    onTap: () async {
+                      final file = await ref.read(apiClientProvider).pickFile();
+                      if (file == null) return;
+                      
+                      setState(() => _isUploadingProof = true);
+                      try {
+                        final result = await ref.read(mediaServiceProvider).uploadMedia(
+                          file.bytes!,
+                          file.name,
+                        );
+                        if (mounted) setState(() => _proofUrl = result);
+                      } catch (e) {
+                        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
+                      } finally {
+                        if (mounted) setState(() => _isUploadingProof = false);
+                      }
+                    },
+                    isUploaded: _proofUrl != null,
+                    isLoading: _isUploadingProof,
+                    isAr: isAr,
+                  ),
 
                   const SizedBox(height: 24),
                   _PrimaryButton(
@@ -265,6 +352,9 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                         _handleSubmit(
                           _selectedDonationType == DonationType.general ? 'GENERAL_DONATION' : 'PROJECT_SUPPORT',
                           amount,
+                          currency: _selectedCurrency,
+                          projectId: _selectedDonationType == DonationType.project ? _selectedProject?.id : null,
+                          proofUrl: _proofUrl,
                         );
                       }
                     },
@@ -279,7 +369,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
             // If PUBLIC, show membership as an optional secondary action at the bottom
             ...(() {
               final user = ref.watch(currentUserProvider).asData?.value;
-              final isPublic = user?.membershipLevel.toUpperCase() == 'PUBLIC';
+              final isPublic = user?.role == EbzimRole.public;
               
               if (isPublic) {
                 return [
@@ -302,7 +392,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                         const SizedBox(height: 16),
                         _PrimaryButton(
                           label: loc.finApplyJoin,
-                          onTap: () => context.push('/membership'),
+                          onTap: () => context.push('/membership/apply'),
                           isAr: isAr,
                         ),
                       ],
@@ -319,12 +409,15 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
     );
   }
 
-  void _handleSubmit(String type, double amount) async {
+  void _handleSubmit(String type, double amount, {String currency = 'DZD', String? projectId, String? proofUrl}) async {
     setState(() => _isSubmitting = true);
     try {
       await ref.read(financialServiceProvider).submitContribution(
         type: type,
         amount: amount,
+        currency: currency,
+        projectId: projectId,
+        proofUrl: proofUrl,
       );
       if (mounted) {
         _showSuccessDialog();
@@ -449,31 +542,60 @@ class _PrimaryButton extends StatelessWidget {
   }
 }
 
-class _ProjectSelector extends StatelessWidget {
+
+class _ProofUploadTile extends StatelessWidget {
+  final VoidCallback onTap;
+  final bool isUploaded;
+  final bool isLoading;
   final bool isAr;
-  final bool isDark;
-  const _ProjectSelector({required this.isAr, required this.isDark});
+
+  const _ProofUploadTile({required this.onTap, required this.isUploaded, required this.isLoading, required this.isAr});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.1)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.architecture_rounded, color: AppTheme.accentColor, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              isAr ? 'ترميم ثكنة الحامة (المشروع المفتوح)' : 'Restoration of El Hamma Barracks',
-              style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
+    return InkWell(
+      onTap: isLoading ? null : onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isUploaded ? Colors.green.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isUploaded ? Colors.green.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.2),
+            style: BorderStyle.solid,
           ),
-        ],
+        ),
+        child: Row(
+          children: [
+            Icon(
+              isUploaded ? Icons.check_circle_rounded : Icons.receipt_long_rounded,
+              color: isUploaded ? Colors.green : AppTheme.accentColor,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isAr ? 'وصل الدفع' : 'Proof of Payment',
+                    style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  Text(
+                    isUploaded 
+                      ? (isAr ? 'تم تحميل الوصل' : 'Receipt uploaded') 
+                      : (isAr ? 'اضغط لتحميل صورة الوصل (CCP/Bank)' : 'Tap to upload receipt image'),
+                    style: TextStyle(fontSize: 11, color: isUploaded ? Colors.green : Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            if (isLoading)
+              const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+            else if (!isUploaded)
+              const Icon(Icons.cloud_upload_outlined, color: AppTheme.accentColor, size: 20),
+          ],
+        ),
       ),
     );
   }

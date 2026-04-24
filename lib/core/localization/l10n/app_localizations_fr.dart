@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appName => 'Ebzim | إبزيم';
+  String get appName => 'EBZIM';
 
   @override
   String get welcome => 'Bienvenue';
@@ -56,10 +56,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get langFr => 'Français';
 
   @override
-  String get onboardingSkip => 'Passer au Patrimoine';
+  String get onboardingSkip => 'Passer';
 
   @override
-  String get onboardingNext => 'Commencer le Voyage';
+  String get onboardingNext => 'Suivant';
+
+  @override
+  String get onboardingBegin => 'Commencer l\'aventure';
+
+  @override
+  String get onboardingDone => 'Commencer';
 
   @override
   String get onb1Tag => 'Fondation du Patrimoine';
@@ -113,7 +119,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authSecret => 'Secret';
 
   @override
-  String get authLostCredentials => 'Oublié vos accès ?';
+  String get authLostCredentials => 'Mot de passe oublié ?';
 
   @override
   String get authPasswordHint => '••••••••';
@@ -133,11 +139,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Une erreur inattendue s\'est produite. Veuillez réessayer plus tard.';
 
   @override
-  String get authForgotPasswordTitle => 'Récupération de compte';
+  String get authForgotPasswordTitle => 'Mot de passe oublié ?';
 
   @override
   String get authForgotPasswordDesc =>
-      'La récupération automatique de compte est en cours de développement. Veuillez contacter l\'administration de l\'association pour obtenir de l\'aide.';
+      'Saisissez votre adresse e-mail pour recevoir un code de sécurité et réinitialiser votre mot de passe.';
 
   @override
   String get authAssocName => 'ASSOCIATION EBZIM';
@@ -206,7 +212,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get regMembershipNote =>
-      'إنشاء حساب في المنصة لا يعني اكتساب العضوية الرسمية في الجمعية.';
+      'La création d\'un compte ne confère pas l\'adhésion officielle à l\'association.';
 
   @override
   String get regFullName => 'Nom complet';
@@ -637,6 +643,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dashMemberLevelMember => 'Membre officiel de l\'Association';
+
+  @override
+  String get dashMemberLevelAdmin => 'Administrateur (Admin)';
+
+  @override
+  String get dashMemberLevelSuperAdmin => 'Super Administrateur (Super Admin)';
 
   @override
   String get dashAccountStatus => 'Statut du compte';

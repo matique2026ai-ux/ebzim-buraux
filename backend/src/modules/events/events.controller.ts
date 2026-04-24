@@ -27,8 +27,13 @@ import { Role } from '../../common/enums/role.enum';
 import { CreateEventDto } from './dto/create-event.dto';
 
 @ApiTags('Events & RSVP')
-@Controller('events')
+@Controller('activities')
 export class EventsController {
+  @Get('test-route')
+  async testRoute() {
+    return { message: 'Route is active' };
+  }
+
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
@@ -96,7 +101,7 @@ export class EventsController {
     return this.eventsService.deleteEvent(id);
   }
 
-  @Get(':id')
+  @Get('detail/:id')
   @ApiOperation({ summary: 'Get single event details' })
   async findOne(@Param('id') id: string) {
     return this.eventsService.findOne(id);

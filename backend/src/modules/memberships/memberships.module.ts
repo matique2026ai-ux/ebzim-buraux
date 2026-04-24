@@ -4,6 +4,7 @@ import { MembershipsController } from './memberships.controller';
 import { MembershipsService } from './memberships.service';
 import { MembershipSchema } from './schemas/membership.schema';
 import { UserSchema } from '../users/schemas/user.schema';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { UserSchema } from '../users/schemas/user.schema';
       { name: 'Membership', schema: MembershipSchema },
       { name: 'User', schema: UserSchema },
     ]),
+    MailModule,
   ],
   controllers: [MembershipsController],
   providers: [MembershipsService],

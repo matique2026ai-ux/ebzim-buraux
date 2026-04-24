@@ -1,3 +1,5 @@
+import 'package:ebzim_app/core/common_widgets/ebzim_logo.dart';
+import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
@@ -21,7 +23,7 @@ class DigitalIdCard extends StatelessWidget {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
     
     return Container(
-      height: 230,
+      height: 250,
       decoration: BoxDecoration(
         color: ivory,
         borderRadius: BorderRadius.circular(24),
@@ -44,7 +46,7 @@ class DigitalIdCard extends StatelessWidget {
               bottom: -40,
               child: Opacity(
                 opacity: 0.03,
-                child: Icon(Icons.workspace_premium, size: 240, color: emerald),
+              child: const EbzimLogo(size: 240, isEngraved: true),
               ),
             ),
             
@@ -72,11 +74,11 @@ class DigitalIdCard extends StatelessWidget {
                   Center(
                     child: Column(
                       children: [
-                        const Icon(Icons.workspace_premium, color: emerald, size: 32),
+                        const EbzimLogo(size: 32, isEngraved: true),
                         const SizedBox(height: 2),
                         Text(
                           'EBZIM',
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.playfairDisplay(
                             color: slateBlack,
                             fontSize: 12,
                             fontWeight: FontWeight.w900,
@@ -92,14 +94,43 @@ class DigitalIdCard extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text(
-                      '${loc.cardTitle} / MEMBERSHIP CARD',
-                      style: GoogleFonts.cairo(
-                        color: gold,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1,
-                      ),
+                    child: Column(
+                      children: [
+                        Text(
+                          '${loc.cardTitle} / MEMBERSHIP CARD',
+                          style: GoogleFonts.cairo(
+                            color: gold,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        if (user.role != EbzimRole.public)
+                          Container(
+                            margin: const EdgeInsets.only(top: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: user.role.getBadgeColor(),
+                              borderRadius: BorderRadius.circular(4),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: user.role.getBadgeColor().withValues(alpha: 0.3),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                )
+                              ],
+                            ),
+                            child: Text(
+                              user.getInstitutionalTitle(Localizations.localeOf(context).languageCode).toUpperCase(),
+                              style: GoogleFonts.playfairDisplay(
+                                color: Colors.white,
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   
@@ -118,10 +149,10 @@ class DigitalIdCard extends StatelessWidget {
                           border: Border.all(color: gold, width: 1.5),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: user.imageUrl.isNotEmpty 
+                        child: user.imageUrl != null && user.imageUrl!.isNotEmpty 
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(2.5),
-                              child: Image.network(user.imageUrl, fit: BoxFit.cover),
+                              child: Image.network(user.imageUrl!, fit: BoxFit.cover),
                             )
                           : Center(child: Icon(Icons.person, color: gold.withValues(alpha: 0.5))),
                       ),
@@ -140,7 +171,7 @@ class DigitalIdCard extends StatelessWidget {
                             const SizedBox(height: 6),
                             _buildCardField(
                               loc.cardMemberId, 
-                              'ID-${user.id.substring(user.id.length - 6).toUpperCase()}',
+                              'ID-${user.id.substring(user.id.length.clamp(0, 6)).toUpperCase()}',
                               isAr
                             ),
                             const SizedBox(height: 6),
@@ -148,8 +179,10 @@ class DigitalIdCard extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: _buildCardField(
-                                    loc.cardIssueDate, 
-                                    '10/04/2026', // Placeholder for now
+                                    loc.cardIssueDate,
+                                    user.createdAt != null 
+                                      ? '${user.createdAt!.day.toString().padLeft(2, '0')}/${user.createdAt!.month.toString().padLeft(2, '0')}/${user.createdAt!.year}'
+                                      : '10/04/2026', 
                                     isAr
                                   ),
                                 ),
@@ -212,7 +245,7 @@ class DigitalIdCard extends StatelessWidget {
         ),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.playfairDisplay(
             fontSize: 10,
             fontWeight: FontWeight.w900,
             color: slateBlack,

@@ -44,7 +44,7 @@ class MembershipSuccessScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white.withValues(alpha: 0.7),
-                  fontStyle: FontStyle.italic,
+                  // fontStyle removed for accessibility,
                   height: 1.5,
                 ),
               ),

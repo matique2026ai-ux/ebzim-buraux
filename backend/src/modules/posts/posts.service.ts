@@ -13,7 +13,7 @@ import {
 export class PostsService {
   constructor(@InjectModel('Post') private postModel: Model<PostDocument>) {}
 
-  async getPublicFeed(locale: string, options: any) {
+  async getPublicFeedSystemFixed(locale: string, options: any) {
     const pagination = buildCursorPagination(options);
     const query: Record<string, any> = pagination.query;
     const limit = pagination.limit;

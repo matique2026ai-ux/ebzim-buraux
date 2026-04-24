@@ -150,7 +150,9 @@ final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
     'TOURISM',
     'CHILD',
     'PARTNERSHIP',
-    'EVENT_REPORT'
+    'EVENT_REPORT',
+    'ASSOCIATIVE',
+    'SOCIAL'
   };
   return news.where((p) => projectCategories.contains(p.category.toUpperCase())).toList();
 });

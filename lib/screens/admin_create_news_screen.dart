@@ -533,6 +533,24 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _CategoryChip(
+                          label: 'نشاط جمعوي',
+                          icon: Icons.groups_rounded,
+                          isSelected: _category == 'ASSOCIATIVE',
+                          onTap: () => setState(() => _category = 'ASSOCIATIVE'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'عمل اجتماعي',
+                          icon: Icons.volunteer_activism_rounded,
+                          isSelected: _category == 'SOCIAL',
+                          onTap: () => setState(() => _category = 'SOCIAL'),
+                        ),
+                      ],
+                    ),
                     
                     const SizedBox(height: 32),
                     _buildLabel(_category != 'ANNOUNCEMENT' ? 'حالة المشروع' : 'نوع الخبر'),

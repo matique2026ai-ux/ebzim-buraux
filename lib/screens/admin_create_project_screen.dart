@@ -11,6 +11,7 @@ import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_image.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/common_widgets/glass_card.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AdminCreateProjectScreen extends ConsumerStatefulWidget {
   final NewsPost? existingPost;

@@ -4,33 +4,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_theme.dart';
 
-# Admin Dashboard Modularization Checklist
-
-- [ ] Extract `UsersTab`
-    - [ ] Create `users_tab.dart`
-    - [ ] Modernize UI with `AdminSharedComponents`
-    - [ ] Integrate `AdminUserService`
-- [ ] Extract `ProjectsTab`
-    - [ ] Create `projects_tab.dart`
-    - [ ] Integrate `EbzimImage` and `NewsService`
-- [ ] Extract `NewsTab`
-    - [ ] Create `news_tab.dart`
-- [ ] Extract `FinancialsTab`
-    - [ ] Create `financials_tab.dart`
-    - [ ] Integrate `FinancialService`
-- [ ] Extract `ReportsTab`
-    - [ ] Create `reports_tab.dart`
-    - [ ] Integrate `ReportService`
-- [ ] Extract `CMSTab`
-    - [ ] Create `cms_tab.dart`
-    - [ ] Integrate `CMSContentService`
-- [ ] Clean up `AdminDashboardScreen.dart`
-    - [ ] Remove extracted classes
-    - [ ] Remove redundant imports and utilities
-- [ ] Final Verification
-    - [ ] Flutter analyze
-    - [ ] Hot restart and manual check
-
 class AdminSectionHeader extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -82,50 +55,6 @@ class AdminSectionHeader extends StatelessWidget {
     );
   }
 }
-
-# Admin Dashboard Modularization Plan
-
-Modularizing the `AdminDashboardScreen` monolith by extracting tabs into independent files.
-
-## User Review Required
-
-> [!IMPORTANT]
-> The `AdminDashboardScreen` is currently ~4,353 lines. We will extract each tab iteratively. The user should verify navigation and data parity for each tab after extraction.
-
-## Proposed Changes
-
-### Admin Tabs (Modularization)
-
-#### [NEW] [users_tab.dart](file:///c:/ebzim-buraux/lib/screens/admin/tabs/users_tab.dart)
-Extracting user management logic, table, and dialogs.
-
-#### [NEW] [projects_tab.dart](file:///c:/ebzim-buraux/lib/screens/admin/tabs/projects_tab.dart)
-Extracting project management logic, using `EbzimImage`.
-
-#### [NEW] [news_tab.dart](file:///c:/ebzim-buraux/lib/screens/admin/tabs/news_tab.dart)
-Extracting news/announcements management.
-
-#### [NEW] [financials_tab.dart](file:///c:/ebzim-buraux/lib/screens/admin/tabs/financials_tab.dart)
-Extracting contribution and membership fee management.
-
-#### [NEW] [reports_tab.dart](file:///c:/ebzim-buraux/lib/screens/admin/tabs/reports_tab.dart)
-Extracting civic reports management.
-
-#### [NEW] [cms_tab.dart](file:///c:/ebzim-buraux/lib/screens/admin/tabs/cms_tab.dart)
-Extracting content management (Hero slides, Partners, Leadership).
-
-#### [MODIFY] [admin_dashboard_screen.dart](file:///c:/ebzim-buraux/lib/screens/admin_dashboard_screen.dart)
-Removing legacy code and importing modular tabs.
-
-## Verification Plan
-
-### Automated Tests
-*   Run `flutter analyze` to ensure no broken references.
-
-### Manual Verification
-*   Verify each tab loads data correctly.
-*   Verify action dialogs (edit, delete, status update) function as expected.
-*   Verify Excel export parity.
 
 class AdminStatCard extends StatelessWidget {
   final String label;
@@ -439,4 +368,59 @@ SnackBar adminErrorSnack(String message) {
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
   );
+}
+
+class AdminGlassInfoCard extends StatelessWidget {
+  final String title;
+  final String message;
+  final IconData icon;
+
+  const AdminGlassInfoCard({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.primaryColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: AppTheme.primaryColor, size: 24),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.tajawal(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  message,
+                  style: GoogleFonts.tajawal(
+                    fontSize: 11,
+                    color: AppTheme.primaryColor.withValues(alpha: 0.7),
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

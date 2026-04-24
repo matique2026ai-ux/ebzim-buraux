@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/services/news_service.dart';
 import '../../../core/models/news_post.dart';
-import '../widgets/ebzim_project_timeline.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 import 'admin_shared_components.dart';
 
 class ProjectsTab extends ConsumerWidget {
@@ -39,7 +39,7 @@ class ProjectsTab extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AdminSharedComponents.buildSectionHeader(
+                const AdminSectionHeader(
                   title: 'إدارة الأنشطة والبرامج الجمعوية',
                   subtitle: 'إدارة مبادرات الجمعية الولائية وتقارير الإنجاز الميداني',
                   icon: Icons.architecture_rounded,
@@ -47,7 +47,7 @@ class ProjectsTab extends ConsumerWidget {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    AdminSharedComponents.buildStatCard(
+                    AdminStatCard(
                       label: 'مشاريع ميدانية',
                       value: '${projects.length}',
                       icon: Icons.construction_rounded,
@@ -56,7 +56,7 @@ class ProjectsTab extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    AdminSharedComponents.buildStatCard(
+                    AdminStatCard(
                       label: 'نسبة الإنجاز العام',
                       value: '$avgProgress%',
                       icon: Icons.trending_up_rounded,
@@ -119,7 +119,7 @@ class ProjectsTab extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 if (projects.isEmpty)
-                  const AdminSharedComponents.EmptyState(
+                  const AdminEmptyState(
                     message: 'لا توجد مشاريع مسجلة بعد',
                     icon: Icons.architecture_rounded,
                   )
@@ -142,8 +142,8 @@ class ProjectsTab extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const AdminSharedComponents.LoadingShimmer(),
-        error: (e, _) => AdminSharedComponents.ErrorState(error: e.toString()),
+        loading: () => const AdminLoadingShimmer(),
+        error: (e, _) => AdminErrorState(error: e.toString()),
       ),
     );
   }

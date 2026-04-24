@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/services/admin_user_service.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
-import 'admin_shared_components.dart';
+import 'admin_shared_components.dart' hide Excel;
 import 'package:excel/excel.dart' hide Border;
 import 'dart:typed_data';
 import 'package:ebzim_app/core/services/web_helper.dart';
@@ -53,17 +53,17 @@ class _UsersTabState extends ConsumerState<UsersTab> {
         sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex)).value = TextCellValue(u.getName('en'));
         sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex)).value = TextCellValue(u.getName('ar'));
         sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex)).value = TextCellValue(u.email);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex)).value = TextCellValue(u.phoneNumber ?? '');
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex)).value = TextCellValue(u.phone ?? '');
         sheet.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex)).value = TextCellValue(u.role.name);
         sheet.cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex)).value = TextCellValue(u.status);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex)).value = TextCellValue(u.expiryDate != null ? DateFormat('yyyy-MM-dd').format(u.expiryDate!) : '');
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex)).value = TextCellValue(DateFormat('yyyy-MM-dd').format(u.createdAt));
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex)).value = TextCellValue(u.membershipExpiry != null ? DateFormat('yyyy-MM-dd').format(u.membershipExpiry!) : '');
+        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex)).value = TextCellValue(u.createdAt != null ? DateFormat('yyyy-MM-dd').format(u.createdAt!) : '');
       }
 
       final bytes = excel.encode();
       if (bytes != null) {
         final fileName = 'Ebzim_Users_${DateFormat('yyyyMMdd_HHmm').format(DateTime.now())}.xlsx';
-        WebHelper.downloadFile(Uint8List.fromList(bytes), fileName);
+        triggerWebDownloadBytes(Uint8List.fromList(bytes), fileName);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(adminSuccessSnack('تم استخراج البيانات بنجاح'));
         }
@@ -148,24 +148,23 @@ class _UsersTabState extends ConsumerState<UsersTab> {
                   border: Border.all(color: Colors.grey.shade200),
                 ),
                 child: TextField(
-                  onChanged: (v) => setState(() => _searchQuery = v),
                   decoration: const InputDecoration(
-                    hintText: 'البحث عن مستخدم بالاسم أو البريد...',
+                    hintText: 'البحث باسم المستخدم أو البريد الإلكتروني...',
                     border: InputBorder.none,
-                    icon: Icon(Icons.search_rounded, color: Colors.grey),
+                    icon: Icon(Icons.search_rounded),
                   ),
+                  onChanged: (v) => setState(() => _searchQuery = v),
                 ),
               ),
-              const SizedBox(height: 20),
-              if (filtered.isEmpty)
-                const AdminEmptyState(message: 'لم يتم العثور على مستخدمين', icon: Icons.person_off_rounded)
-              else
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) => _UserListItem(user: filtered[index]),
-                ),
+              const SizedBox(height: 24),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: filtered.length,
+                itemBuilder: (context, index) {
+                  return _UserListItem(user: filtered[index]);
+                },
+              ),
             ],
           ),
         );
@@ -180,46 +179,52 @@ class _UserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade100),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade100),
       ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-            child: Text(
-              user.getName('ar').isNotEmpty ? user.getName('ar')[0] : 'U',
-              style: const TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
-            ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: CircleAvatar(
+          backgroundColor: user.role.getBadgeColor().withValues(alpha: 0.1),
+          child: Text(
+            user.firstName[0].toUpperCase(),
+            style: TextStyle(color: user.role.getBadgeColor(), fontWeight: FontWeight.bold),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.getName('ar'),
-                  style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        title: Text(
+          user.getName('ar'),
+          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(user.email, style: const TextStyle(fontSize: 12)),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: user.role.getBadgeColor().withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                user.getInstitutionalTitle('ar'),
+                style: TextStyle(
+                  color: user.role.getBadgeColor(),
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  user.email,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ],
+              ),
             ),
-          ),
-          AdminStatusBadge(status: user.status),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(Icons.more_vert_rounded, color: Colors.grey),
-            onPressed: () => _showUserActions(context, ref),
-          ),
-        ],
+            const SizedBox(width: 8),
+            IconButton(
+              icon: const Icon(Icons.more_vert_rounded),
+              onPressed: () => _showUserActions(context, ref),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -227,57 +232,74 @@ class _UserListItem extends ConsumerWidget {
   void _showUserActions(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => Column(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 8),
-          Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
           ListTile(
-            leading: const Icon(Icons.edit_note_rounded, color: Colors.blue),
-            title: const Text('تعديل البيانات'),
+            leading: const Icon(Icons.edit_outlined),
+            title: const Text('تعديل الرتبة'),
             onTap: () {
               Navigator.pop(context);
-              // Implementation for edit
+              // Implement role change
             },
           ),
           ListTile(
             leading: Icon(
-              user.status.toUpperCase() == 'ACTIVE' ? Icons.block_flipped : Icons.check_circle_outline_rounded,
-              color: user.status.toUpperCase() == 'ACTIVE' ? Colors.orange : Colors.green,
+              user.status == 'ACTIVE' ? Icons.block_flipped : Icons.check_circle_outline,
+              color: user.status == 'ACTIVE' ? Colors.red : Colors.green,
             ),
-            title: Text(user.status.toUpperCase() == 'ACTIVE' ? 'تعطيل الحساب' : 'تنشيط الحساب'),
+            title: Text(user.status == 'ACTIVE' ? 'تجميد الحساب' : 'تفعيل الحساب'),
             onTap: () async {
               Navigator.pop(context);
-              final newStatus = user.status.toUpperCase() == 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-              await ref.read(adminUserServiceProvider).updateUserStatus(user.id, newStatus);
-              ref.invalidate(allUsersProvider);
+              try {
+                await ref.read(adminUserServiceProvider).updateUserStatus(
+                  user.id,
+                  user.status == 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+                );
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(adminSuccessSnack('تم تحديث حالة الحساب'));
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(adminErrorSnack('فشل التحديث: $e'));
+                }
+              }
             },
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.delete_forever_rounded, color: Colors.red),
-            title: const Text('حذف المستخدم نهائياً'),
+            leading: const Icon(Icons.delete_outline, color: Colors.red),
+            title: const Text('حذف الحساب نهائياً', style: TextStyle(color: Colors.red)),
             onTap: () async {
               Navigator.pop(context);
               final confirm = await showDialog<bool>(
                 context: context,
-                builder: (_) => AlertDialog(
-                  title: const Text('تأكيد الحذف'),
-                  content: const Text('هل أنت متأكد من حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.'),
+                builder: (ctx) => AlertDialog(
+                  title: const Text('حذف حساب'),
+                  content: const Text('هل أنت متأكد من حذف هذا الحساب نهائياً؟ لا يمكن التراجع.'),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('إلغاء')),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                      child: const Text('حذف'),
+                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('إلغاء')),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text('حذف', style: TextStyle(color: Colors.red)),
                     ),
                   ],
                 ),
               );
               if (confirm == true) {
-                await ref.read(adminUserServiceProvider).deleteUser(user.id);
-                ref.invalidate(allUsersProvider);
+                try {
+                  await ref.read(adminUserServiceProvider).deleteUser(user.id);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(adminSuccessSnack('تم حذف الحساب بنجاح'));
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(adminErrorSnack('فشل الحذف: $e'));
+                  }
+                }
               }
             },
           ),

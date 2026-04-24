@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:excel/excel.dart';
 import 'package:intl/intl.dart';
 import 'package:universal_html/html.dart' as html;
-import '../models/membership_request.dart';
+import 'package:ebzim_app/core/services/membership_service.dart';
 
 class MembershipExportService {
   /// Triggers a browser download for the given bytes.
@@ -37,8 +37,6 @@ class MembershipExportService {
         'Full Name',
         'Email',
         'Phone',
-        'Nationality',
-        'District',
         'Status',
         'Submission Date',
       ];
@@ -59,22 +57,16 @@ class MembershipExportService {
             .value = TextCellValue(r.fullName);
         sheet
             .cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex))
-            .value = TextCellValue(r.email);
+            .value = TextCellValue(r.data['email'] ?? 'N/A');
         sheet
             .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex))
-            .value = TextCellValue(r.phoneNumber);
+            .value = TextCellValue(r.data['phone'] ?? 'N/A');
         sheet
             .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex))
-            .value = TextCellValue(r.nationality);
+            .value = TextCellValue(r.status);
         sheet
             .cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex))
-            .value = TextCellValue(r.district);
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex))
-            .value = TextCellValue(r.status.name);
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex))
-            .value = TextCellValue(DateFormat('yyyy-MM-dd').format(r.createdAt));
+            .value = TextCellValue(DateFormat('yyyy-MM-dd').format(r.submissionDate));
       }
 
       final bytes = excel.encode();

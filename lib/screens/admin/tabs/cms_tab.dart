@@ -27,7 +27,7 @@ class CMSTab extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AdminSharedComponents.buildSectionHeader(
+          const AdminSectionHeader(
             title: 'إدارة المحتوى (CMS)',
             subtitle: 'التحكم في الشاشة الرئيسية والشركاء والهيكل التنظيمي',
             icon: Icons.dashboard_customize_rounded,
@@ -90,7 +90,7 @@ class CMSTab extends ConsumerWidget {
           ),
 
           const SizedBox(height: 32),
-          const AdminSharedComponents.GlassInfoCard(
+          const AdminGlassInfoCard(
             title: 'تنبيه أمني',
             message:
                 'جميع التغييرات هنا تظهر مباشرة لجميع مستخدمي التطبيق. يرجى التأكد من جودة الصور ودقة النصوص قبل الحفظ.',

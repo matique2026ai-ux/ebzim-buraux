@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../../../models/membership_request.dart';
-import '../../../providers/membership_admin_provider.dart';
-import '../../../theme/app_theme.dart';
-import '../../../services/membership_export_service.dart';
+import 'package:ebzim_app/core/services/membership_service.dart';
+import 'package:ebzim_app/core/theme/app_theme.dart';
+import 'package:ebzim_app/services/membership_export_service.dart';
 import 'admin_shared_components.dart';
 
 class MembershipTab extends ConsumerWidget {
@@ -13,48 +12,51 @@ class MembershipTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(membershipAdminProvider);
+    final stateAsync = ref.watch(pendingMembershipsProvider);
 
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AdminHeader(
+          AdminSectionHeader(
             title: 'طلبات الانضمام',
             subtitle: 'إدارة ومراجعة طلبات العضوية الجديدة',
-            actions: [
-              ExportButton(
-                onPressed: () async {
-                  final success = await MembershipExportService.exportToExcel(state.requests);
-                  if (context.mounted) {
-                    if (success) {
-                      AdminSharedComponents.showSuccess(context, 'تم تصدير الملف بنجاح');
-                    } else {
-                      AdminSharedComponents.showError(context, 'فشل في تصدير الملف');
-                    }
-                  }
-                },
-                label: 'تصدير Excel',
-              ),
-            ],
+            icon: Icons.person_add_alt_1_rounded,
           ),
-          const SizedBox(height: 32),
-          if (state.isLoading)
-            const Expanded(child: Center(child: CircularProgressIndicator()))
-          else if (state.error != null)
-            Expanded(child: AdminErrorState(message: state.error!))
-          else if (state.requests.isEmpty)
-            const Expanded(child: AdminEmptyState(message: 'لا توجد طلبات انضمام حالياً'))
-          else
-            Expanded(
-              child: ListView.builder(
-                itemCount: state.requests.length,
-                itemBuilder: (context, index) {
-                  return MembershipRequestCard(request: state.requests[index]);
-                },
-              ),
+          const SizedBox(height: 24),
+          stateAsync.when(
+            data: (requests) => Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    AdminExportButton(
+                      isLoading: false,
+                      onPressed: () => MembershipExportService.exportToExcel(requests),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                if (requests.isEmpty)
+                  const AdminEmptyState(
+                    message: 'لا توجد طلبات انضمام حالياً',
+                    icon: Icons.person_off_rounded,
+                  )
+                else
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: requests.length,
+                    itemBuilder: (context, index) {
+                      return MembershipRequestCard(request: requests[index]);
+                    },
+                  ),
+              ],
             ),
+            loading: () => const AdminLoadingShimmer(),
+            error: (e, _) => AdminErrorState(error: e.toString()),
+          ),
         ],
       ),
     );
@@ -68,8 +70,6 @@ class MembershipRequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = _getStatusColor(request.status);
-
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 0,
@@ -107,7 +107,7 @@ class MembershipRequestCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      request.email,
+                      request.data['email'] ?? 'No Email',
                       style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
                     ),
                   ],
@@ -116,10 +116,10 @@ class MembershipRequestCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  StatusBadge(status: request.status.name, color: statusColor),
+                  AdminStatusBadge(status: request.status),
                   const SizedBox(height: 8),
                   Text(
-                    DateFormat('yyyy-MM-dd').format(request.createdAt),
+                    DateFormat('yyyy-MM-dd').format(request.submissionDate),
                     style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
                   ),
                 ],
@@ -129,17 +129,6 @@ class MembershipRequestCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getStatusColor(MembershipStatus status) {
-    switch (status) {
-      case MembershipStatus.pending:
-        return Colors.orange;
-      case MembershipStatus.approved:
-        return Colors.green;
-      case MembershipStatus.rejected:
-        return Colors.red;
-    }
   }
 
   void _showDetailsDialog(BuildContext context) {
@@ -162,20 +151,19 @@ class MembershipRequestDetailsDialog extends ConsumerStatefulWidget {
 class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> {
   bool _isProcessing = false;
 
-  Future<void> _updateStatus(MembershipStatus status) async {
+  Future<void> _updateStatus(String status) async {
     setState(() => _isProcessing = true);
     try {
-      await ref.read(membershipAdminProvider.notifier).updateRequestStatus(widget.request.id, status);
+      await ref.read(membershipAdminProvider).reviewRequest(widget.request.id, status, userId: widget.request.userId);
       if (mounted) {
         Navigator.pop(context);
-        AdminSharedComponents.showSuccess(
-          context,
-          status == MembershipStatus.approved ? 'تم قبول الطلب بنجاح' : 'تم رفض الطلب',
+        ScaffoldMessenger.of(context).showSnackBar(
+          adminSuccessSnack(status == 'APPROVED' ? 'تم قبول الطلب بنجاح' : 'تم تحديث حالة الطلب'),
         );
       }
     } catch (e) {
       if (mounted) {
-        AdminSharedComponents.showError(context, 'فشل في تحديث الحالة: $e');
+        ScaffoldMessenger.of(context).showSnackBar(adminErrorSnack('فشل في تحديث الحالة: $e'));
       }
     } finally {
       if (mounted) setState(() => _isProcessing = false);
@@ -184,6 +172,7 @@ class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> 
 
   @override
   Widget build(BuildContext context) {
+    final data = widget.request.data;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
@@ -211,18 +200,17 @@ class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> 
             ),
             const Divider(height: 32),
             _buildDetailRow('الاسم الكامل', widget.request.fullName),
-            _buildDetailRow('البريد الإلكتروني', widget.request.email),
-            _buildDetailRow('رقم الهاتف', widget.request.phoneNumber),
-            _buildDetailRow('الجنسية', widget.request.nationality),
-            _buildDetailRow('الحي/المنطقة', widget.request.district),
-            _buildDetailRow('تاريخ التقديم', DateFormat('yyyy-MM-dd HH:mm').format(widget.request.createdAt)),
+            _buildDetailRow('البريد الإلكتروني', data['email'] ?? 'N/A'),
+            _buildDetailRow('رقم الهاتف', data['phone'] ?? 'N/A'),
+            _buildDetailRow('الجنس', data['gender'] ?? 'N/A'),
+            _buildDetailRow('تاريخ التقديم', DateFormat('yyyy-MM-dd HH:mm').format(widget.request.submissionDate)),
             const SizedBox(height: 32),
-            if (widget.request.status == MembershipStatus.pending)
+            if (widget.request.status == 'SUBMITTED' || widget.request.status == 'UNDER_REVIEW')
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: _isProcessing ? null : () => _updateStatus(MembershipStatus.rejected),
+                      onPressed: _isProcessing ? null : () => _updateStatus('REJECTED'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.red,
                         side: const BorderSide(color: Colors.red),
@@ -234,7 +222,7 @@ class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> 
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: _isProcessing ? null : () => _updateStatus(MembershipStatus.approved),
+                      onPressed: _isProcessing ? null : () => _updateStatus('APPROVED'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1B4332),
                         foregroundColor: Colors.white,
@@ -249,10 +237,7 @@ class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> 
               )
             else
               Center(
-                child: StatusBadge(
-                  status: widget.request.status == MembershipStatus.approved ? 'تم القبول' : 'مرفوض',
-                  color: widget.request.status == MembershipStatus.approved ? Colors.green : Colors.red,
-                ),
+                child: AdminStatusBadge(status: widget.request.status),
               ),
           ],
         ),

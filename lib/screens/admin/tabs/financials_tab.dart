@@ -23,7 +23,7 @@ class FinancialsTab extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AdminSharedComponents.buildSectionHeader(
+            const AdminSectionHeader(
               title: 'المساهمات المالية',
               subtitle: 'التحقق من وصول اشتراكات العضوية والتبرعات',
               icon: Icons.account_balance_wallet_rounded,
@@ -32,7 +32,7 @@ class FinancialsTab extends ConsumerWidget {
             contributionsAsync.when(
               data: (items) {
                 if (items.isEmpty) {
-                  return const AdminSharedComponents.EmptyState(
+                  return const AdminEmptyState(
                     message: 'لا توجد مساهمات حالياً',
                     icon: Icons.payments_outlined,
                   );
@@ -96,8 +96,8 @@ class FinancialsTab extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => const AdminSharedComponents.LoadingShimmer(),
-              error: (e, _) => AdminSharedComponents.ErrorState(error: e.toString()),
+              loading: () => const AdminLoadingShimmer(),
+              error: (e, _) => AdminErrorState(error: e.toString()),
             ),
             const SizedBox(height: 40),
           ],

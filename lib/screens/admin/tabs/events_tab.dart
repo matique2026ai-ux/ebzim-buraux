@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/services/event_service.dart';
-import '../../../core/models/event.dart';
 import 'admin_shared_components.dart';
 
 class EventsTab extends ConsumerWidget {
@@ -25,7 +24,7 @@ class EventsTab extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AdminSharedComponents.buildSectionHeader(
+            const AdminSectionHeader(
               title: 'إدارة الأنشطة',
               subtitle: 'تنظيم الفعاليات والورشات الميدانية',
               icon: Icons.event_available_rounded,
@@ -34,7 +33,7 @@ class EventsTab extends ConsumerWidget {
             eventsAsync.when(
               data: (events) => Row(
                 children: [
-                  AdminSharedComponents.buildStatCard(
+                  AdminStatCard(
                     label: 'أنشطة مجدولة',
                     value: '${events.length}',
                     icon: Icons.calendar_month_rounded,
@@ -43,7 +42,7 @@ class EventsTab extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  AdminSharedComponents.buildStatCard(
+                  AdminStatCard(
                     label: 'فعاليات مميزة',
                     value: events.where((e) => e.isFeatured).length.toString(),
                     icon: Icons.star_rounded,
@@ -53,7 +52,7 @@ class EventsTab extends ConsumerWidget {
                   ),
                 ],
               ).animate().fadeIn(delay: 200.ms),
-              loading: () => const AdminSharedComponents.LoadingShimmer(),
+              loading: () => const AdminLoadingShimmer(),
               error: (_, __) => const SizedBox(),
             ),
             const SizedBox(height: 28),
@@ -108,7 +107,7 @@ class EventsTab extends ConsumerWidget {
             eventsAsync.when(
               data: (events) {
                 if (events.isEmpty) {
-                  return const AdminSharedComponents.EmptyState(
+                  return const AdminEmptyState(
                     message: 'لا توجد أنشطة حالياً — أضف نشاطاً جديداً!',
                     icon: Icons.event_busy_rounded,
                   );
@@ -126,8 +125,8 @@ class EventsTab extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => const AdminSharedComponents.LoadingShimmer(),
-              error: (e, _) => AdminSharedComponents.ErrorState(error: e.toString()),
+              loading: () => const AdminLoadingShimmer(),
+              error: (e, _) => AdminErrorState(error: e.toString()),
             ),
             const SizedBox(height: 40),
           ],
@@ -138,7 +137,7 @@ class EventsTab extends ConsumerWidget {
 }
 
 class _AdminEventCard extends StatelessWidget {
-  final EbzimEvent event;
+  final ActivityEvent event;
   const _AdminEventCard({required this.event});
 
   @override
@@ -187,7 +186,7 @@ class _AdminEventCard extends StatelessWidget {
           children: [
             const SizedBox(height: 4),
             Text(
-              DateFormat('dd MMMM yyyy', 'ar').format(event.startDate),
+              DateFormat('dd MMMM yyyy', 'ar').format(event.date),
               style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey),
             ),
           ],

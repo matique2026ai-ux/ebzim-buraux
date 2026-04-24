@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';

@@ -24,7 +24,7 @@ class ReportsTab extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AdminSharedComponents.buildSectionHeader(
+            const AdminSectionHeader(
               title: 'إدارة البلاغات المدنية',
               subtitle: 'تتبع ومعالجة بلاغات حماية التراث والمباني الأثرية',
               icon: Icons.assignment_rounded,
@@ -33,7 +33,7 @@ class ReportsTab extends ConsumerWidget {
             reportsAsync.when(
               data: (reports) {
                 if (reports.isEmpty) {
-                  return const AdminSharedComponents.EmptyState(
+                  return const AdminEmptyState(
                     message: 'لا توجد بلاغات حالياً',
                     icon: Icons.flag_outlined,
                   );
@@ -89,8 +89,8 @@ class ReportsTab extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => const AdminSharedComponents.LoadingShimmer(),
-              error: (e, _) => AdminSharedComponents.ErrorState(error: e.toString()),
+              loading: () => const AdminLoadingShimmer(),
+              error: (e, _) => AdminErrorState(error: e.toString()),
             ),
             const SizedBox(height: 40),
           ],

@@ -25,7 +25,7 @@ class NewsTab extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AdminSharedComponents.buildSectionHeader(
+            const AdminSectionHeader(
               title: 'إدارة الأخبار',
               subtitle: 'نشر المستجدات والشراكات الرسمية',
               icon: Icons.newspaper_rounded,
@@ -36,7 +36,7 @@ class NewsTab extends ConsumerWidget {
                 final posts = allPosts.where((p) => p.isInstitutionalNews).toList();
                 return Row(
                   children: [
-                    AdminSharedComponents.buildStatCard(
+                    AdminStatCard(
                       label: 'إجمالي المقالات',
                       value: '${posts.length}',
                       icon: Icons.article_outlined,
@@ -45,7 +45,7 @@ class NewsTab extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    AdminSharedComponents.buildStatCard(
+                    AdminStatCard(
                       label: 'مقالات مثبتة',
                       value: posts.where((p) => p.isPinned).length.toString(),
                       icon: Icons.push_pin_rounded,
@@ -56,8 +56,8 @@ class NewsTab extends ConsumerWidget {
                   ],
                 ).animate().fadeIn(delay: 200.ms);
               },
-              loading: () => const AdminSharedComponents.LoadingShimmer(),
-              error: (_, __) => const SizedBox(),
+              loading: () => const AdminLoadingShimmer(),
+              error: (e, _) => AdminErrorState(error: e.toString()),
             ),
             const SizedBox(height: 28),
             Row(
@@ -125,7 +125,7 @@ class NewsTab extends ConsumerWidget {
                     )
                     .toList();
                 if (newsPosts.isEmpty) {
-                  return const AdminSharedComponents.EmptyState(
+                  return const AdminEmptyState(
                     message: 'لا توجد أخبار حالياً — انشر أول خبر!',
                     icon: Icons.newspaper_rounded,
                   );
@@ -143,8 +143,8 @@ class NewsTab extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => const AdminSharedComponents.LoadingShimmer(),
-              error: (e, _) => AdminSharedComponents.ErrorState(error: e.toString()),
+              loading: () => const AdminLoadingShimmer(),
+              error: (e, _) => AdminErrorState(error: e.toString()),
             ),
             const SizedBox(height: 40),
           ],

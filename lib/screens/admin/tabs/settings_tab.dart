@@ -43,7 +43,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AdminSharedComponents.buildSectionHeader(
+          const AdminSectionHeader(
             title: 'مركز التحكم والإعدادات',
             subtitle: 'إدارة المعايير المالية وأدوات النظام التقنية',
             icon: Icons.admin_panel_settings_rounded,

@@ -9,7 +9,7 @@ export class AppController {
   getDebug() {
     return {
       status: 'OK',
-      version: 'STABLE_V3_DEBUG',
+      version: '1.2.1-FORCED',
       timestamp: new Date().toISOString(),
     };
   }

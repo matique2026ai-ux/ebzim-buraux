@@ -30,7 +30,7 @@ class NewsService {
 
   Future<List<NewsPost>> getAdminNews() async {
     try {
-      final response = await _ref.read(apiClientProvider).dio.get('posts');
+      final response = await _ref.read(apiClientProvider).dio.get('posts/admin');
       final dynamic responseData = response.data;
       List rawList = [];
       

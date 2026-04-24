@@ -19,16 +19,7 @@ import 'package:ebzim_app/core/services/report_service.dart';
 import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/cms_content_service.dart';
 import 'package:excel/excel.dart' hide Border;
-import 'package:ebzim_app/core/services/membership_service.dart';
 import 'package:ebzim_app/screens/admin/tabs/membership_tab.dart';
-import 'package:ebzim_app/screens/admin/tabs/users_tab.dart';
-import 'package:ebzim_app/screens/admin/tabs/cms_tab.dart';
-import 'package:ebzim_app/screens/admin/tabs/events_tab.dart';
-import 'package:ebzim_app/screens/admin/tabs/news_tab.dart';
-import 'package:ebzim_app/screens/admin/tabs/projects_tab.dart';
-import 'package:ebzim_app/screens/admin/tabs/reports_tab.dart';
-import 'package:ebzim_app/screens/admin/tabs/financials_tab.dart';
-import 'package:ebzim_app/screens/admin/tabs/settings_tab.dart';
 
 class _MiniMetric extends StatelessWidget {
   final String label;
@@ -67,9 +58,9 @@ class _MiniMetric extends StatelessWidget {
   }
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 // ADMIN DASHBOARD SCREEN
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
 
@@ -92,49 +83,49 @@ class AdminDashboardScreen extends ConsumerWidget {
     final List<Map<String, dynamic>> allTabs = [
       {
         'icon': Icons.group_add_rounded,
-        'text': 'Ø§Ù„Ø¹Ø¶ÙˆÙŠØ©',
+        'text': 'العضوية',
         'view': const MembershipTab(),
       },
       {
         'icon': Icons.people_alt_rounded,
-        'text': 'Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…ÙˆÙ†',
-        'view': const UsersTab(),
+        'text': 'المستخدمون',
+        'view': const _UsersTab(),
       },
       {
         'icon': Icons.dashboard_customize_rounded,
-        'text': 'Ø§Ù„Ù…Ø­ØªÙˆÙ‰',
-        'view': const CMSTab(),
+        'text': 'المحتوى',
+        'view': const _CMSTab(),
       },
       {
         'icon': Icons.event_rounded,
-        'text': 'Ø§Ù„Ø£Ù†Ø´Ø·Ø©',
-        'view': const EventsTab(),
+        'text': 'الأنشطة',
+        'view': const _EventsTab(),
       },
       {
         'icon': Icons.newspaper_rounded,
-        'text': 'Ø§Ù„Ø£Ø®Ø¨Ø§Ø±',
-        'view': const NewsTab(),
+        'text': 'الأخبار',
+        'view': const _NewsTab(),
       },
       {
         'icon': Icons.architecture_rounded,
-        'text': 'Ø§Ù„Ù…Ø´Ø§Ø±ÙŠØ¹',
-        'view': const ProjectsTab(),
+        'text': 'المشاريع',
+        'view': const _ProjectsTab(),
       },
       {
         'icon': Icons.flag_rounded,
-        'text': 'Ø§Ù„Ø¨Ù„Ø§ØºØ§Øª',
-        'view': const ReportsTab(),
+        'text': 'البلاغات',
+        'view': const _ReportsTab(),
       },
       if (isSuperAdmin) ...[
         {
           'icon': Icons.account_balance_wallet_rounded,
-          'text': 'Ø§Ù„Ù…Ø³Ø§Ù‡Ù…Ø§Øª',
-          'view': const FinancialsTab(),
+          'text': 'المساهمات',
+          'view': const _FinancialsTab(),
         },
         {
           'icon': Icons.settings_rounded,
-          'text': 'Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª',
-          'view': const SettingsTab(),
+          'text': 'الإعدادات',
+          'view': const _SettingsTab(),
         },
       ],
     ];
@@ -161,29 +152,29 @@ class AdminDashboardScreen extends ConsumerWidget {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.home_rounded, color: Colors.white70),
-                  tooltip: 'Ø§Ù„Ø¹ÙˆØ¯Ø© Ù„Ù„Ù…ÙˆÙ‚Ø¹',
+                  tooltip: 'العودة للموقع',
                   onPressed: () => context.go('/home'),
                 ),
                 IconButton(
                   icon: const Icon(Icons.logout_rounded, color: Colors.white70),
-                  tooltip: 'ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬',
+                  tooltip: 'تسجيل الخروج',
                   onPressed: () async {
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (_) => AlertDialog(
-                        title: const Text('ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬'),
-                        content: const Text('Ù‡Ù„ ØªØ±ÙŠØ¯ Ø§Ù„Ø®Ø±ÙˆØ¬ Ù…Ù† Ù„ÙˆØ­Ø© Ø§Ù„Ø¥Ø¯Ø§Ø±Ø©ØŸ'),
+                        title: const Text('تسجيل الخروج'),
+                        content: const Text('هل تريد الخروج من لوحة الإدارة؟'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
-                            child: const Text('Ø¥Ù„ØºØ§Ø¡'),
+                            child: const Text('إلغاء'),
                           ),
                           ElevatedButton(
                             onPressed: () => Navigator.pop(context, true),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
                             ),
-                            child: const Text('Ø®Ø±ÙˆØ¬'),
+                            child: const Text('خروج'),
                           ),
                         ],
                       ),
@@ -224,7 +215,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©'.toUpperCase(),
+                                'الرئيسية'.toUpperCase(),
                                 style: GoogleFonts.playfairDisplay(
                                   color: Colors.white.withValues(alpha: 0.5),
                                   fontSize: 8,
@@ -244,8 +235,8 @@ class AdminDashboardScreen extends ConsumerWidget {
                               ),
                               Text(
                                 (isSuperAdmin
-                                        ? 'Ø¥Ø´Ø±Ø§Ù Ø§Ù„Ù…Ø´Ø±Ù Ø§Ù„Ø¹Ø§Ù…'
-                                        : 'Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ù†Ø¸Ø§Ù…')
+                                        ? 'إشراف المشرف العام'
+                                        : 'إدارة النظام')
                                     .toUpperCase(),
                                 style: GoogleFonts.playfairDisplay(
                                   color: AppTheme.accentColor.withValues(alpha: 0.8),
@@ -260,8 +251,8 @@ class AdminDashboardScreen extends ConsumerWidget {
                           // Bold centered title
                           Text(
                             isSuperAdmin
-                                ? 'Ù„ÙˆØ­Ø© Ø§Ù„Ø³ÙŠØ§Ø¯Ø© ÙˆØ§Ù„ØªØ­ÙƒÙ… [V1.2]'
-                                : 'Ù„ÙˆØ­Ø© Ø§Ù„Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø´Ø§Ù…Ù„Ø© [V1.2]',
+                                ? 'لوحة السيادة والتحكم [V1.2]'
+                                : 'لوحة الإدارة الشاملة [V1.2]',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.tajawal(
                               fontSize: 28,
@@ -292,8 +283,8 @@ class AdminDashboardScreen extends ConsumerWidget {
                               Flexible(
                                 child: Text(
                                   isSuperAdmin
-                                      ? 'Ø£Ù‡Ù„Ø§Ù‹ Ø¨Ùƒ ÙŠØ§ Ù…Ø´Ø±Ù Ø§Ù„Ù†Ø¸Ø§Ù…. Ø¬Ù…ÙŠØ¹ Ø§Ù„ØµÙ„Ø§Ø­ÙŠØ§Øª Ù…ÙØ¹Ù„Ø©.'
-                                      : 'Ø§Ù„Ù…Ø±ÙƒØ² Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ Ù„Ù„ØªØ­ÙƒÙ… ÙˆØ§Ù„Ø¹Ù…Ù„ÙŠØ§Øª',
+                                      ? 'أهلاً بك يا مشرف النظام. جميع الصلاحيات مفعلة.'
+                                      : 'المركز الرئيسي للتحكم والعمليات',
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.tajawal(
                                     fontSize: 11,
@@ -349,3 +340,12 @@ class AdminDashboardScreen extends ConsumerWidget {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// TAB 2: REGISTERED USERS
+// ─────────────────────────────────────────────────────────────────────────────
+class _UsersTab extends StatefulWidget {
+  const _UsersTab();
+
+  @override
+  State<_UsersTab> createState() => _UsersTabState();
+}

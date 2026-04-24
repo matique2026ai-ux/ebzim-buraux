@@ -43,7 +43,10 @@ export class PostsService {
       };
     });
 
-    return formatCursorPaginatedResponse(localizedPosts);
+    return {
+      version: '1.2.1-metadata-fix',
+      ...formatCursorPaginatedResponse(localizedPosts)
+    };
   }
 
   async getAdminTable(options: any) {

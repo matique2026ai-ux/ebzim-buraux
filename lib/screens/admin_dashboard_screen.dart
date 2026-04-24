@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/services/web_helper.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
-import 'package:ebzim_app/core/services/membership_service.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
@@ -20,6 +19,7 @@ import 'package:ebzim_app/core/services/report_service.dart';
 import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/cms_content_service.dart';
 import 'package:excel/excel.dart' hide Border;
+import 'package:ebzim_app/screens/admin/tabs/membership_tab.dart';
 
 class _MiniMetric extends StatelessWidget {
   final String label;
@@ -84,7 +84,7 @@ class AdminDashboardScreen extends ConsumerWidget {
       {
         'icon': Icons.group_add_rounded,
         'text': 'العضوية',
-        'view': const _MembershipTab(),
+        'view': const MembershipTab(),
       },
       {
         'icon': Icons.people_alt_rounded,
@@ -869,355 +869,6 @@ class _UserCard extends ConsumerWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TAB 1: MEMBERSHIP
-// ─────────────────────────────────────────────────────────────────────────────
-class _MembershipTab extends ConsumerStatefulWidget {
-  const _MembershipTab();
-
-  @override
-  ConsumerState<_MembershipTab> createState() => _MembershipTabState();
-}
-
-class _MembershipTabState extends ConsumerState<_MembershipTab> {
-  bool _isExporting = false;
-
-  Future<void> _exportMembershipsToExcel(List<MembershipRequest> requests) async {
-    setState(() => _isExporting = true);
-    try {
-      final excel = Excel.createExcel();
-      final String sheetName = 'Ebzim Memberships';
-      final sheet = excel[sheetName];
-      excel.delete('Sheet1');
-
-      final headers = [
-        'Full Name',
-        'Email',
-        'Phone',
-        'Wilaya ID',
-        'Commune ID',
-        'Status',
-        'Submission Date',
-        'Interests',
-        'Skills',
-      ];
-      for (int i = 0; i < headers.length; i++) {
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0))
-            .value = TextCellValue(headers[i]);
-      }
-
-      for (int i = 0; i < requests.length; i++) {
-        final r = requests[i];
-        final rowIndex = i + 1;
-        final d = r.data;
-
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex))
-            .value = TextCellValue(r.fullName);
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex))
-            .value = TextCellValue(d['email'] ?? 'N/A');
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex))
-            .value = TextCellValue(d['phone'] ?? 'N/A');
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex))
-            .value = TextCellValue(d['wilayaId'] ?? 'N/A');
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex))
-            .value = TextCellValue(d['communeId'] ?? 'N/A');
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex))
-            .value = TextCellValue(r.status);
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex))
-            .value = TextCellValue(r.submissionDate.toIso8601String().split('T').first);
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex))
-            .value = TextCellValue((d['interests'] as List?)?.join(', ') ?? 'N/A');
-        sheet
-            .cell(CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: rowIndex))
-            .value = TextCellValue((d['skills'] as List?)?.join(', ') ?? 'N/A');
-      }
-
-      final bytes = excel.save();
-      if (bytes != null) {
-        final timestamp = DateTime.now().millisecondsSinceEpoch;
-        triggerWebDownloadBytes(
-          Uint8List.fromList(bytes),
-          'ebzim_memberships_$timestamp.xlsx',
-        );
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            _successSnack('📊 تم تصدير طلبات العضوية بنجاح'),
-          );
-        }
-      }
-    } catch (e) {
-      debugPrint('Membership Export Error: $e');
-    } finally {
-      if (mounted) setState(() => _isExporting = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final pendingAsync = ref.watch(pendingMembershipsProvider);
-    final adminService = ref.read(membershipAdminProvider);
-
-    return RefreshIndicator(
-      color: AppTheme.primaryColor,
-      onRefresh: () async => ref.invalidate(pendingMembershipsProvider),
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _SectionHeader(
-              title: 'مركز العضوية',
-              subtitle: 'إدارة الطلبات، الإحصائيات، ومراقبة نمو الجمعية',
-              icon: Icons.group_add_rounded,
-            ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
-            const SizedBox(height: 20),
-
-            // --- Custom Visual Analytics Section ---
-            pendingAsync.when(
-              data: (requests) {
-                final total = requests.length;
-                final approved = requests
-                    .where((r) => r.status == 'APPROVED')
-                    .length;
-                final pending = requests
-                    .where((r) => r.status == 'SUBMITTED')
-                    .length;
-                final ratio = total > 0 ? (approved / total) : 0.0;
-
-                return Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 15,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.analytics_outlined,
-                                size: 18,
-                                color: AppTheme.primaryColor.withValues(alpha: 0.4),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'نبض النظام (System Pulse)',
-                                style: GoogleFonts.tajawal(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.primaryColor,
-                                ),
-                              ),
-                              const Spacer(),
-                              Text(
-                                'معدل القبول: ${(ratio * 100).toStringAsFixed(0)}%',
-                                style: GoogleFonts.tajawal(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF15803D),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          // Custom Progress Indicator
-                          Stack(
-                            children: [
-                              Container(
-                                height: 8,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF1F5F9),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              ),
-                              FractionallySizedBox(
-                                widthFactor: ratio,
-                                child: Container(
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xFF052011),
-                                        Color(0xFF1A6B3A),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _MiniMetric(
-                                label: 'الإجمالي',
-                                value: '$total',
-                                color: AppTheme.primaryColor,
-                              ),
-                              _MiniMetric(
-                                label: 'مقبول',
-                                value: '$approved',
-                                color: const Color(0xFF15803D),
-                              ),
-                              _MiniMetric(
-                                label: 'قيد الانتظار',
-                                value: '$pending',
-                                color: const Color(0xFFB45309),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                    .animate()
-                    .fadeIn(delay: 200.ms)
-                    .scale(begin: const Offset(0.95, 0.95));
-              },
-              loading: () => const SizedBox(height: 120),
-              error: (_, __) => const SizedBox(),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'الطلبات الأخيرة',
-                  style: GoogleFonts.tajawal(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF052011),
-                  ),
-                ),
-                Row(
-                  children: [
-                    pendingAsync.maybeWhen(
-                      data: (reqs) => _ExportButton(
-                        isLoading: _isExporting,
-                        onPressed: () => _exportMembershipsToExcel(reqs),
-                      ),
-                      orElse: () => const SizedBox(),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap: () => ref.invalidate(pendingMembershipsProvider),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.refresh_rounded,
-                          size: 18,
-                          color: AppTheme.primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            pendingAsync.when(
-              data: (requests) {
-                if (requests.isEmpty) {
-                  return const _EmptyState(
-                    message: 'لا توجد طلبات عضوية حالياً',
-                    icon: Icons.inbox_rounded,
-                  );
-                }
-                return ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: requests.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final req = requests[index];
-                    return _MembershipRequestCard(
-                          request: req,
-                          onApprove: () async {
-                            await adminService.reviewRequest(
-                              req.id,
-                              'APPROVED',
-                              userId: req.userId,
-                            );
-                            ref.invalidate(pendingMembershipsProvider);
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                _successSnack('✅ تم قبول الطلب وإخطار العضو'),
-                              );
-                            }
-                          },
-                          onReject: () async {
-                            await adminService.reviewRequest(
-                              req.id,
-                              'REJECTED',
-                              userId: req.userId,
-                            );
-                            ref.invalidate(pendingMembershipsProvider);
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                _errorSnack('❌ تم رفض الطلب وإخطار المستخدم'),
-                              );
-                            }
-                          },
-                          onDelete: () async {
-                            try {
-                              await adminService.deleteRequest(req.id);
-                              ref.invalidate(pendingMembershipsProvider);
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  _successSnack('🗑️ تم حذف الطلب من السجل'),
-                                );
-                              }
-                            } catch (e) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  _errorSnack('❌ فشل الحذف: ${e.toString()}'),
-                                );
-                              }
-                            }
-                          },
-                        )
-                        .animate(delay: (index * 80).ms)
-                        .fadeIn()
-                        .slideY(begin: 0.05);
-                  },
-                );
-              },
-              loading: () => const _LoadingShimmer(),
-              error: (e, _) => _ErrorState(error: e.toString()),
-            ),
-            const SizedBox(height: 40),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // TAB 2: EVENTS
 // ─────────────────────────────────────────────────────────────────────────────
 class _EventsTab extends ConsumerWidget {
@@ -1681,9 +1332,6 @@ class _FinancialsTab extends ConsumerWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TAB 6: SETTINGS
-// ─────────────────────────────────────────────────────────────────────────────
-// ─────────────────────────────────────────────────────────────────────────────
 // TAB 6: CMS MANAGEMENT
 // ─────────────────────────────────────────────────────────────────────────────
 class _CMSTab extends ConsumerWidget {
@@ -2091,7 +1739,6 @@ class _SettingsTabState extends ConsumerState<_SettingsTab> {
                     ); // Visual feedback
                     ref.invalidate(adminEventsProvider);
                     ref.invalidate(adminNewsProvider);
-                    ref.invalidate(pendingMembershipsProvider);
                     if (mounted) {
                       setState(() => _isClearingCache = false);
                       ScaffoldMessenger.of(context).showSnackBar(

@@ -8,6 +8,7 @@ import 'package:ebzim_app/core/services/media_service.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
+import 'package:ebzim_app/core/common_widgets/ebzim_image.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 
@@ -678,14 +679,46 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                           const Text('اضغط لاختيار صورة للمشروع', style: TextStyle(color: Colors.white54, fontFamily: 'Cairo')),
                         ],
                       )
-                    : Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          margin: const EdgeInsets.all(12),
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(12)),
-                          child: const Icon(Icons.edit_rounded, color: Colors.white, size: 20),
-                        ),
+                    : Stack(
+                        children: [
+                          Positioned.fill(
+                            child: EbzimImage(
+                              imageUrl: _imageUrl,
+                              borderRadius: 20,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Positioned(
+                            top: 12,
+                            right: 12,
+                            child: Row(
+                              children: [
+                                // Edit Button
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black54,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: const Icon(Icons.edit_rounded, color: Colors.white, size: 20),
+                                ),
+                                const SizedBox(width: 8),
+                                // Remove Button
+                                InkWell(
+                                  onTap: () => setState(() => _imageUrl = null),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.withValues(alpha: 0.8),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Icon(Icons.delete_forever_rounded, color: Colors.white, size: 20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
           ),
         ),

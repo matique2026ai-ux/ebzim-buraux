@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -49,9 +48,9 @@ class HeritageProjectsScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppTheme.accentColor.withOpacity(0.1),
+                        color: AppTheme.accentColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(30),
-                        border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
+                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -154,7 +153,7 @@ class HeritageProjectsScreen extends ConsumerWidget {
               loading: () => const SliverToBoxAdapter(
                 child: Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator())),
               ),
-              error: (_, __) => SliverToBoxAdapter(
+              error: (_, _) => SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: Center(child: Text(isAr ? 'خطأ في جلب البيانات' : 'Erreur de chargement')),
@@ -189,9 +188,9 @@ class _SearchAndFilterBar extends ConsumerWidget {
         Container(
           height: 52,
           decoration: BoxDecoration(
-            color: isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.9),
+            color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(26),
-            border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : AppTheme.accentColor.withOpacity(0.2)),
+            border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.1) : AppTheme.accentColor.withValues(alpha: 0.2)),
           ),
           child: Row(
             children: [
@@ -202,7 +201,7 @@ class _SearchAndFilterBar extends ConsumerWidget {
                   decoration: InputDecoration(
                     hintText: isAr ? 'ابحث عن مشروع، معلم، أو شراكة...' : 'Rechercher un projet, un monument...',
                     hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13),
-                    prefixIcon: Icon(Icons.search_rounded, color: AppTheme.accentColor.withOpacity(0.6)),
+                    prefixIcon: Icon(Icons.search_rounded, color: AppTheme.accentColor.withValues(alpha: 0.6)),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   ),
@@ -216,7 +215,7 @@ class _SearchAndFilterBar extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppTheme.accentColor.withOpacity(0.1),
+                      color: AppTheme.accentColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -274,9 +273,9 @@ class _SearchAndFilterBar extends ConsumerWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.8)),
+          color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.8)),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white.withOpacity(0.1) : AppTheme.accentColor.withOpacity(0.2))),
+          border: Border.all(color: isSelected ? AppTheme.accentColor : (isDark ? Colors.white.withValues(alpha: 0.1) : AppTheme.accentColor.withValues(alpha: 0.2))),
         ),
         child: Text(
           label,
@@ -302,15 +301,6 @@ class _ProjectCard extends StatelessWidget {
   final bool isDark;
   const _ProjectCard({required this.project, required this.isAr, required this.isDark});
 
-  void _showProjectDetails(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _ProjectDetailsSheet(project: project, isAr: isAr, isDark: isDark),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final lang = isAr ? 'ar' : 'fr';
@@ -323,7 +313,7 @@ class _ProjectCard extends StatelessWidget {
       child: GlassCard(
         padding: EdgeInsets.zero,
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.05) : AppTheme.accentColor.withOpacity(0.05),
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppTheme.accentColor.withValues(alpha: 0.05),
           width: 1.5,
         ),
         child: Column(
@@ -342,7 +332,7 @@ class _ProjectCard extends StatelessWidget {
                       height: 180,
                       width: double.infinity,
                       color: const Color(0xFF081C10),
-                      child: Icon(Icons.apartment_outlined, color: AppTheme.accentColor.withOpacity(0.3), size: 60),
+                      child: Icon(Icons.apartment_outlined, color: AppTheme.accentColor.withValues(alpha: 0.3), size: 60),
                     ),
                   ),
                   Positioned.fill(
@@ -351,7 +341,7 @@ class _ProjectCard extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
                         ),
                       ),
                     ),
@@ -362,7 +352,7 @@ class _ProjectCard extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
-                        color: _statusColor(project.category).withOpacity(0.8),
+                        color: _statusColor(project.category).withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -400,7 +390,7 @@ class _ProjectCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: _statusColor(project.projectStatus).withOpacity(0.8),
+                          color: _statusColor(project.projectStatus).withValues(alpha: 0.8),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: Colors.white24),
                         ),
@@ -519,7 +509,7 @@ class _ProjectDetailsSheet extends StatelessWidget {
           color: isDark ? const Color(0xFF0F1A0F) : Colors.white,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 40),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 40),
           ],
         ),
         child: ClipRRect(
@@ -586,7 +576,7 @@ class _ProjectDetailsSheet extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: AppTheme.accentColor.withOpacity(0.15),
+                            color: AppTheme.accentColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -613,9 +603,9 @@ class _ProjectDetailsSheet extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: isDark ? Colors.white.withOpacity(0.03) : Colors.black.withOpacity(0.03),
+                        color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.03),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05)),
+                        border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05)),
                       ),
                       child: Column(
                         children: [

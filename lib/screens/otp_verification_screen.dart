@@ -132,7 +132,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
+                          color: Colors.white.withValues(alpha: 0.05),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -159,7 +159,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                       Text(
                         getDesc(),
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
                           fontSize: 15,
                           height: 1.6,
                         ),
@@ -171,7 +171,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                         getMaskedEmail(),
                         textDirection: TextDirection.ltr,
                         style: TextStyle(
-                          color: const Color(0xFFD3C5AD).withOpacity(0.9),
+                          color: const Color(0xFFD3C5AD).withValues(alpha: 0.9),
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
@@ -187,7 +187,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                           Text(
                             langCode == 'ar' ? 'رمز التحقق' : 'VERIFICATION CODE',
                             style: TextStyle(
-                              color: const Color(0xFFD3C5AD).withOpacity(0.6),
+                              color: const Color(0xFFD3C5AD).withValues(alpha: 0.6),
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 2.0,
@@ -198,10 +198,10 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                             onFocusChange: (hasFocus) => setState(() => _isFocused = hasFocus),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: _isFocused ? Colors.white.withOpacity(0.07) : Colors.white.withOpacity(0.03),
+                                color: _isFocused ? Colors.white.withValues(alpha: 0.07) : Colors.white.withValues(alpha: 0.03),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: _isFocused ? const Color(0x4DD3C5AD) : Colors.white.withOpacity(0.1),
+                                  color: _isFocused ? const Color(0x4DD3C5AD) : Colors.white.withValues(alpha: 0.1),
                                 ),
                               ),
                               child: TextFormField(

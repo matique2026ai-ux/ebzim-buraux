@@ -65,7 +65,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               left: (index * 100.0) % size.width,
               child: Icon(
                 Icons.security_rounded, 
-                color: AppTheme.accentColor.withOpacity(0.04), 
+                color: AppTheme.accentColor.withValues(alpha: 0.04), 
                 size: 40 + (index * 10.0)
               ).animate(onPlay: (c) => c.repeat(reverse: true))
                 .fadeIn(duration: 4.seconds)
@@ -109,8 +109,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           width: 100, height: 100,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppTheme.accentColor.withOpacity(0.1),
-            border: Border.all(color: AppTheme.accentColor.withOpacity(0.2), width: 1),
+            color: AppTheme.accentColor.withValues(alpha: 0.1),
+            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2), width: 1),
           ),
         ).animate(onPlay: (c) => c.repeat(reverse: true))
          .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.1, 1.1), duration: 3.seconds),
@@ -134,9 +134,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.white.withOpacity(0.12), width: 1.2),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.12), width: 1.2),
           ),
           child: _isSubmitted ? _buildSuccessState(loc) : _buildFormState(loc, authState, isAr),
         ),
@@ -179,9 +179,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
             ),
             child: TextFormField(
               controller: _emailController,
@@ -193,7 +193,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               },
               decoration: InputDecoration(
                 hintText: loc.regEmailHint,
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.2), fontSize: 14),
+                hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.2), fontSize: 14),
                 prefixIcon: const Icon(Icons.mail_outline_rounded, color: AppTheme.accentColor, size: 20),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
@@ -246,8 +246,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       height: 60,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(colors: [AppTheme.accentColor, AppTheme.accentColor.withOpacity(0.8)]),
-        boxShadow: [BoxShadow(color: AppTheme.accentColor.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 8))],
+        gradient: LinearGradient(colors: [AppTheme.accentColor, AppTheme.accentColor.withValues(alpha: 0.8)]),
+        boxShadow: [BoxShadow(color: AppTheme.accentColor.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 8))],
       ),
       child: ElevatedButton(
         onPressed: authState.isLoading ? null : _submit,

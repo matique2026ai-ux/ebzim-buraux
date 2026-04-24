@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/services/api_client.dart';
 import 'package:ebzim_app/core/services/user_profile_service.dart';

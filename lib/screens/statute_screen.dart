@@ -62,9 +62,9 @@ class _StatuteScreenState extends ConsumerState<StatuteScreen> with TickerProvid
             margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: isDark ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.5),
+              color: isDark ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
+              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
             ),
             child: TabBar(
               controller: _subLocaleController,
@@ -75,7 +75,7 @@ class _StatuteScreenState extends ConsumerState<StatuteScreen> with TickerProvid
                 borderRadius: BorderRadius.circular(8),
               ),
               labelColor: isDark ? AppTheme.primaryColor : Colors.white,
-              unselectedLabelColor: isDark ? Colors.white54 : AppTheme.primaryColor.withOpacity(0.6),
+              unselectedLabelColor: isDark ? Colors.white54 : AppTheme.primaryColor.withValues(alpha: 0.6),
               labelStyle: GoogleFonts.tajawal(fontWeight: FontWeight.w800, fontSize: 12),
               tabs: const [
                 Tab(text: 'ARABIC'),
@@ -197,13 +197,13 @@ class _ArticleCard extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       border: Border.all(
         color: isDark 
-            ? AppTheme.accentColor.withOpacity(0.15)
-            : AppTheme.accentColor.withOpacity(0.1),
+            ? AppTheme.accentColor.withValues(alpha: 0.15)
+            : AppTheme.accentColor.withValues(alpha: 0.1),
         width: 1.5,
       ),
       color: isDark 
-          ? Colors.white.withOpacity(0.02)
-          : Colors.white.withOpacity(0.65),
+          ? Colors.white.withValues(alpha: 0.02)
+          : Colors.white.withValues(alpha: 0.65),
       child: Column(
         crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
@@ -236,8 +236,8 @@ class _ArticleCard extends StatelessWidget {
               fontSize: 14,
               height: 1.8, // Enhanced reading height for institutional text
               color: isDark 
-                  ? Colors.white.withOpacity(0.85) 
-                  : AppTheme.primaryColor.withOpacity(0.8),
+                  ? Colors.white.withValues(alpha: 0.85) 
+                  : AppTheme.primaryColor.withValues(alpha: 0.8),
             ),
           ),
         ],
@@ -255,9 +255,9 @@ class _NumberBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppTheme.accentColor.withOpacity(0.2),
+        color: AppTheme.accentColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppTheme.accentColor.withOpacity(0.3)),
+        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
       ),
       child: Text(
         'ART. $number',

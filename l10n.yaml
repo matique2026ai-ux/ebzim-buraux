@@ -2,7 +2,6 @@ arb-dir: lib/core/localization/l10n
 template-arb-file: app_ar.arb
 output-localization-file: app_localizations.dart
 output-class: AppLocalizations
-synthetic-package: false
 output-dir: lib/core/localization/l10n
 preferred-supported-locales:
   - ar

@@ -82,10 +82,11 @@ class NewsDetailScreen extends StatelessWidget {
               onPressed: () => context.pop(),
             ),
             background: post.imageUrl.isNotEmpty
-                ? Image.network(
-                    post.imageUrl,
+                ? CachedNetworkImage(
+                    imageUrl: post.imageUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    placeholder: (context, url) => Container(color: Colors.black12),
+                    errorWidget: (context, url, error) => Container(
                       color: theme.colorScheme.surfaceContainerHighest,
                       child: Icon(Icons.image_outlined, size: 64, color: theme.colorScheme.primary),
                     ),
@@ -105,7 +106,7 @@ class NewsDetailScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                         decoration: BoxDecoration(
-                          color: catColor.withOpacity(0.12),
+                          color: catColor.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -118,7 +119,7 @@ class NewsDetailScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryColor.withOpacity(0.1),
+                            color: AppTheme.primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Row(
@@ -136,7 +137,7 @@ class NewsDetailScreen extends StatelessWidget {
                       Text(
                         '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
                         style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.45)),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.45)),
                       ),
                     ],
                   ),
@@ -161,7 +162,7 @@ class NewsDetailScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer.withOpacity(0.15),
+                        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(14),
                         border: Border(
                           right: lang == 'ar' ? const BorderSide(color: AppTheme.primaryColor, width: 4) : BorderSide.none,
@@ -174,7 +175,7 @@ class NewsDetailScreen extends StatelessWidget {
                           fontSize: 15,
                           // fontStyle removed for accessibility,
                           height: 1.7,
-                          color: theme.colorScheme.onSurface.withOpacity(0.75),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
                         ),
                       ),
                     ),
@@ -188,7 +189,7 @@ class NewsDetailScreen extends StatelessWidget {
                       style: GoogleFonts.tajawal(
                         fontSize: 15,
                         height: 1.9,
-                        color: theme.colorScheme.onSurface.withOpacity(0.85),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
                       ),
                     ),
 
@@ -198,7 +199,7 @@ class NewsDetailScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer.withOpacity(0.2),
+                        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: theme.colorScheme.primaryContainer),
                       ),
@@ -211,7 +212,7 @@ class NewsDetailScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(lang == 'ar' ? 'شريك الجمعية' : 'Partenaire',
-                                    style: TextStyle(fontSize: 10, color: theme.colorScheme.onSurface.withOpacity(0.5))),
+                                    style: TextStyle(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
                                 Text(post.partnerName!,
                                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
                               ],

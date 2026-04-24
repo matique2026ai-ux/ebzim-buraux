@@ -3,10 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MembershipDocument } from '../memberships/schemas/membership.schema';
 import { ReportDocument } from '../reports/schemas/report.schema';
-import { EventDocument, EventRsvpDocument } from '../events/schemas/event.schema';
+import {
+  EventDocument,
+  EventRsvpDocument,
+} from '../events/schemas/event.schema';
 import { ContributionDocument } from '../contributions/schemas/contribution.schema';
 import { PostDocument } from '../posts/schemas/post.schema';
 import { UserDocument } from '../users/schemas/user.schema';
+import { Role } from '../../common/enums/role.enum';
 
 @Injectable()
 export class AdminService {
@@ -28,22 +32,24 @@ export class AdminService {
       membersCount,
       pendingReportsCount,
       activeEventsCount,
-      contributions,
+      totalContributionsResult,
       pinnedPostsCount,
       totalPostsCount,
+      totalUsersCount,
     ] = await Promise.all([
       this.membershipModel.countDocuments({ status: 'APPROVED' }),
       this.reportModel.countDocuments({ status: 'SUBMITTED' }),
-      this.eventModel.countDocuments({ date: { $gte: new Date() } }),
-      this.contributionModel.find({ status: 'VERIFIED' }),
+      this.eventModel.countDocuments({ startDate: { $gte: new Date() } }),
+      this.contributionModel.aggregate([
+        { $match: { status: 'VERIFIED' } },
+        { $group: { _id: null, total: { $sum: '$amount' } } },
+      ]),
       this.postModel.countDocuments({ isPinned: true }),
       this.postModel.countDocuments({}),
+      this.userModel.countDocuments({}),
     ]);
 
-    const totalContributions = contributions.reduce(
-      (sum, c) => sum + (c.amount || 0),
-      0,
-    );
+    const totalContributions = (totalContributionsResult as { total: number }[])[0]?.total || 0;
 
     return {
       membersCount,
@@ -52,7 +58,7 @@ export class AdminService {
       totalContributions,
       pinnedPostsCount,
       totalPostsCount,
-      totalUsersCount: await this.userModel.countDocuments({}),
+      totalUsersCount,
     };
   }
 
@@ -66,10 +72,10 @@ export class AdminService {
 
   async deleteUser(userId: string) {
     const user = await this.userModel.findById(userId);
-    if (user && user.role === 'SUPER_ADMIN') {
+    if (user && user.role === Role.SUPER_ADMIN) {
       throw new Error('Cannot delete a Super Admin account');
     }
-    
+
     // Cleanup associated records to avoid orphaned data (Ebzim Logic Audit compliance)
     await Promise.all([
       this.membershipModel.deleteMany({ userId }),
@@ -83,11 +89,13 @@ export class AdminService {
 
   async updateUser(userId: string, data: any) {
     const { profile, ...rest } = data;
-    const update: any = { ...rest };
+    const update: Record<string, any> = { ...rest };
 
-    if (profile) {
+    if (profile && typeof profile === 'object') {
       for (const key in profile) {
-        update[`profile.${key}`] = profile[key];
+        if (Object.prototype.hasOwnProperty.call(profile, key)) {
+          update[`profile.${key}`] = (profile as Record<string, any>)[key];
+        }
       }
     }
 

@@ -18,7 +18,7 @@ async function bootstrap() {
 
   // Enable CORS — Robust policy for local and production sync
   app.enableCors({
-    origin: '*', 
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Authorization',
@@ -27,8 +27,8 @@ async function bootstrap() {
   // Set Global Validation Pipe
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, 
-      transform: true, 
+      whitelist: true,
+      transform: true,
     }),
   );
 
@@ -47,6 +47,8 @@ async function bootstrap() {
   await app.listen(port);
 
   console.log(`EBZIM API running on port ${port}`);
-  console.log(`Swagger Docs available at https://ebzim-api-prod.onrender.com/api/docs`);
+  console.log(
+    `Swagger Docs available at https://ebzim-api-prod.onrender.com/api/docs`,
+  );
 }
 bootstrap();

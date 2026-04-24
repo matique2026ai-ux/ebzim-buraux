@@ -50,7 +50,9 @@ export class MembershipsService {
   }
 
   async processReview(id: string, updateDto: any, adminUser: any) {
-    const membership = await this.membershipModel.findById(id).populate('userId');
+    const membership = await this.membershipModel
+      .findById(id)
+      .populate('userId');
     if (!membership) throw new NotFoundException('Application not found');
 
     if (updateDto.status) {
@@ -76,7 +78,7 @@ export class MembershipsService {
           await this.mailService.sendMembershipDecisionEmail(
             user.email,
             updateDto.status,
-            user.name || 'عضو إبزيم'
+            user.name || 'عضو إبزيم',
           );
         }
       } catch (e) {

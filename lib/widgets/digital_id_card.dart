@@ -23,14 +23,14 @@ class DigitalIdCard extends StatelessWidget {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
     
     return Container(
-      height: 230,
+      height: 250,
       decoration: BoxDecoration(
         color: ivory,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: emerald, width: 8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           )
@@ -114,7 +114,7 @@ class DigitalIdCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4),
                               boxShadow: [
                                 BoxShadow(
-                                  color: user.role.getBadgeColor().withOpacity(0.3),
+                                  color: user.role.getBadgeColor().withValues(alpha: 0.3),
                                   blurRadius: 4,
                                   offset: const Offset(0, 2),
                                 )
@@ -154,7 +154,7 @@ class DigitalIdCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(2.5),
                               child: Image.network(user.imageUrl!, fit: BoxFit.cover),
                             )
-                          : Center(child: Icon(Icons.person, color: gold.withOpacity(0.5))),
+                          : Center(child: Icon(Icons.person, color: gold.withValues(alpha: 0.5))),
                       ),
                       const SizedBox(width: 16),
                       
@@ -239,7 +239,7 @@ class DigitalIdCard extends StatelessWidget {
           style: GoogleFonts.cairo(
             fontSize: 6.5,
             fontWeight: FontWeight.bold,
-            color: emerald.withOpacity(0.7),
+            color: emerald.withValues(alpha: 0.7),
             letterSpacing: 0.5,
           ),
         ),

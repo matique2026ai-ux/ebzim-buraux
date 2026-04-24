@@ -84,7 +84,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               right: (index * 150.0) % size.width,
               child: Icon(
                 Icons.auto_awesome, 
-                color: AppTheme.accentColor.withOpacity(0.05), 
+                color: AppTheme.accentColor.withValues(alpha: 0.05), 
                 size: 15 + (index * 5.0)
               ).animate(onPlay: (c) => c.repeat(reverse: true))
                 .fadeIn(duration: 3.seconds)
@@ -136,7 +136,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme.accentColor.withOpacity(0.15),
+                    color: AppTheme.accentColor.withValues(alpha: 0.15),
                     blurRadius: 50,
                     spreadRadius: 5,
                   ),
@@ -151,13 +151,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF0A140F).withOpacity(0.6),
-                border: Border.all(color: AppTheme.accentColor.withOpacity(0.3), width: 1.5),
+                color: const Color(0xFF0A140F).withValues(alpha: 0.6),
+                border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1.5),
               ),
               child: Image.asset(
                 'assets/images/logo.png', 
                 fit: BoxFit.contain,
-                color: AppTheme.accentColor.withOpacity(0.9),
+                color: AppTheme.accentColor.withValues(alpha: 0.9),
               ),
             ),
 
@@ -172,7 +172,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     .animate(onPlay: (c) => c.repeat()).rotate(duration: 4.seconds),
                   Transform.translate(
                     offset: const Offset(-8, 0),
-                    child: Icon(Icons.nightlight_round, color: AppTheme.accentColor.withOpacity(0.8), size: 14)
+                    child: Icon(Icons.nightlight_round, color: AppTheme.accentColor.withValues(alpha: 0.8), size: 14)
                       .animate(onPlay: (c) => c.repeat(reverse: true)).moveX(begin: -1, end: 1),
                   ),
                 ],
@@ -202,11 +202,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.white.withOpacity(0.12), width: 1.2),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.12), width: 1.2),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 40, offset: const Offset(0, 20)),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 40, offset: const Offset(0, 20)),
             ],
           ),
           child: Form(
@@ -261,7 +261,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: () => context.push('/auth/forgot-password'),
                     child: Text(
                       loc.authLostCredentials,
-                      style: TextStyle(color: AppTheme.accentColor.withOpacity(0.7), fontSize: 12, fontWeight: FontWeight.w600),
+                      style: TextStyle(color: AppTheme.accentColor.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -302,9 +302,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: TextFormField(
             controller: controller,
@@ -317,7 +317,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             onFieldSubmitted: (_) => _submit(),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.white.withOpacity(0.2), fontSize: 14),
+              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.2), fontSize: 14),
               prefixIcon: Icon(icon, color: AppTheme.accentColor, size: 20),
               suffixIcon: isPassword ? IconButton(
                 icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off, color: Colors.white30, size: 18),
@@ -338,10 +338,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
-          colors: [AppTheme.accentColor, AppTheme.accentColor.withOpacity(0.8)],
+          colors: [AppTheme.accentColor, AppTheme.accentColor.withValues(alpha: 0.8)],
         ),
         boxShadow: [
-          BoxShadow(color: AppTheme.accentColor.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 8)),
+          BoxShadow(color: AppTheme.accentColor.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 8)),
         ],
       ),
       child: ElevatedButton(
@@ -366,9 +366,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       margin: const EdgeInsets.only(top: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.1),
+        color: Colors.red.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.withOpacity(0.3)),
+        border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [

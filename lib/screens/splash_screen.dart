@@ -92,7 +92,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
               left: (index * 200.0) % size.width,
               child: Icon(
                 Icons.auto_awesome, 
-                color: AppTheme.accentColor.withOpacity(0.1), 
+                color: AppTheme.accentColor.withValues(alpha: 0.1), 
                 size: 20 + (index * 5.0)
               ).animate(onPlay: (c) => c.repeat(reverse: true))
                 .fadeIn(duration: 2.seconds)
@@ -165,7 +165,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.accentColor.withOpacity(0.2),
+                  color: AppTheme.accentColor.withValues(alpha: 0.2),
                   blurRadius: 60,
                   spreadRadius: 10,
                 ),
@@ -181,8 +181,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFF0A1A0A).withOpacity(0.6),
-              border: Border.all(color: AppTheme.accentColor.withOpacity(0.3), width: 1.5),
+              color: const Color(0xFF0A1A0A).withValues(alpha: 0.6),
+              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1.5),
             ),
             child: const EbzimLogo(
               size: 80,
@@ -209,7 +209,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
                 // Crescent (Offset to the left of the star)
                 Transform.translate(
                   offset: const Offset(-12, 0),
-                  child: Icon(Icons.nightlight_round, color: AppTheme.accentColor.withOpacity(0.8), size: 20)
+                  child: Icon(Icons.nightlight_round, color: AppTheme.accentColor.withValues(alpha: 0.8), size: 20)
                     .animate(onPlay: (c) => c.repeat(reverse: true))
                     .moveX(begin: -2, end: 2, duration: 2.seconds, curve: Curves.easeInOut)
                     .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0), duration: 1.5.seconds),
@@ -237,7 +237,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
               height: 1.1,
               letterSpacing: -0.5,
               shadows: [
-                Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 20, offset: const Offset(0, 10)),
+                Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 20, offset: const Offset(0, 10)),
               ],
             ),
           ),
@@ -254,7 +254,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
             style: GoogleFonts.playfairDisplay(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppTheme.accentColor.withOpacity(0.8),
+              color: AppTheme.accentColor.withValues(alpha: 0.8),
               letterSpacing: 0.5,
               height: 1.5,
             ),
@@ -266,9 +266,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: const Text(
             'SÉTIF  ·  ALGÉRIE  ·  EST. 2024',
@@ -295,12 +295,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
           end: Alignment.bottomRight,
           colors: [
             AppTheme.accentColor,
-            AppTheme.accentColor.withOpacity(0.7),
+            AppTheme.accentColor.withValues(alpha: 0.7),
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.accentColor.withOpacity(0.3),
+            color: AppTheme.accentColor.withValues(alpha: 0.3),
             blurRadius: 25,
             offset: const Offset(0, 12),
           ),
@@ -341,9 +341,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.08),
+              color: Colors.white.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.15)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -395,7 +395,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
             width: 40,
             height: 2,
             decoration: BoxDecoration(
-              color: AppTheme.accentColor.withOpacity(0.5),
+              color: AppTheme.accentColor.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(1),
             ),
           ),

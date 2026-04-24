@@ -283,10 +283,10 @@ class HomeScreen extends ConsumerWidget {
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(32),
-                      border: Border.all(color: AppTheme.accentColor.withOpacity(0.1), width: 1.5),
+                      border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.1), width: 1.5),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.4),
+                          color: Colors.black.withValues(alpha: 0.4),
                           blurRadius: 30,
                           offset: const Offset(0, 15),
                         ),
@@ -298,7 +298,7 @@ class HomeScreen extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppTheme.accentColor.withOpacity(0.15),
+                            color: AppTheme.accentColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -326,7 +326,7 @@ class HomeScreen extends ConsumerWidget {
                               ? 'جمعية إبزيم للثقافة والمواطنة جمعية ولائية مقرها سطيف، مصادق عليها وفق القانون 06/12 المؤرخ في 12 جانفي 2012.'
                               : 'L\'association Ebzim est une association provinciale basée à Sétif, fondée conformément à la loi 06/12 du 12 janvier 2012.',
                           style: GoogleFonts.cairo(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             fontSize: 15,
                             height: 1.8,
                           ),
@@ -341,7 +341,7 @@ class HomeScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppTheme.accentColor.withOpacity(0.3),
+                                  color: AppTheme.accentColor.withValues(alpha: 0.3),
                                   blurRadius: 15,
                                   offset: const Offset(0, 5),
                                 ),
@@ -412,9 +412,9 @@ class _GlassIconButton extends StatelessWidget {
           child: Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
             ),
             child: Icon(icon, color: Colors.white, size: 20),
           ),
@@ -438,7 +438,7 @@ class _HeroButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: isPrimary ? [
           BoxShadow(
-            color: AppTheme.accentColor.withOpacity(0.3),
+            color: AppTheme.accentColor.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 5),
           )
@@ -454,14 +454,14 @@ class _HeroButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
               gradient: isPrimary ? LinearGradient(
-                colors: [AppTheme.accentColor, AppTheme.accentColor.withOpacity(0.8)],
+                colors: [AppTheme.accentColor, AppTheme.accentColor.withValues(alpha: 0.8)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ) : null,
-              color: isPrimary ? null : Colors.white.withOpacity(0.08),
+              color: isPrimary ? null : Colors.white.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isPrimary ? Colors.white24 : Colors.white.withOpacity(0.1),
+                color: isPrimary ? Colors.white24 : Colors.white.withValues(alpha: 0.1),
                 width: 1.2,
               ),
             ),
@@ -586,7 +586,7 @@ class _SectionHeader extends StatelessWidget {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppTheme.accentColor.withOpacity(0.5), width: 1),
+                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5), width: 1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -629,15 +629,15 @@ class _NewsPreviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
           color: post.isPinned 
-              ? AppTheme.accentColor.withOpacity(0.3) 
-              : (isDark ? Colors.white.withOpacity(0.05) : AppTheme.primaryColor.withOpacity(0.05)),
+              ? AppTheme.accentColor.withValues(alpha: 0.3) 
+              : (isDark ? Colors.white.withValues(alpha: 0.05) : AppTheme.primaryColor.withValues(alpha: 0.05)),
           width: post.isPinned ? 1.5 : 1.0,
         ),
         boxShadow: [
           BoxShadow(
             color: post.isPinned 
-                ? AppTheme.accentColor.withOpacity(0.1) 
-                : Colors.black.withOpacity(0.2),
+                ? AppTheme.accentColor.withValues(alpha: 0.1) 
+                : Colors.black.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -697,7 +697,7 @@ class _NewsPreviewCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: (post.isPinned ? AppTheme.accentColor : AppTheme.primaryColor).withOpacity(0.1),
+                          color: (post.isPinned ? AppTheme.accentColor : AppTheme.primaryColor).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -725,11 +725,11 @@ class _NewsPreviewCard extends StatelessWidget {
                       const Spacer(),
                       Row(
                         children: [
-                          Icon(Icons.event_note_rounded, size: 12, color: theme.hintColor.withOpacity(0.5)),
+                          Icon(Icons.event_note_rounded, size: 12, color: theme.hintColor.withValues(alpha: 0.5)),
                           const SizedBox(width: 6),
                           Text(
                             '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
-                            style: GoogleFonts.outfit(fontSize: 11, color: theme.hintColor.withOpacity(0.7), fontWeight: FontWeight.w600),
+                            style: GoogleFonts.outfit(fontSize: 11, color: theme.hintColor.withValues(alpha: 0.7), fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -742,7 +742,7 @@ class _NewsPreviewCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Icon(
                   isAr ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
-                  color: AppTheme.accentColor.withOpacity(0.3),
+                  color: AppTheme.accentColor.withValues(alpha: 0.3),
                   size: 20,
                 ),
               ),
@@ -755,11 +755,11 @@ class _NewsPreviewCard extends StatelessWidget {
 
   Widget _buildPlaceholder(bool isDark) {
     return Container(
-      color: isDark ? Colors.white.withOpacity(0.1) : AppTheme.primaryColor.withOpacity(0.1),
+      color: isDark ? Colors.white.withValues(alpha: 0.1) : AppTheme.primaryColor.withValues(alpha: 0.1),
       child: Center(
         child: Icon(
           Icons.newspaper_rounded,
-          color: isDark ? Colors.white12 : AppTheme.primaryColor.withOpacity(0.1),
+          color: isDark ? Colors.white12 : AppTheme.primaryColor.withValues(alpha: 0.1),
           size: 32,
         ),
       ),
@@ -781,10 +781,10 @@ class _DynamicPartnerCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.1)),
+        border: Border.all(color: color.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -863,7 +863,7 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 520,
+      height: 620,
       width: double.infinity,
       child: Stack(
         children: [
@@ -892,9 +892,9 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black.withOpacity(0.4),
+                              Colors.black.withValues(alpha: 0.4),
                               Colors.transparent,
-                              Colors.black.withOpacity(0.6),
+                              Colors.black.withValues(alpha: 0.6),
                             ],
                           ),
                         ),
@@ -999,7 +999,7 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
     }
     
     // 3. Final color with definitive opacity applied
-    final Color finaloverlayColor = glassBaseColor.withOpacity(finalOpacity);
+    final Color finaloverlayColor = glassBaseColor.withValues(alpha: finalOpacity);
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 600),
@@ -1012,10 +1012,10 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
             decoration: BoxDecoration(
               color: finaloverlayColor,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.5),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 30,
                   offset: const Offset(0, 10),
                 )
@@ -1041,9 +1041,9 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                         decoration: BoxDecoration(
-                          color: AppTheme.accentColor.withOpacity(0.15),
+                          color: AppTheme.accentColor.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
+                          border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                         ),
                         child: Text(
                           widget.lang == 'ar' ? 'اكتشف إرثنا' : 'DISCOVER HERITAGE',
@@ -1071,7 +1071,7 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
                         slide.getSubtitle(widget.lang),
                         style: GoogleFonts.cairo(
                           fontSize: 16,
-                          color: Colors.white.withOpacity(0.85),
+                          color: Colors.white.withValues(alpha: 0.85),
                           height: 1.7,
                           fontWeight: FontWeight.w500,
                         ),
@@ -1146,7 +1146,7 @@ class _FallbackHero extends StatelessWidget {
 
 class _HeroLoading extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Container(height: 520, color: AppTheme.primaryColor.withOpacity(0.1), child: const Center(child: CircularProgressIndicator()));
+  Widget build(BuildContext context) => Container(height: 620, color: AppTheme.primaryColor.withValues(alpha: 0.1), child: const Center(child: CircularProgressIndicator()));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1292,12 +1292,12 @@ class _InstitutionalCard extends StatelessWidget {
         color: cardBgStrong,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isDark ? iconColor.withOpacity(0.2) : iconColor.withOpacity(0.1),
+          color: isDark ? iconColor.withValues(alpha: 0.2) : iconColor.withValues(alpha: 0.1),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -1308,7 +1308,7 @@ class _InstitutionalCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(24),
-          splashColor: iconColor.withOpacity(0.1),
+          splashColor: iconColor.withValues(alpha: 0.1),
           child: Padding(
             padding: const EdgeInsets.all(22),
             child: Row(
@@ -1316,9 +1316,9 @@ class _InstitutionalCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.1),
+                    color: iconColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: iconColor.withOpacity(0.2)),
+                    border: Border.all(color: iconColor.withValues(alpha: 0.2)),
                   ),
                   child: Icon(icon, color: iconColor, size: 28),
                 ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(0.95, 0.95), end: const Offset(1.05, 1.05), duration: 2.seconds),
@@ -1388,8 +1388,8 @@ class _InstitutionalCard extends StatelessWidget {
 // PLATFORM THEME HELPERS (Shared with Dashboard)
 // ─────────────────────────────────────────────────────────────────────────────
 const Color _kGold = AppTheme.accentColor;
-Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withOpacity(0.1);
-Color _cardBgStrong(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x12FFFFFF) : Colors.white.withOpacity(0.1);
+Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withValues(alpha: 0.1);
+Color _cardBgStrong(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x12FFFFFF) : Colors.white.withValues(alpha: 0.1);
 Color _textPrimary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1C1A);
 Color _textSecondary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0xCCFFFFFF) : Colors.black87;
 
@@ -1415,12 +1415,12 @@ class _PublicPlatformCard extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(32),
         border: Border.all(
-          color: AppTheme.accentColor.withOpacity(0.2),
+          color: AppTheme.accentColor.withValues(alpha: 0.2),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.accentColor.withOpacity(0.05),
+            color: AppTheme.accentColor.withValues(alpha: 0.05),
             blurRadius: 40,
             spreadRadius: 2,
           ),
@@ -1439,7 +1439,7 @@ class _PublicPlatformCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
-                  colors: [AppTheme.accentColor.withOpacity(0.1), Colors.transparent],
+                  colors: [AppTheme.accentColor.withValues(alpha: 0.1), Colors.transparent],
                 ),
               ),
             ),
@@ -1451,9 +1451,9 @@ class _PublicPlatformCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(isDark ? 0.03 : 0.4),
+                  color: Colors.white.withValues(alpha: isDark ? 0.03 : 0.4),
                   border: Border(
-                    bottom: BorderSide(color: AppTheme.accentColor.withOpacity(0.1)),
+                    bottom: BorderSide(color: AppTheme.accentColor.withValues(alpha: 0.1)),
                   ),
                 ),
                 child: Row(
@@ -1462,9 +1462,9 @@ class _PublicPlatformCard extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: AppTheme.accentColor.withOpacity(0.1),
+                        color: AppTheme.accentColor.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
+                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                       ),
                       child: const Icon(Icons.auto_awesome_mosaic_rounded, color: AppTheme.accentColor, size: 24),
                     ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(0.95, 0.95), end: const Offset(1.05, 1.05), duration: 2.seconds),
@@ -1544,9 +1544,9 @@ class _PremiumPillarChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1557,7 +1557,7 @@ class _PremiumPillarChip extends StatelessWidget {
             label,
             style: GoogleFonts.tajawal(
               fontSize: 13,
-              color: isDark ? Colors.white.withOpacity(0.9) : Colors.black87,
+              color: isDark ? Colors.white.withValues(alpha: 0.9) : Colors.black87,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -1591,12 +1591,12 @@ class _HomeProjectCard extends StatelessWidget {
           color: isDark ? const Color(0xFF0F1A0F) : Colors.white,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(
-            color: isDark ? AppTheme.accentColor.withOpacity(0.1) : AppTheme.primaryColor.withOpacity(0.05),
+            color: isDark ? AppTheme.accentColor.withValues(alpha: 0.1) : AppTheme.primaryColor.withValues(alpha: 0.05),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -1615,6 +1615,24 @@ class _HomeProjectCard extends StatelessWidget {
                     height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.black12,
+                      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.black26,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.image_not_supported_outlined, color: Colors.white54, size: 40),
+                          const SizedBox(height: 8),
+                          Text(
+                            isAr ? 'فشل تحميل الصورة' : 'Image error',
+                            style: const TextStyle(color: Colors.white38, fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   Positioned.fill(
                     child: Container(
@@ -1622,7 +1640,7 @@ class _HomeProjectCard extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.transparent, Colors.black.withOpacity(0.9)],
+                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.9)],
                         ),
                       ),
                     ),
@@ -1653,7 +1671,7 @@ class _HomeProjectCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
                             value: project.progressPercentage,
-                            backgroundColor: Colors.white.withOpacity(0.1),
+                            backgroundColor: Colors.white.withValues(alpha: 0.1),
                             color: AppTheme.accentColor,
                             minHeight: 5,
                           ),
@@ -1671,7 +1689,7 @@ class _HomeProjectCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppTheme.accentColor,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10)],
+                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10)],
                       ),
                       child: Text(
                         _getStatusLabel(project.projectStatus, isAr),
@@ -1690,7 +1708,7 @@ class _HomeProjectCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: AppTheme.accentColor.withOpacity(0.1),
+                        color: AppTheme.accentColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
@@ -1720,7 +1738,7 @@ class _HomeProjectCard extends StatelessWidget {
                     Text(
                       project.getSummary(lang),
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha: 0.6),
                         fontSize: 12,
                         height: 1.5,
                         fontFamily: 'Cairo',

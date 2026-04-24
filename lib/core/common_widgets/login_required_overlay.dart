@@ -36,7 +36,7 @@ class LoginRequiredOverlay extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppTheme.accentColor.withOpacity(0.1),
+                  color: AppTheme.accentColor.withValues(alpha: 0.1),
                 ),
                 child: Icon(icon, size: 48, color: AppTheme.accentColor),
               ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack),
@@ -54,7 +54,7 @@ class LoginRequiredOverlay extends StatelessWidget {
                 message ?? 'يرجى تسجيل الدخول للوصول إلى هذه الميزة والمساهمة في أنشطة الجمعية.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: textColor.withOpacity(0.6),
+                  color: textColor.withValues(alpha: 0.6),
                   height: 1.5,
                 ),
               ).animate().fadeIn(delay: 400.ms),

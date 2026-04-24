@@ -49,10 +49,10 @@ class EbzimSliverAppBar extends StatelessWidget {
               height: 64,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: bgColor.withOpacity(isDark ? 0.4 : 0.7),
+                color: bgColor.withValues(alpha: isDark ? 0.4 : 0.7),
                 border: Border(
                   bottom: BorderSide(
-                    color: activeColor.withOpacity(0.1),
+                    color: activeColor.withValues(alpha: 0.1),
                     width: 1,
                   ),
                 ),

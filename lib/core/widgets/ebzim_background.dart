@@ -32,7 +32,7 @@ class EbzimBackground extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFF064E3B).withOpacity(0.35), // Doubled intensity
+                    const Color(0xFF064E3B).withValues(alpha: 0.35), // Doubled intensity
                     Colors.transparent,
                   ],
                 ),
@@ -51,7 +51,7 @@ class EbzimBackground extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFF0B6E4F).withOpacity(0.25), // Increased highlight
+                    const Color(0xFF0B6E4F).withValues(alpha: 0.25), // Increased highlight
                     Colors.transparent,
                   ],
                 ),
@@ -81,8 +81,8 @@ class EbzimBackground extends StatelessWidget {
               radius: 1.0,
               colors: [
                 isDark 
-                  ? AppTheme.accentColor.withOpacity(0.05) // Subtle gold ambient glow
-                  : theme.primaryColor.withOpacity(0.05),
+                  ? AppTheme.accentColor.withValues(alpha: 0.05) // Subtle gold ambient glow
+                  : theme.primaryColor.withValues(alpha: 0.05),
                 Colors.transparent,
               ],
             ),
@@ -97,7 +97,7 @@ class EbzimBackground extends StatelessWidget {
                 center: const Alignment(-0.5, -0.5),
                 radius: 1.5,
                 colors: [
-                  Colors.white.withOpacity(isDark ? 0.03 : 0.0), // Subtle silk sheen
+                  Colors.white.withValues(alpha: isDark ? 0.03 : 0.0), // Subtle silk sheen
                   Colors.transparent,
                 ],
               ),

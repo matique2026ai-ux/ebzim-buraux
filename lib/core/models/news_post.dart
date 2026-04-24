@@ -112,6 +112,13 @@ class NewsPost {
     if (json['media'] is List && (json['media'] as List).isNotEmpty) {
       img = json['media'][0]['cloudinaryUrl'] ?? '';
     }
+    
+    // Fallback for flattened responses from getPublicFeed
+    if (img.isEmpty && json['imageUrl'] != null) {
+      img = json['imageUrl'].toString().trim();
+    }
+    
+    img = img.trim();
 
     // Parse milestones
     List<ProjectMilestone> miles = [];
@@ -157,6 +164,8 @@ class NewsPost {
       'MEMORY',
       'TOURISM',
       'CHILD',
+      'ASSOCIATIVE',
+      'SOCIAL',
     };
     return fieldCategories.contains(category.toUpperCase());
   }

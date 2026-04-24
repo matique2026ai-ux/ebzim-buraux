@@ -26,12 +26,12 @@ class GlassCard extends StatelessWidget {
     
     final defaultColor = isDark 
         ? const Color(0x99000000) 
-        : Colors.white.withOpacity(0.7); // Pearl Silk in light mode
+        : Colors.white.withValues(alpha: 0.7); // Pearl Silk in light mode
     
     final defaultBorder = Border.all(
         color: isDark 
             ? AppTheme.borderGlass 
-            : Colors.black.withOpacity(0.05)
+            : Colors.black.withValues(alpha: 0.05)
     );
 
     return ClipRRect(

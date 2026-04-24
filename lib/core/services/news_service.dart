@@ -80,18 +80,18 @@ class NewsService {
       'projectStatus': projectStatus,
       'title': {
         'ar': (category != 'ANNOUNCEMENT' && !title.startsWith('[PROJ]')) ? '[PROJ]$title' : title,
-        'fr': titleFr ?? '',
-        'en': titleEn ?? '',
+        'fr': (titleFr != null && titleFr.isNotEmpty) ? titleFr : title,
+        'en': (titleEn != null && titleEn.isNotEmpty) ? titleEn : title,
       },
       'summary': {
         'ar': summary,
-        'fr': summaryFr ?? '',
-        'en': summaryEn ?? '',
+        'fr': (summaryFr != null && summaryFr.isNotEmpty) ? summaryFr : summary,
+        'en': (summaryEn != null && summaryEn.isNotEmpty) ? summaryEn : summary,
       },
       'content': {
         'ar': content,
-        'fr': contentFr ?? '',
-        'en': contentEn ?? '',
+        'fr': (contentFr != null && contentFr.isNotEmpty) ? contentFr : content,
+        'en': (contentEn != null && contentEn.isNotEmpty) ? contentEn : content,
       },
       'status': 'PUBLISHED',
       'isPinned': isPinned,
@@ -103,8 +103,6 @@ class NewsService {
       },
     };
 
-    print('DEBUG: Sending createPost data: $data');
-
     if (imageUrl != null && imageUrl.isNotEmpty) {
       data['media'] = [
         {
@@ -114,6 +112,8 @@ class NewsService {
         }
       ];
     }
+
+    if (kDebugMode) print('DEBUG: Sending createPost data: $data');
 
     await _ref.read(apiClientProvider).dio.post('posts', data: data);
   }

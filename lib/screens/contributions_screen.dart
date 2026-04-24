@@ -138,7 +138,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                               children: [
                                 Text(
                                   loc.finMembershipFee,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: isDark ? Colors.white.withOpacity(0.5) : Colors.black45),
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black45),
                                 ),
                                 _isLoadingFee 
                                   ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
@@ -151,9 +151,9 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
-                                color: (isPublic ? Colors.blue : Colors.orange).withOpacity(0.1),
+                                color: (isPublic ? Colors.blue : Colors.orange).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: (isPublic ? Colors.blue : Colors.orange).withOpacity(0.3)),
+                                border: Border.all(color: (isPublic ? Colors.blue : Colors.orange).withValues(alpha: 0.3)),
                               ),
                               child: Text(
                                 isPublic ? loc.dashStatusActive : loc.finNeedsRenewal,
@@ -498,7 +498,7 @@ class _ChoiceChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.accentColor : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: isSelected ? AppTheme.accentColor : AppTheme.accentColor.withOpacity(0.3)),
+          border: Border.all(color: isSelected ? AppTheme.accentColor : AppTheme.accentColor.withValues(alpha: 0.3)),
         ),
         child: Center(
           child: Text(
@@ -559,10 +559,10 @@ class _ProofUploadTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isUploaded ? Colors.green.withOpacity(0.05) : Colors.grey.withOpacity(0.05),
+          color: isUploaded ? Colors.green.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isUploaded ? Colors.green.withOpacity(0.3) : Colors.grey.withOpacity(0.2),
+            color: isUploaded ? Colors.green.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.2),
             style: BorderStyle.solid,
           ),
         ),

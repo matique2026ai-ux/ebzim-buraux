@@ -143,7 +143,28 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
           metadata: metadata,
         );
       }
-      if (mounted) context.pop();
+      if (mounted) {
+        // Invalidate providers to refresh the list
+        ref.invalidate(adminNewsProvider);
+        ref.invalidate(newsProvider);
+
+        final successMsg = widget.existingPost != null 
+            ? '✅ تم تحديث المشروع المؤسساتي بنجاح!' 
+            : '✅ تم نشر المشروع المؤسساتي بنجاح!';
+            
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(successMsg, style: const TextStyle(fontFamily: 'Cairo')), 
+            backgroundColor: const Color(0xFF15803D),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        
+        // Wait a bit before navigating back
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) context.pop();
+        });
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -273,9 +294,9 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.02),
+                          color: Colors.white.withValues(alpha: 0.02),
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.white.withOpacity(0.05)),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                         ),
                         child: EbzimProjectTimeline(
                           milestones: _milestones,
@@ -324,7 +345,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                AppTheme.primaryColor.withOpacity(0.6),
+                AppTheme.primaryColor.withValues(alpha: 0.6),
                 Colors.transparent,
               ],
             ),
@@ -349,7 +370,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
           ),
         ),
         const SizedBox(width: 16),
-        Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
+        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.1))),
       ],
     );
   }
@@ -367,7 +388,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
       children: [
         Text(
           label,
-          style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14, fontFamily: 'Cairo'),
+          style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14, fontFamily: 'Cairo'),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -376,17 +397,17 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
           style: const TextStyle(color: Colors.white, fontFamily: 'Cairo'),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
-            prefixIcon: Icon(icon, color: AppTheme.accentColor.withOpacity(0.7), size: 20),
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+            prefixIcon: Icon(icon, color: AppTheme.accentColor.withValues(alpha: 0.7), size: 20),
             filled: true,
-            fillColor: Colors.white.withOpacity(0.05),
+            fillColor: Colors.white.withValues(alpha: 0.05),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -417,9 +438,9 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -462,9 +483,9 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -514,9 +535,9 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             activeTrackColor: AppTheme.accentColor,
-            inactiveTrackColor: Colors.white.withOpacity(0.1),
+            inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
             thumbColor: AppTheme.accentColor,
-            overlayColor: AppTheme.accentColor.withOpacity(0.2),
+            overlayColor: AppTheme.accentColor.withValues(alpha: 0.2),
           ),
           child: Slider(
             value: _progress,
@@ -537,9 +558,9 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.03),
+              color: Colors.white.withValues(alpha: 0.03),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.05)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
             ),
             child: Row(
               children: [
@@ -608,7 +629,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
           foregroundColor: Colors.black,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           elevation: 8,
-          shadowColor: AppTheme.accentColor.withOpacity(0.4),
+          shadowColor: AppTheme.accentColor.withValues(alpha: 0.4),
         ),
         child: _isLoading
             ? const CircularProgressIndicator(color: Colors.black)
@@ -636,11 +657,14 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
             height: 200,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
-              image: _imageUrl != null
-                  ? DecorationImage(image: NetworkImage(_imageUrl!), fit: BoxFit.cover)
+              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                image: _imageUrl != null
+                  ? DecorationImage(
+                      image: CachedNetworkImageProvider(_imageUrl!), 
+                      fit: BoxFit.cover
+                    )
                   : null,
             ),
             child: _isUploadingImage
@@ -649,7 +673,7 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.add_photo_alternate_outlined, color: AppTheme.accentColor.withOpacity(0.5), size: 48),
+                          Icon(Icons.add_photo_alternate_outlined, color: AppTheme.accentColor.withValues(alpha: 0.5), size: 48),
                           const SizedBox(height: 12),
                           const Text('اضغط لاختيار صورة للمشروع', style: TextStyle(color: Colors.white54, fontFamily: 'Cairo')),
                         ],

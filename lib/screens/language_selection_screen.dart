@@ -29,12 +29,12 @@ class LanguageSelectionScreen extends ConsumerWidget {
             Positioned(
               top: -100,
               left: -100,
-              child: _AmbientGlow(color: AppTheme.primaryColor.withOpacity(0.5)),
+              child: _AmbientGlow(color: AppTheme.primaryColor.withValues(alpha: 0.5)),
             ),
             Positioned(
               bottom: -150,
               right: -100,
-              child: _AmbientGlow(color: AppTheme.accentColor.withOpacity(0.15)),
+              child: _AmbientGlow(color: AppTheme.accentColor.withValues(alpha: 0.15)),
             ),
 
             SafeArea(
@@ -133,17 +133,17 @@ class LanguageSelectionScreen extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.translate_rounded, color: Colors.white.withOpacity(0.4), size: 20),
+          Icon(Icons.translate_rounded, color: Colors.white.withValues(alpha: 0.4), size: 20),
           
           // Center Logo with Institutional Glow
           Container(
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppTheme.accentColor.withOpacity(0.3), width: 1),
+              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.accentColor.withOpacity(0.1),
+                  color: AppTheme.accentColor.withValues(alpha: 0.1),
                   blurRadius: 15,
                   spreadRadius: 2,
                 )
@@ -151,12 +151,12 @@ class LanguageSelectionScreen extends ConsumerWidget {
             ),
             child: CircleAvatar(
               radius: 24,
-              backgroundColor: Colors.white.withOpacity(0.05),
+              backgroundColor: Colors.white.withValues(alpha: 0.05),
               child: Image.asset('assets/images/logo.png', height: 28),
             ),
           ).animate().shimmer(duration: 2.seconds, color: Colors.white10),
 
-          Icon(Icons.security_rounded, color: Colors.white.withOpacity(0.4), size: 20),
+          Icon(Icons.security_rounded, color: Colors.white.withValues(alpha: 0.4), size: 20),
         ],
       ),
     );
@@ -196,16 +196,16 @@ class _LanguageOption extends StatelessWidget {
               )
             : null,
           boxShadow: isSelected 
-            ? [BoxShadow(color: AppTheme.accentColor.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))]
+            ? [BoxShadow(color: AppTheme.accentColor.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))]
             : [],
         ),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.transparent : Colors.white.withOpacity(0.03),
+            color: isSelected ? Colors.transparent : Colors.white.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: isSelected ? Colors.transparent : Colors.white.withOpacity(0.08),
+              color: isSelected ? Colors.transparent : Colors.white.withValues(alpha: 0.08),
               width: 1,
             ),
           ),
@@ -216,7 +216,7 @@ class _LanguageOption extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: isSelected ? Colors.white.withOpacity(0.2) : AppTheme.primaryColor.withOpacity(0.5),
+                  color: isSelected ? Colors.white.withValues(alpha: 0.2) : AppTheme.primaryColor.withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: isSelected ? Colors.white : AppTheme.accentColor, size: 24),
@@ -233,7 +233,7 @@ class _LanguageOption extends StatelessWidget {
                       style: GoogleFonts.tajawal(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: isSelected ? Colors.white : Colors.white.withOpacity(0.9),
+                        color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -243,7 +243,7 @@ class _LanguageOption extends StatelessWidget {
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,
-                        color: isSelected ? Colors.white.withOpacity(0.8) : Colors.white38,
+                        color: isSelected ? Colors.white.withValues(alpha: 0.8) : Colors.white38,
                       ),
                     ),
                   ],
@@ -280,7 +280,7 @@ class _PremiumButton extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: AppTheme.accentColor.withOpacity(0.2),
+            color: AppTheme.accentColor.withValues(alpha: 0.2),
             blurRadius: 30,
             offset: const Offset(0, 15),
           )

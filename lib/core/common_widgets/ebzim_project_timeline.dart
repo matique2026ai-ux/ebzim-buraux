@@ -34,15 +34,15 @@ class EbzimProjectTimeline extends StatelessWidget {
                     width: 20,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: milestone.isCompleted ? AppTheme.accentColor : Colors.white.withOpacity(0.1),
+                      color: milestone.isCompleted ? AppTheme.accentColor : Colors.white.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: milestone.isCompleted ? AppTheme.accentColor : Colors.white.withOpacity(0.3),
+                        color: milestone.isCompleted ? AppTheme.accentColor : Colors.white.withValues(alpha: 0.3),
                         width: 2,
                       ),
                       boxShadow: milestone.isCompleted ? [
                         BoxShadow(
-                          color: AppTheme.accentColor.withOpacity(0.3),
+                          color: AppTheme.accentColor.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 2,
                         )
@@ -55,8 +55,8 @@ class EbzimProjectTimeline extends StatelessWidget {
                       child: Container(
                         width: 2,
                         color: milestone.isCompleted 
-                          ? AppTheme.accentColor.withOpacity(0.5) 
-                          : Colors.white.withOpacity(0.1),
+                          ? AppTheme.accentColor.withValues(alpha: 0.5) 
+                          : Colors.white.withValues(alpha: 0.1),
                       ),
                     ),
                 ],
@@ -81,7 +81,7 @@ class EbzimProjectTimeline extends StatelessWidget {
                       Text(
                         DateFormat.yMMMMd(isAr ? 'ar' : 'fr').format(milestone.date),
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
                           fontSize: 12,
                           fontFamily: 'Cairo',
                         ),

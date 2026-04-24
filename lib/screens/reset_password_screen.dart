@@ -123,7 +123,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
+                          color: Colors.white.withValues(alpha: 0.05),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -150,7 +150,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                       Text(
                         getDesc(),
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
                           fontSize: 15,
                           height: 1.6,
                         ),
@@ -165,7 +165,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                             Text(
                               langCode == 'ar' ? 'كلمة المرور الجديدة' : 'NEW PASSWORD',
                               style: TextStyle(
-                                color: const Color(0xFFD3C5AD).withOpacity(0.6),
+                                color: const Color(0xFFD3C5AD).withValues(alpha: 0.6),
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 2.0,
@@ -176,10 +176,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                               onFocusChange: (hasFocus) => setState(() => _isPasswordFocused = hasFocus),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: _isPasswordFocused ? Colors.white.withOpacity(0.07) : Colors.white.withOpacity(0.03),
+                                  color: _isPasswordFocused ? Colors.white.withValues(alpha: 0.07) : Colors.white.withValues(alpha: 0.03),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: _isPasswordFocused ? const Color(0x4DD3C5AD) : Colors.white.withOpacity(0.1),
+                                    color: _isPasswordFocused ? const Color(0x4DD3C5AD) : Colors.white.withValues(alpha: 0.1),
                                   ),
                                 ),
                                 child: TextFormField(
@@ -218,7 +218,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                             Text(
                               langCode == 'ar' ? 'تأكيد كلمة المرور' : 'CONFIRM PASSWORD',
                               style: TextStyle(
-                                color: const Color(0xFFD3C5AD).withOpacity(0.6),
+                                color: const Color(0xFFD3C5AD).withValues(alpha: 0.6),
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 2.0,
@@ -229,10 +229,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                               onFocusChange: (hasFocus) => setState(() => _isConfirmFocused = hasFocus),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: _isConfirmFocused ? Colors.white.withOpacity(0.07) : Colors.white.withOpacity(0.03),
+                                  color: _isConfirmFocused ? Colors.white.withValues(alpha: 0.07) : Colors.white.withValues(alpha: 0.03),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: _isConfirmFocused ? const Color(0x4DD3C5AD) : Colors.white.withOpacity(0.1),
+                                    color: _isConfirmFocused ? const Color(0x4DD3C5AD) : Colors.white.withValues(alpha: 0.1),
                                   ),
                                 ),
                                 child: TextFormField(

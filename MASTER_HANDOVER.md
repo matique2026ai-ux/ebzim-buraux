@@ -22,8 +22,13 @@
   ```
 - **Failure Consequence:** If a `Provider` throws an unhandled error during `HomeScreen` build, the UI will freeze or stay in a loading state (infinite spinner).
 
-### 3. CanvasKit Rendering
-- **Lesson:** For premium glassmorphism and images, **ALWAYS** recommend `canvaskit` renderer, though `html` is safer for low-end compatibility.
+### 4. Port Management & Process Orphanage
+- **Issue:** On Windows, Flutter Web and NestJS processes can become "orphaned," holding ports (8080 or 3000) and causing `EADDRINUSE` errors.
+- **Lesson:** Always use `netstat -ano | findstr :<port>` and `taskkill /F /PID <PID>` before starting servers to ensure a clean launch.
+
+### 5. Localization Path Resolution
+- **Issue:** Absolute imports for `AppLocalizations` (e.g., `import 'package:ebzim_app/core/localization/l10n/app_localizations.dart'`) can sometimes fail in specific build environments.
+- **Lesson:** Prefer **Relative Imports** for the localization file (e.g., `import '../core/localization/l10n/app_localizations.dart'`) to ensure portability across different Flutter toolchains.
 
 ---
 
@@ -51,7 +56,7 @@ c:\ebzim-buraux\
 ### Step 2 — Configure API for Live Testing (THE GOLDEN RULE)
 
 > [!CAUTION]
-> **MANDATORY:** We ALWAYS test against LIVE data even in development mode. NEVER switch to localhost unless you are explicitly debugging a local backend change.
+> **MANDATORY:** We ALWAYS test against LIVE data even in development mode. However, for **Deep Backend Debugging** (e.g., modifying stats or schemas), you may switch to `localhost:3000` in `lib/core/services/api_client_platform_web.dart`. Just ensure you revert to the Production URL before pushing to Git.
 
 Go to `lib/core/services/api_client_platform_web.dart` and ensure `getPlatformBaseUrl` returns the **Production URL**:
 
@@ -258,9 +263,11 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 
 ## 📊 8. Data Management & Logic Synchronization (April 2026 Audit)
 
-- **Synchronized Categories:** News and Projects now share a unified taxonomy. Categories: `ANNOUNCEMENT`, `HERITAGE`, `PROJECT`, `RESTORATION`, `CULTURAL`, `SCIENTIFIC`, `ARTISTIC`, `PARTNERSHIP`, `EVENT_REPORT`, `MEMORY`, `TOURISM`, `CHILD`.
-- **Project Visibility Logic:** `heritageProjectsProvider` and the Admin Dashboard `_ProjectsTab` now share the exact same filter set (includes `PARTNERSHIP` and `EVENT_REPORT` as institutional initiatives).
-- **Independent Trilingual Input:** `AdminCreateNewsScreen` and `NewsService` have been upgraded to support independent entry for Arabic, French, and English. The previous "Arabic-to-all" cloning logic has been removed. Empty fields now remain empty rather than being overwritten by Arabic fallbacks.
+- **Synchronized Categories:** News and Projects now share a unified taxonomy. Categories: `ANNOUNCEMENT`, `HERITAGE`, `PROJECT`, `RESTORATION`, `CULTURAL`, `SCIENTIFIC`, `ARTISTIC`, `PARTNERSHIP`, `EVENT_REPORT`, `MEMORY`, `TOURISM`, `CHILD`, `ASSOCIATIVE`, `SOCIAL`.
+- **Project Visibility Logic:** `heritageProjectsProvider` and the Admin Dashboard `_ProjectsTab` now share the exact same filter set. Updated `NewsPost.isFieldProject` to include `ASSOCIATIVE` and `SOCIAL`.
+- **Defensive Image Loading:** Implemented `CachedNetworkImage` with robust error handling and `imageUrl` string trimming to resolve "EncodingError" on Flutter Web.
+- **Admin UX Feedback:** Implemented proactive provider invalidation and Success/Error snackbars in `AdminCreateProjectScreen` to ensure immediate data sync and user clarity.
+- **Independent Trilingual Input:** `AdminCreateNewsScreen` and `NewsService` have been upgraded to support independent entry for Arabic, French, and English.
 - **Excel Export:** Admin can export member lists to `.xlsx`. Uses the `excel` package (with `hide Border`). Data served via `WebHelper.triggerWebDownloadBytes`.
 - **Financial Contributions:** Linked to projects. Payment receipts tracked.
 - **Live Stats:** `publicStatsProvider` feeds the `StatsStrip` widget on both Home and Admin screens.
@@ -309,9 +316,12 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 5. **✅ [DONE] Model Enhancement:** Added `profileCompletionPercentage` and `getName(lang)` methods to `UserProfile` for a professional UI experience.
 6. **✅ [DONE] Admin Lockout Prevention:** Updated backend `AuthService` to allow login for both `ACTIVE` and `APPROVED` statuses, preventing lockout when admins update their own membership status.
 7. **✅ [DONE] Profile Completion (100%):** Added the missing 'Bio' field to `edit_profile_screen.dart` and implemented 'Smart Routing' in `UserProfileService` to handle production API sync delays.
+8. **✅ [DONE] Project Content Persistence & UX:** Resolved image saving/parsing issues by implementing a fallback for `imageUrl` in the model and adding provider invalidation in the Admin UI.
+9. **✅ [DONE] Category Alignment:** Expanded project support to include `ASSOCIATIVE` and `SOCIAL` categories.
+10. **✅ [DONE] Image Stability:** Fixed "EncodingError" on web by sanitizing URLs (trimming) and using `CachedNetworkImage` across all critical components.
 
 ---
 
-**Handover Status: 🏁 STABLE & VERIFIED — Last updated: April 22, 2026**
-**Current State: Platform fully synchronized. Admin access secured. Profile completion at 100%.**
-**🚨 FINAL MANDATE: LIVE TESTING IS NON-NEGOTIABLE. TEST AGAINST THE PRODUCTION API.**
+**Handover Status: 🏁 STABLE & VERIFIED — Last updated: April 24, 2026**
+**Current State: Project persistence stabilized. Image decoding issues resolved. Admin UX optimized with feedback loops.**
+**🚨 FINAL MANDATE: LIVE TESTING IS NON-NEGOTIABLE. ALWAYS ENSURE PORTS 8080 & 3000 ARE CLEAN BEFORE LAUNCH.**

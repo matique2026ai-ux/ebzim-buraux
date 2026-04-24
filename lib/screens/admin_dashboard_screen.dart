@@ -7,13 +7,10 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:typed_data';
-import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:ebzim_app/core/services/web_helper.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
-import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/services/membership_service.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
@@ -22,10 +19,7 @@ import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/services/report_service.dart';
 import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/cms_content_service.dart';
-import 'package:ebzim_app/core/models/cms_models.dart';
-import 'package:ebzim_app/screens/admin_cms_manage_screen.dart';
 import 'package:excel/excel.dart' hide Border;
-import 'package:cached_network_image/cached_network_image.dart';
 
 class _MiniMetric extends StatelessWidget {
   final String label;
@@ -47,7 +41,7 @@ class _MiniMetric extends StatelessWidget {
           label,
           style: GoogleFonts.tajawal(
             fontSize: 10,
-            color: AppTheme.primaryColor.withOpacity(0.5),
+            color: AppTheme.primaryColor.withValues(alpha: 0.5),
           ),
         ),
         const SizedBox(height: 2),
@@ -84,7 +78,7 @@ class AdminDashboardScreen extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
     final user = userAsync.value;
     final isSuperAdmin = user?.role == EbzimRole.superAdmin;
-    final isAdmin = user?.role == EbzimRole.admin || isSuperAdmin;
+
 
     final List<Map<String, dynamic>> allTabs = [
       {
@@ -141,7 +135,7 @@ class AdminDashboardScreen extends ConsumerWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFFE2E9E5), // Sovereign Sage
         body: NestedScrollView(
-          headerSliverBuilder: (_, __) => [
+          headerSliverBuilder: (_, _) => [
             SliverAppBar(
               expandedHeight: 320, // Increased to fix content overflow
               floating: false,
@@ -223,7 +217,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                               Text(
                                 'الرئيسية'.toUpperCase(),
                                 style: GoogleFonts.playfairDisplay(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: Colors.white.withValues(alpha: 0.5),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -236,7 +230,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 child: Icon(
                                   Icons.chevron_left_rounded,
                                   size: 10,
-                                  color: Colors.white.withOpacity(0.3),
+                                  color: Colors.white.withValues(alpha: 0.3),
                                 ),
                               ),
                               Text(
@@ -245,7 +239,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                         : 'إدارة النظام')
                                     .toUpperCase(),
                                 style: GoogleFonts.playfairDisplay(
-                                  color: AppTheme.accentColor.withOpacity(0.8),
+                                  color: AppTheme.accentColor.withValues(alpha: 0.8),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -294,7 +288,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.tajawal(
                                     fontSize: 11,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -486,9 +480,7 @@ class _UsersTabState extends State<_UsersTab> {
     }
   }
 
-  void _triggerWebDownload(String content, String filename) {
-    triggerWebDownload(content, filename);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -523,7 +515,7 @@ class _UsersTabState extends State<_UsersTab> {
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -536,7 +528,7 @@ class _UsersTabState extends State<_UsersTab> {
                             hintText: 'البحث عن مستخدم (اسم، بريد...)',
                             hintStyle: GoogleFonts.tajawal(
                               fontSize: 13,
-                              color: AppTheme.primaryColor.withOpacity(0.4),
+                              color: AppTheme.primaryColor.withValues(alpha: 0.4),
                             ),
                             prefixIcon: const Icon(
                               Icons.search_rounded,
@@ -618,7 +610,7 @@ class _ExportButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF052011).withOpacity(0.1),
+            color: const Color(0xFF052011).withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -666,10 +658,10 @@ class _UserCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppTheme.primaryColor.withOpacity(0.05)),
+        border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -686,10 +678,10 @@ class _UserCard extends ConsumerWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: AppTheme.primaryColor.withOpacity(0.1),
+              color: AppTheme.primaryColor.withValues(alpha: 0.1),
               width: 2,
             ),
-            color: AppTheme.primaryColor.withOpacity(0.1),
+            color: AppTheme.primaryColor.withValues(alpha: 0.1),
           ),
           child: ClipOval(
             child:
@@ -729,7 +721,7 @@ class _UserCard extends ConsumerWidget {
               user.email,
               style: GoogleFonts.playfairDisplay(
                 fontSize: 11,
-                color: AppTheme.primaryColor.withOpacity(0.5),
+                color: AppTheme.primaryColor.withValues(alpha: 0.5),
               ),
             ),
             const SizedBox(height: 8),
@@ -807,7 +799,7 @@ class _UserCard extends ConsumerWidget {
           },
           icon: Icon(
             Icons.more_vert_rounded,
-            color: AppTheme.primaryColor.withOpacity(0.4),
+            color: AppTheme.primaryColor.withValues(alpha: 0.4),
           ),
           itemBuilder: (_) {
             final currentUserRole = ref.watch(currentUserProvider).value?.role ?? EbzimRole.admin;
@@ -1009,7 +1001,7 @@ class _MembershipTabState extends ConsumerState<_MembershipTab> {
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 15,
                             offset: const Offset(0, 5),
                           ),
@@ -1023,7 +1015,7 @@ class _MembershipTabState extends ConsumerState<_MembershipTab> {
                               Icon(
                                 Icons.analytics_outlined,
                                 size: 18,
-                                color: AppTheme.primaryColor.withOpacity(0.1),
+                                color: AppTheme.primaryColor.withValues(alpha: 0.4),
                               ),
                               const SizedBox(width: 8),
                               Text(
@@ -1132,7 +1124,7 @@ class _MembershipTabState extends ConsumerState<_MembershipTab> {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withOpacity(0.1),
+                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Icon(
@@ -1159,7 +1151,7 @@ class _MembershipTabState extends ConsumerState<_MembershipTab> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: requests.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final req = requests[index];
                     return _MembershipRequestCard(
@@ -1336,7 +1328,7 @@ class _EventsTab extends ConsumerWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: events.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     return _AdminEventCard(event: events[index])
                         .animate(delay: (index * 80).ms)
@@ -1484,7 +1476,7 @@ class _NewsTab extends ConsumerWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: newsPosts.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     return _AdminNewsCard(post: newsPosts[index])
                         .animate(delay: (index * 80).ms)
@@ -1564,15 +1556,17 @@ class _ReportsTab extends ConsumerWidget {
                             newStatus,
                           );
                           ref.invalidate(adminReportsProvider);
-                          if (context.mounted)
+                          if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               _successSnack('✅ تم تحديث حالة البلاغ'),
                             );
+                          }
                         } catch (e) {
-                          if (context.mounted)
+                          if (context.mounted) {
                             ScaffoldMessenger.of(
                               context,
                             ).showSnackBar(_errorSnack('❌ خطأ: $e'));
+                          }
                         }
                       },
                     ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05);
@@ -1628,7 +1622,7 @@ class _FinancialsTab extends ConsumerWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: items.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, i) {
                     final item = items[i];
                     final user = item['user'] is Map ? item['user'] : {};
@@ -1653,10 +1647,11 @@ class _FinancialsTab extends ConsumerWidget {
                           'VERIFIED',
                         );
                         ref.invalidate(adminContributionsProvider);
-                        if (context.mounted)
+                        if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             _successSnack('✅ تم التحقق من المساهمة'),
                           );
+                        }
                       },
                       onReject: () async {
                         await finService.reviewContribution(
@@ -1664,10 +1659,11 @@ class _FinancialsTab extends ConsumerWidget {
                           'REJECTED',
                         );
                         ref.invalidate(adminContributionsProvider);
-                        if (context.mounted)
+                        if (context.mounted) {
                           ScaffoldMessenger.of(
                             context,
                           ).showSnackBar(_errorSnack('❌ تم رفض المساهمة'));
+                        }
                       },
                     ).animate(delay: (i * 80).ms).fadeIn().slideY(begin: 0.05);
                   },
@@ -1812,7 +1808,7 @@ class _CMSManagementCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -1831,7 +1827,7 @@ class _CMSManagementCard extends StatelessWidget {
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(icon, color: color, size: 28),
@@ -1858,7 +1854,7 @@ class _CMSManagementCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: color.withOpacity(0.1),
+                              color: color.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -1911,9 +1907,9 @@ class _GlassInfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.primaryColor.withOpacity(0.1),
+        color: AppTheme.primaryColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.primaryColor.withOpacity(0.1)),
+        border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
@@ -1936,7 +1932,7 @@ class _GlassInfoCard extends StatelessWidget {
                   message,
                   style: GoogleFonts.tajawal(
                     fontSize: 11,
-                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    color: AppTheme.primaryColor.withValues(alpha: 0.7),
                     height: 1.5,
                   ),
                 ),
@@ -2262,7 +2258,7 @@ class _AdminEventCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -2283,7 +2279,7 @@ class _AdminEventCard extends ConsumerWidget {
               errorBuilder: (_, __, ___) => Container(
                 width: 80,
                 height: 80,
-                color: AppTheme.primaryColor.withOpacity(0.1),
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
                 child: const Icon(
                   Icons.event_rounded,
                   color: AppTheme.primaryColor,
@@ -2339,7 +2335,7 @@ class _AdminEventCard extends ConsumerWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: AppTheme.accentColor.withOpacity(0.1),
+                              color: AppTheme.accentColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -2382,10 +2378,11 @@ class _AdminEventCard extends ConsumerWidget {
                   await ref.read(eventServiceProvider).deleteEvent(event.id);
                   ref.invalidate(adminEventsProvider);
                   ref.invalidate(upcomingEventsProvider);
-                  if (context.mounted)
+                  if (context.mounted) {
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(_errorSnack('🗑️ تم حذف النشاط'));
+                  }
                 }
               }
             },
@@ -2451,7 +2448,7 @@ class _AdminNewsCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -2464,11 +2461,11 @@ class _AdminNewsCard extends ConsumerWidget {
             height: 46,
             decoration: BoxDecoration(
               color: post.isPinned
-                  ? AppTheme.heritageOrange.withOpacity(0.1)
-                  : AppTheme.primaryColor.withOpacity(0.1),
+                  ? AppTheme.heritageOrange.withValues(alpha: 0.1)
+                  : AppTheme.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: post.isPinned
-                  ? Border.all(color: AppTheme.heritageOrange.withOpacity(0.1))
+                  ? Border.all(color: AppTheme.heritageOrange.withValues(alpha: 0.1))
                   : null,
             ),
             child: Icon(
@@ -2504,7 +2501,7 @@ class _AdminNewsCard extends ConsumerWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(0.1),
+                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -2543,10 +2540,11 @@ class _AdminNewsCard extends ConsumerWidget {
                   await ref.read(newsServiceProvider).deletePost(post.id);
                   ref.invalidate(adminNewsProvider);
                   ref.invalidate(newsProvider);
-                  if (context.mounted)
+                  if (context.mounted) {
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(_errorSnack('🗑️ تم حذف الخبر'));
+                  }
                 }
               }
             },
@@ -2653,7 +2651,7 @@ class _MembershipRequestCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -2713,9 +2711,9 @@ class _MembershipRequestCard extends ConsumerWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
+                  color: statusColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: statusColor.withOpacity(0.1)),
+                  border: Border.all(color: statusColor.withValues(alpha: 0.1)),
                 ),
                 child: Text(
                   _statusLabel(request.status),
@@ -2748,7 +2746,7 @@ class _MembershipRequestCard extends ConsumerWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppTheme.primaryColor,
                       side: BorderSide(
-                        color: AppTheme.primaryColor.withOpacity(0.1),
+                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -2804,7 +2802,7 @@ class _MembershipRequestCard extends ConsumerWidget {
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.red.withOpacity(0.2)),
+                  side: BorderSide(color: Colors.red.withValues(alpha: 0.2)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -2875,7 +2873,7 @@ class _MembershipDetailsDialog extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -3131,7 +3129,7 @@ class _MembershipDetailsDialog extends StatelessWidget {
   Widget _buildSectionTitle(String title, IconData icon) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppTheme.primaryColor.withOpacity(0.1)),
+        Icon(icon, size: 18, color: AppTheme.primaryColor.withValues(alpha: 0.1)),
         const SizedBox(width: 8),
         Text(
           title,
@@ -3154,11 +3152,12 @@ class _MembershipDetailsDialog extends StatelessWidget {
   }
 
   Widget _buildChips(List<String> labels, Color color) {
-    if (labels.isEmpty)
+    if (labels.isEmpty) {
       return Text(
         'لم يتم التحديد',
         style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey),
       );
+    }
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -3167,9 +3166,9 @@ class _MembershipDetailsDialog extends StatelessWidget {
             (label) => Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: color.withOpacity(0.1)),
+                border: Border.all(color: color.withValues(alpha: 0.1)),
               ),
               child: Text(
                 label,
@@ -3285,7 +3284,7 @@ class _ReportCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -3300,7 +3299,7 @@ class _ReportCard extends StatelessWidget {
             // Header with status indicator
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withValues(alpha: 0.1),
               child: Row(
                 children: [
                   Container(
@@ -3342,7 +3341,7 @@ class _ReportCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withOpacity(0.1),
+                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Icon(
@@ -3471,9 +3470,9 @@ class _ActionButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: isActive ? color : color.withOpacity(0.1),
+          color: isActive ? color : color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.1)),
+          border: Border.all(color: color.withValues(alpha: 0.1)),
         ),
         child: Row(
           children: [
@@ -3534,7 +3533,7 @@ class _ContributionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -3628,7 +3627,7 @@ class _ContributionCard extends StatelessWidget {
                 ),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  side: BorderSide(color: const Color(0xFF6D28D9).withOpacity(0.2)),
+                  side: BorderSide(color: const Color(0xFF6D28D9).withValues(alpha: 0.2)),
                 ),
               ),
             ),
@@ -3800,7 +3799,7 @@ class _StatCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -3809,7 +3808,7 @@ class _StatCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: Colors.white.withOpacity(0.1), size: 22),
+            Icon(icon, color: Colors.white.withValues(alpha: 0.1), size: 22),
             const SizedBox(height: 12),
             Text(
               value,
@@ -3825,7 +3824,7 @@ class _StatCard extends StatelessWidget {
               label,
               style: GoogleFonts.tajawal(
                 fontSize: 10,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 letterSpacing: 0.5,
               ),
             ),
@@ -3926,7 +3925,7 @@ class _LoadingShimmer extends StatelessWidget {
                   .animate(onPlay: (c) => c.repeat())
                   .shimmer(
                     duration: 1200.ms,
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                   ),
         ),
       ),
@@ -3955,7 +3954,7 @@ class _SettingsItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -4397,7 +4396,7 @@ class _ProjectsTab extends ConsumerWidget {
                   'V1.2 - SYNC ACTIVE',
                   style: TextStyle(
                     fontSize: 9,
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -4505,7 +4504,7 @@ class _AdminProjectCardState extends ConsumerState<_AdminProjectCard> {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -4679,13 +4678,7 @@ class _AdminProjectCardState extends ConsumerState<_AdminProjectCard> {
   }
 }
 
-Color _getRoleColor(EbzimRole role) {
-  return role.getBadgeColor();
-}
 
-String _getLocalizedRole(EbzimRole role, String lang) {
-  return role.getLabel(lang);
-}
 
 Widget _buildSmallBadge({
   required String label,
@@ -4695,9 +4688,9 @@ Widget _buildSmallBadge({
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
     decoration: BoxDecoration(
-      color: isOutline ? Colors.transparent : color.withOpacity(0.1),
+      color: isOutline ? Colors.transparent : color.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(6),
-      border: isOutline ? Border.all(color: color.withOpacity(0.1)) : null,
+      border: isOutline ? Border.all(color: color.withValues(alpha: 0.1)) : null,
     ),
     child: Text(
       label,

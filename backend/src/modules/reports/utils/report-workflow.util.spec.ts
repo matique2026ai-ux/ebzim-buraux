@@ -12,14 +12,14 @@ describe('ReportWorkflowUtil', () => {
 
   describe('validateAuthorityAccess', () => {
     it('allows SUPER_ADMIN complete access unconditionally', () => {
-      const report = { institutionId: new Types.ObjectId() } as Report;
+      const report = { institutionId: new Types.ObjectId() } as unknown as Report;
       expect(() =>
         ReportWorkflowUtil.validateAuthorityAccess(superAdmin, report),
       ).not.toThrow();
     });
 
     it('denies AUTHORITY if report has no institution linked', () => {
-      const report = { institutionId: null } as Report;
+      const report = { institutionId: null } as unknown as Report;
       expect(() =>
         ReportWorkflowUtil.validateAuthorityAccess(authorityUser, report),
       ).toThrow(ForbiddenException);

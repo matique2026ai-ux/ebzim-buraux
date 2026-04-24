@@ -87,9 +87,9 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark ? Colors.black.withOpacity(0.4) : Colors.white.withOpacity(0.6),
+                  color: isDark ? Colors.black.withValues(alpha: 0.4) : Colors.white.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppTheme.accentColor.withOpacity(0.2)),
+                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                 ),
                 child: IconButton(
                   icon: Icon(
@@ -136,7 +136,7 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
                           borderRadius: BorderRadius.circular(2),
                           color: stepIdx < _currentStep
                               ? AppTheme.accentColor
-                              : isDark ? Colors.white12 : Colors.black.withOpacity(0.08),
+                              : isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.08),
                         ),
                       ),
                     );
@@ -154,12 +154,12 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
                       color: isDone
                           ? AppTheme.accentColor
                           : isActive
-                              ? AppTheme.accentColor.withOpacity(0.15)
-                              : isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+                              ? AppTheme.accentColor.withValues(alpha: 0.15)
+                              : isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
                       border: Border.all(
                         color: (isDone || isActive)
                             ? AppTheme.accentColor
-                            : isDark ? Colors.white12 : Colors.black.withOpacity(0.1),
+                            : isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.1),
                         width: isActive ? 2 : 1.5,
                       ),
                     ),
@@ -222,8 +222,8 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
           child: Container(
             padding: EdgeInsets.fromLTRB(24, 16, 24, MediaQuery.of(context).padding.bottom + 16),
             decoration: BoxDecoration(
-              color: isDark ? Colors.black.withOpacity(0.5) : Colors.white.withOpacity(0.85),
-              border: Border(top: BorderSide(color: isDark ? Colors.white10 : Colors.black.withOpacity(0.06))),
+              color: isDark ? Colors.black.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.85),
+              border: Border(top: BorderSide(color: isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.06))),
             ),
             child: Container(
               height: 58,
@@ -236,7 +236,7 @@ class _MembershipFlowScreenState extends ConsumerState<MembershipFlowScreen> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme.accentColor.withOpacity(0.3),
+                    color: AppTheme.accentColor.withValues(alpha: 0.3),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -374,7 +374,7 @@ class _Step1IdentityForm extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.secondaryColor.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? AppTheme.secondaryColor.withValues(alpha: 0.1) : Colors.transparent,
           border: Border.all(color: isSelected ? AppTheme.secondaryColor : Colors.grey.shade300, width: 2),
           borderRadius: BorderRadius.circular(12),
         ),
@@ -501,7 +501,7 @@ class _Step4MotivationForm extends ConsumerWidget {
                 label: Text(label),
                 selected: isSelected,
                 onSelected: (_) => notifier.toggleList('interests', committee['id']!),
-                selectedColor: AppTheme.secondaryColor.withOpacity(0.2),
+                selectedColor: AppTheme.secondaryColor.withValues(alpha: 0.2),
                 checkmarkColor: AppTheme.secondaryColor,
               );
             }).toList(),
@@ -515,7 +515,7 @@ class _Step4MotivationForm extends ConsumerWidget {
             maxLines: 4,
             decoration: InputDecoration(
               filled: true,
-              fillColor: AppTheme.primaryColor.withOpacity(0.02),
+              fillColor: AppTheme.primaryColor.withValues(alpha: 0.02),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppTheme.primaryColor)),
             ),
@@ -597,7 +597,7 @@ class _Step3AttachmentsForm extends ConsumerWidget {
     final state = ref.watch(membershipProvider);
     final notifier = ref.read(membershipProvider.notifier);
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+
 
     final hasId = state.attachments.any((a) => a['type'] == 'ID_CARD');
     final hasPhoto = state.attachments.any((a) => a['type'] == 'PHOTO');
@@ -686,11 +686,11 @@ class _Step3AttachmentsForm extends ConsumerWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isDone 
-            ? const Color(0xFF22C55E).withOpacity(0.05) 
-            : isDark ? Colors.white.withOpacity(0.02) : Colors.black.withOpacity(0.02),
+            ? const Color(0xFF22C55E).withValues(alpha: 0.05) 
+            : isDark ? Colors.white.withValues(alpha: 0.02) : Colors.black.withValues(alpha: 0.02),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isDone ? const Color(0xFF22C55E).withOpacity(0.3) : Colors.transparent,
+            color: isDone ? const Color(0xFF22C55E).withValues(alpha: 0.3) : Colors.transparent,
             width: 2,
           ),
         ),
@@ -699,7 +699,7 @@ class _Step3AttachmentsForm extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isDone ? const Color(0xFF22C55E).withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                color: isDone ? const Color(0xFF22C55E).withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(isDone ? Icons.check_circle_rounded : icon, color: isDone ? const Color(0xFF22C55E) : Colors.grey, size: 24),
@@ -782,9 +782,9 @@ class _Step0Conditions extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppTheme.secondaryColor.withOpacity(0.1),
+              color: AppTheme.secondaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppTheme.secondaryColor.withOpacity(0.3)),
+              border: Border.all(color: AppTheme.secondaryColor.withValues(alpha: 0.3)),
             ),
             child: const Row(
               children: [
@@ -811,7 +811,7 @@ class _Step0Conditions extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppTheme.primaryColor.withOpacity(0.05),
+            color: AppTheme.primaryColor.withValues(alpha: 0.05),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: AppTheme.primaryColor, size: 20),

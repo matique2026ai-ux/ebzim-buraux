@@ -46,7 +46,7 @@ class HelpSupportScreen extends ConsumerWidget {
                       loc.supportSubtitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha: 0.6),
                         fontSize: 14,
                         letterSpacing: 0.5,
                       ),
@@ -150,7 +150,7 @@ class _ContactCard extends StatelessWidget {
         children: [
           Icon(icon, color: AppTheme.accentColor, size: 28),
           const SizedBox(height: 12),
-          Text(label, style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 10, fontWeight: FontWeight.bold)),
+          Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 10, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           Text(value, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
         ],
@@ -204,7 +204,7 @@ class _FaqTileState extends State<_FaqTile> {
                   const SizedBox(height: 8),
                   Text(
                     widget.answer,
-                    style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13, height: 1.6),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13, height: 1.6),
                   ),
                 ],
               ],

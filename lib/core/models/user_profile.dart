@@ -150,6 +150,15 @@ class UserProfile {
     return filled / total;
   }
 
+  String getFormattedExpiry(String lang) {
+    if (membershipExpiry == null) return '—';
+    final date = membershipExpiry!;
+    if (lang == 'ar') {
+      return '${date.year}/${date.month}/${date.day}';
+    }
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
   UserProfile copyWith({
     String? id,
     String? email,

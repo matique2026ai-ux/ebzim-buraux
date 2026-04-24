@@ -18,9 +18,9 @@ import 'package:ebzim_app/widgets/stats_strip.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 const Color _kGold = AppTheme.accentColor;
 
-Color _cardBg(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x0CFFFFFF) : Colors.white.withOpacity(0.4);
-Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withOpacity(0.05);
-Color _cardBgStrong(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x12FFFFFF) : Colors.white.withOpacity(0.7);
+Color _cardBg(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x0CFFFFFF) : Colors.white.withValues(alpha: 0.4);
+Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withValues(alpha: 0.05);
+Color _cardBgStrong(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x12FFFFFF) : Colors.white.withValues(alpha: 0.7);
 Color _textPrimary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1C1A);
 Color _textSecondary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0xCCFFFFFF) : Colors.black87;
 Color _textMuted(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x73FFFFFF) : Colors.black54;
@@ -86,7 +86,7 @@ class DashboardScreen extends ConsumerWidget {
                     child: GestureDetector(
                       onTap: () => context.push('/profile/edit'),
                       child: CircleAvatar(
-                        backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.14),
+                        backgroundColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.14),
                         backgroundImage: (user.imageUrl?.isNotEmpty ?? false) && user.imageUrl!.startsWith('http')
                             ? NetworkImage(user.imageUrl!)
                             : null,
@@ -270,10 +270,10 @@ class _HeroSection extends StatelessWidget {
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: _kGold.withOpacity(0.2), width: 2),
+                  border: Border.all(color: _kGold.withValues(alpha: 0.2), width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: _kGold.withOpacity(0.08),
+                      color: _kGold.withValues(alpha: 0.08),
                       blurRadius: 30,
                       spreadRadius: 2,
                     )
@@ -281,7 +281,7 @@ class _HeroSection extends StatelessWidget {
                 ),
                 child: CircleAvatar(
                   radius: 54,
-                  backgroundColor: textColor.withOpacity(0.05),
+                  backgroundColor: textColor.withValues(alpha: 0.05),
                   backgroundImage: (user.imageUrl?.isNotEmpty ?? false) && user.imageUrl!.startsWith('http')
                       ? NetworkImage(user.imageUrl!)
                       : null,
@@ -334,7 +334,7 @@ class _HeroSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: _textPrimary(context).withOpacity(0.05),
+                color: _textPrimary(context).withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -359,7 +359,7 @@ class _HeroSection extends StatelessWidget {
             'أكمل بياناتك الشخصية للوصول إلى كافة ميزات المنصة',
             style: GoogleFonts.cairo(
               fontSize: 11,
-              color: _kGold.withOpacity(0.7),
+              color: _kGold.withValues(alpha: 0.7),
               fontWeight: FontWeight.bold,
             ),
           ).animate().fadeIn(delay: 400.ms),
@@ -401,12 +401,12 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: color.withOpacity(0.2), width: isSuperAdmin ? 1.5 : 1.0),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: isSuperAdmin ? 1.5 : 1.0),
         boxShadow: isSuperAdmin ? [
           BoxShadow(
-            color: color.withOpacity(0.05),
+            color: color.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 1,
           )
@@ -441,12 +441,12 @@ class _ActiveBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFF4ADE80).withOpacity(0.12),
+        color: const Color(0xFF4ADE80).withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF4ADE80).withOpacity(0.30)),
+        border: Border.all(color: const Color(0xFF4ADE80).withValues(alpha: 0.30)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF4ADE80).withOpacity(0.08),
+            color: const Color(0xFF4ADE80).withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -502,16 +502,16 @@ class _MembershipEntryTile extends StatelessWidget {
       child: InkWell(
         onTap: () => context.push('/membership/discover'),
         borderRadius: BorderRadius.circular(20),
-        splashColor: _kGold.withOpacity(0.06),
+        splashColor: _kGold.withValues(alpha: 0.06),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           decoration: BoxDecoration(
             color: _cardBg(context),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _kGold.withOpacity(0.20), width: 1.5),
+            border: Border.all(color: _kGold.withValues(alpha: 0.20), width: 1.5),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
               ),
@@ -522,7 +522,7 @@ class _MembershipEntryTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: _kGold.withOpacity(0.1),
+                  color: _kGold.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Icon(Icons.workspace_premium_outlined, color: _kGold, size: 28),
@@ -545,7 +545,7 @@ class _MembershipEntryTile extends StatelessWidget {
                       loc.dashMembershipLearnMore,
                       style: GoogleFonts.cairo(
                         fontSize: 12,
-                        color: _kGold.withOpacity(0.8),
+                        color: _kGold.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -572,14 +572,14 @@ class _MembershipPendingTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: _cardBg(context),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.amber.withOpacity(0.30), width: 1.5),
+        border: Border.all(color: Colors.amber.withValues(alpha: 0.30), width: 1.5),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.amber.withOpacity(0.1),
+              color: Colors.amber.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(14),
             ),
             child: const Icon(Icons.hourglass_empty, color: Colors.amber, size: 28),
@@ -626,7 +626,7 @@ class _MembershipRejectedTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: _cardBg(context),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.redAccent.withOpacity(0.30), width: 1.5),
+        border: Border.all(color: Colors.redAccent.withValues(alpha: 0.30), width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -636,7 +636,7 @@ class _MembershipRejectedTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.redAccent.withOpacity(0.1),
+                  color: Colors.redAccent.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Icon(Icons.cancel_outlined, color: Colors.redAccent, size: 28),
@@ -665,8 +665,8 @@ class _MembershipRejectedTile extends StatelessWidget {
               label: const Text('التواصل مع الإدارة'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).brightness == Brightness.dark 
-                    ? Colors.white.withOpacity(0.1) 
-                    : Colors.black.withOpacity(0.05),
+                    ? Colors.white.withValues(alpha: 0.1) 
+                    : Colors.black.withValues(alpha: 0.05),
                 foregroundColor: _textPrimary(context),
                 elevation: 0,
               ),
@@ -736,7 +736,7 @@ class _S extends StatelessWidget {
     ).animate(onPlay: (c) => c.repeat(reverse: true))
      .shimmer(
        duration: 1400.ms,
-       color: Colors.white.withOpacity(0.03),
+       color: Colors.white.withValues(alpha: 0.03),
      );
   }
 }
@@ -759,16 +759,16 @@ class _ProfileCompletionCard extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               _cardBg(context),
-              _kGold.withOpacity(0.05),
+              _kGold.withValues(alpha: 0.05),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: _kGold.withOpacity(0.15), width: 1.5),
+          border: Border.all(color: _kGold.withValues(alpha: 0.15), width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: _kGold.withOpacity(0.05),
+              color: _kGold.withValues(alpha: 0.05),
               blurRadius: 20,
               offset: const Offset(0, 10),
             )
@@ -807,7 +807,7 @@ class _ProfileCompletionCard extends StatelessWidget {
                   height: 10,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: _kGold.withOpacity(0.1),
+                    color: _kGold.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -823,7 +823,7 @@ class _ProfileCompletionCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: _kGold.withOpacity(0.3),
+                        color: _kGold.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       )

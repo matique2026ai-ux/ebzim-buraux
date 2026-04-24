@@ -8,7 +8,9 @@ export class PublicStatsController {
   constructor(private readonly adminService: AdminService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get public platform statistics for the home screen stats strip' })
+  @ApiOperation({
+    summary: 'Get public platform statistics for the home screen stats strip',
+  })
   async getStats() {
     return this.adminService.getStats();
   }

@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ebzim_app/core/models/user_profile.dart';
 import 'package:ebzim_app/screens/splash_screen.dart';
 import 'package:ebzim_app/screens/language_selection_screen.dart';
 import 'package:ebzim_app/screens/onboarding_slider_screen.dart';
@@ -33,7 +33,6 @@ import 'package:ebzim_app/screens/news_screen.dart';
 import 'package:ebzim_app/screens/membership_discover_screen.dart';
 import 'package:ebzim_app/screens/help_support_screen.dart';
 import 'package:ebzim_app/core/services/auth_service.dart';
-import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/services/event_service.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/screens/heritage_projects_screen.dart';
@@ -80,7 +79,6 @@ CustomTransitionPage<T> _slideHoriz<T>(GoRouterState state, Widget child, {bool 
     reverseTransitionDuration: const Duration(milliseconds: 260),
     transitionsBuilder: (context, animation, secondaryAnimation, widget) {
       final isAr = Directionality.of(context) == TextDirection.rtl;
-      final dir = (isAr || rtl) ? -1.0 : 1.0;
       final curve = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
       return FadeTransition(
         opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curve),
@@ -154,14 +152,14 @@ final appRouterProvider = Provider((ref) {
       final isAllowedUnauthenticated = isLoggingIn || isRegistering || isAuthFlow || isPublicBase || isPublicDetail;
 
       if (isInitializing) {
-        print('[ROUTER] Initializing... staying at $loc');
+        if (kDebugMode) print('[ROUTER] Initializing... staying at $loc');
         return null;
       }
 
-      print('[ROUTER] Redirect check: loc=$loc, auth=$isAuthenticated');
+      if (kDebugMode) print('[ROUTER] Redirect check: loc=$loc, auth=$isAuthenticated');
 
       if (!isAuthenticated && !isAllowedUnauthenticated) {
-        print('[ROUTER] Not auth & not public -> /login');
+        if (kDebugMode) print('[ROUTER] Not auth & not public -> /login');
         return '/login';
       }
 
@@ -170,18 +168,18 @@ final appRouterProvider = Provider((ref) {
         final isAdmin = role == EbzimRole.admin || role == EbzimRole.superAdmin;
 
         if (isLoggingIn || isRegistering) {
-          print('[ROUTER] Auth & at login/reg -> redirect to dash');
+          if (kDebugMode) print('[ROUTER] Auth & at login/reg -> redirect to dash');
           return isAdmin ? '/admin' : '/home';
         }
 
         final landingPages = ['/splash', '/language', '/onboarding', '/', ''];
         if (landingPages.contains(loc) || loc == '/') {
-          print('[ROUTER] Auth & at landing -> redirect to dash');
+          if (kDebugMode) print('[ROUTER] Auth & at landing -> redirect to dash');
           return isAdmin ? '/admin' : '/home';
         }
 
         if (loc.startsWith('/admin') && !isAdmin) {
-          print('[ROUTER] User at admin -> /home');
+          if (kDebugMode) print('[ROUTER] User at admin -> /home');
           return '/home';
         }
       }
@@ -191,7 +189,7 @@ final appRouterProvider = Provider((ref) {
     routes: [
       GoRoute(
         path: '/',
-        redirect: (_, __) => '/splash',
+        redirect: (_, _) => '/splash',
       ),
       GoRoute(
         path: '/splash',
@@ -410,7 +408,7 @@ final appRouterProvider = Provider((ref) {
                 return postAsync.when(
                   data: (p) => p != null ? ProjectDetailsScreen(project: p) : const Scaffold(body: Center(child: Text('Project not found'))),
                   loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-                  error: (_, __) => const Scaffold(body: Center(child: Text('Error loading project'))),
+                  error: (_, _) => const Scaffold(body: Center(child: Text('Error loading project'))),
                 );
               },
             ),
@@ -433,6 +431,6 @@ final appRouterProvider = Provider((ref) {
 /// A notifier that forces GoRouter to refresh when auth state changes.
 class _AuthStateNotifier extends ChangeNotifier {
   _AuthStateNotifier(Ref ref) {
-    ref.listen(authProvider, (_, __) => notifyListeners());
+    ref.listen(authProvider, (_, _) => notifyListeners());
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +9,7 @@ import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/services/storage_service.dart';
 import 'package:ebzim_app/core/services/cms_content_service.dart';
-import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
+import '../core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/models/cms_models.dart';
 
 class OnboardingSliderScreen extends ConsumerStatefulWidget {
@@ -120,9 +121,9 @@ class _OnboardingSliderScreenState
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.3),
-                  Colors.black.withOpacity(0.1),
-                  Colors.black.withOpacity(0.8),
+                  Colors.black.withValues(alpha: 0.3),
+                  Colors.black.withValues(alpha: 0.1),
+                  Colors.black.withValues(alpha: 0.8),
                   Colors.black,
                 ],
                 stops: const [0.0, 0.4, 0.8, 1.0],
@@ -148,10 +149,10 @@ class _OnboardingSliderScreenState
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 10,
                   )
                 ],
@@ -160,7 +161,7 @@ class _OnboardingSliderScreenState
                 borderRadius: BorderRadius.circular(30),
                 child: BackdropFilter(
                   filter: ColorFilter.mode(
-                    Colors.white.withOpacity(0.05),
+                    Colors.white.withValues(alpha: 0.05),
                     BlendMode.srcOver,
                   ),
                   child: Padding(
@@ -187,16 +188,16 @@ class _OnboardingSliderScreenState
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white.withOpacity(0.03),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        color: Colors.white.withValues(alpha: 0.03),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             offset: const Offset(1, 1),
             blurRadius: 1,
           ),
           BoxShadow(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             offset: const Offset(-1, -1),
             blurRadius: 1,
           ),
@@ -213,18 +214,18 @@ class _OnboardingSliderScreenState
           Text(
             'EBZIM',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               fontWeight: FontWeight.w900,
               letterSpacing: 3,
               fontSize: 13,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                   offset: const Offset(1, 1),
                   blurRadius: 1,
                 ),
                 Shadow(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   offset: const Offset(-1, -1),
                   blurRadius: 1,
                 ),
@@ -245,13 +246,13 @@ class _OnboardingSliderScreenState
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white.withOpacity(0.15) : Colors.transparent,
+          color: isSelected ? Colors.white.withValues(alpha: 0.15) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.white.withOpacity(0.5),
+            color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
@@ -272,9 +273,9 @@ class _OnboardingSliderScreenState
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withOpacity(0.2),
+                color: AppTheme.primaryColor.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppTheme.primaryColor.withOpacity(0.3)),
+                border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.3)),
               ),
               child: Text(
                 'COLLECTIVE MEMORY • 0${index + 1}',
@@ -313,7 +314,7 @@ class _OnboardingSliderScreenState
       }
     }
     
-    final Color finaloverlayColor = glassBaseColor.withOpacity(finalOpacity);
+    final Color finaloverlayColor = glassBaseColor.withValues(alpha: finalOpacity);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(32),
@@ -324,7 +325,7 @@ class _OnboardingSliderScreenState
           decoration: BoxDecoration(
             color: finaloverlayColor,
             borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.5),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.5),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,7 +348,7 @@ class _OnboardingSliderScreenState
               Text(
                 slide.getSubtitle(locale),
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.85),
+                  color: Colors.white.withValues(alpha: 0.85),
                   fontSize: 15,
                   height: 1.6,
                   fontWeight: FontWeight.w400,
@@ -378,7 +379,7 @@ class _OnboardingSliderScreenState
                 height: 4,
                 width: active ? 40 : 12,
                 decoration: BoxDecoration(
-                  color: active ? AppTheme.primaryColor : Colors.white.withOpacity(0.2),
+                  color: active ? AppTheme.primaryColor : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               );
@@ -399,7 +400,7 @@ class _OnboardingSliderScreenState
                   child: Text(
                     loc.onboardingSkip.toUpperCase(),
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,

@@ -241,8 +241,8 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                     height: 100,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppTheme.accentColor.withOpacity(0.1),
-                      border: Border.all(color: AppTheme.accentColor.withOpacity(0.3)),
+                      color: AppTheme.accentColor.withValues(alpha: 0.1),
+                      border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
                     ),
                     child: const Icon(Icons.check_circle_outline_rounded, color: AppTheme.accentColor, size: 52),
                   ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
@@ -314,7 +314,7 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
               GlassCard(
                 padding: const EdgeInsets.all(20),
                 border: Border.all(
-                  color: AppTheme.accentColor.withOpacity(0.2),
+                  color: AppTheme.accentColor.withValues(alpha: 0.2),
                   width: 1.5,
                 ),
                 child: Row(
@@ -323,7 +323,7 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppTheme.accentColor.withOpacity(0.1),
+                        color: AppTheme.accentColor.withValues(alpha: 0.1),
                       ),
                       child: const Icon(Icons.shield_outlined, color: AppTheme.accentColor, size: 28),
                     ),
@@ -342,7 +342,7 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                                 ? 'بلاغك يُحوَّل لفريق جمعية إبزيم للمتابعة والإحالة'
                                 : 'Votre signalement est traité par l\'équipe Ebzim',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: isDark ? Colors.white.withOpacity(0.5) : Colors.black45,
+                              color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black45,
                             ),
                           ),
                         ],
@@ -442,9 +442,9 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: state.selectedType != null ? AppTheme.accentColor : Colors.grey.withOpacity(0.3),
+                  color: state.selectedType != null ? AppTheme.accentColor : Colors.grey.withValues(alpha: 0.3),
                   boxShadow: state.selectedType != null
-                      ? [BoxShadow(color: AppTheme.accentColor.withOpacity(0.3), blurRadius: 16, offset: const Offset(0, 6))]
+                      ? [BoxShadow(color: AppTheme.accentColor.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 6))]
                       : [],
                 ),
                 child: InkWell(
@@ -503,8 +503,8 @@ class _StepLabel extends StatelessWidget {
           height: 24,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppTheme.accentColor.withOpacity(0.15),
-            border: Border.all(color: AppTheme.accentColor.withOpacity(0.4)),
+            color: AppTheme.accentColor.withValues(alpha: 0.15),
+            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.4)),
           ),
           child: Center(
             child: Text(
@@ -517,7 +517,7 @@ class _StepLabel extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.tajawal(
-            color: isDark ? Colors.white70 : Colors.black.withOpacity(0.72),
+            color: isDark ? Colors.white70 : Colors.black.withValues(alpha: 0.72),
             fontSize: 14,
             fontWeight: FontWeight.w700,
           ),
@@ -546,10 +546,10 @@ class _TypeTile extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: selected
-              ? type.color.withOpacity(0.1)
-              : (isDark ? Colors.white.withOpacity(0.03) : Colors.white.withOpacity(0.6)),
+              ? type.color.withValues(alpha: 0.1)
+              : (isDark ? Colors.white.withValues(alpha: 0.03) : Colors.white.withValues(alpha: 0.6)),
           border: Border.all(
-            color: selected ? type.color.withOpacity(0.5) : (isDark ? Colors.white12 : Colors.black.withOpacity(0.06)),
+            color: selected ? type.color.withValues(alpha: 0.5) : (isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.06)),
             width: selected ? 1.5 : 1,
           ),
         ),
@@ -559,7 +559,7 @@ class _TypeTile extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: type.color.withOpacity(selected ? 0.2 : 0.08),
+                color: type.color.withValues(alpha: selected ? 0.2 : 0.08),
               ),
               child: Icon(type.icon, color: type.color, size: 18),
             ),
@@ -580,7 +580,7 @@ class _TypeTile extends StatelessWidget {
                   Text(
                     isAr ? type.descAr : type.descFr,
                     style: TextStyle(
-                      color: isDark ? Colors.white.withOpacity(0.4) : Colors.black45,
+                      color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black45,
                       fontSize: 11,
                     ),
                     maxLines: 1,
@@ -622,8 +622,8 @@ class _FieldBox extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: isDark ? Colors.black.withOpacity(0.25) : Colors.white.withOpacity(0.7),
-        border: Border.all(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.07)),
+        color: isDark ? Colors.black.withValues(alpha: 0.25) : Colors.white.withValues(alpha: 0.7),
+        border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.07)),
       ),
       child: TextFormField(
         controller: controller,
@@ -636,12 +636,12 @@ class _FieldBox extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(
-            color: isDark ? Colors.white.withOpacity(0.25) : Colors.black26,
+            color: isDark ? Colors.white.withValues(alpha: 0.25) : Colors.black26,
             fontSize: 13,
           ),
           prefixIcon: Padding(
             padding: const EdgeInsets.only(top: 14, left: 12, right: 12),
-            child: Icon(icon, color: AppTheme.accentColor.withOpacity(0.6), size: 20),
+            child: Icon(icon, color: AppTheme.accentColor.withValues(alpha: 0.6), size: 20),
           ),
           prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
           border: InputBorder.none,

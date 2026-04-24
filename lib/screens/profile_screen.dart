@@ -83,10 +83,10 @@ class ProfileScreen extends ConsumerWidget {
                               Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: AppTheme.accentColor.withOpacity(0.2), width: 4),
+                                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2), width: 4),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppTheme.accentColor.withOpacity(0.08),
+                                      color: AppTheme.accentColor.withValues(alpha: 0.08),
                                       blurRadius: 40,
                                       spreadRadius: 4,
                                     )
@@ -94,7 +94,7 @@ class ProfileScreen extends ConsumerWidget {
                                 ),
                                 child: CircleAvatar(
                                   radius: 60,
-                                  backgroundColor: textColor.withOpacity(0.05),
+                                  backgroundColor: textColor.withValues(alpha: 0.05),
                                   backgroundImage: (user.imageUrl?.startsWith('http') ?? false)
                                       ? NetworkImage(user.imageUrl!) 
                                       : null,
@@ -146,7 +146,7 @@ class ProfileScreen extends ConsumerWidget {
                                         Text(
                                           'رقم العضوية: ${user.id.substring(user.id.length.clamp(0, 6)).toUpperCase()}',
                                           style: GoogleFonts.playfairDisplay(
-                                            color: textColor.withOpacity(0.4),
+                                            color: textColor.withValues(alpha: 0.4),
                                             fontSize: 10,
                                             letterSpacing: 1.0,
                                           ),
@@ -182,10 +182,8 @@ class ProfileScreen extends ConsumerWidget {
                                 Divider(color: isDark ? Colors.white10 : Colors.black12),
                                 _ProfileTile(
                                   icon: Icons.verified_user_outlined,
-                                  label: loc.profileActiveSince,
-                                  value: user.membershipExpiry != null 
-                                      ? '${user.membershipExpiry!.year - 1}' 
-                                      : '—',
+                                  label: isRtl ? 'صلاحية العضوية لغاية' : 'Membership Valid Until',
+                                  value: user.getFormattedExpiry(lang),
                                 ),
                               ],
                             ],
@@ -205,13 +203,13 @@ class ProfileScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(20),
                               child: GlassCard(
                                 padding: const EdgeInsets.all(20),
-                                border: Border.all(color: AppTheme.accentColor.withOpacity(0.3)),
+                                border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
                                 child: Row(
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
-                                        color: AppTheme.accentColor.withOpacity(0.1),
+                                        color: AppTheme.accentColor.withValues(alpha: 0.1),
                                         shape: BoxShape.circle,
                                       ),
                                       child: Icon(Icons.workspace_premium, color: accentColor),
@@ -227,7 +225,7 @@ class ProfileScreen extends ConsumerWidget {
                                           ),
                                           Text(
                                             loc.dashMembershipInvite,
-                                            style: theme.textTheme.bodySmall?.copyWith(color: textColor.withOpacity(0.6)),
+                                            style: theme.textTheme.bodySmall?.copyWith(color: textColor.withValues(alpha: 0.6)),
                                           ),
                                         ],
                                       ),
@@ -283,7 +281,7 @@ class ProfileScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(20),
                             child: GlassCard(
                               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-                              border: Border.all(color: textColor.withOpacity(0.05)),
+                                border: Border.all(color: textColor.withValues(alpha: 0.05)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -334,14 +332,14 @@ class _SectionHeader extends StatelessWidget {
           Text(
             title.toUpperCase(),
             style: GoogleFonts.playfairDisplay(
-              color: isDark ? Colors.white.withOpacity(0.4) : Colors.black26,
+              color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black26,
               fontSize: 10,
               fontWeight: FontWeight.w900,
               letterSpacing: 2.5,
             ),
           ),
           const SizedBox(width: 12),
-          Expanded(child: Divider(color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05), thickness: 1)),
+          Expanded(child: Divider(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05), thickness: 1)),
         ],
       ),
     );
@@ -362,7 +360,7 @@ class _ProfileTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.accentColor.withOpacity(0.6), size: 20),
+          Icon(icon, color: AppTheme.accentColor.withValues(alpha: 0.6), size: 20),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -371,7 +369,7 @@ class _ProfileTile extends StatelessWidget {
                 Text(
                   label.toUpperCase(),
                   style: TextStyle(
-                    color: isDark ? Colors.white.withOpacity(0.3) : Colors.black38,
+                    color: isDark ? Colors.white.withValues(alpha: 0.3) : Colors.black38,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
@@ -458,11 +456,11 @@ class _Sk extends StatelessWidget {
       height: h,
       width: w,
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(r),
       ),
     ).animate(onPlay: (c) => c.repeat(reverse: true))
-     .shimmer(duration: 1500.ms, color: isDark ? Colors.white.withOpacity(0.03) : Colors.black.withOpacity(0.02));
+     .shimmer(duration: 1500.ms, color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.02));
   }
 }
 
@@ -492,7 +490,7 @@ class _RoleBadge extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: bgColor.withOpacity(0.4), blurRadius: 8, offset: const Offset(0, 3)),
+          BoxShadow(color: bgColor.withValues(alpha: 0.4), blurRadius: 8, offset: const Offset(0, 3)),
         ],
       ),
       child: Row(
@@ -583,7 +581,7 @@ class _HonoraryMedal extends StatelessWidget {
         color: Colors.white,
         shape: BoxShape.circle,
         boxShadow: [
-          BoxShadow(color: color.withOpacity(0.4), blurRadius: 12, spreadRadius: 2),
+          BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 12, spreadRadius: 2),
         ],
         border: Border.all(color: color, width: 2),
       ),

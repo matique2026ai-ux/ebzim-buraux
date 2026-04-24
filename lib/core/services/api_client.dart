@@ -34,18 +34,12 @@ class ApiClient {
             options.contentType = 'application/json';
           }
           
-          print('[API REQUEST] ${options.method} ${options.baseUrl}${options.path}');
-          if (options.data != null) print('[API DATA] ${options.data}');
-          
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          print('[API RESPONSE] ${response.statusCode} from ${response.requestOptions.path}');
           return handler.next(response);
         },
         onError: (DioException e, handler) {
-          print('[API ERROR] ${e.response?.statusCode} for ${e.requestOptions.path}');
-          print('[API ERROR DATA] ${e.response?.data}');
           if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
             // If unauthorized or forbidden, clear token and trigger global logout
             _ref.read(storageServiceProvider).deleteToken();

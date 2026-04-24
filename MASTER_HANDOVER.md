@@ -172,7 +172,8 @@ The platform serves 4 audiences:
 | `login_screen.dart` | `/login` | Pre-fills last used credential |
 | `register_screen.dart` | `/register` | Registration with OTP |
 | `home_screen.dart` | `/home` | Main public portal with Hero carousel, stats, news, projects |
-| `admin_dashboard_screen.dart` | `/admin` | Full admin control center |
+| `admin_dashboard_screen.dart` | `/admin` | Navigation shell for the modular admin tabs |
+| `admin/tabs/*.dart` | N/A | **Modularized Admin Components** (Users, Projects, News, etc.) |
 | `admin_cms_manage_screen.dart` | `/admin/cms/...` | CMS CRUD for Hero, Partners, Leadership, Onboarding |
 | `admin_create_news_screen.dart` | `/admin/news/create` | Trilingual news/project editor |
 | `admin_create_project_screen.dart` | `/admin/project/create` | Project with milestones timeline |
@@ -329,6 +330,7 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 
 ---
 
-**Handover Status: 🏁 STABLE & VERIFIED — Last updated: April 24, 2026**
-**Current State: Project persistence stabilized. Image decoding issues resolved. Admin UX optimized with feedback loops.**
+**Handover Status: 🏁 STABLE & MODULARIZED — Last updated: April 24, 2026**
+**Current State: Admin Dashboard refactored into a high-performance modular architecture. All functional tabs extracted for isolated development. Production deployment paths verified.**
+**🚨 NEXT AGENT FOCUS: Maintain the `lib/screens/admin/tabs/` structure for any future admin feature. DO NOT re-bloat the main screen.**
 **🚨 FINAL MANDATE: LIVE TESTING IS NON-NEGOTIABLE. ALWAYS ENSURE PORTS 8080 & 3000 ARE CLEAN BEFORE LAUNCH.**

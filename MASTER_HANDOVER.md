@@ -7,6 +7,13 @@
 
 ## 🚨 CRITICAL STABILITY LESSONS (APRIL 2026) — READ FIRST
 
+> [!IMPORTANT]
+> **بروتوكول التشغيل والتجريب (Mandatory Testing Protocol):**
+> 1. **التعامل مع المنافذ (Ports):** دائماً تأكد من تحرير منفذ `8080` (للفرونت) ومنفذ `3000` (للباكاند) باستخدام `taskkill` قبل البدء.
+> 2. **التجريب "اللايف" (Live API):** نحن نختبر دائماً مقابل الـ API الحقيقي (Render) لضمان مطابقة البيانات. لا تستخدم `localhost` للباكاند إلا إذا كنت تعدل في الـ Database Schema نفسها.
+> 3. **طريقة التشغيل:** استخدم دائماً: `flutter run -d web-server --web-port 8080 --release` لتجنب تعليق المتصفح (Infinite Spinner).
+> 4. **الباكاند موجود هنا:** تذكر أن مجلد `backend` هو جزء من نفس المشروع (Monorepo)؛ أي تعديل فيه ثم `git push` سيرفع التحديث للسيرفر تلقائياً.
+
 ### 1. The "Infinite Spinner" Incident
 - **Issue:** A custom CSS/HTML loader in `index.html` caused an infinite hang because it didn't account for Flutter initialization failures or environment mismatches.
 - **Lesson:** **NEVER** modify the low-level `index.html` or `main.dart` boot sequence unless testing incrementally. We have restored the **Classic Flutter Web Loader** for maximum compatibility.

@@ -136,12 +136,12 @@ class EventsTab extends ConsumerWidget {
   }
 }
 
-class _AdminEventCard extends StatelessWidget {
+class _AdminEventCard extends ConsumerWidget {
   final ActivityEvent event;
   const _AdminEventCard({required this.event});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -155,7 +155,7 @@ class _AdminEventCard extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Image.network(
@@ -191,7 +191,63 @@ class _AdminEventCard extends StatelessWidget {
             ),
           ],
         ),
-        trailing: const Icon(Icons.chevron_left_rounded, color: Colors.grey),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit_rounded, color: Colors.blueGrey, size: 20),
+              tooltip: 'تعديل',
+              onPressed: () => context.push('/admin/events/create', extra: event),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20),
+              tooltip: 'حذف',
+              onPressed: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text('حذف النشاط', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    content: Text('هل أنت متأكد من حذف "${event.titleAr}"؟', style: GoogleFonts.tajawal()),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text('إلغاء', style: GoogleFonts.tajawal()),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        onPressed: () => Navigator.pop(context, true),
+                        child: Text('حذف', style: GoogleFonts.tajawal(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirm == true && context.mounted) {
+                  try {
+                    await ref.read(eventServiceProvider).deleteEvent(event.id);
+                    ref.invalidate(adminEventsProvider);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('تم حذف النشاط بنجاح', style: GoogleFonts.tajawal()),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('خطأ في الحذف: $e', style: GoogleFonts.tajawal()),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+            ),
+          ],
+        ),
         onTap: () => context.push('/admin/events/create', extra: event),
       ),
     );

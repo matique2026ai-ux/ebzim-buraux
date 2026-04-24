@@ -113,6 +113,7 @@ class NewsTab extends ConsumerWidget {
                 const newsCategories = {
                   'ANNOUNCEMENT',
                   'PARTNERSHIP',
+                  'PRESS_RELEASE',
                   'EVENT_REPORT',
                 };
                 final newsPosts = posts
@@ -154,12 +155,12 @@ class NewsTab extends ConsumerWidget {
   }
 }
 
-class _AdminNewsCard extends StatelessWidget {
+class _AdminNewsCard extends ConsumerWidget {
   final NewsPost post;
   const _AdminNewsCard({required this.post});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -173,7 +174,7 @@ class _AdminNewsCard extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Image.network(
@@ -209,9 +210,66 @@ class _AdminNewsCard extends StatelessWidget {
             ),
           ],
         ),
-        trailing: const Icon(Icons.chevron_left_rounded, color: Colors.grey),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit_rounded, color: Colors.blueGrey, size: 20),
+              tooltip: 'تعديل',
+              onPressed: () => context.push('/admin/news/create', extra: post),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20),
+              tooltip: 'حذف',
+              onPressed: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text('حذف الخبر', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    content: Text('هل أنت متأكد من حذف "${post.titleAr}"؟', style: GoogleFonts.tajawal()),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text('إلغاء', style: GoogleFonts.tajawal()),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        onPressed: () => Navigator.pop(context, true),
+                        child: Text('حذف', style: GoogleFonts.tajawal(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirm == true && context.mounted) {
+                  try {
+                    await ref.read(newsServiceProvider).deletePost(post.id);
+                    ref.invalidate(adminNewsProvider);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('تم حذف الخبر بنجاح', style: GoogleFonts.tajawal()),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('خطأ في الحذف: $e', style: GoogleFonts.tajawal()),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+            ),
+          ],
+        ),
         onTap: () => context.push('/admin/news/create', extra: post),
       ),
     );
   }
 }
+

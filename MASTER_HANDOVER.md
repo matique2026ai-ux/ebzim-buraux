@@ -330,7 +330,14 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 
 ---
 
+---
+
 **Handover Status: 🏁 STABLE & MODULARIZED — Last updated: April 24, 2026**
-**Current State: Admin Dashboard refactored into a high-performance modular architecture. All functional tabs extracted for isolated development. Production deployment paths verified.**
-**🚨 NEXT AGENT FOCUS: Maintain the `lib/screens/admin/tabs/` structure for any future admin feature. DO NOT re-bloat the main screen.**
-**🚨 FINAL MANDATE: LIVE TESTING IS NON-NEGOTIABLE. ALWAYS ENSURE PORTS 8080 & 3000 ARE CLEAN BEFORE LAUNCH.**
+**Current State: Admin Dashboard 100% modularized and stabilized. All tabs (Users, News, Events, Projects, etc.) are extracted into high-performance modular widgets. Production-ready delete functionality enabled for News and Events. Layout overflows resolved.**
+
+🚨 **NEXT AGENT FOCUS:**
+1. **Maintain the Modular Architecture:** Never add logic directly to `admin_dashboard_screen.dart`. Use `lib/screens/admin/tabs/`.
+2. **Tab Synchronization:** Ensure all tabs use `RefreshIndicator` and `SingleChildScrollView` for consistent UX.
+3. **API Integrity:** Monitor for 404s on specific detail routes (e.g., `/events/:id`) which might indicate backend route gaps.
+
+🚨 **FINAL MANDATE: THE DASHBOARD IS NOW MODULAR. KEEP IT CLEAN.**

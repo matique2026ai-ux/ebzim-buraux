@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_logo.dart';
 import 'package:ebzim_app/core/services/admin_user_service.dart';
@@ -18,45 +18,16 @@ import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/services/report_service.dart';
 import 'package:ebzim_app/core/services/financial_service.dart';
 import 'package:ebzim_app/core/services/cms_content_service.dart';
-import 'package:excel/excel.dart' hide Border;
 import 'package:ebzim_app/screens/admin/tabs/membership_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/users_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/cms_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/events_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/news_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/projects_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/reports_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/financials_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/settings_tab.dart';
 
-class _MiniMetric extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color color;
-
-  const _MiniMetric({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.tajawal(
-            fontSize: 10,
-            color: AppTheme.primaryColor.withValues(alpha: 0.5),
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          value,
-          style: GoogleFonts.playfairDisplay(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            color: color,
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ADMIN DASHBOARD SCREEN
@@ -84,48 +55,48 @@ class AdminDashboardScreen extends ConsumerWidget {
       {
         'icon': Icons.group_add_rounded,
         'text': 'العضوية',
-        'view': const MembershipTab(),
+        'view': MembershipTab(),
       },
       {
         'icon': Icons.people_alt_rounded,
         'text': 'المستخدمون',
-        'view': const _UsersTab(),
+        'view': UsersTab(),
       },
       {
         'icon': Icons.dashboard_customize_rounded,
         'text': 'المحتوى',
-        'view': const _CMSTab(),
+        'view': CMSTab(),
       },
       {
         'icon': Icons.event_rounded,
         'text': 'الأنشطة',
-        'view': const _EventsTab(),
+        'view': EventsTab(),
       },
       {
         'icon': Icons.newspaper_rounded,
         'text': 'الأخبار',
-        'view': const _NewsTab(),
+        'view': NewsTab(),
       },
       {
         'icon': Icons.architecture_rounded,
         'text': 'المشاريع',
-        'view': const _ProjectsTab(),
+        'view': ProjectsTab(),
       },
       {
         'icon': Icons.flag_rounded,
         'text': 'البلاغات',
-        'view': const _ReportsTab(),
+        'view': ReportsTab(),
       },
       if (isSuperAdmin) ...[
         {
           'icon': Icons.account_balance_wallet_rounded,
           'text': 'المساهمات',
-          'view': const _FinancialsTab(),
+          'view': FinancialsTab(),
         },
         {
           'icon': Icons.settings_rounded,
           'text': 'الإعدادات',
-          'view': const _SettingsTab(),
+          'view': SettingsTab(),
         },
       ],
     ];
@@ -340,12 +311,3 @@ class AdminDashboardScreen extends ConsumerWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// TAB 2: REGISTERED USERS
-// ─────────────────────────────────────────────────────────────────────────────
-class _UsersTab extends StatefulWidget {
-  const _UsersTab();
-
-  @override
-  State<_UsersTab> createState() => _UsersTabState();
-}

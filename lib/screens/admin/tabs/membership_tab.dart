@@ -14,53 +14,59 @@ class MembershipTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stateAsync = ref.watch(pendingMembershipsProvider);
 
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AdminSectionHeader(
-            title: 'طلبات الانضمام',
-            subtitle: 'إدارة ومراجعة طلبات العضوية الجديدة',
-            icon: Icons.person_add_alt_1_rounded,
-          ),
-          const SizedBox(height: 24),
-          stateAsync.when(
-            data: (requests) => Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    AdminExportButton(
-                      isLoading: false,
-                      onPressed: () => MembershipExportService.exportToExcel(requests),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                if (requests.isEmpty)
-                  const AdminEmptyState(
-                    message: 'لا توجد طلبات انضمام حالياً',
-                    icon: Icons.person_off_rounded,
-                  )
-                else
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: requests.length,
-                    itemBuilder: (context, index) {
-                      return MembershipRequestCard(request: requests[index]);
-                    },
-                  ),
-              ],
+    return RefreshIndicator(
+      color: AppTheme.primaryColor,
+      onRefresh: () async => ref.invalidate(pendingMembershipsProvider),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AdminSectionHeader(
+              title: 'طلبات الانضمام',
+              subtitle: 'إدارة ومراجعة طلبات العضوية الجديدة',
+              icon: Icons.person_add_alt_1_rounded,
             ),
-            loading: () => const AdminLoadingShimmer(),
-            error: (e, _) => AdminErrorState(error: e.toString()),
-          ),
-        ],
+            const SizedBox(height: 24),
+            stateAsync.when(
+              data: (requests) => Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AdminExportButton(
+                        isLoading: false,
+                        onPressed: () => MembershipExportService.exportToExcel(requests),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  if (requests.isEmpty)
+                    const AdminEmptyState(
+                      message: 'لا توجد طلبات انضمام حالياً',
+                      icon: Icons.person_off_rounded,
+                    )
+                  else
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: requests.length,
+                      itemBuilder: (context, index) {
+                        return MembershipRequestCard(request: requests[index]);
+                      },
+                    ),
+                ],
+              ),
+              loading: () => const AdminLoadingShimmer(),
+              error: (e, _) => AdminErrorState(error: e.toString()),
+            ),
+          ],
+        ),
       ),
     );
   }
+
 }
 
 class MembershipRequestCard extends StatelessWidget {

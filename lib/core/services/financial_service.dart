@@ -10,7 +10,7 @@ class FinancialService {
   /// Fetches global system settings (including membership fee)
   Future<Map<String, dynamic>> getSettings() async {
     try {
-      final response = await _apiClient.dio.get('/settings');
+      final response = await _apiClient.dio.get('settings');
       return response.data;
     } catch (e) {
       // Default fallback
@@ -21,7 +21,7 @@ class FinancialService {
   /// Admin updates the annual membership fee
   Future<void> updateMembershipFee(int newFee) async {
     try {
-      await _apiClient.dio.patch('/settings/membership-fee', data: {'fee': newFee});
+      await _apiClient.dio.patch('settings/membership-fee', data: {'fee': newFee});
     } catch (e) {
       throw 'Failed to update fee';
     }
@@ -37,7 +37,7 @@ class FinancialService {
     String? notes,
   }) async {
     try {
-      await _apiClient.dio.post('/contributions', data: {
+      await _apiClient.dio.post('contributions', data: {
         'type': type,
         'amount': amount,
         'currency': currency,
@@ -53,7 +53,7 @@ class FinancialService {
   /// Fetches user's contribution history
   Future<List<dynamic>> getMyContributions() async {
     try {
-      final response = await _apiClient.dio.get('/contributions/my');
+      final response = await _apiClient.dio.get('contributions/my');
       return response.data ?? [];
     } catch (e) {
       return [];
@@ -63,7 +63,7 @@ class FinancialService {
   /// Admin fetches all global contributions
   Future<List<dynamic>> getAllContributions() async {
     try {
-      final response = await _apiClient.dio.get('/contributions/admin');
+      final response = await _apiClient.dio.get('contributions/admin');
       return response.data ?? [];
     } catch (e) {
       return [];
@@ -73,7 +73,7 @@ class FinancialService {
   /// Admin verifies or rejects a contribution
   Future<void> reviewContribution(String id, String status, {String? notes}) async {
     try {
-      await _apiClient.dio.patch('/contributions/$id/verify', data: {
+      await _apiClient.dio.patch('contributions/$id/verify', data: {
         'status': status,
         'notes': notes,
       });

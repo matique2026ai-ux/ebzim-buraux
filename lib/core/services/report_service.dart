@@ -17,7 +17,7 @@ class ReportService {
   }) async {
     try {
       final response = await _apiClient.dio.post(
-        '/reports',
+        'reports',
         data: {
           'title': '${category.toUpperCase()} Report',
           'incidentCategory': category.toUpperCase(),
@@ -39,7 +39,7 @@ class ReportService {
   /// Lists reports for the current user (if they are authority/admin).
   Future<List<dynamic>> getReports({int page = 1}) async {
     try {
-      final response = await _apiClient.dio.get('/reports', queryParameters: {'page': page});
+      final response = await _apiClient.dio.get('reports', queryParameters: {'page': page});
       return response.data['data'] ?? [];
     } catch (e) {
       return [];
@@ -51,7 +51,7 @@ class ReportService {
   Future<void> updateReportStatus(String id, String status, {String? adminComment}) async {
     try {
       await _apiClient.dio.patch(
-        '/reports/$id/status',
+        'reports/$id/status',
         data: {
           'status': status,
           if (adminComment != null) 'adminComment': adminComment,

@@ -149,8 +149,6 @@ final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
     'MEMORY',
     'TOURISM',
     'CHILD',
-    'PARTNERSHIP',
-    'EVENT_REPORT',
     'ASSOCIATIVE',
     'SOCIAL'
   };

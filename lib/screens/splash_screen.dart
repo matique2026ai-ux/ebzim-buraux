@@ -122,7 +122,33 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
                       // ── Action Button ──
                       _buildExploreButton(context),
 
-                      const SizedBox(height: 80),
+                      const SizedBox(height: 32),
+
+                      // ── Smart Loading Status ──
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final auth = ref.watch(authProvider);
+                          if (auth.isInitializing) {
+                            return Column(
+                              children: [
+                                const CircularProgressIndicator(color: AppTheme.accentColor, strokeWidth: 2)
+                                  .animate(onPlay: (c) => c.repeat())
+                                  .shimmer(duration: 2.seconds),
+                                const SizedBox(height: 16),
+                                Text(
+                                  Localizations.localeOf(context).languageCode == 'ar' 
+                                    ? 'جاري إيقاظ السيرفر... يرجى الانتظار قليلاً' 
+                                    : 'Réveil du serveur... veuillez patienter',
+                                  style: GoogleFonts.cairo(color: Colors.white54, fontSize: 10, fontWeight: FontWeight.bold),
+                                ).animate().fadeIn().shimmer(delay: 2.seconds),
+                              ],
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+
+                      const SizedBox(height: 48),
                     ],
                   ),
                 ),

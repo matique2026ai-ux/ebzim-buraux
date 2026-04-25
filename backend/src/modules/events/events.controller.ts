@@ -29,10 +29,6 @@ import { CreateEventDto } from './dto/create-event.dto';
 @ApiTags('Events & RSVP')
 @Controller('events')
 export class EventsController {
-  testRoute() {
-    return { message: 'Route is active' };
-  }
-
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()

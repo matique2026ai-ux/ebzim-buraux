@@ -274,6 +274,8 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 - `overlayOpacity` is parsed robustly from both `String` and `double` backend responses.
 - `glassColor` hex normalization handles `#` prefix presence/absence.
 - Backend `hero.service.ts` now uses `{ $set: dto }` to correctly persist `glassColor` and `overlayOpacity`.
+- **Mobile Activity Saving Fix:** Relaxed `MultilingualTextDto` validation to allow optional French/English fields. Added `coverImage` to `CreateEventDto` to prevent data stripping.
+- **Defensive Event Logic:** `EventService` now automatically handles empty descriptions by providing a default space to satisfy backend requirements.
 
 ---
 
@@ -336,13 +338,14 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 8. **✅ [DONE] Project Content Persistence & UX:** Resolved image saving/parsing issues by implementing a fallback for `imageUrl` in the model and adding provider invalidation in the Admin UI.
 9. **✅ [DONE] Category Alignment:** Expanded project support to include `ASSOCIATIVE` and `SOCIAL` categories.
 10. **✅ [DONE] Image Stability:** Fixed "EncodingError" on web by sanitizing URLs (trimming) and using `CachedNetworkImage` across all critical components.
+11. **✅ [DONE] Activity Saving Stability:** Resolved failures on mobile by relaxing trilingual validation and hardening DTO schemas for events.
 
 ---
 
 ---
 
-**Handover Status: 🏁 STABLE & MODULARIZED — Last updated: April 24, 2026**
-**Current State: Admin Dashboard 100% modularized and stabilized. All tabs (Users, News, Events, Projects, etc.) are extracted into high-performance modular widgets. Production-ready delete functionality enabled for News and Events. Layout overflows resolved.**
+**Handover Status: 🏁 STABLE & HARDENED — Last updated: April 25, 2026**
+**Current State: Admin Dashboard modularized and stabilized. Activity/Event saving logic hardened for mobile use. Multilingual validation relaxed to support optional French/English inputs. All DTOs synchronized with backend schemas.**
 
 🚨 **NEXT AGENT FOCUS:**
 

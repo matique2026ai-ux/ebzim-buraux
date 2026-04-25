@@ -477,9 +477,9 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 - **Financial Contributions:** Linked to projects. Payment receipts tracked.
 - **Live Stats:** `publicStatsProvider` feeds the `StatsStrip` widget on both Home and Admin screens.
 - **[APRIL 25] News & Projects Separation:** Complete structural separation achieved. News has `newsType` (Urgent/Important/Normal) and Projects have enforced `contentType: 'PROJECT'`.
-- **[APRIL 25] Dynamic Geospatial Map:** Overhauled the public `/heritage` map to fetch live projects with coordinates. Replaced the static pale map with an interactive high-resolution Satellite Map (Esri World Imagery) and a top-level category filter (`All`, `Heritage`, `Associative`, `Cultural`).
-- **[APRIL 25] Interactive Location Picker:** Upgraded the Admin Project Creation screen with an interactive `flutter_map` widget. Admins can now simply tap the map to precisely capture latitude/longitude without manual data entry.
-- **[APRIL 25] Unified Associative Taxonomy:** The public Project filters and card labels are now strictly mapped to the 6 official admin dashboard categories (ASSOCIATIVE, PROJECT, RESTORATION, CULTURAL, SOCIAL, SCIENTIFIC). Extraneous filters were removed from the public project screens to maintain logical separation.
+- **[APRIL 25] Professional Heritage Map Refactor:** Overhauled the discovery system to include permanent architectural anchors for Algeria's crown jewels (Djemila, Timgad, Tipaza, Ghardaïa) and global wonders (Petra, Taj Mahal). Implemented a persistent landmark cache (`_landmarkCache`) that eliminates flickering and prevents historical sites from disappearing during map navigation.
+- **[APRIL 25] Institutional Logo Integration:** Elevated field project branding by replacing generic icons with the official Ebzim Golden Logo. Integrated a high-fidelity 'Golden theme' (Amber) for priority landmarks to distinguish them from dynamic Wikipedia results.
+- **[APRIL 25] Discovery Stability & Density:** Increased the Wikipedia discovery limit to 150 results and implemented a robust fallback system for CORS-restricted images, ensuring a clean and reliable visual experience across the globe.
 
 ---
 
@@ -538,7 +538,9 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 13. **✅ [DONE] Backend Stability**: Resolved critical merge conflicts in `app.controller.ts` and cleared port 3000 zombies to ensure reliable local development.
 14. **✅ [DONE] Map Logic & UX Refactoring**: Resolved the logical gap between the CMS and the Map screen. Added a satellite map picker to the admin dashboard, and converted the public map into a dynamic, filterable discovery engine.
 15. **✅ [DONE] Global Category & Logic Synchronization:** Enforced strict `contentType` checking ('PROJECT' vs 'NEWS') on the Home Screen. Synchronized public project filter chips and card labels to perfectly match the 6 official associative standards established in the Admin Dashboard.
-16. **✅ [DONE] Wikipedia Global Heritage API:** Integrated the Wikipedia GeoSearch API (fr.wikipedia.org) to dynamically fetch global historical landmarks as the user pans the map. Added a smart 'Heritage Filter' to exclude non-historical POIs (airports, modern buildings) and ensure only museums, archaeological sites, and monuments render dynamically alongside localized data.
+16. **✅ [DONE] Wikipedia Global Heritage API:** Integrated the Wikipedia GeoSearch API (fr.wikipedia.org) to dynamically fetch global historical landmarks.
+17. **✅ [DONE] Professional Map Stability:** Implemented persistent caching and hardcoded archaeological anchors (Djemila, Timgad, Tipaza, Ghardaïa) to prevent content flickering and ensure historical density.
+18. **✅ [DONE] Institutional Logo Integration:** Replaced generic map icons with the official Ebzim Golden Logo for associative field projects.
 
 ---
 

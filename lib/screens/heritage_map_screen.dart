@@ -60,25 +60,54 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       lat: 30.3285, lon: 35.4444
     ),
     WikiLandmark(
-      pageId: -6, title: 'تاج محل', description: 'ضريح رخامي ضخم في الهند', 
-      imageUrl: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&auto=format&fit=crop', 
+      pageId: -6, title: 'تاج محل', description: 'ضريح رخامي ضخم في الهند - إحدى عجائب العالم السبع.', 
+      imageUrl: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800&auto=format&fit=crop', 
       lat: 27.1751, lon: 78.0421
     ),
     WikiLandmark(
-      pageId: -7, title: 'تمثال الحرية', description: 'رمز الحرية في نيويورك، الولايات المتحدة', 
-      imageUrl: 'https://images.unsplash.com/photo-1527549993586-dff825b37782?w=400&auto=format&fit=crop', 
+      pageId: -7, title: 'البتراء', description: 'المدينة الوردية الأثرية بالأردن - إحدى عجائب العالم السبع.', 
+      imageUrl: 'https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?w=800&auto=format&fit=crop', 
+      lat: 30.3285, lon: 35.4444
+    ),
+    WikiLandmark(
+      pageId: -8, title: 'تمثال الحرية', description: 'رمز الحرية في نيويورك، الولايات المتحدة', 
+      imageUrl: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&auto=format&fit=crop', 
       lat: 40.6892, lon: -74.0445
     ),
     WikiLandmark(
-      pageId: -8, title: 'مقام الشهيد', description: 'رمز الاستقلال الجزائري - الجزائر العاصمة', 
-      imageUrl: 'https://images.unsplash.com/photo-1647466184964-b0a708a38757?w=400&auto=format&fit=crop', 
+      pageId: -9, title: 'مقام الشهيد', description: 'رمز الاستقلال الجزائري - الجزائر العاصمة', 
+      imageUrl: 'https://images.unsplash.com/photo-1626014303757-646c21dc35b7?w=800&auto=format&fit=crop', 
       lat: 36.7458, lon: 3.0597
     ),
     WikiLandmark(
-      pageId: -9, title: 'عين الفوارة - سطيف', 
+      pageId: -10, title: 'عين الفوارة - سطيف', 
       description: 'أيقونة مدينة سطيف وأشهر نافورة في الجزائر، تحفة فنية ومعلم تاريخي يتوسط قلب المدينة.',
       imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Ain_El_Fouara_2013.JPG/800px-Ain_El_Fouara_2013.JPG',
       lat: 36.189444, lon: 5.405
+    ),
+    WikiLandmark(
+      pageId: -11, title: 'جميلة (كويكول) - سطيف', 
+      description: 'موقع أثري روماني استثنائي ومصنف ضمن التراث العالمي لليونسكو، يضم أجمل الفسيفساء في العالم.',
+      imageUrl: 'https://images.unsplash.com/photo-1629216142718-f0278783478d?w=800&auto=format&fit=crop',
+      lat: 36.3194, lon: 5.8656
+    ),
+    WikiLandmark(
+      pageId: -12, title: 'تيمقاد - باتنة', 
+      description: 'مدينة رومانية كاملة الأركان ومصنفة عالمياً، تلقب بـ "بومباي شمال إفريقيا" لعظمة تخطيطها.',
+      imageUrl: 'https://images.unsplash.com/photo-1596468138838-9e320f75e77d?w=800&auto=format&fit=crop',
+      lat: 35.4856, lon: 6.4678
+    ),
+    WikiLandmark(
+      pageId: -13, title: 'تيبازة الأثرية', 
+      description: 'مجمع أثري ساحري يجمع بين عبق التاريخ الروماني وجمال البحر الأبيض المتوسط.',
+      imageUrl: 'https://images.unsplash.com/photo-1565439396115-46f90bc1b193?w=800&auto=format&fit=crop',
+      lat: 36.5925, lon: 2.4419
+    ),
+    WikiLandmark(
+      pageId: -14, title: 'وادي ميزاب - غرداية', 
+      description: 'تحفة معمارية وحضارية فريدة، تعكس عبقرية الإنسان في التأقلم مع البيئة الصحراوية.',
+      imageUrl: 'https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?w=800&auto=format&fit=crop',
+      lat: 32.4883, lon: 3.6733
     ),
   ];
 
@@ -97,6 +126,9 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     _fetchWikiLandmarks(const LatLng(36.1915, 5.4110));
   }
 
+  // Persistent Cache to prevent landmarks from disappearing
+  final Map<int, WikiLandmark> _landmarkCache = {};
+
   Future<void> _fetchWikiLandmarks(LatLng center) async {
     if (_isLoadingWiki) return;
     setState(() => _isLoadingWiki = true);
@@ -109,8 +141,8 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
         'action': 'query',
         'generator': 'geosearch',
         'ggscoord': '${center.latitude}|${center.longitude}',
-        'ggsradius': '10000',
-        'ggslimit': '50',
+        'ggsradius': '20000',
+        'ggslimit': '150',
         'prop': 'coordinates|pageimages|description',
         'piprop': 'thumbnail',
         'pithumbsize': '400',
@@ -336,21 +368,31 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     );
   }
 
-  Marker _buildMarker(NewsPost item, bool isDark, bool isSelected) {
+  Marker _buildMarker(NewsPost p, bool isDark, bool isSelected) {
+    final bool isAssociative = p.category == 'ASSOCIATIVE';
+    final String? logoUrl = isAssociative 
+      ? 'https://res.cloudinary.com/do3ygqlnl/image/upload/v1776845780/ebzim/cms/mti7fecdjsmdfj5ialwg.png'
+      : null;
+
     return Marker(
-      point: LatLng(item.latitude!, item.longitude!),
+      point: LatLng(p.latitude!, p.longitude!),
       width: 65, height: 65,
       child: GestureDetector(
         onTap: () {
-          setState(() => _selectedItem = item);
-          _mapController.move(LatLng(item.latitude!, item.longitude!), 16.0);
+          setState(() => _selectedItem = p);
+          _mapController.move(LatLng(p.latitude!, p.longitude!), 16.0);
         },
-        child: _buildMarkerWidget(_getIconForCategory(item.category), AppTheme.primaryColor, isSelected),
+        child: _buildMarkerWidget(
+          isAssociative ? Icons.groups : Icons.construction,
+          isAssociative ? Colors.amber : Colors.orange,
+          isSelected,
+          imageUrl: logoUrl,
+        ),
       ),
     );
   }
 
-  Widget _buildMarkerWidget(IconData icon, Color color, bool isSelected) {
+  Widget _buildMarkerWidget(IconData icon, Color color, bool isSelected, {String? imageUrl}) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -365,14 +407,27 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
            .scale(duration: 1000.ms, begin: const Offset(1, 1), end: const Offset(2.2, 2.2))
            .fadeOut(duration: 1000.ms),
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 15, spreadRadius: 2)],
           ),
-          child: Icon(icon, color: Colors.white, size: 22),
+          child: imageUrl != null 
+            ? ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  width: 38, height: 38,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Icon(icon, color: Colors.white, size: 20),
+                  errorWidget: (context, url, error) => Icon(icon, color: Colors.white, size: 20),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(6),
+                child: Icon(icon, color: Colors.white, size: 22),
+              ),
         ).animate()
          .scale(
            duration: 400.ms, 

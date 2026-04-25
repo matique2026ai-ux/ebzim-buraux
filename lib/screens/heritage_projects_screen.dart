@@ -305,12 +305,31 @@ class _ProjectCard extends StatelessWidget {
   final bool isDark;
   const _ProjectCard({required this.project, required this.isAr, required this.isDark});
 
+  String _getCategoryLabel(String category, bool isAr) {
+    switch (category.toUpperCase()) {
+      case 'HERITAGE': return isAr ? 'تراثي' : 'Patrimonial';
+      case 'PROJECT': return isAr ? 'مشروع ميداني' : 'Projet Terrain';
+      case 'RESTORATION': return isAr ? 'ترميم' : 'Restauration';
+      case 'CULTURAL': return isAr ? 'ثقافي' : 'Culturel';
+      case 'SCIENTIFIC': return isAr ? 'علمي' : 'Scientifique';
+      case 'ARTISTIC': return isAr ? 'فني' : 'Artistique';
+      case 'PARTNERSHIP': return isAr ? 'شراكة إستراتيجية' : 'Partenariat Stratégique';
+      case 'EVENT_REPORT': return isAr ? 'تقرير ميداني' : 'Rapport Terrain';
+      case 'MEMORY': return isAr ? 'ذاكرة وطنية' : 'Mémoire Nationale';
+      case 'TOURISM': return isAr ? 'سياحي' : 'Touristique';
+      case 'CHILD': return isAr ? 'طفولة' : 'Enfance';
+      case 'ASSOCIATIVE': return isAr ? 'نشاط جمعوي' : 'Activité Associative';
+      case 'SOCIAL': return isAr ? 'عمل اجتماعي' : 'Action Sociale';
+      default: return isAr ? 'نشاط عام' : 'Activité Générale';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final lang = isAr ? 'ar' : 'fr';
     final title = project.getTitle(lang);
     final description = project.getSummary(lang);
-    final partner = project.partnerName ?? (isAr ? 'شراكة إستراتيجية' : 'Partenariat Stratégique');
+    final displayCategory = project.partnerName ?? _getCategoryLabel(project.category, isAr);
 
     return GestureDetector(
       onTap: () => context.push('/project/${project.id}', extra: project),
@@ -429,7 +448,7 @@ class _ProjectCard extends StatelessWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          partner,
+                          displayCategory,
                           style: GoogleFonts.cairo(
                             color: AppTheme.accentColor,
                             fontSize: 11,
@@ -501,9 +520,30 @@ class _ProjectDetailsSheet extends StatelessWidget {
     required this.isDark,
   });
 
+  String _getCategoryLabel(String category, bool isAr) {
+    switch (category.toUpperCase()) {
+      case 'HERITAGE': return isAr ? 'تراثي' : 'Patrimonial';
+      case 'PROJECT': return isAr ? 'مشروع ميداني' : 'Projet Terrain';
+      case 'RESTORATION': return isAr ? 'ترميم' : 'Restauration';
+      case 'CULTURAL': return isAr ? 'ثقافي' : 'Culturel';
+      case 'SCIENTIFIC': return isAr ? 'علمي' : 'Scientifique';
+      case 'ARTISTIC': return isAr ? 'فني' : 'Artistique';
+      case 'PARTNERSHIP': return isAr ? 'شراكة إستراتيجية' : 'Partenariat Stratégique';
+      case 'EVENT_REPORT': return isAr ? 'تقرير ميداني' : 'Rapport Terrain';
+      case 'MEMORY': return isAr ? 'ذاكرة وطنية' : 'Mémoire Nationale';
+      case 'TOURISM': return isAr ? 'سياحي' : 'Touristique';
+      case 'CHILD': return isAr ? 'طفولة' : 'Enfance';
+      case 'ASSOCIATIVE': return isAr ? 'نشاط جمعوي' : 'Activité Associative';
+      case 'SOCIAL': return isAr ? 'عمل اجتماعي' : 'Action Sociale';
+      default: return isAr ? 'نشاط عام' : 'Activité Générale';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final lang = isAr ? 'ar' : 'fr';
+    final displayCategory = project.partnerName ?? _getCategoryLabel(project.category, isAr);
+    
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
       minChildSize: 0.5,
@@ -584,7 +624,7 @@ class _ProjectDetailsSheet extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            project.partnerName ?? (isAr ? 'وزارة المجاهدين' : 'Min. Moudjahidines'),
+                            displayCategory,
                             style: const TextStyle(color: AppTheme.accentColor, fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),

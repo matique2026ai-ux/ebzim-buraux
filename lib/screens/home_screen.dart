@@ -91,8 +91,7 @@ class HomeScreen extends ConsumerWidget {
               data: (posts) {
                 // Filter to only show general news/announcements, excluding projects
                 final newsPosts = posts.where((p) => 
-                  p.isInstitutionalNews || 
-                  p.category.isEmpty
+                  p.contentType == 'NEWS' || p.category.toUpperCase() == 'ANNOUNCEMENT'
                 ).toList();
 
                 if (newsPosts.isEmpty) return const SizedBox.shrink();
@@ -142,8 +141,7 @@ class HomeScreen extends ConsumerWidget {
               data: (posts) {
                 // Filter specifically for projects
                 final projects = posts.where((p) => 
-                  p.category.toUpperCase() != 'ANNOUNCEMENT' && 
-                  p.category.isNotEmpty
+                  p.contentType == 'PROJECT' || p.isFieldProject
                 ).take(4).toList();
 
                 if (projects.isEmpty) return const SizedBox.shrink();

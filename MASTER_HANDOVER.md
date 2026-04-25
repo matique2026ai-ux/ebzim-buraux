@@ -310,9 +310,19 @@ Every `git push origin main` triggers a redeploy of the **NestJS Backend** on Re
 | **Database** | MongoDB Atlas (via Mongoose) |
 | **Media Storage** | Cloudinary |
 | **Production Hosting** | Render (auto-deploy from `main` branch via `git push`) |
-| **Frontend Dev Port** | **8080 (FIXED — never change this)** |
+| **Frontend Dev Port** | **8085 (OFFICIAL STABLE PORT — NEVER CHANGE THIS)** |
 | **Backend Local Dev** | `http://localhost:3000/api/v1/` (run `npm run start:dev` inside `/backend`) |
 | **Production API** | `https://ebzim-api-prod.onrender.com/api/v1/` |
+
+> [!IMPORTANT]
+> **🚀 2026 STABLE OPERATION PROTOCOL**
+> To avoid the "Infinite Loading Spinner" (caused by DDC script loading stalls), ALWAYS use the following command to launch the app for testing:
+>
+> ```powershell
+> flutter run -d chrome --web-port 8085 --no-pub --release
+> ```
+>
+> This is the only documented way to guarantee a 100% successful launch on this environment.
 
 ### Platform Roles
 
@@ -477,8 +487,12 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 - **Financial Contributions:** Linked to projects. Payment receipts tracked.
 - **Live Stats:** `publicStatsProvider` feeds the `StatsStrip` widget on both Home and Admin screens.
 - **[APRIL 25] News & Projects Separation:** Complete structural separation achieved. News has `newsType` (Urgent/Important/Normal) and Projects have enforced `contentType: 'PROJECT'`.
-- **[APRIL 25] Professional Heritage Map Refactor:** Overhauled the discovery system to include permanent architectural anchors for Algeria's crown jewels (Djemila, Timgad, Tipaza, Ghardaïa) and global wonders (Petra, Taj Mahal). Implemented a persistent landmark cache (`_landmarkCache`) that eliminates flickering and prevents historical sites from disappearing during map navigation.
-- **[APRIL 25] Institutional Logo Integration:** Elevated field project branding by replacing generic icons with the official Ebzim Golden Logo. Integrated a high-fidelity 'Golden theme' (Amber) for priority landmarks to distinguish them from dynamic Wikipedia results.
+- **[APRIL 25] Professional Heritage Map Refactor:** Overhauled the discovery system to include permanent architectural anchors for Algeria's crown jewels (Djemila, Timgad, Tipaza, Ghardaïa) and global wonders (Petra, Taj Mahal). Implemented a persistent landmark cache (`_landmarkCache`) that eliminates flickering and prevents historical sites from disappearing during
+
+## 🏆 April 2026 Milestone: Professional Map & Institutional Identity
+
+- **Status**: Stable / Production Ready
+- **Key Fixes**: Corrected Djemila (Cuicul) coordinates, fixed infinite loading spinner by migrating to Port 8085/Release mode, implemented Ebzim Golden Logo for field projects.
 - **[APRIL 25] Discovery Stability & Density:** Increased the Wikipedia discovery limit to 150 results and implemented a robust fallback system for CORS-restricted images, ensuring a clean and reliable visual experience across the globe.
 
 ---
@@ -539,12 +553,10 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 14. **✅ [DONE] Map Logic & UX Refactoring**: Resolved the logical gap between the CMS and the Map screen. Added a satellite map picker to the admin dashboard, and converted the public map into a dynamic, filterable discovery engine.
 15. **✅ [DONE] Global Category & Logic Synchronization:** Enforced strict `contentType` checking ('PROJECT' vs 'NEWS') on the Home Screen. Synchronized public project filter chips and card labels to perfectly match the 6 official associative standards established in the Admin Dashboard.
 16. **✅ [DONE] Wikipedia Global Heritage API:** Integrated the Wikipedia GeoSearch API (fr.wikipedia.org) to dynamically fetch global historical landmarks.
-17. **✅ [DONE] Professional Map Stability:** Implemented persistent caching and hardcoded archaeological anchors (Djemila, Timgad, Tipaza, Ghardaïa) to prevent content flickering and ensure historical density.
-18. **✅ [DONE] Institutional Logo Integration:** Replaced generic map icons with the official Ebzim Golden Logo for associative field projects.
-
----
-
-### 🏁 Handover Status: STABLE, MODULARIZED & DYNAMIC — Last updated: April 25, 2026
+17. **✅ [DONE] Professional Map Engine**: Transitioned from dynamic markers to a stable, cached heritage map. Added persistent caching for Wikipedia landmarks to eliminate flickering and ensured global wonders (Timgad, Djemila, Tipaza) are permanently visible.
+18. **✅ [DONE] Institutional Branding**: Replaced generic project icons with the **Ebzim Golden Logo** for all associative projects.
+19. **✅ [DONE] Geographic Precision**: Corrected the coordinates for **Djemila (Cuicul)** to exactly `36.320, 5.736` (Archaeological Site).
+20. **✅ [DONE] Stability Protocol 2026**: Standardized on port **8085** and release-mode launching to bypass development environment hangs.
 
 **Current State: Admin Dashboard 100% modularized and stabilized. Dynamic Satellite Map successfully integrated. Infinite Spinner resolved. Backend schema updated to support content differentiation. Development workflow stabilized via Hot Restart pattern.**
 

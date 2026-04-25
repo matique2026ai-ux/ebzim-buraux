@@ -89,7 +89,7 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       pageId: -11, title: 'جميلة (كويكول) - سطيف', 
       description: 'موقع أثري روماني استثنائي ومصنف ضمن التراث العالمي لليونسكو، يضم أجمل الفسيفساء في العالم.',
       imageUrl: 'https://images.unsplash.com/photo-1629216142718-f0278783478d?w=800&auto=format&fit=crop',
-      lat: 36.3194, lon: 5.8656
+      lat: 36.320, lon: 5.736
     ),
     WikiLandmark(
       pageId: -12, title: 'تيمقاد - باتنة', 

@@ -5,6 +5,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
@@ -24,6 +26,50 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   
 
   dynamic _selectedItem;
+  List<WikiLandmark> _wikiLandmarks = [];
+  bool _isLoadingWiki = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchWikiLandmarks(const LatLng(36.1915, 5.4110));
+  }
+
+  Future<void> _fetchWikiLandmarks(LatLng center) async {
+    if (_isLoadingWiki) return;
+    setState(() => _isLoadingWiki = true);
+    try {
+      final url = Uri.parse(
+          'https://ar.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${center.latitude}|${center.longitude}&ggsradius=10000&ggslimit=30&prop=coordinates|pageimages|description&piprop=thumbnail&pithumbsize=400&format=json&origin=*');
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final pages = data['query']?['pages'] as Map<String, dynamic>? ?? {};
+        final List<WikiLandmark> newLandmarks = [];
+        for (var page in pages.values) {
+          if (page['coordinates'] != null) {
+            newLandmarks.add(WikiLandmark(
+              pageId: page['pageid'],
+              title: page['title'] ?? '',
+              description: page['description'] ?? 'معلم تاريخي (ويكيبيديا)',
+              imageUrl: page['thumbnail']?['source'] ?? '',
+              lat: page['coordinates'][0]['lat'],
+              lon: page['coordinates'][0]['lon'],
+            ));
+          }
+        }
+        if (mounted) {
+          setState(() {
+            _wikiLandmarks = newLandmarks;
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Wiki Error: $e');
+    } finally {
+      if (mounted) setState(() => _isLoadingWiki = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +123,13 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
             }
           }
 
+          // Add Wikipedia Landmarks
+          if (_selectedFilter == 'ALL' || _selectedFilter == 'RESTORATION' || _selectedFilter == 'CULTURAL') {
+            for (var w in _wikiLandmarks) {
+              markers.add(_buildWikiMarker(w, isDark));
+            }
+          }
+
           return Stack(
             children: [
               FlutterMap(
@@ -120,6 +173,41 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
         },
         loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor)),
         error: (e, _) => Center(child: Text('Error: $e')),
+      ),
+    );
+  }
+
+  Marker _buildWikiMarker(WikiLandmark item, bool isDark) {
+    final bool isSelected = _selectedItem is WikiLandmark && (_selectedItem as WikiLandmark).pageId == item.pageId;
+
+    return Marker(
+      point: LatLng(item.lat, item.lon),
+      width: 60,
+      height: 60,
+      child: GestureDetector(
+        onTap: () {
+          setState(() => _selectedItem = item);
+          _mapController.move(LatLng(item.lat, item.lon), 16.0);
+        },
+        child: AnimatedScale(
+          scale: isSelected ? 1.3 : 1.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.elasticOut,
+          child: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.purple : Colors.indigo,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+              boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3))],
+            ),
+            child: const Icon(
+              Icons.account_balance_rounded,
+              color: Colors.white,
+              size: 18,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -234,14 +322,29 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     }
   }
 
-  Widget _buildDetailCard(NewsPost item, bool isAr, bool isDark) {
-    final String title = item.getTitle(isAr ? 'ar' : 'fr');
-    final String desc = item.getSummary(isAr ? 'ar' : 'fr');
-    final String img = item.imageUrl;
-    final String cat = _getCategoryLabel(item.category, isAr);
+  Widget _buildDetailCard(dynamic item, bool isAr, bool isDark) {
+    String title = '';
+    String desc = '';
+    String img = '';
+    String cat = '';
+    VoidCallback? onTap;
+
+    if (item is WikiLandmark) {
+      title = item.title;
+      desc = item.description;
+      img = item.imageUrl;
+      cat = isAr ? 'موسوعة ويكيبيديا' : 'Wikipedia';
+      onTap = null; // Maybe open external link in future
+    } else if (item is NewsPost) {
+      title = item.getTitle(isAr ? 'ar' : 'fr');
+      desc = item.getSummary(isAr ? 'ar' : 'fr');
+      img = item.imageUrl;
+      cat = _getCategoryLabel(item.category, isAr);
+      onTap = () => context.push('/project/${item.id}', extra: item);
+    }
 
     return GestureDetector(
-      onTap: () => context.push('/project/${item.id}', extra: item),
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E2124) : Colors.white,
@@ -282,4 +385,22 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       ),
     );
   }
+}
+
+class WikiLandmark {
+  final int pageId;
+  final String title;
+  final String description;
+  final String imageUrl;
+  final double lat;
+  final double lon;
+
+  WikiLandmark({
+    required this.pageId,
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+    required this.lat,
+    required this.lon,
+  });
 }

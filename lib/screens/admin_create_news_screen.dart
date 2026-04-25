@@ -15,10 +15,15 @@ const _kGold = Color(0xFFC5A059);
 class AdminCreateNewsScreen extends ConsumerStatefulWidget {
   final NewsPost? existingPost;
   final String? initialCategory;
-  const AdminCreateNewsScreen({super.key, this.existingPost, this.initialCategory});
+  const AdminCreateNewsScreen({
+    super.key,
+    this.existingPost,
+    this.initialCategory,
+  });
 
   @override
-  ConsumerState<AdminCreateNewsScreen> createState() => _AdminCreateNewsScreenState();
+  ConsumerState<AdminCreateNewsScreen> createState() =>
+      _AdminCreateNewsScreenState();
 }
 
 class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
@@ -92,8 +97,11 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
     try {
       String? uploadedImageUrl;
 
-      if ((_selectedFileBytes != null || _selectedFilePath != null) && _selectedFileName != null) {
-        uploadedImageUrl = await ref.read(mediaServiceProvider).uploadMedia(
+      if ((_selectedFileBytes != null || _selectedFilePath != null) &&
+          _selectedFileName != null) {
+        uploadedImageUrl = await ref
+            .read(mediaServiceProvider)
+            .uploadMedia(
               _selectedFileBytes ?? Uint8List(0),
               _selectedFileName!,
               filePath: _selectedFilePath,
@@ -102,7 +110,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
       final isEditing = widget.existingPost != null;
       final finalImageUrl = uploadedImageUrl ?? _existingImageUrl;
-      
+
       final payload = {
         'categoryId': NewsService.newsCategoryId,
         'title': {
@@ -126,7 +134,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         'category': _category,
         'contentType': 'NEWS',
         'newsType': _newsType,
-        'metadata': {}
+        'metadata': {},
       };
 
       if (finalImageUrl != null && finalImageUrl.isNotEmpty) {
@@ -135,14 +143,18 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
             'type': 'IMAGE',
             'cloudinaryUrl': finalImageUrl,
             'publicId': finalImageUrl.split('/').last.split('.').first,
-          }
+          },
         ];
       }
 
       if (isEditing) {
-        await ref.read(newsServiceProvider).updatePost(widget.existingPost!.id, payload);
+        await ref
+            .read(newsServiceProvider)
+            .updatePost(widget.existingPost!.id, payload);
       } else {
-        await ref.read(newsServiceProvider).createPost(
+        await ref
+            .read(newsServiceProvider)
+            .createPost(
               title: _titleArController.text,
               titleFr: _titleFrController.text,
               titleEn: _titleEnController.text,
@@ -156,10 +168,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
               isPinned: _isPinned,
               category: _category,
               projectStatus: 'GENERAL',
-              metadata: {
-                'contentType': 'NEWS',
-                'newsType': _newsType,
-              },
+              metadata: {'contentType': 'NEWS', 'newsType': _newsType},
             );
       }
 
@@ -167,9 +176,11 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         ref.invalidate(adminNewsProvider);
         ref.invalidate(newsProvider);
 
-        final successMsg = isEditing ? '✅ تم تحديث الخبر بنجاح!' : '✅ تم نشر الخبر بنجاح!';
+        final successMsg = isEditing
+            ? '✅ تم تحديث الخبر بنجاح!'
+            : '✅ تم نشر الخبر بنجاح!';
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(
+          SnackBar(
             content: Text(successMsg),
             backgroundColor: const Color(0xFF15803D),
             duration: const Duration(seconds: 3),
@@ -186,9 +197,14 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
           context: context,
           builder: (ctx) => AlertDialog(
             title: const Text('❌ فشل النشر'),
-            content: SingleChildScrollView(child: Text('حدث خطأ أثناء التواصل مع السيرفر:\n\n$e')),
+            content: SingleChildScrollView(
+              child: Text('حدث خطأ أثناء التواصل مع السيرفر:\n\n$e'),
+            ),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('حسناً'))
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('حسناً'),
+              ),
             ],
           ),
         );
@@ -243,14 +259,27 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                       decoration: BoxDecoration(
                         color: _kGreen.withOpacity(0.15),
                         shape: BoxShape.circle,
-                        border: Border.all(color: _kGreen.withOpacity(0.4), width: 1.5),
+                        border: Border.all(
+                          color: _kGreen.withOpacity(0.4),
+                          width: 1.5,
+                        ),
                       ),
-                      child: const Icon(Icons.post_add_rounded, size: 36, color: _kGreen),
+                      child: const Icon(
+                        Icons.post_add_rounded,
+                        size: 36,
+                        color: _kGreen,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      widget.existingPost != null ? 'تعديل هذا الخبر' : 'إضافة خبر جديد',
-                      style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                      widget.existingPost != null
+                          ? 'تعديل هذا الخبر'
+                          : 'إضافة خبر جديد',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 24),
                   ],
@@ -263,7 +292,10 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
             child: Form(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -280,30 +312,49 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: (_selectedFileBytes != null || _existingImageUrl != null)
+                            color:
+                                (_selectedFileBytes != null ||
+                                    _existingImageUrl != null)
                                 ? const Color(0xFF22C55E)
                                 : _kGreen.withOpacity(0.5),
                             width: 2,
                           ),
                           color: const Color(0xFF1A2E1A),
                           image: _selectedFileBytes != null
-                              ? DecorationImage(image: MemoryImage(_selectedFileBytes!), fit: BoxFit.cover)
-                              : (_existingImageUrl != null && _existingImageUrl!.isNotEmpty)
-                                  ? DecorationImage(image: NetworkImage(_existingImageUrl!), fit: BoxFit.cover)
-                                  : null,
+                              ? DecorationImage(
+                                  image: MemoryImage(_selectedFileBytes!),
+                                  fit: BoxFit.cover,
+                                )
+                              : (_existingImageUrl != null &&
+                                    _existingImageUrl!.isNotEmpty)
+                              ? DecorationImage(
+                                  image: NetworkImage(_existingImageUrl!),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
                         ),
-                        child: (_selectedFileBytes != null || _existingImageUrl != null)
+                        child:
+                            (_selectedFileBytes != null ||
+                                _existingImageUrl != null)
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(18),
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
                                     BackdropFilter(
-                                      filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                                      child: Container(color: Colors.transparent),
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 0,
+                                        sigmaY: 0,
+                                      ),
+                                      child: Container(
+                                        color: Colors.transparent,
+                                      ),
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
                                         color: Colors.black.withOpacity(0.5),
                                         borderRadius: BorderRadius.circular(30),
@@ -311,9 +362,19 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Icon(Icons.check_circle, color: Color(0xFF22C55E), size: 18),
+                                          const Icon(
+                                            Icons.check_circle,
+                                            color: Color(0xFF22C55E),
+                                            size: 18,
+                                          ),
                                           const SizedBox(width: 6),
-                                          const Text('تم الاختيار • اضغط للتغيير', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                          const Text(
+                                            'تم الاختيار • اضغط للتغيير',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -323,16 +384,27 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.add_photo_alternate_rounded, size: 48, color: _kGreen.withOpacity(0.7)),
+                                  Icon(
+                                    Icons.add_photo_alternate_rounded,
+                                    size: 48,
+                                    color: _kGreen.withOpacity(0.7),
+                                  ),
                                   const SizedBox(height: 10),
                                   Text(
                                     'اضغط لاختيار صورة الغلاف',
-                                    style: TextStyle(color: _kGreen.withOpacity(0.9), fontWeight: FontWeight.bold, fontSize: 15),
+                                    style: TextStyle(
+                                      color: _kGreen.withOpacity(0.9),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     'JPG · PNG · WEBP',
-                                    style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12),
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.4),
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -348,14 +420,28 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                       child: Column(
                         children: [
                           _buildLanguageTabs(),
-                          SliverToBoxAdapter(child: SizedBox(height: 10)), // Dummy spacer
+                          SliverToBoxAdapter(
+                            child: SizedBox(height: 10),
+                          ), // Dummy spacer
                           Container(
                             height: 60,
                             child: TabBarView(
                               children: [
-                                _buildField(controller: _titleArController, hint: 'العربية...', validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null),
-                                _buildField(controller: _titleFrController, hint: 'Français...'),
-                                _buildField(controller: _titleEnController, hint: 'English...'),
+                                _buildField(
+                                  controller: _titleArController,
+                                  hint: 'العربية...',
+                                  validator: (v) => v == null || v.isEmpty
+                                      ? 'حقل مطلوب'
+                                      : null,
+                                ),
+                                _buildField(
+                                  controller: _titleFrController,
+                                  hint: 'Français...',
+                                ),
+                                _buildField(
+                                  controller: _titleEnController,
+                                  hint: 'English...',
+                                ),
                               ],
                             ),
                           ),
@@ -376,9 +462,21 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                             height: 100,
                             child: TabBarView(
                               children: [
-                                _buildField(controller: _summaryArController, hint: 'العربية...', maxLines: 2),
-                                _buildField(controller: _summaryFrController, hint: 'Français...', maxLines: 2),
-                                _buildField(controller: _summaryEnController, hint: 'English...', maxLines: 2),
+                                _buildField(
+                                  controller: _summaryArController,
+                                  hint: 'العربية...',
+                                  maxLines: 2,
+                                ),
+                                _buildField(
+                                  controller: _summaryFrController,
+                                  hint: 'Français...',
+                                  maxLines: 2,
+                                ),
+                                _buildField(
+                                  controller: _summaryEnController,
+                                  hint: 'English...',
+                                  maxLines: 2,
+                                ),
                               ],
                             ),
                           ),
@@ -399,21 +497,42 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                             height: 250,
                             child: TabBarView(
                               children: [
-                                _buildField(controller: _contentArController, hint: 'العربية...', maxLines: 9, validator: (v) => v == null || v.isEmpty ? 'حقل مطلوب' : null),
-                                _buildField(controller: _contentFrController, hint: 'Français...', maxLines: 9),
-                                _buildField(controller: _contentEnController, hint: 'English...', maxLines: 9),
+                                _buildField(
+                                  controller: _contentArController,
+                                  hint: 'العربية...',
+                                  maxLines: 9,
+                                  validator: (v) => v == null || v.isEmpty
+                                      ? 'حقل مطلوب'
+                                      : null,
+                                ),
+                                _buildField(
+                                  controller: _contentFrController,
+                                  hint: 'Français...',
+                                  maxLines: 9,
+                                ),
+                                _buildField(
+                                  controller: _contentEnController,
+                                  hint: 'English...',
+                                  maxLines: 9,
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ),
                     ).animate().fadeIn(delay: 250.ms).slideX(begin: 0.04),
-                    
+
                     const SizedBox(height: 24),
 
                     SwitchListTile(
-                      title: const Text('تثبيت في الأعلى', style: TextStyle(color: Colors.white, fontSize: 14.5)),
-                      subtitle: const Text('سيظهر الخبر في الشريط العلوي للمجلة', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                      title: const Text(
+                        'تثبيت في الأعلى',
+                        style: TextStyle(color: Colors.white, fontSize: 14.5),
+                      ),
+                      subtitle: const Text(
+                        'سيظهر الخبر في الشريط العلوي للمجلة',
+                        style: TextStyle(color: Colors.white60, fontSize: 12),
+                      ),
                       value: _isPinned,
                       onChanged: (val) => setState(() => _isPinned = val),
                       activeColor: _kGreen,
@@ -430,14 +549,16 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                           label: 'خبر عام',
                           icon: Icons.newspaper_rounded,
                           isSelected: _category == 'ANNOUNCEMENT',
-                          onTap: () => setState(() => _category = 'ANNOUNCEMENT'),
+                          onTap: () =>
+                              setState(() => _category = 'ANNOUNCEMENT'),
                         ),
                         const SizedBox(width: 12),
                         _CategoryChip(
                           label: 'ترميم',
                           icon: Icons.architecture_rounded,
                           isSelected: _category == 'RESTORATION',
-                          onTap: () => setState(() => _category = 'RESTORATION'),
+                          onTap: () =>
+                              setState(() => _category = 'RESTORATION'),
                         ),
                         const SizedBox(width: 12),
                         _CategoryChip(
@@ -473,14 +594,16 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                           label: 'شراكة',
                           icon: Icons.handshake_rounded,
                           isSelected: _category == 'PARTNERSHIP',
-                          onTap: () => setState(() => _category = 'PARTNERSHIP'),
+                          onTap: () =>
+                              setState(() => _category = 'PARTNERSHIP'),
                         ),
                         const SizedBox(width: 12),
                         _CategoryChip(
                           label: 'تقرير نشاط',
                           icon: Icons.assignment_rounded,
                           isSelected: _category == 'EVENT_REPORT',
-                          onTap: () => setState(() => _category = 'EVENT_REPORT'),
+                          onTap: () =>
+                              setState(() => _category = 'EVENT_REPORT'),
                         ),
                       ],
                     ),
@@ -505,7 +628,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                         _CategoryChip(
+                        _CategoryChip(
                           label: 'لجنة الطفل',
                           icon: Icons.child_care_rounded,
                           isSelected: _category == 'CHILD',
@@ -527,7 +650,8 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                           label: 'نشاط جمعوي',
                           icon: Icons.groups_rounded,
                           isSelected: _category == 'ASSOCIATIVE',
-                          onTap: () => setState(() => _category = 'ASSOCIATIVE'),
+                          onTap: () =>
+                              setState(() => _category = 'ASSOCIATIVE'),
                         ),
                         const SizedBox(width: 12),
                         _CategoryChip(
@@ -538,7 +662,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 32),
                     const SizedBox(height: 32),
                     _buildLabel('نوع الخبر (درجة الأهمية)'),
@@ -558,7 +682,8 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                             label: 'خبر هام',
                             color: Colors.orange,
                             isSelected: _newsType == 'IMPORTANT',
-                            onTap: () => setState(() => _newsType = 'IMPORTANT'),
+                            onTap: () =>
+                                setState(() => _newsType = 'IMPORTANT'),
                           ),
                           const SizedBox(width: 10),
                           _StatusChip(
@@ -579,14 +704,25 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                       child: ElevatedButton.icon(
                         onPressed: _isLoading ? null : _submit,
                         icon: _isLoading
-                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
                             : const Icon(Icons.send_rounded, size: 20),
                         label: Text(
                           _isLoading
                               ? 'جاري النشر...'
-                              : (widget.existingPost != null 
-                                  ? (_category == 'ANNOUNCEMENT' ? 'تحديث الخبر' : 'تحديث المشروع')
-                                  : (_category == 'ANNOUNCEMENT' ? 'نشر الخبر' : 'نشر المشروع')),
+                              : (widget.existingPost != null
+                                    ? (_category == 'ANNOUNCEMENT'
+                                          ? 'تحديث الخبر'
+                                          : 'تحديث المشروع')
+                                    : (_category == 'ANNOUNCEMENT'
+                                          ? 'نشر الخبر'
+                                          : 'نشر المشروع')),
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -596,7 +732,9 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _kGreen,
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           elevation: 6,
                           shadowColor: _kGreen.withOpacity(0.4),
                         ),
@@ -640,7 +778,10 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       style: const TextStyle(color: Colors.white, fontSize: 14.5),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 13.5),
+        hintStyle: TextStyle(
+          color: Colors.white.withOpacity(0.3),
+          fontSize: 13.5,
+        ),
         filled: true,
         fillColor: const Color(0xFF1E301E),
         border: OutlineInputBorder(
@@ -660,7 +801,10 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
           borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1.5),
         ),
         errorStyle: const TextStyle(color: Color(0xFFEF4444)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
     );
   }
@@ -718,7 +862,11 @@ class _CategoryChip extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, size: 16, color: isSelected ? Colors.white : Colors.white60),
+            Icon(
+              icon,
+              size: 16,
+              color: isSelected ? Colors.white : Colors.white60,
+            ),
             const SizedBox(width: 8),
             Text(
               label,

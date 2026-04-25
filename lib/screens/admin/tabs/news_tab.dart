@@ -33,7 +33,9 @@ class NewsTab extends ConsumerWidget {
             const SizedBox(height: 20),
             newsAsync.when(
               data: (allPosts) {
-                final posts = allPosts.where((p) => p.isInstitutionalNews).toList();
+                final posts = allPosts
+                    .where((p) => p.isInstitutionalNews)
+                    .toList();
                 return Row(
                   children: [
                     AdminStatCard(
@@ -186,7 +188,10 @@ class _AdminNewsCard extends ConsumerWidget {
               width: 60,
               height: 60,
               color: AppTheme.primaryColor.withOpacity(0.1),
-              child: const Icon(Icons.newspaper_rounded, color: AppTheme.primaryColor),
+              child: const Icon(
+                Icons.newspaper_rounded,
+                color: AppTheme.primaryColor,
+              ),
             ),
           ),
         ),
@@ -214,28 +219,47 @@ class _AdminNewsCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.edit_rounded, color: Colors.blueGrey, size: 20),
+              icon: const Icon(
+                Icons.edit_rounded,
+                color: Colors.blueGrey,
+                size: 20,
+              ),
               tooltip: 'تعديل',
               onPressed: () => context.push('/admin/news/create', extra: post),
             ),
             IconButton(
-              icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20),
+              icon: const Icon(
+                Icons.delete_rounded,
+                color: Colors.red,
+                size: 20,
+              ),
               tooltip: 'حذف',
               onPressed: () async {
                 final confirm = await showDialog<bool>(
                   context: context,
                   builder: (_) => AlertDialog(
-                    title: Text('حذف الخبر', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
-                    content: Text('هل أنت متأكد من حذف "${post.titleAr}"؟', style: GoogleFonts.tajawal()),
+                    title: Text(
+                      'حذف الخبر',
+                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+                    ),
+                    content: Text(
+                      'هل أنت متأكد من حذف "${post.titleAr}"؟',
+                      style: GoogleFonts.tajawal(),
+                    ),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, false),
                         child: Text('إلغاء', style: GoogleFonts.tajawal()),
                       ),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
                         onPressed: () => Navigator.pop(context, true),
-                        child: Text('حذف', style: GoogleFonts.tajawal(color: Colors.white)),
+                        child: Text(
+                          'حذف',
+                          style: GoogleFonts.tajawal(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -247,7 +271,10 @@ class _AdminNewsCard extends ConsumerWidget {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('تم حذف الخبر بنجاح', style: GoogleFonts.tajawal()),
+                          content: Text(
+                            'تم حذف الخبر بنجاح',
+                            style: GoogleFonts.tajawal(),
+                          ),
                           backgroundColor: Colors.green,
                         ),
                       );
@@ -256,7 +283,10 @@ class _AdminNewsCard extends ConsumerWidget {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('خطأ في الحذف: $e', style: GoogleFonts.tajawal()),
+                          content: Text(
+                            'خطأ في الحذف: $e',
+                            style: GoogleFonts.tajawal(),
+                          ),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -272,4 +302,3 @@ class _AdminNewsCard extends ConsumerWidget {
     );
   }
 }
-

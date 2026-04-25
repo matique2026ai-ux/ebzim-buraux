@@ -50,27 +50,84 @@ class _UsersTabState extends ConsumerState<UsersTab> {
         final u = users[row];
         final rowIndex = row + 1;
 
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex)).value = TextCellValue(u.getName('en'));
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex)).value = TextCellValue(u.getName('ar'));
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex)).value = TextCellValue(u.email);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex)).value = TextCellValue(u.phone ?? '');
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex)).value = TextCellValue(u.role.name);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex)).value = TextCellValue(u.status);
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex)).value = TextCellValue(u.membershipExpiry != null ? DateFormat('yyyy-MM-dd').format(u.membershipExpiry!) : '');
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex)).value = TextCellValue(u.createdAt != null ? DateFormat('yyyy-MM-dd').format(u.createdAt!) : '');
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.getName('en'),
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.getName('ar'),
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.email,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.phone ?? '',
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.role.name,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.status,
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.membershipExpiry != null
+              ? DateFormat('yyyy-MM-dd').format(u.membershipExpiry!)
+              : '',
+        );
+        sheet
+            .cell(
+              CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex),
+            )
+            .value = TextCellValue(
+          u.createdAt != null
+              ? DateFormat('yyyy-MM-dd').format(u.createdAt!)
+              : '',
+        );
       }
 
       final bytes = excel.encode();
       if (bytes != null) {
-        final fileName = 'Ebzim_Users_${DateFormat('yyyyMMdd_HHmm').format(DateTime.now())}.xlsx';
+        final fileName =
+            'Ebzim_Users_${DateFormat('yyyyMMdd_HHmm').format(DateTime.now())}.xlsx';
         triggerWebDownloadBytes(Uint8List.fromList(bytes), fileName);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(adminSuccessSnack('تم استخراج البيانات بنجاح'));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(adminSuccessSnack('تم استخراج البيانات بنجاح'));
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(adminErrorSnack('فشل استخراج البيانات: $e'));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(adminErrorSnack('فشل استخراج البيانات: $e'));
       }
     } finally {
       if (mounted) setState(() => _isExporting = false);
@@ -92,8 +149,12 @@ class _UsersTabState extends ConsumerState<UsersTab> {
               u.getName('en').toLowerCase().contains(query);
         }).toList();
 
-        final activeUsers = users.where((u) => u.status.toUpperCase() == 'ACTIVE').length;
-        final pendingUsers = users.where((u) => u.status.toUpperCase() == 'PENDING').length;
+        final activeUsers = users
+            .where((u) => u.status.toUpperCase() == 'ACTIVE')
+            .length;
+        final pendingUsers = users
+            .where((u) => u.status.toUpperCase() == 'PENDING')
+            .length;
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -121,21 +182,27 @@ class _UsersTabState extends ConsumerState<UsersTab> {
                     label: 'إجمالي المستخدمين',
                     value: users.length.toString(),
                     icon: Icons.group_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1B4332)]),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF052011), Color(0xFF1B4332)],
+                    ),
                   ),
                   const SizedBox(width: 16),
                   AdminStatCard(
                     label: 'حسابات نشطة',
                     value: activeUsers.toString(),
                     icon: Icons.check_circle_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFF15803D), Color(0xFF22C55E)]),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF15803D), Color(0xFF22C55E)],
+                    ),
                   ),
                   const SizedBox(width: 16),
                   AdminStatCard(
                     label: 'طلبات معلقة',
                     value: pendingUsers.toString(),
                     icon: Icons.hourglass_empty_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFFB45309), Color(0xFFF59E0B)]),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFB45309), Color(0xFFF59E0B)],
+                    ),
                   ),
                 ],
               ),
@@ -192,7 +259,10 @@ class _UserListItem extends ConsumerWidget {
           backgroundColor: user.role.getBadgeColor().withValues(alpha: 0.1),
           child: Text(
             user.firstName[0].toUpperCase(),
-            style: TextStyle(color: user.role.getBadgeColor(), fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: user.role.getBadgeColor(),
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         title: Text(
@@ -248,23 +318,33 @@ class _UserListItem extends ConsumerWidget {
           ),
           ListTile(
             leading: Icon(
-              user.status == 'ACTIVE' ? Icons.block_flipped : Icons.check_circle_outline,
+              user.status == 'ACTIVE'
+                  ? Icons.block_flipped
+                  : Icons.check_circle_outline,
               color: user.status == 'ACTIVE' ? Colors.red : Colors.green,
             ),
-            title: Text(user.status == 'ACTIVE' ? 'تجميد الحساب' : 'تفعيل الحساب'),
+            title: Text(
+              user.status == 'ACTIVE' ? 'تجميد الحساب' : 'تفعيل الحساب',
+            ),
             onTap: () async {
               Navigator.pop(context);
               try {
-                await ref.read(adminUserServiceProvider).updateUserStatus(
-                  user.id,
-                  user.status == 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
-                );
+                await ref
+                    .read(adminUserServiceProvider)
+                    .updateUserStatus(
+                      user.id,
+                      user.status == 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+                    );
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(adminSuccessSnack('تم تحديث حالة الحساب'));
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(adminSuccessSnack('تم تحديث حالة الحساب'));
                 }
               } catch (e) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(adminErrorSnack('فشل التحديث: $e'));
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(adminErrorSnack('فشل التحديث: $e'));
                 }
               }
             },
@@ -272,19 +352,30 @@ class _UserListItem extends ConsumerWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.delete_outline, color: Colors.red),
-            title: const Text('حذف الحساب نهائياً', style: TextStyle(color: Colors.red)),
+            title: const Text(
+              'حذف الحساب نهائياً',
+              style: TextStyle(color: Colors.red),
+            ),
             onTap: () async {
               Navigator.pop(context);
               final confirm = await showDialog<bool>(
                 context: context,
                 builder: (ctx) => AlertDialog(
                   title: const Text('حذف حساب'),
-                  content: const Text('هل أنت متأكد من حذف هذا الحساب نهائياً؟ لا يمكن التراجع.'),
+                  content: const Text(
+                    'هل أنت متأكد من حذف هذا الحساب نهائياً؟ لا يمكن التراجع.',
+                  ),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('إلغاء')),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text('إلغاء'),
+                    ),
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, true),
-                      child: const Text('حذف', style: TextStyle(color: Colors.red)),
+                      child: const Text(
+                        'حذف',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ),
                   ],
                 ),
@@ -293,11 +384,15 @@ class _UserListItem extends ConsumerWidget {
                 try {
                   await ref.read(adminUserServiceProvider).deleteUser(user.id);
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(adminSuccessSnack('تم حذف الحساب بنجاح'));
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(adminSuccessSnack('تم حذف الحساب بنجاح'));
                   }
                 } catch (e) {
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(adminErrorSnack('فشل الحذف: $e'));
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(adminErrorSnack('فشل الحذف: $e'));
                   }
                 }
               }

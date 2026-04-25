@@ -28,7 +28,6 @@ import 'package:ebzim_app/screens/admin/tabs/reports_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/financials_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/settings_tab.dart';
 
-
 // ─────────────────────────────────────────────────────────────────────────────
 // ADMIN DASHBOARD SCREEN
 // ─────────────────────────────────────────────────────────────────────────────
@@ -51,7 +50,6 @@ class AdminDashboardScreen extends ConsumerWidget {
     final user = userAsync.value;
     final isSuperAdmin = user?.role == EbzimRole.superAdmin;
 
-
     final List<Map<String, dynamic>> allTabs = [
       {
         'icon': Icons.group_add_rounded,
@@ -68,26 +66,14 @@ class AdminDashboardScreen extends ConsumerWidget {
         'text': 'المحتوى',
         'view': CMSTab(),
       },
-      {
-        'icon': Icons.event_rounded,
-        'text': 'الأنشطة',
-        'view': EventsTab(),
-      },
-      {
-        'icon': Icons.newspaper_rounded,
-        'text': 'الأخبار',
-        'view': NewsTab(),
-      },
+      {'icon': Icons.event_rounded, 'text': 'الأنشطة', 'view': EventsTab()},
+      {'icon': Icons.newspaper_rounded, 'text': 'الأخبار', 'view': NewsTab()},
       {
         'icon': Icons.architecture_rounded,
         'text': 'المشاريع',
         'view': ProjectsTab(),
       },
-      {
-        'icon': Icons.flag_rounded,
-        'text': 'البلاغات',
-        'view': ReportsTab(),
-      },
+      {'icon': Icons.flag_rounded, 'text': 'البلاغات', 'view': ReportsTab()},
       if (isSuperAdmin) ...[
         {
           'icon': Icons.account_balance_wallet_rounded,
@@ -211,7 +197,9 @@ class AdminDashboardScreen extends ConsumerWidget {
                                         : 'إدارة النظام')
                                     .toUpperCase(),
                                 style: GoogleFonts.playfairDisplay(
-                                  color: AppTheme.accentColor.withValues(alpha: 0.8),
+                                  color: AppTheme.accentColor.withValues(
+                                    alpha: 0.8,
+                                  ),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -311,4 +299,3 @@ class AdminDashboardScreen extends ConsumerWidget {
     );
   }
 }
-

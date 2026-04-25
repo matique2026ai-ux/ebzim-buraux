@@ -24,8 +24,15 @@ class EventDetailsScreen extends ConsumerWidget {
       extendBodyBehindAppBar: true,
       body: EbzimBackground(
         child: eventAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.accentColor)),
-          error: (e, s) => Center(child: Text(e.toString(), style: const TextStyle(color: Colors.white))),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: AppTheme.accentColor),
+          ),
+          error: (e, s) => Center(
+            child: Text(
+              e.toString(),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
           data: (event) {
             final locale = Localizations.localeOf(context);
             final lang = locale.languageCode;
@@ -42,7 +49,10 @@ class EventDetailsScreen extends ConsumerWidget {
                 EbzimSliverAppBar(
                   expandedHeight: 400,
                   leading: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 20,
+                    ),
                     onPressed: () => context.pop(),
                   ),
                   background: Stack(
@@ -64,7 +74,7 @@ class EventDetailsScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                
+
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
@@ -73,30 +83,39 @@ class EventDetailsScreen extends ConsumerWidget {
                       children: [
                         // Category Tag
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: AppTheme.accentColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
+                            border: Border.all(
+                              color: AppTheme.accentColor.withValues(
+                                alpha: 0.3,
+                              ),
+                            ),
                           ),
                           child: Text(
                             category.toUpperCase(),
                             style: const TextStyle(
-                              fontSize: 10, 
-                              fontWeight: FontWeight.bold, 
-                              letterSpacing: 2, 
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
                               color: AppTheme.accentColor,
                             ),
                           ),
                         ),
                         const SizedBox(height: 24),
-                        
+
                         // Title
                         Text(
                           title,
                           style: theme.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : AppTheme.primaryColor,
+                            color: isDark
+                                ? Colors.white
+                                : AppTheme.primaryColor,
                             height: 1.2,
                           ),
                         ),
@@ -107,13 +126,25 @@ class EventDetailsScreen extends ConsumerWidget {
                           spacing: 24,
                           runSpacing: 16,
                           children: [
-                            _buildIconLabel(Icons.calendar_today, dateFormat.format(event.date)),
-                            _buildIconLabel(Icons.schedule, DateFormat('HH:mm', fullLocale).format(event.date)),
-                            _buildIconLabel(Icons.location_on_outlined, location),
+                            _buildIconLabel(
+                              Icons.calendar_today,
+                              dateFormat.format(event.date),
+                            ),
+                            _buildIconLabel(
+                              Icons.schedule,
+                              DateFormat(
+                                'HH:mm',
+                                fullLocale,
+                              ).format(event.date),
+                            ),
+                            _buildIconLabel(
+                              Icons.location_on_outlined,
+                              location,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 40),
-                        
+
                         // Description Section
                         Text(
                           loc.eventAboutGathering,
@@ -126,24 +157,32 @@ class EventDetailsScreen extends ConsumerWidget {
                           description,
                           style: theme.textTheme.bodyLarge?.copyWith(
                             height: 1.8,
-                            color: isDark ? Colors.white.withValues(alpha: 0.7) : Colors.black87,
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.7)
+                                : Colors.black87,
                           ),
                         ),
                         const SizedBox(height: 40),
-                        
+
                         // Venue Glass Box
                         Container(
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
-                            color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.05)
+                                : Colors.white,
                             borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05)),
+                            border: Border.all(
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.1)
+                                  : Colors.black.withValues(alpha: 0.05),
+                            ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1), 
-                                blurRadius: 40, 
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 40,
                                 offset: const Offset(0, 10),
-                              )
+                              ),
                             ],
                           ),
                           child: Column(
@@ -152,27 +191,42 @@ class EventDetailsScreen extends ConsumerWidget {
                               Text(
                                 loc.eventVenue.toUpperCase(),
                                 style: TextStyle(
-                                  fontSize: 10, 
-                                  letterSpacing: 2, 
-                                  fontWeight: FontWeight.bold, 
-                                  color: AppTheme.accentColor.withValues(alpha: 0.8),
+                                  fontSize: 10,
+                                  letterSpacing: 2,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.accentColor.withValues(
+                                    alpha: 0.8,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                location, 
-                                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                                location,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               const SizedBox(height: 12),
                               TextButton.icon(
                                 onPressed: () {},
-                                icon: const Icon(Icons.map_outlined, size: 16, color: AppTheme.accentColor),
-                                label: Text(
-                                  loc.eventOpenMaps.toUpperCase(), 
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 1, color: AppTheme.accentColor),
+                                icon: const Icon(
+                                  Icons.map_outlined,
+                                  size: 16,
+                                  color: AppTheme.accentColor,
                                 ),
-                                style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                              )
+                                label: Text(
+                                  loc.eventOpenMaps.toUpperCase(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                    letterSpacing: 1,
+                                    color: AppTheme.accentColor,
+                                  ),
+                                ),
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -187,21 +241,31 @@ class EventDetailsScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: eventAsync.hasValue ? Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: ElevatedButton.icon(
-          onPressed: () => _showRegisterDialog(context),
-          icon: const Icon(Icons.how_to_reg_rounded),
-          label: Text(loc.eventRegister.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.accentColor,
-            foregroundColor: Colors.white,
-            minimumSize: const Size(double.infinity, 64),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            elevation: 8,
-          ),
-        ),
-      ) : null,
+      floatingActionButton: eventAsync.hasValue
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: ElevatedButton.icon(
+                onPressed: () => _showRegisterDialog(context),
+                icon: const Icon(Icons.how_to_reg_rounded),
+                label: Text(
+                  loc.eventRegister.toUpperCase(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.accentColor,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 64),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  elevation: 8,
+                ),
+              ),
+            )
+          : null,
     );
   }
 
@@ -211,7 +275,10 @@ class EventDetailsScreen extends ConsumerWidget {
       builder: (_) => AlertDialog(
         backgroundColor: AppTheme.backgroundDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: const Text('تسجيل في الفعالية', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'تسجيل في الفعالية',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         content: const Text(
           'للتسجيل في هذه الفعالية، يرجى التواصل مع الجمعية عبر صفحة المساهمات أو الاتصال المباشر.',
           style: TextStyle(color: Colors.white70),
@@ -226,7 +293,9 @@ class EventDetailsScreen extends ConsumerWidget {
               Navigator.pop(context);
               context.push('/contributions');
             },
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accentColor),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.accentColor,
+            ),
             child: const Text('المساهمات'),
           ),
         ],
@@ -243,8 +312,8 @@ class EventDetailsScreen extends ConsumerWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: 12, 
-            fontWeight: FontWeight.w600, 
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
             color: Colors.white.withValues(alpha: 0.8),
           ),
         ),

@@ -1,23 +1,17 @@
-import {
-  IsString,
-  IsOptional,
-  IsNotEmpty,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class MultilingualTextDto {
   @IsString()
-  @IsNotEmpty()
-  ar: string;
+  @IsOptional()
+  ar?: string;
 
   @IsString()
-  @IsNotEmpty()
-  fr: string;
+  @IsOptional()
+  fr?: string;
 
   @IsString()
-  @IsNotEmpty()
-  en: string;
+  @IsOptional()
+  en?: string;
 }
 
 export class LocationDataDto {

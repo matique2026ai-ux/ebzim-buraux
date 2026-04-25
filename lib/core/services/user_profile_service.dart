@@ -20,25 +20,30 @@ class UserProfileService {
 
   Future<UserProfile> updateProfile(Map<String, dynamic> profileData) async {
     // Backend expects 'profile' object with firstName, lastName, phone, etc.
-    final response = await _apiClient.dio.patch('users/profile', data: {
-      'profile': profileData,
-    });
+    final response = await _apiClient.dio.patch(
+      'users/profile',
+      data: {'profile': profileData},
+    );
     return UserProfile.fromJson(response.data);
   }
 
-  Future<UserProfile> uploadAvatar(List<int> bytes, String fileName, Ref ref) async {
+  Future<UserProfile> uploadAvatar(
+    List<int> bytes,
+    String fileName,
+    Ref ref,
+  ) async {
     // 1. Upload the image to the media service
-    final imageUrl = await ref.read(mediaServiceProvider).uploadMedia(
-      Uint8List.fromList(bytes),
-      fileName,
-    );
+    final imageUrl = await ref
+        .read(mediaServiceProvider)
+        .uploadMedia(Uint8List.fromList(bytes), fileName);
 
     // 2. Update the user's imageUrl in their profile
-    final response = await _apiClient.dio.patch('users/profile', data: {
-      'profile': {
-        'imageUrl': imageUrl,
+    final response = await _apiClient.dio.patch(
+      'users/profile',
+      data: {
+        'profile': {'imageUrl': imageUrl},
       },
-    });
+    );
     return UserProfile.fromJson(response.data);
   }
 }

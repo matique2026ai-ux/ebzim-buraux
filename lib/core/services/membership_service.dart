@@ -27,41 +27,53 @@ class WilayaService {
   List<LocationModel> getCommunes(String wilayaId) {
     if (wilayaId == '19') {
       return [
-        LocationModel('1901', '1901', 'Setif City', 'مدينة سطيف', 'Ville de Sétif'),
+        LocationModel(
+          '1901',
+          '1901',
+          'Setif City',
+          'مدينة سطيف',
+          'Ville de Sétif',
+        ),
         LocationModel('1902', '1902', 'El Eulma', 'العلمة', 'El Eulma'),
         LocationModel('1903', '1903', 'Bougaa', 'بوقاعة', 'Bougaa'),
       ];
     }
     return [
-      LocationModel('xx', 'xx', 'Main City', 'المدينة الرئيسية', 'Ville principale'),
+      LocationModel(
+        'xx',
+        'xx',
+        'Main City',
+        'المدينة الرئيسية',
+        'Ville principale',
+      ),
     ];
   }
 }
 
 final wilayaServiceProvider = Provider((ref) => WilayaService());
 
-
 class MembershipFormState {
   // Step 1: Identity
   final String fullName;
   final DateTime? dob;
   final String gender;
-  
+
   // Step 2: Contact
   final String wilayaId;
   final String communeId;
   final String phone;
   final String email;
-  
+
   // Step 3: Credentials
   final List<String> interests;
   final List<String> skills;
   final String motivation;
-  
+
   // Step 4: Review
   final String notes;
   final bool hasConsented;
-  final List<Map<String, String>> attachments; // { 'url': ..., 'type': 'ID_CARD' }
+  final List<Map<String, String>>
+  attachments; // { 'url': ..., 'type': 'ID_CARD' }
 
   const MembershipFormState({
     this.fullName = '',
@@ -121,15 +133,19 @@ class MembershipNotifier extends StateNotifier<MembershipFormState> {
     if (field == 'dob') state = state.copyWith(dob: value as DateTime);
     if (field == 'gender') state = state.copyWith(gender: value as String);
     if (field == 'wilayaId') state = state.copyWith(wilayaId: value as String);
-    if (field == 'communeId') state = state.copyWith(communeId: value as String);
+    if (field == 'communeId')
+      state = state.copyWith(communeId: value as String);
     if (field == 'phone') state = state.copyWith(phone: value as String);
     if (field == 'email') state = state.copyWith(email: value as String);
-    if (field == 'motivation') state = state.copyWith(motivation: value as String);
+    if (field == 'motivation')
+      state = state.copyWith(motivation: value as String);
     if (field == 'notes') state = state.copyWith(notes: value as String);
-    if (field == 'hasConsented') state = state.copyWith(hasConsented: value as bool);
-    if (field == 'attachments') state = state.copyWith(attachments: value as List<Map<String, String>>);
+    if (field == 'hasConsented')
+      state = state.copyWith(hasConsented: value as bool);
+    if (field == 'attachments')
+      state = state.copyWith(attachments: value as List<Map<String, String>>);
   }
-  
+
   void toggleList(String field, String item) {
     if (field == 'interests') {
       final list = List<String>.from(state.interests);
@@ -158,15 +174,16 @@ class MembershipNotifier extends StateNotifier<MembershipFormState> {
       'motivation': state.motivation,
       'attachments': state.attachments,
     };
-    
+
     await dio.post('memberships', data: payload);
     state = const MembershipFormState();
   }
 }
 
-final membershipProvider = StateNotifierProvider<MembershipNotifier, MembershipFormState>((ref) {
-  return MembershipNotifier(ref);
-});
+final membershipProvider =
+    StateNotifierProvider<MembershipNotifier, MembershipFormState>((ref) {
+      return MembershipNotifier(ref);
+    });
 
 final membershipStatusProvider = FutureProvider<String>((ref) async {
   final dio = ref.read(apiClientProvider).dio;
@@ -197,23 +214,31 @@ class MembershipRequest {
 
   factory MembershipRequest.fromJson(Map<String, dynamic> json) {
     final applicationData = json['applicationData'] ?? {};
-    print('[MEMBERSHIP DATA] Parsed Request: ID=${json['_id'] ?? json['id']}, Status=${json['status']}');
+    print(
+      '[MEMBERSHIP DATA] Parsed Request: ID=${json['_id'] ?? json['id']}, Status=${json['status']}',
+    );
     return MembershipRequest(
       id: json['_id'] ?? json['id'] ?? '',
       userId: json['userId']?.toString(),
       fullName: applicationData['fullName'] ?? 'Unknown',
       status: json['status'] ?? 'SUBMITTED',
-      submissionDate: DateTime.parse(json['submissionDate'] ?? DateTime.now().toIso8601String()),
+      submissionDate: DateTime.parse(
+        json['submissionDate'] ?? DateTime.now().toIso8601String(),
+      ),
       data: applicationData,
     );
   }
 }
 
-final pendingMembershipsProvider = FutureProvider<List<MembershipRequest>>((ref) async {
+final pendingMembershipsProvider = FutureProvider<List<MembershipRequest>>((
+  ref,
+) async {
   final dio = ref.read(apiClientProvider).dio;
   // Note: /memberships/admin returns a paginated response { data: [], meta: {} }
   final response = await dio.get('memberships/admin');
-  final list = (response.data['data'] as List).map((e) => MembershipRequest.fromJson(e)).toList();
+  final list = (response.data['data'] as List)
+      .map((e) => MembershipRequest.fromJson(e))
+      .toList();
   return list;
 });
 
@@ -223,31 +248,42 @@ class MembershipAdminService {
   final Ref ref;
   MembershipAdminService(this.ref);
 
-  Future<void> reviewRequest(String id, String status, {String? notes, String? userId}) async {
+  Future<void> reviewRequest(
+    String id,
+    String status, {
+    String? notes,
+    String? userId,
+  }) async {
     final dio = ref.read(apiClientProvider).dio;
     try {
       print('[ADMIN MEMBERSHIP] Reviewing request $id to status $status');
-      await dio.patch('memberships/$id/review', data: {
-        'status': status,
-        'internalReviewNotes': notes,
-      });
-      
+      await dio.patch(
+        'memberships/$id/review',
+        data: {'status': status, 'internalReviewNotes': notes},
+      );
+
       if (userId != null) {
         final isAr = true;
-        final title = status == 'APPROVED' 
+        final title = status == 'APPROVED'
             ? (isAr ? 'تم قبول طلب العضوية' : 'Membership Approved')
             : (isAr ? 'حالة طلب العضوية' : 'Membership Status Update');
-        
-        final desc = status == 'APPROVED'
-            ? (isAr ? 'مبارك! تم قبول انضمامك لجمعية إبزيم. يمكنك الآن الوصول للميزات المتقدمة.' : 'Congratulations! Your membership has been approved.')
-            : (isAr ? 'نأسف لإبلاغك بأنه تعذر قبول طلبك في الوقت الحالي. يرجى مراجعة البيانات.' : 'Your membership request could not be accepted at this time.');
 
-        await ref.read(notificationServiceProvider).createNotification(
-          userId: userId,
-          title: title,
-          description: desc,
-          type: 'membership',
-        );
+        final desc = status == 'APPROVED'
+            ? (isAr
+                  ? 'مبارك! تم قبول انضمامك لجمعية إبزيم. يمكنك الآن الوصول للميزات المتقدمة.'
+                  : 'Congratulations! Your membership has been approved.')
+            : (isAr
+                  ? 'نأسف لإبلاغك بأنه تعذر قبول طلبك في الوقت الحالي. يرجى مراجعة البيانات.'
+                  : 'Your membership request could not be accepted at this time.');
+
+        await ref
+            .read(notificationServiceProvider)
+            .createNotification(
+              userId: userId,
+              title: title,
+              description: desc,
+              type: 'membership',
+            );
       }
     } catch (e) {
       print('[ADMIN MEMBERSHIP] Error reviewing request: $e');

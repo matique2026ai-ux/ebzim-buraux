@@ -23,10 +23,12 @@ class ProfileScreen extends ConsumerWidget {
     final statusAsync = ref.watch(membershipStatusProvider);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     // Safety check for user profile data
     final UserProfile? userProfile = userAsync.value;
-    final isAdmin = userProfile?.role == EbzimRole.admin || userProfile?.role == EbzimRole.superAdmin;
+    final isAdmin =
+        userProfile?.role == EbzimRole.admin ||
+        userProfile?.role == EbzimRole.superAdmin;
 
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
     final accentColor = AppTheme.accentColor;
@@ -53,18 +55,27 @@ class ProfileScreen extends ConsumerWidget {
                 EbzimSliverAppBar(
                   actions: [
                     IconButton(
-                      icon: const Icon(Icons.edit_note_rounded, color: AppTheme.accentColor),
+                      icon: const Icon(
+                        Icons.edit_note_rounded,
+                        color: AppTheme.accentColor,
+                      ),
                       onPressed: () => context.push('/profile/edit'),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
+                      icon: const Icon(
+                        Icons.logout_rounded,
+                        color: Colors.redAccent,
+                      ),
                       onPressed: () {
                         ref.read(authProvider.notifier).logout();
                         context.go('/splash');
                       },
                     ),
                     IconButton(
-                      icon: Icon(Icons.settings_outlined, color: AppTheme.accentColor),
+                      icon: Icon(
+                        Icons.settings_outlined,
+                        color: AppTheme.accentColor,
+                      ),
                       onPressed: () => context.push('/settings'),
                     ),
                   ],
@@ -83,23 +94,40 @@ class ProfileScreen extends ConsumerWidget {
                               Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2), width: 4),
+                                  border: Border.all(
+                                    color: AppTheme.accentColor.withValues(
+                                      alpha: 0.2,
+                                    ),
+                                    width: 4,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppTheme.accentColor.withValues(alpha: 0.08),
+                                      color: AppTheme.accentColor.withValues(
+                                        alpha: 0.08,
+                                      ),
                                       blurRadius: 40,
                                       spreadRadius: 4,
-                                    )
+                                    ),
                                   ],
                                 ),
                                 child: CircleAvatar(
                                   radius: 60,
-                                  backgroundColor: textColor.withValues(alpha: 0.05),
-                                  backgroundImage: (user.imageUrl?.startsWith('http') ?? false)
-                                      ? NetworkImage(user.imageUrl!) 
+                                  backgroundColor: textColor.withValues(
+                                    alpha: 0.05,
+                                  ),
+                                  backgroundImage:
+                                      (user.imageUrl?.startsWith('http') ??
+                                          false)
+                                      ? NetworkImage(user.imageUrl!)
                                       : null,
-                                  child: !(user.imageUrl?.startsWith('http') ?? false)
-                                      ? const Icon(Icons.person, color: AppTheme.accentColor, size: 40)
+                                  child:
+                                      !(user.imageUrl?.startsWith('http') ??
+                                          false)
+                                      ? const Icon(
+                                          Icons.person,
+                                          color: AppTheme.accentColor,
+                                          size: 40,
+                                        )
                                       : null,
                                 ),
                               ),
@@ -108,11 +136,14 @@ class ProfileScreen extends ConsumerWidget {
                                 child: _RoleBadge(role: user.role),
                               ),
                               // --- HONORARY MEDAL (CUSTOM BADGES) ---
-                              if (user.membershipBadge != null && user.membershipBadge != 'NONE')
+                              if (user.membershipBadge != null &&
+                                  user.membershipBadge != 'NONE')
                                 Positioned(
                                   top: -10,
                                   right: -10,
-                                  child: _HonoraryMedal(badge: user.membershipBadge!),
+                                  child: _HonoraryMedal(
+                                    badge: user.membershipBadge!,
+                                  ),
                                 ),
                             ],
                           ),
@@ -124,39 +155,41 @@ class ProfileScreen extends ConsumerWidget {
                         Text(
                           displayName,
                           textAlign: TextAlign.center,
-                          style: theme.textTheme.headlineLarge?.copyWith(fontSize: 32),
+                          style: theme.textTheme.headlineLarge?.copyWith(
+                            fontSize: 32,
+                          ),
                         ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
 
                         const SizedBox(height: 8),
 
-                                statusAsync.when(
-                                  data: (statusStr) {
-                                    return Column(
-                                      children: [
-                                        Text(
-                                          '${user.role.getLabel(Localizations.localeOf(context).languageCode)} • $statusStr',
-                                          style: GoogleFonts.cairo(
-                                            color: AppTheme.accentColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: 0.5,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'رقم العضوية: ${user.id.substring(user.id.length.clamp(0, 6)).toUpperCase()}',
-                                          style: GoogleFonts.playfairDisplay(
-                                            color: textColor.withValues(alpha: 0.4),
-                                            fontSize: 10,
-                                            letterSpacing: 1.0,
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                  loading: () => const SizedBox(height: 16),
-                                  error: (err, stack) => const SizedBox(height: 16),
+                        statusAsync.when(
+                          data: (statusStr) {
+                            return Column(
+                              children: [
+                                Text(
+                                  '${user.role.getLabel(Localizations.localeOf(context).languageCode)} • $statusStr',
+                                  style: GoogleFonts.cairo(
+                                    color: AppTheme.accentColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'رقم العضوية: ${user.id.substring(user.id.length.clamp(0, 6)).toUpperCase()}',
+                                  style: GoogleFonts.playfairDisplay(
+                                    color: textColor.withValues(alpha: 0.4),
+                                    fontSize: 10,
+                                    letterSpacing: 1.0,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                          loading: () => const SizedBox(height: 16),
+                          error: (err, stack) => const SizedBox(height: 16),
+                        ),
 
                         const SizedBox(height: 40),
 
@@ -172,17 +205,27 @@ class ProfileScreen extends ConsumerWidget {
                                 label: loc.profileEmail,
                                 value: user.email,
                               ),
-                              Divider(color: isDark ? Colors.white10 : Colors.black12),
+                              Divider(
+                                color: isDark ? Colors.white10 : Colors.black12,
+                              ),
                               _ProfileTile(
                                 icon: Icons.phone_android,
                                 label: loc.profilePhone,
-                                value: (user.phone?.isNotEmpty ?? false) ? user.phone! : '—',
+                                value: (user.phone?.isNotEmpty ?? false)
+                                    ? user.phone!
+                                    : '—',
                               ),
                               if (!isPublic) ...[
-                                Divider(color: isDark ? Colors.white10 : Colors.black12),
+                                Divider(
+                                  color: isDark
+                                      ? Colors.white10
+                                      : Colors.black12,
+                                ),
                                 _ProfileTile(
                                   icon: Icons.verified_user_outlined,
-                                  label: isRtl ? 'صلاحية العضوية لغاية' : 'Membership Valid Until',
+                                  label: isRtl
+                                      ? 'صلاحية العضوية لغاية'
+                                      : 'Membership Valid Until',
                                   value: user.getFormattedExpiry(lang),
                                 ),
                               ],
@@ -197,45 +240,74 @@ class ProfileScreen extends ConsumerWidget {
                           _SectionHeader(title: loc.dashJoinTitle),
                           const SizedBox(height: 12),
                           Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => context.push('/membership/discover'),
-                              borderRadius: BorderRadius.circular(20),
-                              child: GlassCard(
-                                padding: const EdgeInsets.all(20),
-                                border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: AppTheme.accentColor.withValues(alpha: 0.1),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(Icons.workspace_premium, color: accentColor),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            loc.dashMembershipDiscover,
-                                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: textColor),
-                                          ),
-                                          Text(
-                                            loc.dashMembershipInvite,
-                                            style: theme.textTheme.bodySmall?.copyWith(color: textColor.withValues(alpha: 0.6)),
-                                          ),
-                                        ],
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () =>
+                                      context.push('/membership/discover'),
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: GlassCard(
+                                    padding: const EdgeInsets.all(20),
+                                    border: Border.all(
+                                      color: AppTheme.accentColor.withValues(
+                                        alpha: 0.3,
                                       ),
                                     ),
-                                    Icon(Icons.chevron_right, color: accentColor),
-                                  ],
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: AppTheme.accentColor
+                                                .withValues(alpha: 0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            Icons.workspace_premium,
+                                            color: accentColor,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                loc.dashMembershipDiscover,
+                                                style: theme
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: textColor,
+                                                    ),
+                                              ),
+                                              Text(
+                                                loc.dashMembershipInvite,
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                      color: textColor
+                                                          .withValues(
+                                                            alpha: 0.6,
+                                                          ),
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.chevron_right,
+                                          color: accentColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ).animate().slideX(begin: 0.05, delay: 500.ms).fadeIn(),
+                              )
+                              .animate()
+                              .slideX(begin: 0.05, delay: 500.ms)
+                              .fadeIn(),
                           const SizedBox(height: 32),
                         ],
 
@@ -256,7 +328,8 @@ class ProfileScreen extends ConsumerWidget {
                                 icon: Icons.lock_outline,
                                 title: loc.authResetPassword,
                                 textColor: textColor,
-                                onTap: () => context.push('/auth/forgot-password'),
+                                onTap: () =>
+                                    context.push('/auth/forgot-password'),
                               ),
                               _ActionTile(
                                 icon: Icons.help_outline,
@@ -280,17 +353,26 @@ class ProfileScreen extends ConsumerWidget {
                             },
                             borderRadius: BorderRadius.circular(20),
                             child: GlassCard(
-                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-                                border: Border.all(color: textColor.withValues(alpha: 0.05)),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 24,
+                              ),
+                              border: Border.all(
+                                color: textColor.withValues(alpha: 0.05),
+                              ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.logout_rounded, color: Colors.redAccent, size: 20),
+                                  const Icon(
+                                    Icons.logout_rounded,
+                                    color: Colors.redAccent,
+                                    size: 20,
+                                  ),
                                   const SizedBox(width: 12),
                                   const Text(
-                                    'تسجيل الخروج من الحساب', 
+                                    'تسجيل الخروج من الحساب',
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold, 
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.redAccent,
                                       fontSize: 16,
                                       letterSpacing: 1,
@@ -301,7 +383,7 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                           ),
                         ).animate().fadeIn(delay: 800.ms),
-                        
+
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -311,7 +393,9 @@ class ProfileScreen extends ConsumerWidget {
             );
           },
           loading: () => const _ProfileSkeleton(),
-          error: (e, s) => Center(child: Text(e.toString(), style: theme.textTheme.bodyMedium)),
+          error: (e, s) => Center(
+            child: Text(e.toString(), style: theme.textTheme.bodyMedium),
+          ),
         ),
       ),
     );
@@ -332,14 +416,23 @@ class _SectionHeader extends StatelessWidget {
           Text(
             title.toUpperCase(),
             style: GoogleFonts.playfairDisplay(
-              color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black26,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.4)
+                  : Colors.black26,
               fontSize: 10,
               fontWeight: FontWeight.w900,
               letterSpacing: 2.5,
             ),
           ),
           const SizedBox(width: 12),
-          Expanded(child: Divider(color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05), thickness: 1)),
+          Expanded(
+            child: Divider(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.black.withValues(alpha: 0.05),
+              thickness: 1,
+            ),
+          ),
         ],
       ),
     );
@@ -350,7 +443,11 @@ class _ProfileTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const _ProfileTile({required this.icon, required this.label, required this.value});
+  const _ProfileTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -360,7 +457,11 @@ class _ProfileTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.accentColor.withValues(alpha: 0.6), size: 20),
+          Icon(
+            icon,
+            color: AppTheme.accentColor.withValues(alpha: 0.6),
+            size: 20,
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -369,7 +470,9 @@ class _ProfileTile extends StatelessWidget {
                 Text(
                   label.toUpperCase(),
                   style: TextStyle(
-                    color: isDark ? Colors.white.withValues(alpha: 0.3) : Colors.black38,
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.3)
+                        : Colors.black38,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
@@ -396,8 +499,8 @@ class _ActionTile extends StatelessWidget {
   final VoidCallback onTap;
 
   const _ActionTile({
-    required this.icon, 
-    required this.title, 
+    required this.icon,
+    required this.title,
     this.textColor,
     required this.onTap,
   });
@@ -412,9 +515,17 @@ class _ActionTile extends StatelessWidget {
       leading: Icon(icon, color: AppTheme.accentColor, size: 22),
       title: Text(
         title,
-        style: theme.textTheme.titleMedium?.copyWith(fontSize: 16, fontWeight: FontWeight.w500, color: color),
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: color,
+        ),
       ),
-      trailing: Icon(Icons.chevron_right, color: isDark ? Colors.white24 : Colors.black26, size: 20),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: isDark ? Colors.white24 : Colors.black26,
+        size: 20,
+      ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
     );
   }
@@ -448,19 +559,32 @@ class _ProfileSkeleton extends StatelessWidget {
 class _Sk extends StatelessWidget {
   final double h, w, r;
   final bool isDark;
-  const _Sk({required this.h, required this.w, this.r = 8, required this.isDark});
+  const _Sk({
+    required this.h,
+    required this.w,
+    this.r = 8,
+    required this.isDark,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: h,
-      width: w,
-      decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(r),
-      ),
-    ).animate(onPlay: (c) => c.repeat(reverse: true))
-     .shimmer(duration: 1500.ms, color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.02));
+          height: h,
+          width: w,
+          decoration: BoxDecoration(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(r),
+          ),
+        )
+        .animate(onPlay: (c) => c.repeat(reverse: true))
+        .shimmer(
+          duration: 1500.ms,
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.03)
+              : Colors.black.withValues(alpha: 0.02),
+        );
   }
 }
 
@@ -472,16 +596,31 @@ class _RoleBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final lang = Localizations.localeOf(context).languageCode;
     final bgColor = role.getBadgeColor();
-    final textColor = role == EbzimRole.superAdmin || role == EbzimRole.admin || role == EbzimRole.authority ? Colors.white : Colors.black87;
+    final textColor =
+        role == EbzimRole.superAdmin ||
+            role == EbzimRole.admin ||
+            role == EbzimRole.authority
+        ? Colors.white
+        : Colors.black87;
     final label = role.getLabel(lang);
-    
+
     IconData? icon;
     switch (role) {
-      case EbzimRole.superAdmin: icon = Icons.stars_rounded; break;
-      case EbzimRole.admin: icon = Icons.admin_panel_settings_rounded; break;
-      case EbzimRole.authority: icon = Icons.account_balance_rounded; break;
-      case EbzimRole.member: icon = Icons.verified_rounded; break;
-      case EbzimRole.public: icon = Icons.person_outline_rounded; break;
+      case EbzimRole.superAdmin:
+        icon = Icons.stars_rounded;
+        break;
+      case EbzimRole.admin:
+        icon = Icons.admin_panel_settings_rounded;
+        break;
+      case EbzimRole.authority:
+        icon = Icons.account_balance_rounded;
+        break;
+      case EbzimRole.member:
+        icon = Icons.verified_rounded;
+        break;
+      case EbzimRole.public:
+        icon = Icons.person_outline_rounded;
+        break;
     }
 
     return Container(
@@ -490,7 +629,11 @@ class _RoleBadge extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: bgColor.withValues(alpha: 0.4), blurRadius: 8, offset: const Offset(0, 3)),
+          BoxShadow(
+            color: bgColor.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
         ],
       ),
       child: Row(
@@ -571,7 +714,8 @@ class _HonoraryMedal extends StatelessWidget {
         icon = Icons.groups_rounded;
         label = 'نائب الرئيس';
         break;
-      default: return const SizedBox();
+      default:
+        return const SizedBox();
     }
 
     return Container(
@@ -581,13 +725,15 @@ class _HonoraryMedal extends StatelessWidget {
         color: Colors.white,
         shape: BoxShape.circle,
         boxShadow: [
-          BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 12, spreadRadius: 2),
+          BoxShadow(
+            color: color.withValues(alpha: 0.4),
+            blurRadius: 12,
+            spreadRadius: 2,
+          ),
         ],
         border: Border.all(color: color, width: 2),
       ),
-      child: Center(
-        child: Icon(icon, color: color, size: 28),
-      ),
+      child: Center(child: Icon(icon, color: color, size: 28)),
     );
   }
 }

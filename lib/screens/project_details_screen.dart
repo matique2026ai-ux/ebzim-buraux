@@ -39,12 +39,19 @@ class ProjectDetailsScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                   onPressed: () => context.pop(),
                 ),
               ),
               flexibleSpace: FlexibleSpaceBar(
-                stretchModes: const [StretchMode.zoomBackground, StretchMode.blurBackground],
+                stretchModes: const [
+                  StretchMode.zoomBackground,
+                  StretchMode.blurBackground,
+                ],
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -53,7 +60,11 @@ class ProjectDetailsScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => Container(
                         color: const Color(0xFF0A1A0A),
-                        child: const Icon(Icons.architecture_rounded, size: 80, color: AppTheme.accentColor),
+                        child: const Icon(
+                          Icons.architecture_rounded,
+                          size: 80,
+                          color: AppTheme.accentColor,
+                        ),
                       ),
                     ),
                     const DecoratedBox(
@@ -79,22 +90,34 @@ class ProjectDetailsScreen extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: AppTheme.accentColor,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
                                   _getCategoryLabel(project.category, isAr),
-                                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                               if (project.projectStatus != 'GENERAL') ...[
                                 const SizedBox(width: 8),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: _getStatusColor(project.projectStatus).withValues(alpha: 0.9),
+                                    color: _getStatusColor(
+                                      project.projectStatus,
+                                    ).withValues(alpha: 0.9),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(color: Colors.white24),
                                   ),
@@ -104,12 +127,22 @@ class ProjectDetailsScreen extends StatelessWidget {
                                       Container(
                                         width: 6,
                                         height: 6,
-                                        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                        ),
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        _getStatusLabel(project.projectStatus, isAr),
-                                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                        _getStatusLabel(
+                                          project.projectStatus,
+                                          isAr,
+                                        ),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -143,14 +176,18 @@ class ProjectDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ── Progress Section ──
-                    _buildSectionHeader(isAr ? 'حالة الإنجاز' : 'État d\'avancement'),
+                    _buildSectionHeader(
+                      isAr ? 'حالة الإنجاز' : 'État d\'avancement',
+                    ),
                     const SizedBox(height: 16),
                     _buildProgressCard(context, project.progressPercentage),
-                    
+
                     const SizedBox(height: 32),
 
                     // ── Timeline Section ──
-                    _buildSectionHeader(isAr ? 'مراحل المشروع' : 'Étapes du projet'),
+                    _buildSectionHeader(
+                      isAr ? 'مراحل المشروع' : 'Étapes du projet',
+                    ),
                     const SizedBox(height: 20),
                     EbzimProjectTimeline(
                       milestones: project.milestones,
@@ -160,7 +197,9 @@ class ProjectDetailsScreen extends StatelessWidget {
                     const SizedBox(height: 32),
 
                     // ── Description Section ──
-                    _buildSectionHeader(isAr ? 'عن المشروع' : 'À propos du projet'),
+                    _buildSectionHeader(
+                      isAr ? 'عن المشروع' : 'À propos du projet',
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       project.getBody(lang),
@@ -220,10 +259,20 @@ class ProjectDetailsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: isDark ? Colors.white10 : AppTheme.accentColor.withValues(alpha: 0.1)),
-        boxShadow: isDark ? [] : [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 10))
-        ],
+        border: Border.all(
+          color: isDark
+              ? Colors.white10
+              : AppTheme.accentColor.withValues(alpha: 0.1),
+        ),
+        boxShadow: isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
       ),
       child: Column(
         children: [
@@ -251,7 +300,9 @@ class ProjectDetailsScreen extends StatelessWidget {
               value: progress,
               minHeight: 12,
               backgroundColor: AppTheme.accentColor.withValues(alpha: 0.1),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.accentColor),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppTheme.accentColor,
+              ),
             ),
           ).animate().shimmer(duration: 2.seconds),
         ],
@@ -275,10 +326,16 @@ class ProjectDetailsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('بالشراكة مع', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                const Text(
+                  'بالشراكة مع',
+                  style: TextStyle(fontSize: 10, color: Colors.grey),
+                ),
                 Text(
                   partner,
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.accentColor),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.accentColor,
+                  ),
                 ),
               ],
             ),
@@ -290,33 +347,50 @@ class ProjectDetailsScreen extends StatelessWidget {
 
   String _getCategoryLabel(String cat, bool isAr) {
     switch (cat) {
-      case 'HERITAGE': return isAr ? 'مشروع تراثي' : 'Projet Patrimonial';
-      case 'PROJECT': return isAr ? 'مشروع تطويري' : 'Projet de Développement';
-      case 'ARTISTIC': return isAr ? 'مشروع فني' : 'Projet Artistique';
-      case 'CULTURAL': return isAr ? 'مشروع ثقافي' : 'Projet Culturel';
-      case 'SCIENTIFIC': return isAr ? 'مشروع علمي' : 'Projet Scientifique';
-      case 'RESTORATION': return isAr ? 'مشروع ترميم' : 'Projet de Restauration';
-      default: return isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel';
+      case 'HERITAGE':
+        return isAr ? 'مشروع تراثي' : 'Projet Patrimonial';
+      case 'PROJECT':
+        return isAr ? 'مشروع تطويري' : 'Projet de Développement';
+      case 'ARTISTIC':
+        return isAr ? 'مشروع فني' : 'Projet Artistique';
+      case 'CULTURAL':
+        return isAr ? 'مشروع ثقافي' : 'Projet Culturel';
+      case 'SCIENTIFIC':
+        return isAr ? 'مشروع علمي' : 'Projet Scientifique';
+      case 'RESTORATION':
+        return isAr ? 'مشروع ترميم' : 'Projet de Restauration';
+      default:
+        return isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel';
     }
   }
 
   Color _getStatusColor(String status) {
     switch (status) {
-      case 'PREPARING': return Colors.blue;
-      case 'ACTIVE': return Colors.green;
-      case 'ON_HOLD': return Colors.orange;
-      case 'COMPLETED': return const Color(0xFFC5A059);
-      default: return Colors.grey;
+      case 'PREPARING':
+        return Colors.blue;
+      case 'ACTIVE':
+        return Colors.green;
+      case 'ON_HOLD':
+        return Colors.orange;
+      case 'COMPLETED':
+        return const Color(0xFFC5A059);
+      default:
+        return Colors.grey;
     }
   }
 
   String _getStatusLabel(String status, bool isAr) {
     switch (status) {
-      case 'PREPARING': return isAr ? 'قيد التحضير' : 'En préparation';
-      case 'ACTIVE': return isAr ? 'نشط' : 'Actif';
-      case 'ON_HOLD': return isAr ? 'متوقف' : 'En pause';
-      case 'COMPLETED': return isAr ? 'مكتمل' : 'Terminé';
-      default: return '';
+      case 'PREPARING':
+        return isAr ? 'قيد التحضير' : 'En préparation';
+      case 'ACTIVE':
+        return isAr ? 'نشط' : 'Actif';
+      case 'ON_HOLD':
+        return isAr ? 'متوقف' : 'En pause';
+      case 'COMPLETED':
+        return isAr ? 'مكتمل' : 'Terminé';
+      default:
+        return '';
     }
   }
 }

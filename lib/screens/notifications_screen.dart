@@ -10,7 +10,8 @@ class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
+  ConsumerState<NotificationsScreen> createState() =>
+      _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
@@ -26,7 +27,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.appBarTheme.backgroundColor ?? theme.scaffoldBackgroundColor,
+        backgroundColor:
+            theme.appBarTheme.backgroundColor ?? theme.scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
@@ -70,7 +72,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   return Center(
                     child: Text(
                       loc.noNotifs,
-                      style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
                     ),
                   );
                 }
@@ -78,7 +84,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 return ListView.separated(
                   padding: const EdgeInsets.all(24),
                   itemCount: filtered.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final n = filtered[index];
                     return Container(
@@ -91,15 +98,19 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                         border: Border.all(
                           color: n.isRead
                               ? theme.colorScheme.outlineVariant
-                              : theme.colorScheme.primary.withValues(alpha: 0.2),
+                              : theme.colorScheme.primary.withValues(
+                                  alpha: 0.2,
+                                ),
                         ),
                         boxShadow: n.isRead
                             ? []
                             : [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.05),
+                                  color: Colors.black.withValues(
+                                    alpha: isDark ? 0.15 : 0.05,
+                                  ),
                                   blurRadius: 10,
-                                )
+                                ),
                               ],
                       ),
                       child: Row(
@@ -110,17 +121,21 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                             decoration: BoxDecoration(
                               color: n.isRead
                                   ? theme.colorScheme.surfaceContainerHighest
-                                  : theme.colorScheme.primary.withValues(alpha: 0.08),
+                                  : theme.colorScheme.primary.withValues(
+                                      alpha: 0.08,
+                                    ),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Icon(
                               n.type == 'event'
                                   ? Icons.event
                                   : (n.type == 'membership'
-                                      ? Icons.badge
-                                      : Icons.notifications),
+                                        ? Icons.badge
+                                        : Icons.notifications),
                               color: n.isRead
-                                  ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
+                                  ? theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.4,
+                                    )
                                   : theme.colorScheme.primary,
                             ),
                           ),
@@ -130,7 +145,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Text(
@@ -146,7 +162,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                       DateFormat('MMM d').format(n.timestamp),
                                       style: TextStyle(
                                         fontSize: 10,
-                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                        color: theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.4),
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -157,13 +174,16 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                   n.description,
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: theme.colorScheme.onSurface.withValues(alpha: n.isRead ? 0.5 : 0.75),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(
+                                          alpha: n.isRead ? 0.5 : 0.75,
+                                        ),
                                     height: 1.4,
                                   ),
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     );
@@ -171,7 +191,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 );
               },
               loading: () => Center(
-                child: CircularProgressIndicator(color: theme.colorScheme.primary),
+                child: CircularProgressIndicator(
+                  color: theme.colorScheme.primary,
+                ),
               ),
               error: (e, s) => Center(
                 child: Text(
@@ -180,7 +202,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -195,7 +217,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primary
-              : (isDark ? Colors.white.withValues(alpha: 0.07) : Colors.black.withValues(alpha: 0.05)),
+              : (isDark
+                    ? Colors.white.withValues(alpha: 0.07)
+                    : Colors.black.withValues(alpha: 0.05)),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(

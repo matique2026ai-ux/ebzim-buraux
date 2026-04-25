@@ -27,7 +27,8 @@ class ContributionsScreen extends ConsumerStatefulWidget {
   const ContributionsScreen({super.key});
 
   @override
-  ConsumerState<ContributionsScreen> createState() => _ContributionsScreenState();
+  ConsumerState<ContributionsScreen> createState() =>
+      _ContributionsScreenState();
 }
 
 class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
@@ -77,19 +78,25 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded, color: AppTheme.accentColor, size: 20),
+            icon: const Icon(
+              Icons.arrow_back_ios_rounded,
+              color: AppTheme.accentColor,
+              size: 20,
+            ),
             onPressed: () => context.pop(),
           ),
           title: Text(
             loc.finTitle,
-            style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 18, color: AppTheme.accentColor),
+            style: GoogleFonts.tajawal(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: AppTheme.accentColor,
+            ),
           ),
           centerTitle: true,
         ),
         body: const EbzimBackground(
-          child: LoginRequiredOverlay(
-            icon: Icons.volunteer_activism_rounded,
-          ),
+          child: LoginRequiredOverlay(icon: Icons.volunteer_activism_rounded),
         ),
       );
     }
@@ -120,8 +127,10 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
 
               final membershipWidget = Column(
                 children: [
-                   _SectionHeader(
-                    title: isPublic ? loc.finJoinOptional : loc.finMembershipFee, 
+                  _SectionHeader(
+                    title: isPublic
+                        ? loc.finJoinOptional
+                        : loc.finMembershipFee,
                     icon: Icons.card_membership_rounded,
                     isAr: isAr,
                   ),
@@ -138,28 +147,55 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                               children: [
                                 Text(
                                   loc.finMembershipFee,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black45),
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: isDark
+                                            ? Colors.white.withValues(
+                                                alpha: 0.5,
+                                              )
+                                            : Colors.black45,
+                                      ),
                                 ),
-                                _isLoadingFee 
-                                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                                  : Text(
-                                      '$_currentFee DZD',
-                                      style: GoogleFonts.playfairDisplay(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.accentColor),
-                                    ),
+                                _isLoadingFee
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : Text(
+                                        '$_currentFee DZD',
+                                        style: GoogleFonts.playfairDisplay(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w900,
+                                          color: AppTheme.accentColor,
+                                        ),
+                                      ),
                               ],
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
-                                color: (isPublic ? Colors.blue : Colors.orange).withValues(alpha: 0.1),
+                                color: (isPublic ? Colors.blue : Colors.orange)
+                                    .withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: (isPublic ? Colors.blue : Colors.orange).withValues(alpha: 0.3)),
+                                border: Border.all(
+                                  color:
+                                      (isPublic ? Colors.blue : Colors.orange)
+                                          .withValues(alpha: 0.3),
+                                ),
                               ),
                               child: Text(
-                                isPublic ? loc.dashStatusActive : loc.finNeedsRenewal,
+                                isPublic
+                                    ? loc.dashStatusActive
+                                    : loc.finNeedsRenewal,
                                 style: GoogleFonts.tajawal(
-                                  fontSize: 10, 
-                                  fontWeight: FontWeight.bold, 
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
                                   color: isPublic ? Colors.blue : Colors.orange,
                                 ),
                               ),
@@ -173,7 +209,10 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                             if (isPublic) {
                               context.push('/membership/apply');
                             } else {
-                              _handleSubmit('ANNUAL_MEMBERSHIP', _currentFee.toDouble());
+                              _handleSubmit(
+                                'ANNUAL_MEMBERSHIP',
+                                _currentFee.toDouble(),
+                              );
                             }
                           },
                           isLoading: _isSubmitting,
@@ -193,16 +232,13 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                 ];
               } else {
                 // For members, show Membership Section first
-                return [
-                  membershipWidget,
-                  const SizedBox(height: 48),
-                ];
+                return [membershipWidget, const SizedBox(height: 48)];
               }
             }()),
 
             // ── Section 2: Donations Choice ──────────────────────────────────
             _SectionHeader(
-              title: loc.finSupportProjects, 
+              title: loc.finSupportProjects,
               icon: Icons.volunteer_activism_rounded,
               isAr: isAr,
             ),
@@ -214,18 +250,23 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                 children: [
                   Text(
                     loc.finChooseType,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Selection Toggle (User Choice)
                   Row(
                     children: [
                       Expanded(
                         child: _ChoiceChip(
                           label: loc.finGeneral,
-                          isSelected: _selectedDonationType == DonationType.general,
-                          onTap: () => setState(() => _selectedDonationType = DonationType.general),
+                          isSelected:
+                              _selectedDonationType == DonationType.general,
+                          onTap: () => setState(
+                            () => _selectedDonationType = DonationType.general,
+                          ),
                           isAr: isAr,
                         ),
                       ),
@@ -233,16 +274,19 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                       Expanded(
                         child: _ChoiceChip(
                           label: loc.finProject,
-                          isSelected: _selectedDonationType == DonationType.project,
-                          onTap: () => setState(() => _selectedDonationType = DonationType.project),
+                          isSelected:
+                              _selectedDonationType == DonationType.project,
+                          onTap: () => setState(
+                            () => _selectedDonationType = DonationType.project,
+                          ),
                           isAr: isAr,
                         ),
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Amount Field & Currency Selector
                   Row(
                     children: [
@@ -251,14 +295,24 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                         child: TextField(
                           controller: _amountController,
                           keyboardType: TextInputType.number,
-                          style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold),
+                          style: GoogleFonts.playfairDisplay(
+                            fontWeight: FontWeight.bold,
+                          ),
                           decoration: InputDecoration(
                             labelText: loc.finAmountLabel,
-                            prefixIcon: const Icon(Icons.payments_outlined, color: AppTheme.accentColor),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                            prefixIcon: const Icon(
+                              Icons.payments_outlined,
+                              color: AppTheme.accentColor,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14),
-                              borderSide: const BorderSide(color: AppTheme.accentColor, width: 2),
+                              borderSide: const BorderSide(
+                                color: AppTheme.accentColor,
+                                width: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -270,70 +324,110 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                           value: _selectedCurrency,
                           decoration: InputDecoration(
                             labelText: isAr ? 'العملة' : 'Currency',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
-                          items: ['DZD', 'EUR', 'USD'].map((c) => DropdownMenuItem(
-                            value: c,
-                            child: Text(c, style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
-                          )).toList(),
-                          onChanged: (val) => setState(() => _selectedCurrency = val ?? 'DZD'),
+                          items: ['DZD', 'EUR', 'USD']
+                              .map(
+                                (c) => DropdownMenuItem(
+                                  value: c,
+                                  child: Text(
+                                    c,
+                                    style: GoogleFonts.playfairDisplay(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (val) =>
+                              setState(() => _selectedCurrency = val ?? 'DZD'),
                         ),
                       ),
                     ],
                   ),
-                  
+
                   if (_selectedDonationType == DonationType.project) ...[
                     const SizedBox(height: 16),
-                    ref.watch(heritageProjectsProvider).when(
-                      data: (projects) {
-                        if (projects.isEmpty) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              isAr ? 'لا توجد مشاريع نشطة حالياً' : 'No active projects available',
-                              style: GoogleFonts.tajawal(fontSize: 12, color: Colors.orange),
-                            ),
-                          );
-                        }
-                        return DropdownButtonFormField<NewsPost>(
-                          value: _selectedProject ?? (projects.isNotEmpty ? projects.first : null),
-                          decoration: InputDecoration(
-                            labelText: isAr ? 'اختر المشروع' : 'Select Project',
-                            prefixIcon: const Icon(Icons.architecture_rounded, color: AppTheme.accentColor),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-                          ),
-                          items: projects.map((p) => DropdownMenuItem(
-                            value: p,
-                            child: Text(
-                              p.getTitle(isAr ? 'ar' : 'en'),
-                              style: GoogleFonts.tajawal(fontSize: 13),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )).toList(),
-                          onChanged: (val) => setState(() => _selectedProject = val),
-                        );
-                      },
-                      loading: () => const Center(child: CircularProgressIndicator()),
-                      error: (_, __) => const SizedBox(),
-                    ),
+                    ref
+                        .watch(heritageProjectsProvider)
+                        .when(
+                          data: (projects) {
+                            if (projects.isEmpty) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  isAr
+                                      ? 'لا توجد مشاريع نشطة حالياً'
+                                      : 'No active projects available',
+                                  style: GoogleFonts.tajawal(
+                                    fontSize: 12,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              );
+                            }
+                            return DropdownButtonFormField<NewsPost>(
+                              value:
+                                  _selectedProject ??
+                                  (projects.isNotEmpty ? projects.first : null),
+                              decoration: InputDecoration(
+                                labelText: isAr
+                                    ? 'اختر المشروع'
+                                    : 'Select Project',
+                                prefixIcon: const Icon(
+                                  Icons.architecture_rounded,
+                                  color: AppTheme.accentColor,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              items: projects
+                                  .map(
+                                    (p) => DropdownMenuItem(
+                                      value: p,
+                                      child: Text(
+                                        p.getTitle(isAr ? 'ar' : 'en'),
+                                        style: GoogleFonts.tajawal(
+                                          fontSize: 13,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (val) =>
+                                  setState(() => _selectedProject = val),
+                            );
+                          },
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (_, __) => const SizedBox(),
+                        ),
                   ],
 
                   const SizedBox(height: 24),
-                  
+
                   _ProofUploadTile(
                     onTap: () async {
                       final file = await ref.read(apiClientProvider).pickFile();
                       if (file == null) return;
-                      
+
                       setState(() => _isUploadingProof = true);
                       try {
-                        final result = await ref.read(mediaServiceProvider).uploadMedia(
-                          file.bytes!,
-                          file.name,
-                        );
+                        final result = await ref
+                            .read(mediaServiceProvider)
+                            .uploadMedia(file.bytes!, file.name);
                         if (mounted) setState(() => _proofUrl = result);
                       } catch (e) {
-                        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
+                        if (mounted)
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Upload failed: $e')),
+                          );
                       } finally {
                         if (mounted) setState(() => _isUploadingProof = false);
                       }
@@ -347,13 +441,19 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
                   _PrimaryButton(
                     label: loc.finSend,
                     onTap: () {
-                      final amount = double.tryParse(_amountController.text) ?? 0;
+                      final amount =
+                          double.tryParse(_amountController.text) ?? 0;
                       if (amount > 0) {
                         _handleSubmit(
-                          _selectedDonationType == DonationType.general ? 'GENERAL_DONATION' : 'PROJECT_SUPPORT',
+                          _selectedDonationType == DonationType.general
+                              ? 'GENERAL_DONATION'
+                              : 'PROJECT_SUPPORT',
                           amount,
                           currency: _selectedCurrency,
-                          projectId: _selectedDonationType == DonationType.project ? _selectedProject?.id : null,
+                          projectId:
+                              _selectedDonationType == DonationType.project
+                              ? _selectedProject?.id
+                              : null,
                           proofUrl: _proofUrl,
                         );
                       }
@@ -370,7 +470,7 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
             ...(() {
               final user = ref.watch(currentUserProvider).asData?.value;
               final isPublic = user?.role == EbzimRole.public;
-              
+
               if (isPublic) {
                 return [
                   const SizedBox(height: 48),
@@ -409,22 +509,32 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
     );
   }
 
-  void _handleSubmit(String type, double amount, {String currency = 'DZD', String? projectId, String? proofUrl}) async {
+  void _handleSubmit(
+    String type,
+    double amount, {
+    String currency = 'DZD',
+    String? projectId,
+    String? proofUrl,
+  }) async {
     setState(() => _isSubmitting = true);
     try {
-      await ref.read(financialServiceProvider).submitContribution(
-        type: type,
-        amount: amount,
-        currency: currency,
-        projectId: projectId,
-        proofUrl: proofUrl,
-      );
+      await ref
+          .read(financialServiceProvider)
+          .submitContribution(
+            type: type,
+            amount: amount,
+            currency: currency,
+            projectId: projectId,
+            proofUrl: proofUrl,
+          );
       if (mounted) {
         _showSuccessDialog();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -437,8 +547,14 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Icon(Icons.check_circle_outline_rounded, color: Colors.green, size: 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Icon(
+            Icons.check_circle_outline_rounded,
+            color: Colors.green,
+            size: 48,
+          ),
           content: Text(
             Localizations.localeOf(context).languageCode == 'ar'
                 ? 'تم إرسال طلب المساهمة بنجاح. سيتم مراجعة الدفع من قِبل الإدارة وتحديث حالتك قريباً.'
@@ -447,7 +563,10 @@ class _ContributionsScreenState extends ConsumerState<ContributionsScreen> {
             style: GoogleFonts.tajawal(),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
           ],
         ),
       ),
@@ -463,7 +582,11 @@ class _SectionHeader extends StatelessWidget {
   final String title;
   final IconData icon;
   final bool isAr;
-  const _SectionHeader({required this.title, required this.icon, required this.isAr});
+  const _SectionHeader({
+    required this.title,
+    required this.icon,
+    required this.isAr,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -486,7 +609,12 @@ class _ChoiceChip extends StatelessWidget {
   final VoidCallback onTap;
   final bool isAr;
 
-  const _ChoiceChip({required this.label, required this.isSelected, required this.onTap, required this.isAr});
+  const _ChoiceChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+    required this.isAr,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -498,7 +626,11 @@ class _ChoiceChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.accentColor : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: isSelected ? AppTheme.accentColor : AppTheme.accentColor.withValues(alpha: 0.3)),
+          border: Border.all(
+            color: isSelected
+                ? AppTheme.accentColor
+                : AppTheme.accentColor.withValues(alpha: 0.3),
+          ),
         ),
         child: Center(
           child: Text(
@@ -522,7 +654,13 @@ class _PrimaryButton extends StatelessWidget {
   final bool isAr;
   final Color? color;
 
-  const _PrimaryButton({required this.label, required this.onTap, this.isLoading = false, required this.isAr, this.color});
+  const _PrimaryButton({
+    required this.label,
+    required this.onTap,
+    this.isLoading = false,
+    required this.isAr,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -535,13 +673,25 @@ class _PrimaryButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
       ),
-      child: isLoading 
-        ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-        : Text(label, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 15)),
+      child: isLoading
+          ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            )
+          : Text(
+              label,
+              style: GoogleFonts.tajawal(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
     );
   }
 }
-
 
 class _ProofUploadTile extends StatelessWidget {
   final VoidCallback onTap;
@@ -549,7 +699,12 @@ class _ProofUploadTile extends StatelessWidget {
   final bool isLoading;
   final bool isAr;
 
-  const _ProofUploadTile({required this.onTap, required this.isUploaded, required this.isLoading, required this.isAr});
+  const _ProofUploadTile({
+    required this.onTap,
+    required this.isUploaded,
+    required this.isLoading,
+    required this.isAr,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -559,17 +714,23 @@ class _ProofUploadTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isUploaded ? Colors.green.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.05),
+          color: isUploaded
+              ? Colors.green.withValues(alpha: 0.05)
+              : Colors.grey.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isUploaded ? Colors.green.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.2),
+            color: isUploaded
+                ? Colors.green.withValues(alpha: 0.3)
+                : Colors.grey.withValues(alpha: 0.2),
             style: BorderStyle.solid,
           ),
         ),
         child: Row(
           children: [
             Icon(
-              isUploaded ? Icons.check_circle_rounded : Icons.receipt_long_rounded,
+              isUploaded
+                  ? Icons.check_circle_rounded
+                  : Icons.receipt_long_rounded,
               color: isUploaded ? Colors.green : AppTheme.accentColor,
             ),
             const SizedBox(width: 12),
@@ -579,21 +740,37 @@ class _ProofUploadTile extends StatelessWidget {
                 children: [
                   Text(
                     isAr ? 'وصل الدفع' : 'Proof of Payment',
-                    style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: GoogleFonts.tajawal(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
                   Text(
-                    isUploaded 
-                      ? (isAr ? 'تم تحميل الوصل' : 'Receipt uploaded') 
-                      : (isAr ? 'اضغط لتحميل صورة الوصل (CCP/Bank)' : 'Tap to upload receipt image'),
-                    style: TextStyle(fontSize: 11, color: isUploaded ? Colors.green : Colors.grey),
+                    isUploaded
+                        ? (isAr ? 'تم تحميل الوصل' : 'Receipt uploaded')
+                        : (isAr
+                              ? 'اضغط لتحميل صورة الوصل (CCP/Bank)'
+                              : 'Tap to upload receipt image'),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isUploaded ? Colors.green : Colors.grey,
+                    ),
                   ),
                 ],
               ),
             ),
             if (isLoading)
-              const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+              const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
             else if (!isUploaded)
-              const Icon(Icons.cloud_upload_outlined, color: AppTheme.accentColor, size: 20),
+              const Icon(
+                Icons.cloud_upload_outlined,
+                color: AppTheme.accentColor,
+                size: 20,
+              ),
           ],
         ),
       ),

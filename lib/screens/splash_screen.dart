@@ -18,8 +18,8 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
-  
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -57,9 +57,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
     final storage = ref.read(storageServiceProvider);
     final isFirstLaunch = await storage.isFirstLaunch();
     final token = await storage.getToken();
-    
+
     if (!mounted) return;
-    
+
     if (isFirstLaunch) {
       context.go('/language');
     } else if (token != null) {
@@ -87,18 +87,32 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
         child: Stack(
           children: [
             // ── Ambient Floating Particles ──
-            ...List.generate(6, (index) => Positioned(
-              top: (index * 150.0) % size.height,
-              left: (index * 200.0) % size.width,
-              child: Icon(
-                Icons.auto_awesome, 
-                color: AppTheme.accentColor.withValues(alpha: 0.1), 
-                size: 20 + (index * 5.0)
-              ).animate(onPlay: (c) => c.repeat(reverse: true))
-                .fadeIn(duration: 2.seconds)
-                .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.2, 1.2), duration: (2 + index).seconds)
-                .moveY(begin: 0, end: -30, duration: (3 + index).seconds, curve: Curves.easeInOut),
-            )),
+            ...List.generate(
+              6,
+              (index) => Positioned(
+                top: (index * 150.0) % size.height,
+                left: (index * 200.0) % size.width,
+                child:
+                    Icon(
+                          Icons.auto_awesome,
+                          color: AppTheme.accentColor.withValues(alpha: 0.1),
+                          size: 20 + (index * 5.0),
+                        )
+                        .animate(onPlay: (c) => c.repeat(reverse: true))
+                        .fadeIn(duration: 2.seconds)
+                        .scale(
+                          begin: const Offset(0.8, 0.8),
+                          end: const Offset(1.2, 1.2),
+                          duration: (2 + index).seconds,
+                        )
+                        .moveY(
+                          begin: 0,
+                          end: -30,
+                          duration: (3 + index).seconds,
+                          curve: Curves.easeInOut,
+                        ),
+              ),
+            ),
 
             // ── Main Content ──
             SafeArea(
@@ -131,15 +145,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
                           if (auth.isInitializing) {
                             return Column(
                               children: [
-                                const CircularProgressIndicator(color: AppTheme.accentColor, strokeWidth: 2)
-                                  .animate(onPlay: (c) => c.repeat())
-                                  .shimmer(duration: 2.seconds),
+                                const CircularProgressIndicator(
+                                      color: AppTheme.accentColor,
+                                      strokeWidth: 2,
+                                    )
+                                    .animate(onPlay: (c) => c.repeat())
+                                    .shimmer(duration: 2.seconds),
                                 const SizedBox(height: 16),
                                 Text(
-                                  Localizations.localeOf(context).languageCode == 'ar' 
-                                    ? 'جاري إيقاظ السيرفر... يرجى الانتظار قليلاً' 
-                                    : 'Réveil du serveur... veuillez patienter',
-                                  style: GoogleFonts.cairo(color: Colors.white54, fontSize: 10, fontWeight: FontWeight.bold),
+                                  Localizations.localeOf(
+                                            context,
+                                          ).languageCode ==
+                                          'ar'
+                                      ? 'جاري إيقاظ السيرفر... يرجى الانتظار قليلاً'
+                                      : 'Réveil du serveur... veuillez patienter',
+                                  style: GoogleFonts.cairo(
+                                    color: Colors.white54,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ).animate().fadeIn().shimmer(delay: 2.seconds),
                               ],
                             );
@@ -162,9 +186,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
               right: 20,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildLanguageToggle(context),
-                ],
+                children: [_buildLanguageToggle(context)],
               ),
             ),
 
@@ -185,39 +207,50 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
         children: [
           // Outer Glow
           Container(
-            width: 160,
-            height: 160,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.accentColor.withValues(alpha: 0.2),
-                  blurRadius: 60,
-                  spreadRadius: 10,
+                width: 160,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.accentColor.withValues(alpha: 0.2),
+                      blurRadius: 60,
+                      spreadRadius: 10,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ).animate(onPlay: (c) => c.repeat(reverse: true))
-           .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.1, 1.1), duration: 2.seconds, curve: Curves.easeInOut),
+              )
+              .animate(onPlay: (c) => c.repeat(reverse: true))
+              .scale(
+                begin: const Offset(0.9, 0.9),
+                end: const Offset(1.1, 1.1),
+                duration: 2.seconds,
+                curve: Curves.easeInOut,
+              ),
 
           // Logo Container
           Container(
-            width: 140,
-            height: 140,
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color(0xFF0A1A0A).withValues(alpha: 0.6),
-              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1.5),
-            ),
-            child: const EbzimLogo(
-              size: 80,
-              color: AppTheme.accentColor,
-            ),
-          ).animate()
-           .fadeIn(duration: 800.ms)
-           .scale(begin: const Offset(0.8, 0.8), curve: Curves.easeOutBack)
-           .shimmer(delay: 1.seconds, duration: 1500.ms, color: Colors.white24),
+                width: 140,
+                height: 140,
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF0A1A0A).withValues(alpha: 0.6),
+                  border: Border.all(
+                    color: AppTheme.accentColor.withValues(alpha: 0.3),
+                    width: 1.5,
+                  ),
+                ),
+                child: const EbzimLogo(size: 80, color: AppTheme.accentColor),
+              )
+              .animate()
+              .fadeIn(duration: 800.ms)
+              .scale(begin: const Offset(0.8, 0.8), curve: Curves.easeOutBack)
+              .shimmer(
+                delay: 1.seconds,
+                duration: 1500.ms,
+                color: Colors.white24,
+              ),
 
           // Sparkle Detail (Star & Crescent - Algerian Identity)
           Positioned(
@@ -227,18 +260,41 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
               alignment: Alignment.center,
               children: [
                 // Star
-                const Icon(Icons.star_rounded, color: AppTheme.accentColor, size: 22)
-                  .animate(onPlay: (c) => c.repeat())
-                  .rotate(duration: 3.seconds)
-                  .scale(begin: const Offset(0.6, 0.6), end: const Offset(1.0, 1.0), duration: 1.seconds, curve: Curves.easeInOut),
-                
+                const Icon(
+                      Icons.star_rounded,
+                      color: AppTheme.accentColor,
+                      size: 22,
+                    )
+                    .animate(onPlay: (c) => c.repeat())
+                    .rotate(duration: 3.seconds)
+                    .scale(
+                      begin: const Offset(0.6, 0.6),
+                      end: const Offset(1.0, 1.0),
+                      duration: 1.seconds,
+                      curve: Curves.easeInOut,
+                    ),
+
                 // Crescent (Offset to the left of the star)
                 Transform.translate(
                   offset: const Offset(-12, 0),
-                  child: Icon(Icons.nightlight_round, color: AppTheme.accentColor.withValues(alpha: 0.8), size: 20)
-                    .animate(onPlay: (c) => c.repeat(reverse: true))
-                    .moveX(begin: -2, end: 2, duration: 2.seconds, curve: Curves.easeInOut)
-                    .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0), duration: 1.5.seconds),
+                  child:
+                      Icon(
+                            Icons.nightlight_round,
+                            color: AppTheme.accentColor.withValues(alpha: 0.8),
+                            size: 20,
+                          )
+                          .animate(onPlay: (c) => c.repeat(reverse: true))
+                          .moveX(
+                            begin: -2,
+                            end: 2,
+                            duration: 2.seconds,
+                            curve: Curves.easeInOut,
+                          )
+                          .scale(
+                            begin: const Offset(0.8, 0.8),
+                            end: const Offset(1.0, 1.0),
+                            duration: 1.5.seconds,
+                          ),
                 ),
               ],
             ),
@@ -252,40 +308,50 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Text(
-            'جمعية إبزيم للثقافة والمواطنة',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.cairo(
-              fontSize: 48,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              height: 1.1,
-              letterSpacing: -0.5,
-              shadows: [
-                Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 20, offset: const Offset(0, 10)),
-              ],
-            ),
-          ),
-        ).animate().fadeIn(delay: 400.ms).moveY(begin: 20, end: 0, duration: 600.ms, curve: Curves.easeOut),
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                'جمعية إبزيم للثقافة والمواطنة',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.cairo(
+                  fontSize: 48,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  height: 1.1,
+                  letterSpacing: -0.5,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .animate()
+            .fadeIn(delay: 400.ms)
+            .moveY(begin: 20, end: 0, duration: 600.ms, curve: Curves.easeOut),
 
         const SizedBox(height: 16),
 
         // English Subtitle
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Text(
-            'Ebzim Association for Culture and Citizenship',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.accentColor.withValues(alpha: 0.8),
-              letterSpacing: 0.5,
-              height: 1.5,
-            ),
-          ),
-        ).animate().fadeIn(delay: 600.ms).moveY(begin: 10, end: 0, duration: 600.ms),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+                'Ebzim Association for Culture and Citizenship',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.accentColor.withValues(alpha: 0.8),
+                  letterSpacing: 0.5,
+                  height: 1.5,
+                ),
+              ),
+            )
+            .animate()
+            .fadeIn(delay: 600.ms)
+            .moveY(begin: 10, end: 0, duration: 600.ms),
 
         const SizedBox(height: 12),
 
@@ -312,49 +378,58 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
 
   Widget _buildExploreButton(BuildContext context) {
     return Container(
-      width: 220,
-      height: 64,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppTheme.accentColor,
-            AppTheme.accentColor.withValues(alpha: 0.7),
-          ],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.accentColor.withValues(alpha: 0.3),
-            blurRadius: 25,
-            offset: const Offset(0, 12),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(32),
-          onTap: _redirect,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                Localizations.localeOf(context).languageCode == 'ar' ? 'استكشف' : 'Découvrir',
-                style: GoogleFonts.cairo(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                ),
+          width: 220,
+          height: 64,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(32),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppTheme.accentColor,
+                AppTheme.accentColor.withValues(alpha: 0.7),
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.accentColor.withValues(alpha: 0.3),
+                blurRadius: 25,
+                offset: const Offset(0, 12),
               ),
-              const SizedBox(width: 12),
-              const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 28),
             ],
           ),
-        ),
-      ),
-    ).animate().fadeIn(delay: 1.seconds).scale(begin: const Offset(0.9, 0.9), curve: Curves.easeOutBack);
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(32),
+              onTap: _redirect,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    Localizations.localeOf(context).languageCode == 'ar'
+                        ? 'استكشف'
+                        : 'Découvrir',
+                    style: GoogleFonts.cairo(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+        .animate()
+        .fadeIn(delay: 1.seconds)
+        .scale(begin: const Offset(0.9, 0.9), curve: Curves.easeOutBack);
   }
 
   Widget _buildLanguageToggle(BuildContext context) {
@@ -374,16 +449,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.translate_rounded, color: AppTheme.accentColor, size: 16),
+                const Icon(
+                  Icons.translate_rounded,
+                  color: AppTheme.accentColor,
+                  size: 16,
+                ),
                 const SizedBox(width: 8),
                 Text(
-                  'EN | FR | AR', 
+                  'EN | FR | AR',
                   style: GoogleFonts.playfairDisplay(
-                    color: Colors.white, 
-                    fontSize: 10, 
-                    fontWeight: FontWeight.w900, 
-                    letterSpacing: 1.5
-                  )
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.5,
+                  ),
                 ),
               ],
             ),
@@ -406,15 +485,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
               const EbzimLogo(size: 16, isEngraved: true),
               const SizedBox(width: 8),
               const Text(
-                'PATRIMOINE CULTUREL & CITOYENNETÉ', 
-                style: TextStyle(color: Colors.white38, fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 2.5)
+                'PATRIMOINE CULTUREL & CITOYENNETÉ',
+                style: TextStyle(
+                  color: Colors.white38,
+                  fontSize: 8,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2.5,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 4),
           const Text(
-            'COPYRIGHT © AKROUR TOUFIK', 
-            style: TextStyle(color: AppTheme.accentColor, fontSize: 7, fontWeight: FontWeight.w900, letterSpacing: 1.5)
+            'COPYRIGHT © AKROUR TOUFIK',
+            style: TextStyle(
+              color: AppTheme.accentColor,
+              fontSize: 7,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.5,
+            ),
           ),
           const SizedBox(height: 8),
           Container(

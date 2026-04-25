@@ -21,7 +21,10 @@ class FinancialService {
   /// Admin updates the annual membership fee
   Future<void> updateMembershipFee(int newFee) async {
     try {
-      await _apiClient.dio.patch('settings/membership-fee', data: {'fee': newFee});
+      await _apiClient.dio.patch(
+        'settings/membership-fee',
+        data: {'fee': newFee},
+      );
     } catch (e) {
       throw 'Failed to update fee';
     }
@@ -37,14 +40,17 @@ class FinancialService {
     String? notes,
   }) async {
     try {
-      await _apiClient.dio.post('contributions', data: {
-        'type': type,
-        'amount': amount,
-        'currency': currency,
-        'projectId': projectId,
-        'proofUrl': proofUrl,
-        'notes': notes,
-      });
+      await _apiClient.dio.post(
+        'contributions',
+        data: {
+          'type': type,
+          'amount': amount,
+          'currency': currency,
+          'projectId': projectId,
+          'proofUrl': proofUrl,
+          'notes': notes,
+        },
+      );
     } on DioException catch (e) {
       throw e.response?.data?['message'] ?? 'Failed to submit contribution';
     }
@@ -71,12 +77,16 @@ class FinancialService {
   }
 
   /// Admin verifies or rejects a contribution
-  Future<void> reviewContribution(String id, String status, {String? notes}) async {
+  Future<void> reviewContribution(
+    String id,
+    String status, {
+    String? notes,
+  }) async {
     try {
-      await _apiClient.dio.patch('contributions/$id/verify', data: {
-        'status': status,
-        'notes': notes,
-      });
+      await _apiClient.dio.patch(
+        'contributions/$id/verify',
+        data: {'status': status, 'notes': notes},
+      );
     } catch (e) {
       throw 'Failed to review contribution';
     }

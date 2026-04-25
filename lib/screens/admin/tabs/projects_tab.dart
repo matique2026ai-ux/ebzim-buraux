@@ -23,7 +23,9 @@ class ProjectsTab extends ConsumerWidget {
       onRefresh: () async => ref.invalidate(adminNewsProvider),
       child: newsAsync.when(
         data: (allPosts) {
-          final projects = allPosts.where((p) => p.contentType == 'PROJECT' || p.isFieldProject).toList();
+          final projects = allPosts
+              .where((p) => p.contentType == 'PROJECT' || p.isFieldProject)
+              .toList();
           final avgProgress = projects.isEmpty
               ? 0
               : (projects
@@ -41,7 +43,8 @@ class ProjectsTab extends ConsumerWidget {
               children: [
                 const AdminSectionHeader(
                   title: 'إدارة الأنشطة والبرامج الجمعوية',
-                  subtitle: 'إدارة مبادرات الجمعية الولائية وتقارير الإنجاز الميداني',
+                  subtitle:
+                      'إدارة مبادرات الجمعية الولائية وتقارير الإنجاز الميداني',
                   icon: Icons.architecture_rounded,
                 ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
                 const SizedBox(height: 20),

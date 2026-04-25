@@ -37,7 +37,8 @@ class MembershipTab extends ConsumerWidget {
                     children: [
                       AdminExportButton(
                         isLoading: false,
-                        onPressed: () => MembershipExportService.exportToExcel(requests),
+                        onPressed: () =>
+                            MembershipExportService.exportToExcel(requests),
                       ),
                     ],
                   ),
@@ -66,7 +67,6 @@ class MembershipTab extends ConsumerWidget {
       ),
     );
   }
-
 }
 
 class MembershipRequestCard extends StatelessWidget {
@@ -97,7 +97,10 @@ class MembershipRequestCard extends StatelessWidget {
                   color: AppTheme.primaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.person_outline, color: AppTheme.primaryColor),
+                child: const Icon(
+                  Icons.person_outline,
+                  color: AppTheme.primaryColor,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -114,7 +117,10 @@ class MembershipRequestCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       request.data['email'] ?? 'No Email',
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 ),
@@ -151,25 +157,39 @@ class MembershipRequestDetailsDialog extends ConsumerStatefulWidget {
   const MembershipRequestDetailsDialog({super.key, required this.request});
 
   @override
-  ConsumerState<MembershipRequestDetailsDialog> createState() => _DetailsDialogState();
+  ConsumerState<MembershipRequestDetailsDialog> createState() =>
+      _DetailsDialogState();
 }
 
-class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> {
+class _DetailsDialogState
+    extends ConsumerState<MembershipRequestDetailsDialog> {
   bool _isProcessing = false;
 
   Future<void> _updateStatus(String status) async {
     setState(() => _isProcessing = true);
     try {
-      await ref.read(membershipAdminProvider).reviewRequest(widget.request.id, status, userId: widget.request.userId);
+      await ref
+          .read(membershipAdminProvider)
+          .reviewRequest(
+            widget.request.id,
+            status,
+            userId: widget.request.userId,
+          );
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          adminSuccessSnack(status == 'APPROVED' ? 'تم قبول الطلب بنجاح' : 'تم تحديث حالة الطلب'),
+          adminSuccessSnack(
+            status == 'APPROVED'
+                ? 'تم قبول الطلب بنجاح'
+                : 'تم تحديث حالة الطلب',
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(adminErrorSnack('فشل في تحديث الحالة: $e'));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(adminErrorSnack('فشل في تحديث الحالة: $e'));
       }
     } finally {
       if (mounted) setState(() => _isProcessing = false);
@@ -209,14 +229,22 @@ class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> 
             _buildDetailRow('البريد الإلكتروني', data['email'] ?? 'N/A'),
             _buildDetailRow('رقم الهاتف', data['phone'] ?? 'N/A'),
             _buildDetailRow('الجنس', data['gender'] ?? 'N/A'),
-            _buildDetailRow('تاريخ التقديم', DateFormat('yyyy-MM-dd HH:mm').format(widget.request.submissionDate)),
+            _buildDetailRow(
+              'تاريخ التقديم',
+              DateFormat(
+                'yyyy-MM-dd HH:mm',
+              ).format(widget.request.submissionDate),
+            ),
             const SizedBox(height: 32),
-            if (widget.request.status == 'SUBMITTED' || widget.request.status == 'UNDER_REVIEW')
+            if (widget.request.status == 'SUBMITTED' ||
+                widget.request.status == 'UNDER_REVIEW')
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: _isProcessing ? null : () => _updateStatus('REJECTED'),
+                      onPressed: _isProcessing
+                          ? null
+                          : () => _updateStatus('REJECTED'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.red,
                         side: const BorderSide(color: Colors.red),
@@ -228,23 +256,30 @@ class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> 
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: _isProcessing ? null : () => _updateStatus('APPROVED'),
+                      onPressed: _isProcessing
+                          ? null
+                          : () => _updateStatus('APPROVED'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1B4332),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       child: _isProcessing
-                          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
                           : const Text('قبول الطلب'),
                     ),
                   ),
                 ],
               )
             else
-              Center(
-                child: AdminStatusBadge(status: widget.request.status),
-              ),
+              Center(child: AdminStatusBadge(status: widget.request.status)),
           ],
         ),
       ),
@@ -261,7 +296,10 @@ class _DetailsDialogState extends ConsumerState<MembershipRequestDetailsDialog> 
             width: 120,
             child: Text(
               '$label:',
-              style: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           Expanded(

@@ -16,7 +16,7 @@ class CMSTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // isSuperAdmin check is already handled in the service/UI navigation if needed,
     // but here we just show the options.
-    
+
     final slidesAsync = ref.watch(heroSlidesProvider);
     final onboardingAsync = ref.watch(onboardingSlidesProvider);
     final partnersAsync = ref.watch(partnersProvider);

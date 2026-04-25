@@ -141,7 +141,7 @@ class _CivicReportNotifier extends StateNotifier<_CivicReportState> {
 
   Future<void> submit() async {
     if (state.selectedType == null) return;
-    
+
     state = state.copyWith(isSubmitting: true);
     try {
       final reportService = _ref.read(reportServiceProvider);
@@ -158,9 +158,10 @@ class _CivicReportNotifier extends StateNotifier<_CivicReportState> {
   }
 }
 
-final _civicReportProvider = StateNotifierProvider.autoDispose<_CivicReportNotifier, _CivicReportState>(
-  (ref) => _CivicReportNotifier(ref),
-);
+final _civicReportProvider =
+    StateNotifierProvider.autoDispose<_CivicReportNotifier, _CivicReportState>(
+      (ref) => _CivicReportNotifier(ref),
+    );
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Screen
@@ -203,15 +204,16 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                color: AppTheme.accentColor, size: 20),
+            icon: Icon(
+              isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+              color: AppTheme.accentColor,
+              size: 20,
+            ),
             onPressed: () => context.pop(),
           ),
         ),
         body: const EbzimBackground(
-          child: LoginRequiredOverlay(
-            icon: Icons.shield_outlined,
-          ),
+          child: LoginRequiredOverlay(icon: Icons.shield_outlined),
         ),
       );
     }
@@ -224,8 +226,11 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                color: AppTheme.accentColor, size: 20),
+            icon: Icon(
+              isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+              color: AppTheme.accentColor,
+              size: 20,
+            ),
             onPressed: () => context.pop(),
           ),
         ),
@@ -242,21 +247,34 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppTheme.accentColor.withValues(alpha: 0.1),
-                      border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
+                      border: Border.all(
+                        color: AppTheme.accentColor.withValues(alpha: 0.3),
+                      ),
                     ),
-                    child: const Icon(Icons.check_circle_outline_rounded, color: AppTheme.accentColor, size: 52),
-                  ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
+                    child: const Icon(
+                      Icons.check_circle_outline_rounded,
+                      color: AppTheme.accentColor,
+                      size: 52,
+                    ),
+                  ).animate().scale(
+                    duration: 600.ms,
+                    curve: Curves.easeOutBack,
+                  ),
                   const SizedBox(height: 24),
                   Text(
                     loc.repSuccess,
-                    style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800),
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
                     textAlign: TextAlign.center,
                   ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
                   const SizedBox(height: 12),
                   Text(
                     isAr
                         ? 'شكراً على مساهمتك في صون التراث والفضاء المشترك. سيتم مراجعة بلاغك من قِبل فريق جمعية إبزيم في أقرب وقت.'
-                        : (isEn ? 'Thank you for your contribution to heritage preservation. Your report will be reviewed by the Ebzim team.' : 'Merci pour votre contribution à la sauvegarde du patrimoine. Votre signalement sera examiné par l\'équipe Ebzim.'),
+                        : (isEn
+                              ? 'Thank you for your contribution to heritage preservation. Your report will be reviewed by the Ebzim team.'
+                              : 'Merci pour votre contribution à la sauvegarde du patrimoine. Votre signalement sera examiné par l\'équipe Ebzim.'),
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isDark ? Colors.white60 : Colors.black54,
@@ -267,12 +285,19 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                   ElevatedButton.icon(
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.home_outlined),
-                    label: Text(isAr ? 'العودة للرئيسية' : 'Retour à l\'accueil'),
+                    label: Text(
+                      isAr ? 'العودة للرئيسية' : 'Retour à l\'accueil',
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.accentColor,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 28,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
                   ).animate().fadeIn(delay: 700.ms),
                 ],
@@ -291,7 +316,10 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
         elevation: 0,
         foregroundColor: AppTheme.accentColor,
         leading: IconButton(
-          icon: Icon(isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios, size: 20),
+          icon: Icon(
+            isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+            size: 20,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -325,7 +353,11 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                         shape: BoxShape.circle,
                         color: AppTheme.accentColor.withValues(alpha: 0.1),
                       ),
-                      child: const Icon(Icons.shield_outlined, color: AppTheme.accentColor, size: 28),
+                      child: const Icon(
+                        Icons.shield_outlined,
+                        color: AppTheme.accentColor,
+                        size: 28,
+                      ),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -333,8 +365,12 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isAr ? 'المواطن البلاغي المدني' : 'Espace de Signalement Civique',
-                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+                            isAr
+                                ? 'المواطن البلاغي المدني'
+                                : 'Espace de Signalement Civique',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -342,7 +378,9 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                                 ? 'بلاغك يُحوَّل لفريق جمعية إبزيم للمتابعة والإحالة'
                                 : 'Votre signalement est traité par l\'équipe Ebzim',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black45,
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.5)
+                                  : Colors.black45,
                             ),
                           ),
                         ],
@@ -355,34 +393,47 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
               const SizedBox(height: 28),
 
               // ── Step 1: Type ──────────────────────────────────────────────
-              _StepLabel(number: '1', label: isAr ? 'نوع الانتهاك' : 'Type de violation', isDark: isDark),
+              _StepLabel(
+                number: '1',
+                label: isAr ? 'نوع الانتهاك' : 'Type de violation',
+                isDark: isDark,
+              ),
               const SizedBox(height: 12),
               ...List.generate(_reportTypes.length, (i) {
                 final t = _reportTypes[i];
                 final selected = state.selectedType == t.id;
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: _TypeTile(
-                    type: t,
-                    selected: selected,
-                    isAr: isAr,
-                    isDark: isDark,
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      notifier.selectType(t.id);
-                    },
-                  ),
-                ).animate().fadeIn(delay: (150 + i * 60).ms).slideX(begin: 0.05);
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _TypeTile(
+                        type: t,
+                        selected: selected,
+                        isAr: isAr,
+                        isDark: isDark,
+                        onTap: () {
+                          HapticFeedback.selectionClick();
+                          notifier.selectType(t.id);
+                        },
+                      ),
+                    )
+                    .animate()
+                    .fadeIn(delay: (150 + i * 60).ms)
+                    .slideX(begin: 0.05);
               }),
 
               const SizedBox(height: 28),
 
               // ── Step 2: Location ──────────────────────────────────────────
-              _StepLabel(number: '2', label: isAr ? 'الموقع الجغرافي' : 'Localisation', isDark: isDark),
+              _StepLabel(
+                number: '2',
+                label: isAr ? 'الموقع الجغرافي' : 'Localisation',
+                isDark: isDark,
+              ),
               const SizedBox(height: 12),
               _FieldBox(
                 controller: _locationController,
-                hint: isAr ? 'مثال: شارع الشهداء، البلدية، الولاية...' : 'Ex: Rue des Martyrs, commune, wilaya...',
+                hint: isAr
+                    ? 'مثال: شارع الشهداء، البلدية، الولاية...'
+                    : 'Ex: Rue des Martyrs, commune, wilaya...',
                 icon: Icons.location_on_outlined,
                 isDark: isDark,
                 onChanged: notifier.setLocation,
@@ -394,7 +445,11 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
               const SizedBox(height: 28),
 
               // ── Step 3: Description ───────────────────────────────────────
-              _StepLabel(number: '3', label: isAr ? 'وصف الانتهاك' : 'Description de la violation', isDark: isDark),
+              _StepLabel(
+                number: '3',
+                label: isAr ? 'وصف الانتهاك' : 'Description de la violation',
+                isDark: isDark,
+              ),
               const SizedBox(height: 12),
               _FieldBox(
                 controller: _descriptionController,
@@ -406,20 +461,32 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
                 maxLines: 5,
                 onChanged: notifier.setDescription,
                 validator: (v) => (v == null || v.trim().length < 10)
-                    ? (isAr ? 'يرجى كتابة وصف أوضح' : 'Veuillez fournir une description plus détaillée')
+                    ? (isAr
+                          ? 'يرجى كتابة وصف أوضح'
+                          : 'Veuillez fournir une description plus détaillée')
                     : null,
               ).animate().fadeIn(delay: 500.ms),
 
               const SizedBox(height: 28),
 
               // ── Step 4: Evidence notice ───────────────────────────────────
-              _StepLabel(number: '4', label: isAr ? 'إرفاق دليل (قريباً)' : 'Joindre une preuve (bientôt)', isDark: isDark),
+              _StepLabel(
+                number: '4',
+                label: isAr
+                    ? 'إرفاق دليل (قريباً)'
+                    : 'Joindre une preuve (bientôt)',
+                isDark: isDark,
+              ),
               const SizedBox(height: 12),
               GlassCard(
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Icon(Icons.camera_alt_outlined, color: isDark ? Colors.white30 : Colors.black26, size: 24),
+                    Icon(
+                      Icons.camera_alt_outlined,
+                      color: isDark ? Colors.white30 : Colors.black26,
+                      size: 24,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -439,43 +506,61 @@ class _CivicReportScreenState extends ConsumerState<CivicReportScreen> {
 
               // ── Submit Button ─────────────────────────────────────────────
               Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: state.selectedType != null ? AppTheme.accentColor : Colors.grey.withValues(alpha: 0.3),
-                  boxShadow: state.selectedType != null
-                      ? [BoxShadow(color: AppTheme.accentColor.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 6))]
-                      : [],
-                ),
-                child: InkWell(
-                  onTap: state.selectedType == null
-                      ? null
-                      : () {
-                          if (_formKey.currentState!.validate()) {
-                            HapticFeedback.heavyImpact();
-                            notifier.submit();
-                          }
-                        },
-                  borderRadius: BorderRadius.circular(16),
-                  child: Center(
-                    child: state.isSubmitting
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-                          )
-                        : Text(
-                            loc.repSubmit,
-                            style: GoogleFonts.tajawal(
-                              color: state.selectedType != null ? Colors.white : Colors.white38,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                  ),
-                ),
-              ).animate().fadeIn(delay: 600.ms).scale(begin: const Offset(0.96, 0.96)),
+                    height: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: state.selectedType != null
+                          ? AppTheme.accentColor
+                          : Colors.grey.withValues(alpha: 0.3),
+                      boxShadow: state.selectedType != null
+                          ? [
+                              BoxShadow(
+                                color: AppTheme.accentColor.withValues(
+                                  alpha: 0.3,
+                                ),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ]
+                          : [],
+                    ),
+                    child: InkWell(
+                      onTap: state.selectedType == null
+                          ? null
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                HapticFeedback.heavyImpact();
+                                notifier.submit();
+                              }
+                            },
+                      borderRadius: BorderRadius.circular(16),
+                      child: Center(
+                        child: state.isSubmitting
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                            : Text(
+                                loc.repSubmit,
+                                style: GoogleFonts.tajawal(
+                                  color: state.selectedType != null
+                                      ? Colors.white
+                                      : Colors.white38,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                      ),
+                    ),
+                  )
+                  .animate()
+                  .fadeIn(delay: 600.ms)
+                  .scale(begin: const Offset(0.96, 0.96)),
             ],
           ),
         ),
@@ -492,7 +577,11 @@ class _StepLabel extends StatelessWidget {
   final String number;
   final String label;
   final bool isDark;
-  const _StepLabel({required this.number, required this.label, required this.isDark});
+  const _StepLabel({
+    required this.number,
+    required this.label,
+    required this.isDark,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -504,12 +593,18 @@ class _StepLabel extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppTheme.accentColor.withValues(alpha: 0.15),
-            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.4)),
+            border: Border.all(
+              color: AppTheme.accentColor.withValues(alpha: 0.4),
+            ),
           ),
           child: Center(
             child: Text(
               number,
-              style: const TextStyle(color: AppTheme.accentColor, fontSize: 11, fontWeight: FontWeight.w800),
+              style: const TextStyle(
+                color: AppTheme.accentColor,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         ),
@@ -517,7 +612,9 @@ class _StepLabel extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.tajawal(
-            color: isDark ? Colors.white70 : Colors.black.withValues(alpha: 0.72),
+            color: isDark
+                ? Colors.white70
+                : Colors.black.withValues(alpha: 0.72),
             fontSize: 14,
             fontWeight: FontWeight.w700,
           ),
@@ -533,7 +630,13 @@ class _TypeTile extends StatelessWidget {
   final bool isAr;
   final bool isDark;
   final VoidCallback onTap;
-  const _TypeTile({required this.type, required this.selected, required this.isAr, required this.isDark, required this.onTap});
+  const _TypeTile({
+    required this.type,
+    required this.selected,
+    required this.isAr,
+    required this.isDark,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -547,9 +650,15 @@ class _TypeTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           color: selected
               ? type.color.withValues(alpha: 0.1)
-              : (isDark ? Colors.white.withValues(alpha: 0.03) : Colors.white.withValues(alpha: 0.6)),
+              : (isDark
+                    ? Colors.white.withValues(alpha: 0.03)
+                    : Colors.white.withValues(alpha: 0.6)),
           border: Border.all(
-            color: selected ? type.color.withValues(alpha: 0.5) : (isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.06)),
+            color: selected
+                ? type.color.withValues(alpha: 0.5)
+                : (isDark
+                      ? Colors.white12
+                      : Colors.black.withValues(alpha: 0.06)),
             width: selected ? 1.5 : 1,
           ),
         ),
@@ -580,7 +689,9 @@ class _TypeTile extends StatelessWidget {
                   Text(
                     isAr ? type.descAr : type.descFr,
                     style: TextStyle(
-                      color: isDark ? Colors.white.withValues(alpha: 0.4) : Colors.black45,
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.4)
+                          : Colors.black45,
                       fontSize: 11,
                     ),
                     maxLines: 1,
@@ -622,8 +733,14 @@ class _FieldBox extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: isDark ? Colors.black.withValues(alpha: 0.25) : Colors.white.withValues(alpha: 0.7),
-        border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.07)),
+        color: isDark
+            ? Colors.black.withValues(alpha: 0.25)
+            : Colors.white.withValues(alpha: 0.7),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.black.withValues(alpha: 0.07),
+        ),
       ),
       child: TextFormField(
         controller: controller,
@@ -636,16 +753,28 @@ class _FieldBox extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(
-            color: isDark ? Colors.white.withValues(alpha: 0.25) : Colors.black26,
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.25)
+                : Colors.black26,
             fontSize: 13,
           ),
           prefixIcon: Padding(
             padding: const EdgeInsets.only(top: 14, left: 12, right: 12),
-            child: Icon(icon, color: AppTheme.accentColor.withValues(alpha: 0.6), size: 20),
+            child: Icon(
+              icon,
+              color: AppTheme.accentColor.withValues(alpha: 0.6),
+              size: 20,
+            ),
           ),
-          prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
+          ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
         ),
       ),
     );

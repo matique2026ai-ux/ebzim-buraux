@@ -161,7 +161,9 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
                       setState(() => _isClearingCache = false);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('✨ تم مسح الذاكرة المؤقتة وتحديث البيانات'),
+                          content: Text(
+                            '✨ تم مسح الذاكرة المؤقتة وتحديث البيانات',
+                          ),
                           backgroundColor: Colors.green,
                         ),
                       );
@@ -372,11 +374,12 @@ class _QuickLinkTile extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon, color: AppTheme.primaryColor, size: 18),
-      title: Text(
-        label,
-        style: GoogleFonts.tajawal(fontSize: 12),
+      title: Text(label, style: GoogleFonts.tajawal(fontSize: 12)),
+      trailing: const Icon(
+        Icons.open_in_new_rounded,
+        size: 14,
+        color: Colors.grey,
       ),
-      trailing: const Icon(Icons.open_in_new_rounded, size: 14, color: Colors.grey),
       onTap: onTap,
     );
   }

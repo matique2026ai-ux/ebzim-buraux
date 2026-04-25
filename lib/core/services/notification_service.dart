@@ -25,7 +25,8 @@ class NotificationService {
       AppNotification(
         id: '1',
         title: 'New Archive Access',
-        description: 'The 19th-century collection of Ebzim artifacts is now digitally available for premium members.',
+        description:
+            'The 19th-century collection of Ebzim artifacts is now digitally available for premium members.',
         timestamp: DateTime.now().subtract(const Duration(hours: 2)),
         isRead: false,
         type: 'membership',
@@ -33,7 +34,8 @@ class NotificationService {
       AppNotification(
         id: '2',
         title: 'Calligraphy Masterclass',
-        description: 'Reminder: The upcoming masterclass begins in less than 48 hours.',
+        description:
+            'Reminder: The upcoming masterclass begins in less than 48 hours.',
         timestamp: DateTime.now().subtract(const Duration(days: 1)),
         isRead: true,
         type: 'event',
@@ -41,13 +43,15 @@ class NotificationService {
       AppNotification(
         id: '3',
         title: 'Annual General Meeting',
-        description: 'The association general meeting agenda has been finalized and published.',
+        description:
+            'The association general meeting agenda has been finalized and published.',
         timestamp: DateTime.now().subtract(const Duration(days: 3)),
         isRead: true,
         type: 'update',
       ),
     ];
   }
+
   Future<void> createNotification({
     required String userId,
     required String title,

@@ -574,12 +574,22 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
     - **Outcome**: The browser now reflects the EXACT state of the cloud server, same as the phone, ensuring what you see in the IDE is what the user sees in the APK.
     - **Protocol Reinforcement**: NEVER trust `localhost` for testing production features. Always verify against the live Render API.
 
-**Current State: Admin Dashboard 100% modularized and stabilized. Dynamic Satellite Map successfully integrated. Infinite Spinner resolved. Backend schema updated to support content differentiation. Development workflow stabilized via Hot Restart pattern.**
+22. **✅ [DONE] Zero-Lint Backend & Render Deployment Mastery (April 26, 2026)**:
+    - **CRITICAL LESSON**: The user expects ZERO linting errors in the backend (`unsafe-member-access`, implicit `any`). Previous agents used `any` or `FilterQuery` from mongoose incorrectly, breaking the build. Additionally, Render's auto-deploy can take up to 15-20 minutes, causing a temporary mismatch between the Live URL and the pushed GitHub code.
+    - **Action Taken**: 
+        1. Stripped all `any` usages from `events.service.ts` and `events.controller.ts`, replacing them with `Record<string, unknown>` or strictly typed assertions (`as { code?: number }`).
+        2. Removed the `startDate >= new Date()` filter from `events.service.ts` -> `getPublicFeed` to allow ALL `PUBLISHED` events to show regardless of their date.
+        3. Built and verified the Mobile APK pointing exactly to the production Render URL.
+    - **Outcome**: The backend is 100% strictly typed with zero errors. The DB was synced to ensure all events are `PUBLISHED`.
+    - **Protocol Reinforcement**: **DO NOT USE `any` IN THE BACKEND.** If you touch the backend, YOU MUST ENSURE it compiles without ESLint warnings, or Render will FAIL to build. If you push code, DO NOT assume it's live instantly; advise the user of Render's build delay.
+
+**Current State: Admin Dashboard 100% modularized and stabilized. Backend strictly typed with zero lint errors. Mobile APK built and synced to the cloud. Render Live API is the undisputed source of truth.**
 
 ### 🚨 NEXT AGENT FOCUS
 
 1. **Maintain the Modular Architecture:** Never add logic directly to `admin_dashboard_screen.dart`. Use `lib/screens/admin/tabs/`.
-2. **Tab Synchronization:** Ensure all tabs use `RefreshIndicator` and `SingleChildScrollView` for consistent UX.
-3. **API Integrity:** Monitor for 404s on specific detail routes (e.g., `/events/:id`) which might indicate backend route gaps.
+2. **Backend Strictness (NO ANY):** The backend Linter is unforgiving. Never assign `any` to update data or catch blocks. Use `Record<string, any>` or explicit types.
+3. **Render Build Delays:** Be aware that pushing to `main` does not mean the Live API updates instantly. Always verify the live endpoint (`https://ebzim-api-prod.onrender.com`) before declaring a fix complete.
+4. **Cloud/Live Sync:** Both Web and Mobile apps MUST point to `https://ebzim-api-prod.onrender.com/api/v1/` via `api_client_platform_X.dart`.
 
-🚨 **FINAL MANDATE: THE DASHBOARD IS NOW MODULAR. KEEP IT CLEAN.**
+🚨 **FINAL MANDATE: ZERO LINT TOLERANCE. ALWAYS TEST LIVE AFTER DEPLOYMENT.**

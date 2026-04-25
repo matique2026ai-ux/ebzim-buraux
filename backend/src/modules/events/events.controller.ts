@@ -29,8 +29,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 @ApiTags('Events & RSVP')
 @Controller('events')
 export class EventsController {
-  @Get('test-route')
-  async testRoute() {
+  testRoute() {
     return { message: 'Route is active' };
   }
 
@@ -114,7 +113,7 @@ export class EventsController {
   @ApiOperation({ summary: 'Any authenticated user can RSVP' })
   async rsvpToEvent(
     @Param('id') eventId: string,
-    @Request() req: { user?: any },
+    @Request() req: { user: { userId: string } },
   ) {
     return this.eventsService.rsvp(eventId, req.user.userId);
   }

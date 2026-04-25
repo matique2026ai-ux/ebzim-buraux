@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
@@ -185,7 +186,8 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
           if (_mapLayer == 'ALL' || _mapLayer == 'PROJECTS') {
             for (var p in projects) {
               if (_selectedFilter == 'ALL' || _selectedFilter == p.category) {
-                markers.add(_buildMarker(p, isDark));
+                final isSelected = _selectedItem is NewsPost && (_selectedItem as NewsPost).id == p.id;
+                markers.add(_buildMarker(p, isDark, isSelected));
               }
             }
           }
@@ -194,10 +196,12 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
           if (_mapLayer == 'ALL' || _mapLayer == 'DISCOVERY') {
             if (_selectedFilter == 'ALL' || _selectedFilter == 'RESTORATION' || _selectedFilter == 'CULTURAL') {
               for (var w in _wikiLandmarks) {
-                markers.add(_buildWikiMarker(w, isDark));
+                final isSelected = _selectedItem is WikiLandmark && (_selectedItem as WikiLandmark).pageId == w.pageId;
+                markers.add(_buildWikiMarker(w, isDark, isSelected));
               }
               for (var gw in _globalWonders) {
-                markers.add(_buildWikiMarker(gw, isDark));
+                final isSelected = _selectedItem is WikiLandmark && (_selectedItem as WikiLandmark).pageId == gw.pageId;
+                markers.add(_buildWikiMarker(gw, isDark, isSelected));
               }
             }
           }
@@ -270,77 +274,60 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     );
   }
 
-  Marker _buildWikiMarker(WikiLandmark item, bool isDark) {
-    final bool isSelected = _selectedItem is WikiLandmark && (_selectedItem as WikiLandmark).pageId == item.pageId;
-
+  Marker _buildWikiMarker(WikiLandmark item, bool isDark, bool isSelected) {
     return Marker(
       point: LatLng(item.lat, item.lon),
-      width: 60,
-      height: 60,
+      width: 65, height: 65,
       child: GestureDetector(
         onTap: () {
           setState(() => _selectedItem = item);
           _mapController.move(LatLng(item.lat, item.lon), 16.0);
         },
-        child: AnimatedScale(
-          scale: isSelected ? 1.3 : 1.0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.elasticOut,
-          child: Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.purple : Colors.indigo,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-              boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3))],
-            ),
-            child: const Icon(
-              Icons.account_balance_rounded,
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
-        ),
+        child: _buildMarkerWidget(Icons.auto_awesome, Colors.purpleAccent, isSelected),
       ),
     );
   }
 
-  Marker _buildMarker(NewsPost item, bool isDark) {
-    final String id = item.id;
-    final LatLng loc = LatLng(item.latitude!, item.longitude!);
-    final String cat = item.category;
-    
-    final bool isSelected = _selectedItem is NewsPost && (_selectedItem as NewsPost).id == id;
-
+  Marker _buildMarker(NewsPost item, bool isDark, bool isSelected) {
     return Marker(
-      point: loc,
-      width: 60,
-      height: 60,
+      point: LatLng(item.latitude!, item.longitude!),
+      width: 65, height: 65,
       child: GestureDetector(
         onTap: () {
           setState(() => _selectedItem = item);
-          _mapController.move(loc, 16.0);
+          _mapController.move(LatLng(item.latitude!, item.longitude!), 16.0);
         },
-        child: AnimatedScale(
-          scale: isSelected ? 1.3 : 1.0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.elasticOut,
-          child: Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: isSelected ? AppTheme.accentColor : AppTheme.primaryColor,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-              boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3))],
-            ),
-            child: Icon(
-              _getIconForCategory(cat),
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
-        ),
+        child: _buildMarkerWidget(_getIconForCategory(item.category), AppTheme.primaryColor, isSelected),
       ),
+    );
+  }
+
+  Widget _buildMarkerWidget(IconData icon, Color color, bool isSelected) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        if (isSelected)
+          Container(
+            width: 45, height: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color.withValues(alpha: 0.3),
+            ),
+          ).animate(onPlay: (controller) => controller.repeat())
+           .scale(duration: 1000.ms, begin: const Offset(1, 1), end: const Offset(2.2, 2.2))
+           .fadeOut(duration: 1000.ms),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 2),
+            boxShadow: [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 15, spreadRadius: 2)],
+          ),
+          child: Icon(icon, color: Colors.white, size: 22),
+        ).animate(target: isSelected ? 1 : 0)
+         .scale(duration: 400.ms, curve: Curves.elasticOut),
+      ],
     );
   }
 

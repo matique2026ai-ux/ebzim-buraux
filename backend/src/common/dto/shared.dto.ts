@@ -2,9 +2,7 @@ import {
   IsString,
   IsOptional,
   IsNotEmpty,
-  ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export class MultilingualTextDto {
   @IsString()

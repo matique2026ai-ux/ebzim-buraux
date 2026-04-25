@@ -82,7 +82,9 @@ class FinancialsTab extends ConsumerWidget {
                         );
                         ref.invalidate(adminContributionsProvider);
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(
                             const SnackBar(
                               content: Text('❌ تم رفض المساهمة'),
                               backgroundColor: Colors.red,
@@ -163,10 +165,7 @@ class _ContributionCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'من: $userName',
-            style: GoogleFonts.tajawal(
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-            ),
+            style: GoogleFonts.tajawal(fontWeight: FontWeight.w600, fontSize: 13),
           ),
           if (projectName.isNotEmpty)
             Text(
@@ -184,10 +183,7 @@ class _ContributionCard extends StatelessWidget {
                 // Logic to view proof image
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade50,
                   borderRadius: BorderRadius.circular(10),
@@ -196,16 +192,9 @@ class _ContributionCard extends StatelessWidget {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.image_search_rounded,
-                      size: 16,
-                      color: Colors.blue,
-                    ),
+                    Icon(Icons.image_search_rounded, size: 16, color: Colors.blue),
                     SizedBox(width: 8),
-                    Text(
-                      'عرض إثبات الدفع',
-                      style: TextStyle(fontSize: 11, color: Colors.blue),
-                    ),
+                    Text('عرض إثبات الدفع', style: TextStyle(fontSize: 11, color: Colors.blue)),
                   ],
                 ),
               ),

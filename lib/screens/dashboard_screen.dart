@@ -18,30 +18,12 @@ import 'package:ebzim_app/widgets/stats_strip.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 const Color _kGold = AppTheme.accentColor;
 
-Color _cardBg(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? const Color(0x0CFFFFFF)
-    : Colors.white.withValues(alpha: 0.4);
-Color _cardBorder(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? const Color(0x22FFFFFF)
-    : Colors.black.withValues(alpha: 0.05);
-Color _cardBgStrong(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? const Color(0x12FFFFFF)
-    : Colors.white.withValues(alpha: 0.7);
-Color _textPrimary(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? Colors.white
-    : const Color(0xFF1A1C1A);
-Color _textSecondary(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? const Color(0xCCFFFFFF)
-    : Colors.black87;
-Color _textMuted(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? const Color(0x73FFFFFF)
-    : Colors.black54;
+Color _cardBg(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x0CFFFFFF) : Colors.white.withValues(alpha: 0.4);
+Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withValues(alpha: 0.05);
+Color _cardBgStrong(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x12FFFFFF) : Colors.white.withValues(alpha: 0.7);
+Color _textPrimary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1C1A);
+Color _textSecondary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0xCCFFFFFF) : Colors.black87;
+Color _textMuted(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x73FFFFFF) : Colors.black54;
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -62,10 +44,7 @@ class DashboardScreen extends ConsumerWidget {
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         extendBodyBehindAppBar: true,
-        appBar: const EbzimAppBar(
-          backgroundColor: Colors.transparent,
-          color: _kGold,
-        ),
+        appBar: const EbzimAppBar(backgroundColor: Colors.transparent, color: _kGold),
         body: EbzimBackground(child: _DashboardSkeleton()),
       );
     }
@@ -85,35 +64,19 @@ class DashboardScreen extends ConsumerWidget {
                   padding: const EdgeInsetsDirectional.only(end: 16.0),
                   child: TextButton.icon(
                     onPressed: () => context.push('/login'),
-                    icon: const Icon(
-                      Icons.login_rounded,
-                      color: _kGold,
-                      size: 20,
-                    ),
-                    label: Text(
-                      loc.authAccessButton,
-                      style: const TextStyle(
-                        color: _kGold,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    icon: const Icon(Icons.login_rounded, color: _kGold, size: 20),
+                    label: Text(loc.authAccessButton, style: const TextStyle(color: _kGold, fontWeight: FontWeight.bold)),
                   ),
                 );
               }
-              final isAdmin =
-                  user.role == EbzimRole.admin ||
-                  user.role == EbzimRole.superAdmin;
+              final isAdmin = user.role == EbzimRole.admin || user.role == EbzimRole.superAdmin;
               return Row(
                 children: [
                   if (isAdmin)
                     Padding(
                       padding: const EdgeInsetsDirectional.only(end: 8.0),
                       child: IconButton(
-                        icon: const Icon(
-                          Icons.admin_panel_settings_rounded,
-                          color: _kGold,
-                          size: 24,
-                        ),
+                        icon: const Icon(Icons.admin_panel_settings_rounded, color: _kGold, size: 24),
                         tooltip: 'لوحة الإدارة',
                         onPressed: () => context.go('/admin'),
                       ),
@@ -123,23 +86,13 @@ class DashboardScreen extends ConsumerWidget {
                     child: GestureDetector(
                       onTap: () => context.push('/profile/edit'),
                       child: CircleAvatar(
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.secondary.withValues(alpha: 0.14),
-                        backgroundImage:
-                            (user.imageUrl?.isNotEmpty ?? false) &&
-                                user.imageUrl!.startsWith('http')
+                        backgroundColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.14),
+                        backgroundImage: (user.imageUrl?.isNotEmpty ?? false) && user.imageUrl!.startsWith('http')
                             ? NetworkImage(user.imageUrl!)
                             : null,
                         radius: 19,
-                        child:
-                            (user.imageUrl?.isEmpty ?? true) ||
-                                !user.imageUrl!.startsWith('http')
-                            ? const Icon(
-                                Icons.person_outline_rounded,
-                                color: _kGold,
-                                size: 20,
-                              )
+                        child: (user.imageUrl?.isEmpty ?? true) || !user.imageUrl!.startsWith('http')
+                            ? const Icon(Icons.person_outline_rounded, color: _kGold, size: 20)
                             : null,
                       ),
                     ),
@@ -156,26 +109,22 @@ class DashboardScreen extends ConsumerWidget {
         child: userAsync.when(
           data: (user) {
             // Provide a fallback Guest profile if unauthenticated
-            final displayUser =
-                user ??
-                UserProfile(
-                  id: 'guest',
-                  firstName: 'Guest',
-                  lastName: 'User',
-                  firstNameAr: 'زائر',
-                  lastNameAr: '',
-                  email: '',
-                  phone: '',
-                  imageUrl: '',
-                  role: EbzimRole.public,
-                  status: 'ACTIVE',
-                );
+            final displayUser = user ?? UserProfile(
+              id: 'guest',
+              firstName: 'Guest',
+              lastName: 'User',
+              firstNameAr: 'زائر',
+              lastNameAr: '',
+              email: '',
+              phone: '',
+              imageUrl: '',
+              role: EbzimRole.public,
+              status: 'ACTIVE',
+            );
 
             final langCode = Localizations.localeOf(context).languageCode;
             final fullName = displayUser.getName(langCode);
-            final firstName = fullName.isNotEmpty
-                ? fullName.split(' ').first
-                : '';
+            final firstName = fullName.isNotEmpty ? fullName.split(' ').first : '';
             final isPublic = displayUser.role == EbzimRole.public;
             final isMember = displayUser.role != EbzimRole.public;
 
@@ -199,7 +148,7 @@ class DashboardScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 28),
-
+                  
                   // --- LIVE PLATFORM STATS ---
                   const StatsStrip(
                     padding: EdgeInsets.symmetric(horizontal: 24),
@@ -213,9 +162,7 @@ class DashboardScreen extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: _ProfileCompletionCard(
-                        percentage:
-                            (displayUser.profileCompletionPercentage * 100)
-                                .toInt(),
+                        percentage: (displayUser.profileCompletionPercentage * 100).toInt(),
                         loc: loc,
                       ),
                     ),
@@ -233,9 +180,7 @@ class DashboardScreen extends ConsumerWidget {
                   if (isMember) ...[
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: DigitalIdCard(
-                        user: displayUser,
-                      ).animate().fadeIn().slideY(begin: 0.04),
+                      child: DigitalIdCard(user: displayUser).animate().fadeIn().slideY(begin: 0.04),
                     ),
                     const SizedBox(height: 32),
                   ],
@@ -255,12 +200,7 @@ class DashboardScreen extends ConsumerWidget {
                             return _MembershipEntryTile(loc: loc);
                           }
                         },
-                        loading: () => const Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppTheme.accentColor,
-                          ),
-                        ),
+                        loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.accentColor)),
                         error: (_, __) => _MembershipEntryTile(loc: loc),
                       ),
                     ),
@@ -279,10 +219,8 @@ class DashboardScreen extends ConsumerWidget {
           },
           loading: () => _DashboardSkeleton(),
           error: (e, _) => Center(
-            child: Text(
-              loc.dashErrorData,
-              style: const TextStyle(color: Colors.redAccent),
-            ),
+            child: Text(loc.dashErrorData,
+                style: const TextStyle(color: Colors.redAccent)),
           ),
         ),
       ),
@@ -325,65 +263,47 @@ class _HeroSection extends StatelessWidget {
         GestureDetector(
           onTap: () => context.push('/profile/edit'),
           child: Center(
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: _kGold.withValues(alpha: 0.2),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: _kGold.withValues(alpha: 0.08),
-                        blurRadius: 30,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: CircleAvatar(
-                    radius: 54,
-                    backgroundColor: textColor.withValues(alpha: 0.05),
-                    backgroundImage:
-                        (user.imageUrl?.isNotEmpty ?? false) &&
-                            user.imageUrl!.startsWith('http')
-                        ? NetworkImage(user.imageUrl!)
-                        : null,
-                    child:
-                        (user.imageUrl?.isEmpty ?? true) ||
-                            !user.imageUrl!.startsWith('http')
-                        ? const Icon(
-                            Icons.person_rounded,
-                            color: _kGold,
-                            size: 48,
-                          )
-                        : null,
-                  ),
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: _kGold.withValues(alpha: 0.2), width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _kGold.withValues(alpha: 0.08),
+                      blurRadius: 30,
+                      spreadRadius: 2,
+                    )
+                  ],
                 ),
-                // Hint for editing
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: _kGold,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: theme.scaffoldBackgroundColor,
-                      width: 3,
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.camera_alt_rounded,
-                    size: 14,
-                    color: isDark ? Colors.black : Colors.white,
-                  ),
-                ).animate().scale(delay: 400.ms),
-              ],
-            ),
-          ).animate().fadeIn().scale(duration: 400.ms),
-        ),
+                child: CircleAvatar(
+                  radius: 54,
+                  backgroundColor: textColor.withValues(alpha: 0.05),
+                  backgroundImage: (user.imageUrl?.isNotEmpty ?? false) && user.imageUrl!.startsWith('http')
+                      ? NetworkImage(user.imageUrl!)
+                      : null,
+                  child: (user.imageUrl?.isEmpty ?? true) || !user.imageUrl!.startsWith('http')
+                      ? const Icon(Icons.person_rounded, color: _kGold, size: 48)
+                      : null,
+                ),
+              ),
+              // Hint for editing
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: _kGold,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: theme.scaffoldBackgroundColor, width: 3),
+                ),
+                child: Icon(Icons.camera_alt_rounded, size: 14, color: isDark ? Colors.black : Colors.white),
+              ).animate().scale(delay: 400.ms),
+            ],
+          ),
+        ).animate().fadeIn().scale(duration: 400.ms),
+      ),
 
         const SizedBox(height: 24),
 
@@ -406,8 +326,8 @@ class _HeroSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _StatusBadge(
-              label: levelLabel,
-              isPublic: isPublic,
+              label: levelLabel, 
+              isPublic: isPublic, 
               role: user.role,
             ),
             const SizedBox(width: 8),
@@ -431,7 +351,7 @@ class _HeroSection extends StatelessWidget {
         ).animate().fadeIn(delay: 300.ms),
 
         const SizedBox(height: 16),
-
+        
         // --- LOGICAL NOTE ---
         // --- LOGICAL NOTE ---
         if (isPublic)
@@ -457,7 +377,7 @@ class _StatusBadge extends StatelessWidget {
   final EbzimRole role;
 
   const _StatusBadge({
-    required this.label,
+    required this.label, 
     required this.isPublic,
     required this.role,
   });
@@ -466,12 +386,10 @@ class _StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSuperAdmin = role == EbzimRole.superAdmin;
     final isAdmin = role == EbzimRole.admin;
-
+    
     Color color = isPublic ? _textSecondary(context) : _kGold;
-    IconData icon = isPublic
-        ? Icons.person_outline_rounded
-        : Icons.verified_outlined;
-
+    IconData icon = isPublic ? Icons.person_outline_rounded : Icons.verified_outlined;
+    
     if (isSuperAdmin) {
       color = const Color(0xFFD4AF37); // Royal Gold
       icon = Icons.shield_rounded;
@@ -485,19 +403,14 @@ class _StatusBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: color.withValues(alpha: 0.2),
-          width: isSuperAdmin ? 1.5 : 1.0,
-        ),
-        boxShadow: isSuperAdmin
-            ? [
-                BoxShadow(
-                  color: color.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  spreadRadius: 1,
-                ),
-              ]
-            : null,
+        border: Border.all(color: color.withValues(alpha: 0.2), width: isSuperAdmin ? 1.5 : 1.0),
+        boxShadow: isSuperAdmin ? [
+          BoxShadow(
+            color: color.withValues(alpha: 0.05),
+            blurRadius: 10,
+            spreadRadius: 1,
+          )
+        ] : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -530,9 +443,7 @@ class _ActiveBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF4ADE80).withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFF4ADE80).withValues(alpha: 0.30),
-        ),
+        border: Border.all(color: const Color(0xFF4ADE80).withValues(alpha: 0.30)),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF4ADE80).withValues(alpha: 0.08),
@@ -568,10 +479,14 @@ class _ActiveBadge extends StatelessWidget {
   }
 }
 
+
+
+
 // ─────────────────────────────────────────────────────────────────────────────
 // MEMBERSHIP ENTRY TILE — kept for reference only
 // ─────────────────────────────────────────────────────────────────────────────
 // (Events section moved to HomeScreen)
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MEMBERSHIP ENTRY TILE (secondary, bottom of page)
@@ -593,10 +508,7 @@ class _MembershipEntryTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: _cardBg(context),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: _kGold.withValues(alpha: 0.20),
-              width: 1.5,
-            ),
+            border: Border.all(color: _kGold.withValues(alpha: 0.20), width: 1.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.1),
@@ -613,11 +525,7 @@ class _MembershipEntryTile extends StatelessWidget {
                   color: _kGold.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(
-                  Icons.workspace_premium_outlined,
-                  color: _kGold,
-                  size: 28,
-                ),
+                child: const Icon(Icons.workspace_premium_outlined, color: _kGold, size: 28),
               ),
               const SizedBox(width: 18),
               Expanded(
@@ -664,10 +572,7 @@ class _MembershipPendingTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: _cardBg(context),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.amber.withValues(alpha: 0.30),
-          width: 1.5,
-        ),
+        border: Border.all(color: Colors.amber.withValues(alpha: 0.30), width: 1.5),
       ),
       child: Row(
         children: [
@@ -677,11 +582,7 @@ class _MembershipPendingTile extends StatelessWidget {
               color: Colors.amber.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(
-              Icons.hourglass_empty,
-              color: Colors.amber,
-              size: 28,
-            ),
+            child: const Icon(Icons.hourglass_empty, color: Colors.amber, size: 28),
           ),
           const SizedBox(width: 18),
           Expanded(
@@ -725,10 +626,7 @@ class _MembershipRejectedTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: _cardBg(context),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.redAccent.withValues(alpha: 0.30),
-          width: 1.5,
-        ),
+        border: Border.all(color: Colors.redAccent.withValues(alpha: 0.30), width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -741,11 +639,7 @@ class _MembershipRejectedTile extends StatelessWidget {
                   color: Colors.redAccent.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(
-                  Icons.cancel_outlined,
-                  color: Colors.redAccent,
-                  size: 28,
-                ),
+                child: const Icon(Icons.cancel_outlined, color: Colors.redAccent, size: 28),
               ),
               const SizedBox(width: 18),
               Expanded(
@@ -770,8 +664,8 @@ class _MembershipRejectedTile extends StatelessWidget {
               icon: const Icon(Icons.support_agent_rounded, size: 18),
               label: const Text('التواصل مع الإدارة'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withValues(alpha: 0.1)
+                backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.white.withValues(alpha: 0.1) 
                     : Colors.black.withValues(alpha: 0.05),
                 foregroundColor: _textPrimary(context),
                 elevation: 0,
@@ -783,6 +677,10 @@ class _MembershipRejectedTile extends StatelessWidget {
     ).animate().fadeIn(delay: 500.ms);
   }
 }
+
+
+
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SKELETON LOADING STATES
@@ -803,15 +701,13 @@ class _DashboardSkeleton extends StatelessWidget {
           const SizedBox(height: 28),
           _S(h: 108, w: double.infinity, r: 20),
           const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(child: _S(h: 82, w: double.infinity, r: 16)),
-              const SizedBox(width: 10),
-              Expanded(child: _S(h: 82, w: double.infinity, r: 16)),
-              const SizedBox(width: 10),
-              Expanded(child: _S(h: 82, w: double.infinity, r: 16)),
-            ],
-          ),
+          Row(children: [
+            Expanded(child: _S(h: 82, w: double.infinity, r: 16)),
+            const SizedBox(width: 10),
+            Expanded(child: _S(h: 82, w: double.infinity, r: 16)),
+            const SizedBox(width: 10),
+            Expanded(child: _S(h: 82, w: double.infinity, r: 16)),
+          ]),
           const SizedBox(height: 36),
           _S(h: 20, w: 160),
           const SizedBox(height: 18),
@@ -822,6 +718,8 @@ class _DashboardSkeleton extends StatelessWidget {
   }
 }
 
+
+
 class _S extends StatelessWidget {
   final double h, w, r;
   const _S({required this.h, required this.w, this.r = 8});
@@ -829,18 +727,17 @@ class _S extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-          height: h,
-          width: w,
-          decoration: BoxDecoration(
-            color: _cardBg(context),
-            borderRadius: BorderRadius.circular(r),
-          ),
-        )
-        .animate(onPlay: (c) => c.repeat(reverse: true))
-        .shimmer(
-          duration: 1400.ms,
-          color: Colors.white.withValues(alpha: 0.03),
-        );
+      height: h,
+      width: w,
+      decoration: BoxDecoration(
+        color: _cardBg(context),
+        borderRadius: BorderRadius.circular(r),
+      ),
+    ).animate(onPlay: (c) => c.repeat(reverse: true))
+     .shimmer(
+       duration: 1400.ms,
+       color: Colors.white.withValues(alpha: 0.03),
+     );
   }
 }
 
@@ -860,7 +757,10 @@ class _ProfileCompletionCard extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [_cardBg(context), _kGold.withValues(alpha: 0.05)],
+            colors: [
+              _cardBg(context),
+              _kGold.withValues(alpha: 0.05),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -871,7 +771,7 @@ class _ProfileCompletionCard extends StatelessWidget {
               color: _kGold.withValues(alpha: 0.05),
               blurRadius: 20,
               offset: const Offset(0, 10),
-            ),
+            )
           ],
         ),
         child: Column(
@@ -882,7 +782,7 @@ class _ProfileCompletionCard extends StatelessWidget {
                 Icon(Icons.auto_awesome_rounded, color: _kGold, size: 18),
                 const SizedBox(width: 10),
                 Text(
-                  'جاهزية الملف الشخصي',
+                  'جاهزية الملف الشخصي', 
                   style: GoogleFonts.cairo(
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
@@ -915,9 +815,7 @@ class _ProfileCompletionCard extends StatelessWidget {
                   duration: const Duration(seconds: 1),
                   curve: Curves.easeOutCubic,
                   height: 10,
-                  width:
-                      (MediaQuery.of(context).size.width - 96) *
-                      (percentage / 100),
+                  width: (MediaQuery.of(context).size.width - 96) * (percentage / 100),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [_kGold, Color(0xFFFFA000)],
@@ -928,7 +826,7 @@ class _ProfileCompletionCard extends StatelessWidget {
                         color: _kGold.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -938,24 +836,16 @@ class _ProfileCompletionCard extends StatelessWidget {
             Row(
               children: [
                 if (percentage >= 100)
-                  const Icon(
-                    Icons.verified_user_rounded,
-                    color: Colors.greenAccent,
-                    size: 14,
-                  ),
+                  const Icon(Icons.verified_user_rounded, color: Colors.greenAccent, size: 14),
                 if (percentage >= 100) const SizedBox(width: 6),
                 Text(
-                  percentage >= 100
-                      ? 'ملفك الشخصي مكتمل وموثق بنجاح'
-                      : 'أكمل بياناتك للحصول على هوية رقمية معتمدة',
+                  percentage >= 100 
+                    ? 'ملفك الشخصي مكتمل وموثق بنجاح' 
+                    : 'أكمل بياناتك للحصول على هوية رقمية معتمدة',
                   style: GoogleFonts.cairo(
                     fontSize: 11,
-                    color: percentage >= 100
-                        ? Colors.greenAccent
-                        : _textMuted(context),
-                    fontWeight: percentage >= 100
-                        ? FontWeight.bold
-                        : FontWeight.w500,
+                    color: percentage >= 100 ? Colors.greenAccent : _textMuted(context),
+                    fontWeight: percentage >= 100 ? FontWeight.bold : FontWeight.w500,
                   ),
                 ),
               ],
@@ -1010,11 +900,7 @@ class _ActionItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _ActionItem({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
+  const _ActionItem({required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -1050,3 +936,4 @@ class _ActionItem extends StatelessWidget {
     );
   }
 }
+

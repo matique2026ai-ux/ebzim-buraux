@@ -11,8 +11,7 @@ class ApiClient {
   final StorageService storageService;
   final Ref _ref;
 
-  ApiClient({required this.dio, required this.storageService, required Ref ref})
-    : _ref = ref {
+  ApiClient({required this.dio, required this.storageService, required Ref ref}) : _ref = ref {
     _initInterceptors();
     _initProxy();
   }
@@ -30,13 +29,11 @@ class ApiClient {
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
-
-          if (options.method != 'GET' &&
-              options.method != 'HEAD' &&
-              options.contentType == null) {
+          
+          if (options.method != 'GET' && options.method != 'HEAD' && options.contentType == null) {
             options.contentType = 'application/json';
           }
-
+          
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -57,11 +54,9 @@ class ApiClient {
         },
       ),
     );
-
+    
     if (kDebugMode) {
-      dio.interceptors.add(
-        LogInterceptor(responseBody: true, requestBody: true),
-      );
+      dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     }
   }
 
@@ -85,7 +80,7 @@ class ApiClient {
 
 final apiClientProvider = Provider((ref) {
   final storageService = ref.watch(storageServiceProvider);
-
+  
   // Use the platform-safe helper to detect tests and base URLs.
   final isTest = isPlatformTest;
   final baseUrl = getPlatformBaseUrl(isTest);
@@ -93,15 +88,11 @@ final apiClientProvider = Provider((ref) {
     print('[DEBUG API] Initializing ApiClient with baseUrl: $baseUrl');
   }
 
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: const Duration(
-        seconds: 60,
-      ), // Give Render time to wake up
-      receiveTimeout: const Duration(seconds: 60),
-    ),
-  );
+  final dio = Dio(BaseOptions(
+    baseUrl: baseUrl,
+    connectTimeout: const Duration(seconds: 60), // Give Render time to wake up
+    receiveTimeout: const Duration(seconds: 60),
+  ));
 
   return ApiClient(dio: dio, storageService: storageService, ref: ref);
 });

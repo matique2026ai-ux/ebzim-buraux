@@ -5,8 +5,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/providers/locale_provider.dart';
@@ -23,82 +21,32 @@ class HeritageMapScreen extends ConsumerStatefulWidget {
 class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   final MapController _mapController = MapController();
   String _selectedFilter = 'ALL';
+  
+  // Static seeded historical landmarks in Sétif
+  final List<_Landmark> _staticLandmarks = [
+    _Landmark(
+      id: "ain_elfouara",
+      nameAr: "عين الفوارة",
+      nameFr: "Ain El Fouara",
+      descAr: "المعلم التاريخي الأبرز في سطيف.",
+      descFr: "Le monument historique le plus célèbre de Sétif.",
+      location: const LatLng(36.1895, 5.4098),
+      category: "HERITAGE",
+      image: "https://res.cloudinary.com/do3ygqlnl/image/upload/v1777077119/ebzim/static/ain_fouara.jpg"
+    ),
+    _Landmark(
+      id: "museum_setif",
+      nameAr: "المتحف الوطني للآثار",
+      nameFr: "Musée National",
+      descAr: "شريك جمعية إبزيم، يحتوي على أندر المقتنيات الرومانية.",
+      descFr: "Partenaire d'Ebzim, contenant des objets romains rares.",
+      location: const LatLng(36.1911, 5.4128),
+      category: "HERITAGE",
+      image: "https://res.cloudinary.com/do3ygqlnl/image/upload/v1777077119/ebzim/static/museum.jpg"
+    ),
+  ];
 
   dynamic _selectedItem;
-  List<WikiLandmark> _wikiLandmarks = [];
-  bool _isLoadingWiki = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchWikiLandmarks(const LatLng(36.1915, 5.4110));
-  }
-
-  Future<void> _fetchWikiLandmarks(LatLng center) async {
-    if (_isLoadingWiki) return;
-    setState(() => _isLoadingWiki = true);
-    try {
-      final url = Uri.parse(
-        'https://fr.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${center.latitude}|${center.longitude}&ggsradius=10000&ggslimit=30&prop=coordinates|pageimages|description&piprop=thumbnail&pithumbsize=400&format=json&origin=*',
-      );
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final pages = data['query']?['pages'] as Map<String, dynamic>? ?? {};
-        final List<WikiLandmark> newLandmarks = [];
-        final validKeywords = [
-          'musée',
-          'ruines',
-          'archéologique',
-          'monument',
-          'mosquée',
-          'château',
-          'patrimoine',
-          'historique',
-          'antique',
-          'romain',
-          'tombeau',
-          'palais',
-          'site',
-          'vestiges',
-        ];
-
-        for (var page in pages.values) {
-          if (page['coordinates'] != null) {
-            final title = (page['title'] ?? '').toLowerCase();
-            final desc = (page['description'] ?? '').toLowerCase();
-
-            bool isHeritage = validKeywords.any(
-              (kw) => title.contains(kw) || desc.contains(kw),
-            );
-
-            // Allow if it has a thumbnail and matches heritage keywords
-            if (isHeritage && page['thumbnail'] != null) {
-              newLandmarks.add(
-                WikiLandmark(
-                  pageId: page['pageid'],
-                  title: page['title'] ?? '',
-                  description: page['description'] ?? 'معلم تاريخي',
-                  imageUrl: page['thumbnail']?['source'] ?? '',
-                  lat: page['coordinates'][0]['lat'],
-                  lon: page['coordinates'][0]['lon'],
-                ),
-              );
-            }
-          }
-        }
-        if (mounted) {
-          setState(() {
-            _wikiLandmarks = newLandmarks;
-          });
-        }
-      }
-    } catch (e) {
-      debugPrint('Wiki Error: $e');
-    } finally {
-      if (mounted) setState(() => _isLoadingWiki = false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,10 +66,7 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
               color: isDark ? Colors.black54 : Colors.white70,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              isAr ? Icons.arrow_forward : Icons.arrow_back,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
+            child: Icon(isAr ? Icons.arrow_forward : Icons.arrow_back, color: isDark ? Colors.white : Colors.black87),
           ),
           onPressed: () => context.pop(),
         ),
@@ -144,25 +89,21 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       ),
       body: newsAsync.when(
         data: (posts) {
-          final projects = posts
-              .where((p) => p.latitude != null && p.longitude != null)
-              .toList();
-
+          final projects = posts.where((p) => p.latitude != null && p.longitude != null).toList();
+          
           final List<Marker> markers = [];
-
+          
+          // Add static landmarks if filtered
+          if (_selectedFilter == 'ALL' || _selectedFilter == 'HERITAGE') {
+            for (var l in _staticLandmarks) {
+              markers.add(_buildMarker(l, isDark));
+            }
+          }
+          
           // Add dynamic projects
           for (var p in projects) {
             if (_selectedFilter == 'ALL' || _selectedFilter == p.category) {
               markers.add(_buildMarker(p, isDark));
-            }
-          }
-
-          // Add Wikipedia Landmarks
-          if (_selectedFilter == 'ALL' ||
-              _selectedFilter == 'RESTORATION' ||
-              _selectedFilter == 'CULTURAL') {
-            for (var w in _wikiLandmarks) {
-              markers.add(_buildWikiMarker(w, isDark));
             }
           }
 
@@ -176,31 +117,20 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
                   onTap: (tapPosition, point) {
                     setState(() => _selectedItem = null);
                   },
-                  onPositionChanged: (pos, hasGesture) {
-                    if (hasGesture && pos.center != null) {
-                      // Fetch new landmarks when map stops moving (debounced naturally by humans pausing)
-                      // In a real app we'd use a debounce timer, but simple check works for demo
-                      if (!_isLoadingWiki) {
-                        _fetchWikiLandmarks(pos.center!);
-                      }
-                    }
-                  },
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate:
-                        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                    urlTemplate: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
                     userAgentPackageName: 'com.ebzim.app',
                   ),
                   MarkerLayer(markers: markers),
                 ],
               ),
-
+              
               // Top Filter Bar
               Positioned(
                 top: MediaQuery.of(context).padding.top + 70,
-                left: 0,
-                right: 0,
+                left: 0, right: 0,
                 child: _buildFilterBar(isAr, isDark),
               ),
 
@@ -218,64 +148,19 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
             ],
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppTheme.primaryColor),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor)),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
     );
   }
 
-  Marker _buildWikiMarker(WikiLandmark item, bool isDark) {
-    final bool isSelected =
-        _selectedItem is WikiLandmark &&
-        (_selectedItem as WikiLandmark).pageId == item.pageId;
-
-    return Marker(
-      point: LatLng(item.lat, item.lon),
-      width: 60,
-      height: 60,
-      child: GestureDetector(
-        onTap: () {
-          setState(() => _selectedItem = item);
-          _mapController.move(LatLng(item.lat, item.lon), 16.0);
-        },
-        child: AnimatedScale(
-          scale: isSelected ? 1.3 : 1.0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.elasticOut,
-          child: Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.purple : Colors.indigo,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 6,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.account_balance_rounded,
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Marker _buildMarker(NewsPost item, bool isDark) {
-    final String id = item.id;
-    final LatLng loc = LatLng(item.latitude!, item.longitude!);
-    final String cat = item.category;
-
-    final bool isSelected =
-        _selectedItem is NewsPost && (_selectedItem as NewsPost).id == id;
+  Marker _buildMarker(dynamic item, bool isDark) {
+    final String id = item is _Landmark ? item.id : (item as NewsPost).id;
+    final LatLng loc = item is _Landmark ? item.location : LatLng(item.latitude!, item.longitude!);
+    final String cat = item is _Landmark ? item.category : (item as NewsPost).category;
+    
+    final bool isSelected = (_selectedItem is _Landmark && (_selectedItem as _Landmark).id == id) ||
+                           (_selectedItem is NewsPost && (_selectedItem as NewsPost).id == id);
 
     return Marker(
       point: loc,
@@ -296,13 +181,7 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
               color: isSelected ? AppTheme.accentColor : AppTheme.primaryColor,
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 6,
-                  offset: Offset(0, 3),
-                ),
-              ],
+              boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3))],
             ),
             child: Icon(
               _getIconForCategory(cat),
@@ -317,48 +196,22 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
 
   IconData _getIconForCategory(String category) {
     switch (category.toUpperCase()) {
-      case 'HERITAGE':
-      case 'RESTORATION':
-        return Icons.museum_rounded;
-      case 'PROJECT':
-        return Icons.assignment_rounded;
-      case 'ASSOCIATIVE':
-        return Icons.groups_rounded;
-      case 'SOCIAL':
-        return Icons.favorite_rounded;
-      case 'CULTURAL':
-        return Icons.palette_rounded;
-      case 'SCIENTIFIC':
-        return Icons.science_rounded;
-      default:
-        return Icons.location_on_rounded;
+      case 'HERITAGE': case 'RESTORATION': return Icons.museum_rounded;
+      case 'PROJECT': return Icons.assignment_rounded;
+      case 'ASSOCIATIVE': return Icons.groups_rounded;
+      case 'SOCIAL': return Icons.favorite_rounded;
+      case 'CULTURAL': return Icons.palette_rounded;
+      case 'SCIENTIFIC': return Icons.science_rounded;
+      default: return Icons.location_on_rounded;
     }
   }
 
   Widget _buildFilterBar(bool isAr, bool isDark) {
     final filters = [
       {'id': 'ALL', 'label': isAr ? 'الكل' : 'Tous'},
-      {
-        'id': 'ASSOCIATIVE',
-        'label': isAr ? 'نشاط جمعوي' : 'Activité Associative',
-      },
-      {
-        'id': 'PROJECT',
-        'label': isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel',
-      },
-      {
-        'id': 'RESTORATION',
-        'label': isAr ? 'حماية التراث' : 'Protection du Patrimoine',
-      },
-      {'id': 'CULTURAL', 'label': isAr ? 'نشاط ثقافي' : 'Activité Culturelle'},
-      {
-        'id': 'SOCIAL',
-        'label': isAr ? 'مبادرة اجتماعية' : 'Initiative Sociale',
-      },
-      {
-        'id': 'SCIENTIFIC',
-        'label': isAr ? 'بحث علمي' : 'Recherche Scientifique',
-      },
+      {'id': 'HERITAGE', 'label': isAr ? 'التراث' : 'Patrimoine'},
+      {'id': 'ASSOCIATIVE', 'label': isAr ? 'نشاط جمعوي' : 'Associatif'},
+      {'id': 'CULTURAL', 'label': isAr ? 'ثقافي' : 'Culturel'},
     ];
 
     return SizedBox(
@@ -376,21 +229,15 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: active
-                    ? AppTheme.accentColor
-                    : (isDark ? Colors.black87 : Colors.white),
+                color: active ? AppTheme.accentColor : (isDark ? Colors.black87 : Colors.white),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: active ? Colors.transparent : Colors.white24,
-                ),
+                border: Border.all(color: active ? Colors.transparent : Colors.white24),
               ),
               child: Center(
                 child: Text(
                   f['label']!,
                   style: GoogleFonts.tajawal(
-                    color: active
-                        ? Colors.black
-                        : (isDark ? Colors.white : Colors.black87),
+                    color: active ? Colors.black : (isDark ? Colors.white : Colors.black87),
                     fontWeight: active ? FontWeight.bold : FontWeight.normal,
                     fontSize: 12,
                   ),
@@ -403,59 +250,19 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     );
   }
 
-  String _getCategoryLabel(String category, bool isAr) {
-    switch (category.toUpperCase()) {
-      case 'PROJECT':
-        return isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel';
-      case 'RESTORATION':
-        return isAr ? 'حماية التراث والآثار' : 'Protection du Patrimoine';
-      case 'CULTURAL':
-        return isAr ? 'مهرجان / نشاط ثقافي' : 'Activité Culturelle';
-      case 'SCIENTIFIC':
-        return isAr ? 'ندوة / بحث علمي' : 'Recherche Scientifique';
-      case 'ASSOCIATIVE':
-        return isAr ? 'نشاط جمعوي' : 'Activité Associative';
-      case 'SOCIAL':
-        return isAr ? 'مبادرة اجتماعية' : 'Initiative Sociale';
-      default:
-        return isAr ? 'مشروع ميداني' : 'Projet Terrain';
-    }
-  }
-
   Widget _buildDetailCard(dynamic item, bool isAr, bool isDark) {
-    String title = '';
-    String desc = '';
-    String img = '';
-    String cat = '';
-    VoidCallback? onTap;
-
-    if (item is WikiLandmark) {
-      title = item.title;
-      desc = item.description;
-      img = item.imageUrl;
-      cat = isAr ? 'موسوعة ويكيبيديا' : 'Wikipedia';
-      onTap = null; // Maybe open external link in future
-    } else if (item is NewsPost) {
-      title = item.getTitle(isAr ? 'ar' : 'fr');
-      desc = item.getSummary(isAr ? 'ar' : 'fr');
-      img = item.imageUrl;
-      cat = _getCategoryLabel(item.category, isAr);
-      onTap = () => context.push('/project/${item.id}', extra: item);
-    }
+    final String title = item is _Landmark ? (isAr ? item.nameAr : item.nameFr) : (item as NewsPost).getTitle(isAr ? 'ar' : 'fr');
+    final String desc = item is _Landmark ? (isAr ? item.descAr : item.descFr) : (item as NewsPost).getSummary(isAr ? 'ar' : 'fr');
+    final String img = item is _Landmark ? item.image : (item as NewsPost).imageUrl;
+    final String cat = item is _Landmark ? item.category : (item as NewsPost).category;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: item is NewsPost ? () => context.push('/news/${item.id}', extra: item) : null,
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E2124) : Colors.white,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.15),
-              blurRadius: 30,
-              offset: const Offset(0, 10),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 30, offset: const Offset(0, 10))],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
@@ -474,45 +281,17 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.accentColor.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        cat,
-                        style: const TextStyle(
-                          color: AppTheme.accentColor,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(color: AppTheme.accentColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
+                      child: Text(cat, style: const TextStyle(color: AppTheme.accentColor, fontSize: 10, fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      title,
-                      style: GoogleFonts.cairo(
-                        color: isDark ? Colors.white : Colors.black87,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text(title, style: GoogleFonts.cairo(color: isDark ? Colors.white : Colors.black87, fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
-                    Text(
-                      desc,
-                      style: TextStyle(
-                        color: isDark ? Colors.white70 : Colors.black54,
-                        fontSize: 13,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Text(desc, style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -521,20 +300,24 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   }
 }
 
-class WikiLandmark {
-  final int pageId;
-  final String title;
-  final String description;
-  final String imageUrl;
-  final double lat;
-  final double lon;
+class _Landmark {
+  final String id;
+  final String nameAr;
+  final String nameFr;
+  final String descAr;
+  final String descFr;
+  final LatLng location;
+  final String category;
+  final String image;
 
-  WikiLandmark({
-    required this.pageId,
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-    required this.lat,
-    required this.lon,
+  const _Landmark({
+    required this.id,
+    required this.nameAr,
+    required this.nameFr,
+    required this.descAr,
+    required this.descFr,
+    required this.location,
+    required this.category,
+    required this.image,
   });
 }

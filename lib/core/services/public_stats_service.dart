@@ -41,16 +41,11 @@ class PublicStatsService {
 
   Future<PublicStats> getPublicStats() async {
     try {
-      final response = await _ref
-          .read(apiClientProvider)
-          .dio
-          .get('public/stats');
+      final response = await _ref.read(apiClientProvider).dio.get('public/stats');
       final dynamic responseData = response.data;
       if (responseData is Map<String, dynamic>) {
         if (responseData.containsKey('data')) {
-          return PublicStats.fromJson(
-            responseData['data'] as Map<String, dynamic>,
-          );
+          return PublicStats.fromJson(responseData['data'] as Map<String, dynamic>);
         }
         return PublicStats.fromJson(responseData);
       }

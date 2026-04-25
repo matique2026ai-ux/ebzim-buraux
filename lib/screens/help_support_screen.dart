@@ -22,18 +22,15 @@ class HelpSupportScreen extends ConsumerWidget {
           physics: const BouncingScrollPhysics(),
           slivers: [
             const EbzimSliverAppBar(),
-
+            
             // --- HEADER / INTRO ---
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24, 140, 24, 24),
                 child: Column(
                   children: [
-                    const Icon(
-                      Icons.support_agent_rounded,
-                      color: AppTheme.accentColor,
-                      size: 56,
-                    ).animate().fadeIn().scale(delay: 200.ms),
+                    const Icon(Icons.support_agent_rounded, color: AppTheme.accentColor, size: 56)
+                        .animate().fadeIn().scale(delay: 200.ms),
                     const SizedBox(height: 16),
                     Text(
                       loc.settingsHelp,
@@ -98,18 +95,15 @@ class HelpSupportScreen extends ConsumerWidget {
                     const SizedBox(height: 16),
                     _FaqTile(
                       question: "كيف يمكنني الانضمام كعضو رسمي؟",
-                      answer:
-                          "يمكنك تقديم طلب العضوية عبر الانتقال إلى قسم 'أعضاء الجمعية' وتعبئة بياناتك. سيقوم مجلس الأمناء بمراجعة طلبك والرد خلال 48 ساعة.",
+                      answer: "يمكنك تقديم طلب العضوية عبر الانتقال إلى قسم 'أعضاء الجمعية' وتعبئة بياناتك. سيقوم مجلس الأمناء بمراجعة طلبك والرد خلال 48 ساعة.",
                     ),
                     _FaqTile(
                       question: "ماهي فوائد العضوية الرقمية؟",
-                      answer:
-                          "تتيح لك العضوية الرقمية الوصول الحصري للفعاليات، الحصول على شهادات المشاركة، والمساهمة في لجان الجمعية الفنية والثقافية.",
+                      answer: "تتيح لك العضوية الرقمية الوصول الحصري للفعاليات، الحصول على شهادات المشاركة، والمساهمة في لجان الجمعية الفنية والثقافية.",
                     ),
                     _FaqTile(
                       question: "كيف أقوم بتحديث بياناتي الشخصية؟",
-                      answer:
-                          "يمكنك تحديث بياناتك من خلال شاشة 'الملف الشخصي' > 'تعديل'، وسيتم مزامنة التغييرات فوراً مع النظام المركزي.",
+                      answer: "يمكنك تحديث بياناتك من خلال شاشة 'الملف الشخصي' > 'تعديل'، وسيتم مزامنة التغييرات فوراً مع النظام المركزي.",
                     ),
                   ],
                 ).animate(delay: 600.ms).fadeIn(),
@@ -146,11 +140,7 @@ class _ContactCard extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const _ContactCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
+  const _ContactCard({required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -160,23 +150,9 @@ class _ContactCard extends StatelessWidget {
         children: [
           Icon(icon, color: AppTheme.accentColor, size: 28),
           const SizedBox(height: 12),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.5),
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 10, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          Text(value, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
         ],
       ),
     );
@@ -213,17 +189,11 @@ class _FaqTileState extends State<_FaqTile> {
                     Expanded(
                       child: Text(
                         widget.question,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                     ),
                     Icon(
-                      _isExpanded
-                          ? Icons.keyboard_arrow_up_rounded
-                          : Icons.keyboard_arrow_down_rounded,
+                      _isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
                       color: AppTheme.accentColor,
                     ),
                   ],
@@ -234,11 +204,7 @@ class _FaqTileState extends State<_FaqTile> {
                   const SizedBox(height: 8),
                   Text(
                     widget.answer,
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.7),
-                      fontSize: 13,
-                      height: 1.6,
-                    ),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13, height: 1.6),
                   ),
                 ],
               ],

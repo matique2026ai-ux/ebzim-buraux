@@ -45,28 +45,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
       if (result != null && result.files.single.bytes != null) {
         setState(() => _isUploading = true);
-
+        
         final file = result.files.single;
-        await ref
-            .read(authProvider.notifier)
-            .uploadAvatar(file.bytes!, file.name);
+        await ref.read(authProvider.notifier).uploadAvatar(
+          file.bytes!,
+          file.name,
+        );
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم تحديث الصورة الشخصية'),
-              backgroundColor: Colors.green,
-            ),
+            const SnackBar(content: Text('تم تحديث الصورة الشخصية'), backgroundColor: Colors.green),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('خطأ في تحميل الصورة: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('خطأ في تحميل الصورة: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -135,16 +130,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         centerTitle: true,
         title: Text(
           loc.profileEdit,
-          style: GoogleFonts.tajawal(
-            fontWeight: FontWeight.bold,
-            color: AppTheme.accentColor,
-          ),
+          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: AppTheme.accentColor),
         ),
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: AppTheme.accentColor,
-          ),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppTheme.accentColor),
           onPressed: () => context.pop(),
         ),
       ),
@@ -166,34 +155,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppTheme.accentColor.withValues(
-                                alpha: 0.3,
-                              ),
-                              width: 2,
-                            ),
+                            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 2),
                           ),
                           child: CircleAvatar(
                             radius: 60,
-                            backgroundColor: theme.colorScheme.secondary
-                                .withValues(alpha: 0.1),
-                            backgroundImage:
-                                (user?.imageUrl?.isNotEmpty ?? false) &&
-                                    user!.imageUrl!.startsWith('http')
+                            backgroundColor: theme.colorScheme.secondary.withValues(alpha: 0.1),
+                            backgroundImage: (user?.imageUrl?.isNotEmpty ?? false) && user!.imageUrl!.startsWith('http')
                                 ? NetworkImage(user.imageUrl!)
                                 : null,
-                            child: _isUploading
-                                ? const CircularProgressIndicator(
-                                    color: AppTheme.accentColor,
-                                  )
-                                : ((user?.imageUrl?.isEmpty ?? true) ||
-                                          !user!.imageUrl!.startsWith('http')
-                                      ? const Icon(
-                                          Icons.person,
-                                          color: AppTheme.accentColor,
-                                          size: 40,
-                                        )
-                                      : null),
+                            child: _isUploading 
+                                ? const CircularProgressIndicator(color: AppTheme.accentColor)
+                                : ((user?.imageUrl?.isEmpty ?? true) || !user!.imageUrl!.startsWith('http')
+                                    ? const Icon(Icons.person, color: AppTheme.accentColor, size: 40)
+                                    : null),
                           ),
                         ),
                         Container(
@@ -202,11 +176,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             color: AppTheme.accentColor,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
-                            Icons.camera_enhance_rounded,
-                            size: 18,
-                            color: Colors.black,
-                          ),
+                          child: const Icon(Icons.camera_enhance_rounded, size: 18, color: Colors.black),
                         ),
                       ],
                     ),
@@ -230,7 +200,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         validator: (v) => v!.isEmpty ? loc.valRequired : null,
                       ),
                       const SizedBox(height: 20),
-
+                      
                       _buildFieldLabel('اللقب / العائلة'),
                       const SizedBox(height: 8),
                       _buildTextField(
@@ -253,8 +223,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       const SizedBox(height: 8),
                       _buildTextField(
                         controller: _bioController,
-                        hint:
-                            'اكتب نبذة مختصرة عن مسارك المهني أو صفتك في الجمعية...',
+                        hint: 'اكتب نبذة مختصرة عن مسارك المهني أو صفتك في الجمعية...',
                         icon: Icons.description_outlined,
                         maxLines: 4,
                       ),
@@ -273,39 +242,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.accentColor,
                       foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       elevation: 8,
                       shadowColor: AppTheme.accentColor.withValues(alpha: 0.3),
                     ),
                     child: _isSaving
-                        ? const SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.black,
-                              strokeWidth: 2,
-                            ),
-                          )
+                        ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2))
                         : Text(
                             'حفظ التغييرات',
-                            style: GoogleFonts.tajawal(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 18,
-                              letterSpacing: 1,
-                            ),
+                            style: GoogleFonts.tajawal(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 1),
                           ),
                   ),
                 ).animate().slideY(begin: 0.2, delay: 400.ms).fadeIn(),
-
+                
                 const SizedBox(height: 20),
                 Text(
                   'سيتم تحديث نسبة إكمال الملف تلقائياً بعد الحفظ',
-                  style: GoogleFonts.cairo(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                    fontSize: 11,
-                  ),
+                  style: GoogleFonts.cairo(color: theme.colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11),
                 ),
               ],
             ),
@@ -341,30 +294,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       validator: validator,
       keyboardType: keyboardType,
       maxLines: maxLines,
-      style: GoogleFonts.tajawal(
-        fontSize: 16,
-        color: isDark ? Colors.white : Colors.black,
-      ),
+      style: GoogleFonts.tajawal(fontSize: 16, color: isDark ? Colors.white : Colors.black),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: isDark ? Colors.white24 : Colors.black26),
-        prefixIcon: Icon(
-          icon,
-          color: AppTheme.accentColor.withValues(alpha: 0.5),
-          size: 20,
-        ),
+        prefixIcon: Icon(icon, color: AppTheme.accentColor.withValues(alpha: 0.5), size: 20),
         filled: true,
-        fillColor: isDark
-            ? Colors.white.withValues(alpha: 0.03)
-            : Colors.black.withValues(alpha: 0.03),
+        fillColor: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.03),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
   }

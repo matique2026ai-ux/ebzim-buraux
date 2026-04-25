@@ -29,16 +29,12 @@ class LanguageSelectionScreen extends ConsumerWidget {
             Positioned(
               top: -100,
               left: -100,
-              child: _AmbientGlow(
-                color: AppTheme.primaryColor.withValues(alpha: 0.5),
-              ),
+              child: _AmbientGlow(color: AppTheme.primaryColor.withValues(alpha: 0.5)),
             ),
             Positioned(
               bottom: -150,
               right: -100,
-              child: _AmbientGlow(
-                color: AppTheme.accentColor.withValues(alpha: 0.15),
-              ),
+              child: _AmbientGlow(color: AppTheme.accentColor.withValues(alpha: 0.15)),
             ),
 
             SafeArea(
@@ -53,31 +49,25 @@ class LanguageSelectionScreen extends ConsumerWidget {
                         children: [
                           const SizedBox(height: 24),
                           Text(
-                                loc.langSub.toUpperCase(),
-                                style: GoogleFonts.tajawal(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 4.0,
-                                  color: AppTheme.accentColor,
-                                ),
-                              )
-                              .animate()
-                              .fadeIn(duration: 800.ms)
-                              .slideY(begin: 0.2),
+                            loc.langSub.toUpperCase(),
+                            style: GoogleFonts.tajawal(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 4.0,
+                              color: AppTheme.accentColor,
+                            ),
+                          ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2),
                           const SizedBox(height: 12),
                           Text(
-                                loc.langTitle1,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.tajawal(
-                                  fontSize: 34,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.2,
-                                ),
-                              )
-                              .animate()
-                              .fadeIn(delay: 200.ms, duration: 800.ms)
-                              .scale(begin: const Offset(0.95, 0.95)),
+                            loc.langTitle1,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.tajawal(
+                              fontSize: 34,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              height: 1.2,
+                            ),
+                          ).animate().fadeIn(delay: 200.ms, duration: 800.ms).scale(begin: const Offset(0.95, 0.95)),
                           const SizedBox(height: 16),
                           Opacity(
                             opacity: 0.7,
@@ -93,52 +83,34 @@ class LanguageSelectionScreen extends ConsumerWidget {
                           ).animate().fadeIn(delay: 400.ms),
                           const SizedBox(height: 48),
                           _LanguageOption(
-                                label: loc.langAr,
-                                subLabel: 'اللغة العربية • التراث والأصالة',
-                                icon: Icons.auto_awesome_rounded,
-                                isSelected: currentLocale == 'ar',
-                                onTap: () => ref
-                                    .read(localeProvider.notifier)
-                                    .setLocale(const Locale('ar')),
-                              )
-                              .animate()
-                              .fadeIn(delay: 500.ms)
-                              .slideX(begin: isRtl ? 0.1 : -0.1),
+                            label: loc.langAr,
+                            subLabel: 'اللغة العربية • التراث والأصالة',
+                            icon: Icons.auto_awesome_rounded,
+                            isSelected: currentLocale == 'ar',
+                            onTap: () => ref.read(localeProvider.notifier).setLocale(const Locale('ar')),
+                          ).animate().fadeIn(delay: 500.ms).slideX(begin: isRtl ? 0.1 : -0.1),
                           const SizedBox(height: 16),
                           _LanguageOption(
-                                label: loc.langEn,
-                                subLabel: 'English • Heritage & Modernity',
-                                icon: Icons.language_rounded,
-                                isSelected: currentLocale == 'en',
-                                onTap: () => ref
-                                    .read(localeProvider.notifier)
-                                    .setLocale(const Locale('en')),
-                              )
-                              .animate()
-                              .fadeIn(delay: 600.ms)
-                              .slideX(begin: isRtl ? 0.1 : -0.1),
+                            label: loc.langEn,
+                            subLabel: 'English • Heritage & Modernity',
+                            icon: Icons.language_rounded,
+                            isSelected: currentLocale == 'en',
+                            onTap: () => ref.read(localeProvider.notifier).setLocale(const Locale('en')),
+                          ).animate().fadeIn(delay: 600.ms).slideX(begin: isRtl ? 0.1 : -0.1),
                           const SizedBox(height: 16),
                           _LanguageOption(
-                                label: loc.langFr,
-                                subLabel: 'Français • Culture et Citoyenneté',
-                                icon: Icons.stars_rounded,
-                                isSelected: currentLocale == 'fr',
-                                onTap: () => ref
-                                    .read(localeProvider.notifier)
-                                    .setLocale(const Locale('fr')),
-                              )
-                              .animate()
-                              .fadeIn(delay: 700.ms)
-                              .slideX(begin: isRtl ? 0.1 : -0.1),
+                            label: loc.langFr,
+                            subLabel: 'Français • Culture et Citoyenneté',
+                            icon: Icons.stars_rounded,
+                            isSelected: currentLocale == 'fr',
+                            onTap: () => ref.read(localeProvider.notifier).setLocale(const Locale('fr')),
+                          ).animate().fadeIn(delay: 700.ms).slideX(begin: isRtl ? 0.1 : -0.1),
                           const SizedBox(height: 60),
                           _PremiumButton(
-                                label: loc.langContinue,
-                                isRtl: isRtl,
-                                onPressed: () => context.go('/onboarding'),
-                              )
-                              .animate()
-                              .fadeIn(delay: 900.ms)
-                              .scale(begin: const Offset(0.9, 0.9)),
+                            label: loc.langContinue,
+                            isRtl: isRtl,
+                            onPressed: () => context.go('/onboarding'),
+                          ).animate().fadeIn(delay: 900.ms).scale(begin: const Offset(0.9, 0.9)),
                           const SizedBox(height: 40),
                           _FooterBranding(loc: loc),
                           const SizedBox(height: 24),
@@ -161,28 +133,21 @@ class LanguageSelectionScreen extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(
-            Icons.translate_rounded,
-            color: Colors.white.withValues(alpha: 0.4),
-            size: 20,
-          ),
-
+          Icon(Icons.translate_rounded, color: Colors.white.withValues(alpha: 0.4), size: 20),
+          
           // Center Logo with Institutional Glow
           Container(
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: AppTheme.accentColor.withValues(alpha: 0.3),
-                width: 1,
-              ),
+              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1),
               boxShadow: [
                 BoxShadow(
                   color: AppTheme.accentColor.withValues(alpha: 0.1),
                   blurRadius: 15,
                   spreadRadius: 2,
-                ),
-              ],
+                )
+              ]
             ),
             child: CircleAvatar(
               radius: 24,
@@ -191,11 +156,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
             ),
           ).animate().shimmer(duration: 2.seconds, color: Colors.white10),
 
-          Icon(
-            Icons.security_rounded,
-            color: Colors.white.withValues(alpha: 0.4),
-            size: 20,
-          ),
+          Icon(Icons.security_rounded, color: Colors.white.withValues(alpha: 0.4), size: 20),
         ],
       ),
     );
@@ -227,34 +188,24 @@ class _LanguageOption extends StatelessWidget {
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          gradient: isSelected
-              ? const LinearGradient(
-                  colors: [AppTheme.accentColor, Color(0xFF8B7344)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                )
-              : null,
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppTheme.accentColor.withValues(alpha: 0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ]
-              : [],
+          gradient: isSelected 
+            ? const LinearGradient(
+                colors: [AppTheme.accentColor, Color(0xFF8B7344)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+          boxShadow: isSelected 
+            ? [BoxShadow(color: AppTheme.accentColor.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))]
+            : [],
         ),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
           decoration: BoxDecoration(
-            color: isSelected
-                ? Colors.transparent
-                : Colors.white.withValues(alpha: 0.03),
+            color: isSelected ? Colors.transparent : Colors.white.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: isSelected
-                  ? Colors.transparent
-                  : Colors.white.withValues(alpha: 0.08),
+              color: isSelected ? Colors.transparent : Colors.white.withValues(alpha: 0.08),
               width: 1,
             ),
           ),
@@ -265,19 +216,13 @@ class _LanguageOption extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? Colors.white.withValues(alpha: 0.2)
-                      : AppTheme.primaryColor.withValues(alpha: 0.5),
+                  color: isSelected ? Colors.white.withValues(alpha: 0.2) : AppTheme.primaryColor.withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  color: isSelected ? Colors.white : AppTheme.accentColor,
-                  size: 24,
-                ),
+                child: Icon(icon, color: isSelected ? Colors.white : AppTheme.accentColor, size: 24),
               ),
               const SizedBox(width: 20),
-
+              
               // Text Content
               Expanded(
                 child: Column(
@@ -288,9 +233,7 @@ class _LanguageOption extends StatelessWidget {
                       style: GoogleFonts.tajawal(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: isSelected
-                            ? Colors.white
-                            : Colors.white.withValues(alpha: 0.9),
+                        color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -300,22 +243,18 @@ class _LanguageOption extends StatelessWidget {
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,
-                        color: isSelected
-                            ? Colors.white.withValues(alpha: 0.8)
-                            : Colors.white38,
+                        color: isSelected ? Colors.white.withValues(alpha: 0.8) : Colors.white38,
                       ),
                     ),
                   ],
                 ),
               ),
-
+              
               // Selection Indicator
               if (isSelected)
-                const Icon(
-                  Icons.check_circle_rounded,
-                  color: Colors.white,
-                  size: 28,
-                ).animate().scale(duration: 400.ms, curve: Curves.elasticOut),
+                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 28)
+                  .animate()
+                  .scale(duration: 400.ms, curve: Curves.elasticOut),
             ],
           ),
         ),
@@ -344,8 +283,8 @@ class _PremiumButton extends StatelessWidget {
             color: AppTheme.accentColor.withValues(alpha: 0.2),
             blurRadius: 30,
             offset: const Offset(0, 15),
-          ),
-        ],
+          )
+        ]
       ),
       child: ElevatedButton(
         onPressed: onPressed,
@@ -353,9 +292,7 @@ class _PremiumButton extends StatelessWidget {
           backgroundColor: AppTheme.accentColor,
           foregroundColor: AppTheme.primaryColor,
           minimumSize: const Size(double.infinity, 68),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           elevation: 0,
         ),
         child: Row(
@@ -363,16 +300,10 @@ class _PremiumButton extends StatelessWidget {
           children: [
             Text(
               label,
-              style: GoogleFonts.tajawal(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-              ),
+              style: GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.w900),
             ),
             const SizedBox(width: 16),
-            Icon(
-              isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
-              size: 28,
-            ),
+            Icon(isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded, size: 28),
           ],
         ),
       ),
@@ -391,7 +322,13 @@ class _AmbientGlow extends StatelessWidget {
       height: 300,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: [BoxShadow(color: color, blurRadius: 150, spreadRadius: 50)],
+        boxShadow: [
+          BoxShadow(
+            color: color,
+            blurRadius: 150,
+            spreadRadius: 50,
+          )
+        ],
       ),
     );
   }

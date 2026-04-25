@@ -11,15 +11,10 @@ class OtpVerificationScreen extends ConsumerStatefulWidget {
   final String email;
   final bool isRegistration;
 
-  const OtpVerificationScreen({
-    super.key,
-    required this.email,
-    this.isRegistration = false,
-  });
+  const OtpVerificationScreen({super.key, required this.email, this.isRegistration = false});
 
   @override
-  ConsumerState<OtpVerificationScreen> createState() =>
-      _OtpVerificationScreenState();
+  ConsumerState<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
 }
 
 class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
@@ -36,9 +31,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
   void _verifyOtp() {
     if (_formKey.currentState!.validate()) {
       if (widget.isRegistration) {
-        ref
-            .read(authProvider.notifier)
-            .verifyEmail(widget.email, _otpController.text);
+        ref.read(authProvider.notifier).verifyEmail(widget.email, _otpController.text);
       } else {
         // Password reset flow
         context.push('/auth/reset-password', extra: _otpController.text);
@@ -54,27 +47,17 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
 
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (widget.isRegistration) {
-        if (!next.isEmailVerificationRequired &&
-            next.error == null &&
-            previous?.isEmailVerificationRequired == true) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                langCode == 'ar'
-                    ? 'تم تأكيد الحساب بنجاح، يرجى تسجيل الدخول'
-                    : 'Account verified successfully, please log in',
-              ),
-              backgroundColor: AppTheme.primaryColor,
-            ),
-          );
+        if (!next.isEmailVerificationRequired && next.error == null && previous?.isEmailVerificationRequired == true) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(langCode == 'ar' ? 'تم تأكيد الحساب بنجاح، يرجى تسجيل الدخول' : 'Account verified successfully, please log in'),
+            backgroundColor: AppTheme.primaryColor,
+          ));
           context.go('/login');
         } else if (next.error != null && previous?.error != next.error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(next.error!),
-              backgroundColor: Colors.redAccent,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(next.error!),
+            backgroundColor: Colors.redAccent,
+          ));
         }
       }
     });
@@ -86,10 +69,8 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
     }
 
     String getDesc() {
-      if (langCode == 'ar')
-        return 'الرجاء إدخال الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني لإكمال استعادة الحساب.';
-      if (langCode == 'fr')
-        return 'Veuillez entrer le code à 6 chiffres envoyé à votre adresse e-mail.';
+      if (langCode == 'ar') return 'الرجاء إدخال الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني لإكمال استعادة الحساب.';
+      if (langCode == 'fr') return 'Veuillez entrer le code à 6 chiffres envoyé à votre adresse e-mail.';
       return 'Please enter the 6-digit code sent to your email to continue your account recovery.';
     }
 
@@ -120,10 +101,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
             SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Row(
                   children: [
                     IconButton(
@@ -144,10 +122,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
 
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32.0,
-                  vertical: 40.0,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -161,8 +136,8 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Icons.verified_user_outlined,
-                          color: Color(0xFFF0E0C8),
+                          Icons.verified_user_outlined, 
+                          color: Color(0xFFF0E0C8), 
                           size: 32,
                         ),
                       ),
@@ -171,20 +146,16 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                       Text(
                         getTitle(),
                         style: TextStyle(
-                          fontFamily: Theme.of(
-                            context,
-                          ).textTheme.displayLarge?.fontFamily,
+                          fontFamily: Theme.of(context).textTheme.displayLarge?.fontFamily,
                           fontSize: 42,
                           height: 1.1,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontStyle: isRtl
-                              ? FontStyle.normal
-                              : FontStyle.italic,
+                          fontStyle: isRtl ? FontStyle.normal : FontStyle.italic,
                         ),
                       ),
                       const SizedBox(height: 24),
-
+                      
                       Text(
                         getDesc(),
                         style: TextStyle(
@@ -194,7 +165,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-
+                      
                       // Show masked email
                       Text(
                         getMaskedEmail(),
@@ -206,7 +177,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                           letterSpacing: 1.2,
                         ),
                       ),
-
+                      
                       const SizedBox(height: 60),
 
                       // Code Input Field
@@ -214,13 +185,9 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            langCode == 'ar'
-                                ? 'رمز التحقق'
-                                : 'VERIFICATION CODE',
+                            langCode == 'ar' ? 'رمز التحقق' : 'VERIFICATION CODE',
                             style: TextStyle(
-                              color: const Color(
-                                0xFFD3C5AD,
-                              ).withValues(alpha: 0.6),
+                              color: const Color(0xFFD3C5AD).withValues(alpha: 0.6),
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 2.0,
@@ -228,32 +195,25 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                           ),
                           const SizedBox(height: 12),
                           Focus(
-                            onFocusChange: (hasFocus) =>
-                                setState(() => _isFocused = hasFocus),
+                            onFocusChange: (hasFocus) => setState(() => _isFocused = hasFocus),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: _isFocused
-                                    ? Colors.white.withValues(alpha: 0.07)
-                                    : Colors.white.withValues(alpha: 0.03),
+                                color: _isFocused ? Colors.white.withValues(alpha: 0.07) : Colors.white.withValues(alpha: 0.03),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: _isFocused
-                                      ? const Color(0x4DD3C5AD)
-                                      : Colors.white.withValues(alpha: 0.1),
+                                  color: _isFocused ? const Color(0x4DD3C5AD) : Colors.white.withValues(alpha: 0.1),
                                 ),
                               ),
                               child: TextFormField(
                                 controller: _otpController,
                                 style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 28,
-                                  letterSpacing:
-                                      24, // Wide spacing to simulate digits
+                                  color: Colors.white, 
+                                  fontSize: 28, 
+                                  letterSpacing: 24, // Wide spacing to simulate digits
                                   fontWeight: FontWeight.bold,
                                 ),
                                 textAlign: TextAlign.center,
-                                textDirection:
-                                    TextDirection.ltr, // Western numerals only
+                                textDirection: TextDirection.ltr, // Western numerals only
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
@@ -261,16 +221,11 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                                 ],
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 24,
-                                  ),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                                 ),
                                 validator: (value) {
                                   if (value == null || value.length < 6) {
-                                    return langCode == 'ar'
-                                        ? 'الرمز غير مكتمل'
-                                        : 'Code is incomplete';
+                                    return langCode == 'ar' ? 'الرمز غير مكتمل' : 'Code is incomplete';
                                   }
                                   return null;
                                 },
@@ -290,27 +245,15 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFF0E0C8),
                             foregroundColor: AppTheme.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             elevation: 0,
                           ),
-                          child: authState.isLoading
-                              ? const SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: AppTheme.primaryColor,
-                                  ),
-                                )
-                              : Text(
-                                  getConfirmBtnText().toUpperCase(),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 2,
-                                  ),
-                                ),
+                          child: authState.isLoading 
+                            ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primaryColor))
+                            : Text(
+                                getConfirmBtnText().toUpperCase(),
+                                style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2),
+                              ),
                         ),
                       ),
                     ],

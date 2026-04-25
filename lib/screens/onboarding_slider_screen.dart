@@ -56,9 +56,8 @@ class _OnboardingSliderScreenState
       backgroundColor: Colors.black,
       body: slidesAsync.when(
         data: (slides) {
-          final effectiveSlides = slides.isNotEmpty
-              ? slides
-              : _getDefaultSlides(loc, locale);
+          final effectiveSlides =
+              slides.isNotEmpty ? slides : _getDefaultSlides(loc, locale);
           return Stack(
             children: [
               // Dynamic Background based on current slide
@@ -72,10 +71,7 @@ class _OnboardingSliderScreenState
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   return _buildSlideContent(
-                    effectiveSlides[index],
-                    locale,
-                    index,
-                  );
+                      effectiveSlides[index], locale, index);
                 },
               ),
 
@@ -114,7 +110,10 @@ class _OnboardingSliderScreenState
               placeholder: (context, url) => Container(color: Colors.black),
             )
           else
-            Image.asset(slide.imageUrl, fit: BoxFit.cover),
+            Image.asset(
+              slide.imageUrl,
+              fit: BoxFit.cover,
+            ),
           // Gradient Overlay for Premium Look
           Container(
             decoration: BoxDecoration(
@@ -145,7 +144,7 @@ class _OnboardingSliderScreenState
           children: [
             // Premium Engraved Logo Look
             _buildEngravedLogo(),
-
+            
             // Language Selector Glassmorphism
             Container(
               decoration: BoxDecoration(
@@ -155,7 +154,7 @@ class _OnboardingSliderScreenState
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 10,
-                  ),
+                  )
                 ],
               ),
               child: ClipRRect(
@@ -241,25 +240,19 @@ class _OnboardingSliderScreenState
   Widget _buildLangBtn(String label, bool isSelected) {
     return GestureDetector(
       onTap: () {
-        ref
-            .read(localeProvider.notifier)
-            .setLocale(Locale(label.toLowerCase()));
+        ref.read(localeProvider.notifier).setLocale(Locale(label.toLowerCase()));
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.white.withValues(alpha: 0.15)
-              : Colors.transparent,
+          color: isSelected ? Colors.white.withValues(alpha: 0.15) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected
-                ? Colors.white
-                : Colors.white.withValues(alpha: 0.5),
+            color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
@@ -278,34 +271,26 @@ class _OnboardingSliderScreenState
           children: [
             // Tag / Category
             Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: AppTheme.primaryColor.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: Text(
-                    'COLLECTIVE MEMORY • 0${index + 1}',
-                    style: const TextStyle(
-                      color: AppTheme.primaryColor,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                )
-                .animate(key: ValueKey('tag_$index'))
-                .fadeIn(delay: 200.ms)
-                .slideX(begin: -0.1),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.3)),
+              ),
+              child: Text(
+                'COLLECTIVE MEMORY • 0${index + 1}',
+                style: const TextStyle(
+                  color: AppTheme.primaryColor,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+            ).animate(key: ValueKey('tag_$index')).fadeIn(delay: 200.ms).slideX(begin: -0.1),
 
             // Glass Card for Content
             _buildGlassCard(slide, locale, index),
-
+            
             const SizedBox(height: 120), // Spacer for bottom actions
           ],
         ),
@@ -320,10 +305,7 @@ class _OnboardingSliderScreenState
 
     if (slide.overlayColor != null && slide.overlayColor!.trim().isNotEmpty) {
       try {
-        String hex = slide.overlayColor!.trim().toUpperCase().replaceFirst(
-          '#',
-          '',
-        );
+        String hex = slide.overlayColor!.trim().toUpperCase().replaceFirst('#', '');
         if (hex.length == 3) hex = hex.split('').map((c) => c + c).join('');
         if (hex.length == 6) hex = 'FF$hex';
         if (hex.length == 8) glassBaseColor = Color(int.parse(hex, radix: 16));
@@ -331,66 +313,52 @@ class _OnboardingSliderScreenState
         glassBaseColor = AppTheme.primaryColor;
       }
     }
-
-    final Color finaloverlayColor = glassBaseColor.withValues(
-      alpha: finalOpacity,
-    );
+    
+    final Color finaloverlayColor = glassBaseColor.withValues(alpha: finalOpacity);
 
     return ClipRRect(
-          borderRadius: BorderRadius.circular(32),
-          child: BackdropFilter(
-            filter: ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: finaloverlayColor,
-                borderRadius: BorderRadius.circular(32),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  width: 1.5,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Main Title
-                  Text(
-                        slide.getTitle(locale),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 36,
-                          fontWeight: FontWeight.w900,
-                          height: 1.1,
-                          letterSpacing: -1,
-                        ),
-                      )
-                      .animate(key: ValueKey('title_$index'))
-                      .fadeIn(delay: 400.ms)
-                      .slideY(begin: 0.1),
-
-                  const SizedBox(height: 16),
-
-                  // Description
-                  Text(
-                        slide.getSubtitle(locale),
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.85),
-                          fontSize: 15,
-                          height: 1.6,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      )
-                      .animate(key: ValueKey('desc_$index'))
-                      .fadeIn(delay: 600.ms)
-                      .slideY(begin: 0.1),
-                ],
-              ),
-            ),
+      borderRadius: BorderRadius.circular(32),
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            color: finaloverlayColor,
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.5),
           ),
-        )
-        .animate(key: ValueKey('glass_$index'))
-        .fadeIn(delay: 300.ms)
-        .slideY(begin: 0.1);
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Main Title
+              Text(
+                slide.getTitle(locale),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  height: 1.1,
+                  letterSpacing: -1,
+                ),
+              ).animate(key: ValueKey('title_$index')).fadeIn(delay: 400.ms).slideY(begin: 0.1),
+
+              const SizedBox(height: 16),
+
+              // Description
+              Text(
+                slide.getSubtitle(locale),
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.85),
+                  fontSize: 15,
+                  height: 1.6,
+                  fontWeight: FontWeight.w400,
+                ),
+              ).animate(key: ValueKey('desc_$index')).fadeIn(delay: 600.ms).slideY(begin: 0.1),
+            ],
+          ),
+        ),
+      ),
+    ).animate(key: ValueKey('glass_$index')).fadeIn(delay: 300.ms).slideY(begin: 0.1);
   }
 
   Widget _buildFooter(int totalPages, AppLocalizations loc, bool isAr) {
@@ -411,9 +379,7 @@ class _OnboardingSliderScreenState
                 height: 4,
                 width: active ? 40 : 12,
                 decoration: BoxDecoration(
-                  color: active
-                      ? AppTheme.primaryColor
-                      : Colors.white.withValues(alpha: 0.2),
+                  color: active ? AppTheme.primaryColor : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               );
@@ -494,12 +460,9 @@ class _OnboardingSliderScreenState
         titleAr: 'إرث من الثقافة والواجب',
         titleEn: 'A Legacy of Culture & Duty',
         titleFr: 'Un héritage de culture et de devoir',
-        subtitleAr:
-            'انضم إلى تجربة إبزيم لاكتشاف كنوز سطيف، حيث يلتقي الماضي بروح العصر.',
-        subtitleEn:
-            'Join the Ebzim experience to discover the treasures of Sétif, where the past meets the spirit of the age.',
-        subtitleFr:
-            'Rejoignez l\'expérience Ebzim pour découvrir les trésors de Sétif, où le passé rencontre l\'esprit de l\'époque.',
+        subtitleAr: 'انضم إلى تجربة إبزيم لاكتشاف كنوز سطيف، حيث يلتقي الماضي بروح العصر.',
+        subtitleEn: 'Join the Ebzim experience to discover the treasures of Sétif, where the past meets the spirit of the age.',
+        subtitleFr: 'Rejoignez l\'expérience Ebzim pour découvrir les trésors de Sétif, où le passé rencontre l\'esprit de l\'époque.',
         imageUrl: 'assets/images/onboarding_1.png',
         location: 'ONBOARDING',
       ),
@@ -508,12 +471,9 @@ class _OnboardingSliderScreenState
         titleAr: 'جسر رقمي نحو الحكمة',
         titleEn: 'A Digital Bridge to Wisdom',
         titleFr: 'Un pont numérique vers la sagesse',
-        subtitleAr:
-            'تمكين الوصول إلى الأرشيفات واللقاءات التي تشكل هويتنا الجماعية.',
-        subtitleEn:
-            'Enabling access to archives and gatherings that shape our collective identity.',
-        subtitleFr:
-            'Permettre l\'accès aux archives et aux rencontres qui façonnent notre identité collective.',
+        subtitleAr: 'تمكين الوصول إلى الأرشيفات واللقاءات التي تشكل هويتنا الجماعية.',
+        subtitleEn: 'Enabling access to archives and gatherings that shape our collective identity.',
+        subtitleFr: 'Permettre l\'accès aux archives et aux rencontres qui façonnent notre identité collective.',
         imageUrl: 'assets/images/onboarding_2.png',
         location: 'ONBOARDING',
       ),
@@ -523,10 +483,8 @@ class _OnboardingSliderScreenState
         titleEn: 'Be Part of Memory Preservation',
         titleFr: 'Participez à la préservation de la mémoire',
         subtitleAr: 'مساهمتك اليوم تؤمن بقاء إرثنا الثقافي للأجيال القادمة.',
-        subtitleEn:
-            'Your contribution today secures the survival of our heritage for future generations.',
-        subtitleFr:
-            'Votre contribution aujourd\'hui assure la survie de notre patrimoine pour les générations futures.',
+        subtitleEn: 'Your contribution today secures the survival of our heritage for future generations.',
+        subtitleFr: 'Votre contribution aujourd\'hui assure la survie de notre patrimoine pour les générations futures.',
         imageUrl: 'assets/images/onboarding_3.png',
         location: 'ONBOARDING',
       ),

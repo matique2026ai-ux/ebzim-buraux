@@ -20,9 +20,7 @@ class ProjectMilestone {
       titleAr: json['titleAr'] ?? '',
       titleEn: json['titleEn'] ?? '',
       titleFr: json['titleFr'] ?? '',
-      date: json['date'] != null
-          ? DateTime.parse(json['date'])
-          : DateTime.now(),
+      date: json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
       isCompleted: json['isCompleted'] ?? false,
     );
   }
@@ -117,18 +115,18 @@ class NewsPost {
     final summary = json['summary'] is Map ? json['summary'] : {};
     final content = json['content'] is Map ? json['content'] : {};
     final metadata = json['metadata'] is Map ? json['metadata'] : {};
-
+    
     // Parse media
     String img = '';
     if (json['media'] is List && (json['media'] as List).isNotEmpty) {
       img = json['media'][0]['cloudinaryUrl'] ?? '';
     }
-
+    
     // Fallback for flattened responses from getPublicFeed
     if (img.isEmpty && json['imageUrl'] != null) {
       img = json['imageUrl'].toString().trim();
     }
-
+    
     img = img.trim();
 
     // Parse milestones
@@ -151,32 +149,22 @@ class NewsPost {
       bodyEn: content['en'] ?? '',
       bodyFr: content['fr'] ?? '',
       imageUrl: img,
-      category:
-          json['category'] ??
-          metadata['category'] ??
-          ((title['ar'] != null && title['ar'].toString().contains('[PROJ]'))
-              ? 'PROJECT'
-              : 'ANNOUNCEMENT'),
+      category: json['category'] ?? 
+                metadata['category'] ?? 
+                ((title['ar'] != null && title['ar'].toString().contains('[PROJ]')) ? 'PROJECT' : 'ANNOUNCEMENT'),
       contentType: json['contentType'] ?? 'NEWS',
       newsType: json['newsType'] ?? 'NORMAL',
-      projectStatus:
-          json['projectStatus'] ?? metadata['projectStatus'] ?? 'GENERAL',
-      progressPercentage: (metadata['progressPercentage'] != null)
-          ? double.tryParse(metadata['progressPercentage'].toString()) ?? 0.0
+      projectStatus: json['projectStatus'] ?? metadata['projectStatus'] ?? 'GENERAL',
+      progressPercentage: (metadata['progressPercentage'] != null) 
+          ? double.tryParse(metadata['progressPercentage'].toString()) ?? 0.0 
           : 0.0,
       isPinned: json['isPinned'] ?? false,
       isFeatured: json['isFeatured'] ?? false,
-      publishedAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
+      publishedAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
       milestones: miles,
       partnerName: metadata['partnerName'],
-      latitude: metadata['latitude'] != null
-          ? double.tryParse(metadata['latitude'].toString())
-          : null,
-      longitude: metadata['longitude'] != null
-          ? double.tryParse(metadata['longitude'].toString())
-          : null,
+      latitude: metadata['latitude'] != null ? double.tryParse(metadata['latitude'].toString()) : null,
+      longitude: metadata['longitude'] != null ? double.tryParse(metadata['longitude'].toString()) : null,
     );
   }
 

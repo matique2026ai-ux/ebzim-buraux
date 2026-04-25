@@ -64,12 +64,9 @@ class MemberService {
         roleAr: 'رئيسة الجمعية',
         roleEn: 'President',
         roleFr: 'Présidente',
-        bioAr:
-            'رئيسة جمعية إبزيم للثقافة والمواطنة، منتخبة من طرف الجمعية العامة في 14 ديسمبر 2024.',
-        bioEn:
-            'President of the Ebzim Association, elected by the General Assembly on December 14, 2024.',
-        bioFr:
-            'Présidente de l\'association Ebzim, élue par l\'Assemblée Générale le 14 décembre 2024.',
+        bioAr: 'رئيسة جمعية إبزيم للثقافة والمواطنة، منتخبة من طرف الجمعية العامة في 14 ديسمبر 2024.',
+        bioEn: 'President of the Ebzim Association, elected by the General Assembly on December 14, 2024.',
+        bioFr: 'Présidente de l\'association Ebzim, élue par l\'Assemblée Générale le 14 décembre 2024.',
         imageUrl: 'assets/images/president.png',
         category: 'المكتب التنفيذي',
         isExecutive: true,
@@ -82,12 +79,9 @@ class MemberService {
         roleAr: 'نائب أول للرئيس',
         roleEn: 'First Vice President',
         roleFr: '1er Vice-Président',
-        bioAr:
-            'مكلف بتمثيل الجمعية والإشراف على اللجان الولائية في غياب الرئيسة.',
-        bioEn:
-            'Responsible for representing the association and overseeing provincial committees.',
-        bioFr:
-            'Responsable de la représentation de l\'association et de la supervision des commissions.',
+        bioAr: 'مكلف بتمثيل الجمعية والإشراف على اللجان الولائية في غياب الرئيسة.',
+        bioEn: 'Responsible for representing the association and overseeing provincial committees.',
+        bioFr: 'Responsable de la représentation de l\'association et de la supervision des commissions.',
         imageUrl: 'assets/images/committee.png',
         category: 'المكتب التنفيذي',
         isExecutive: true,
@@ -101,10 +95,8 @@ class MemberService {
         roleEn: 'Second Vice President',
         roleFr: '2ème Vice-Président',
         bioAr: 'مكلف ببرمجة النشاطات الفنية والثقافية الكبرى للجمعية.',
-        bioEn:
-            'In charge of programming the association\'s major artistic and cultural activities.',
-        bioFr:
-            'Chargé de la programmation des activités artistiques et culturelles majeures.',
+        bioEn: 'In charge of programming the association\'s major artistic and cultural activities.',
+        bioFr: 'Chargé de la programmation des activités artistiques et culturelles majeures.',
         imageUrl: 'assets/images/committee.png',
         category: 'المكتب التنفيذي',
         isExecutive: true,
@@ -117,12 +109,9 @@ class MemberService {
         roleAr: 'الكاتب العام',
         roleEn: 'General Secretary',
         roleFr: 'Secrétaire Général',
-        bioAr:
-            'المسؤول الأول عن الإدارة، التنسيق، ومتابعة تنفيذ قرارات المكتب التنفيذي.',
-        bioEn:
-            'Chief administrator responsible for coordination and implementation of board decisions.',
-        bioFr:
-            'Responsable de l\'administration et de l\'exécution des décisions du bureau.',
+        bioAr: 'المسؤول الأول عن الإدارة، التنسيق، ومتابعة تنفيذ قرارات المكتب التنفيذي.',
+        bioEn: 'Chief administrator responsible for coordination and implementation of board decisions.',
+        bioFr: 'Responsable de l\'administration et de l\'exécution des décisions du bureau.',
         imageUrl: 'assets/images/sg.png',
         category: 'المكتب التنفيذي',
         isExecutive: true,
@@ -136,10 +125,8 @@ class MemberService {
         roleEn: 'Assistant General Secretary',
         roleFr: 'Secrétaire Général Adjoint',
         bioAr: 'مساعدة الكاتب العام في المهام الإدارية وحفظ الأرشيف والمحاضر.',
-        bioEn:
-            'Assists the General Secretary in administrative tasks and archive management.',
-        bioFr:
-            'Aide le Secrétaire Général dans les tâches administratives et la gestion des archives.',
+        bioEn: 'Assists the General Secretary in administrative tasks and archive management.',
+        bioFr: 'Aide le Secrétaire Général dans les tâches administratives et la gestion des archives.',
         imageUrl: 'assets/images/committee.png',
         category: 'المكتب التنفيذي',
         isExecutive: true,
@@ -153,10 +140,8 @@ class MemberService {
         roleEn: 'Treasurer',
         roleFr: 'Trésorier',
         bioAr: 'المسؤول عن مالية الجمعية، التقارير المالية، وتحصيل الاشتراكات.',
-        bioEn:
-            'Responsible for the association\'s finances, financial reporting, and subscriptions.',
-        bioFr:
-            'Responsable des finances, des rapports financiers et de la collecte des cotisations.',
+        bioEn: 'Responsible for the association\'s finances, financial reporting, and subscriptions.',
+        bioFr: 'Responsable des finances, des rapports financiers et de la collecte des cotisations.',
         imageUrl: 'assets/images/committee.png',
         category: 'المكتب التنفيذي',
         isExecutive: true,
@@ -169,12 +154,9 @@ class MemberService {
         roleAr: 'مساعد أمين المال',
         roleEn: 'Assistant Treasurer',
         roleFr: 'Trésorier Adjoint',
-        bioAr:
-            'مساعد في الإدارة المحاسبية ومتابعة الميزانيات المخصصة للمشاريع.',
-        bioEn:
-            'Assists in accounting management and project budget monitoring.',
-        bioFr:
-            'Aide à la gestion comptable et au suivi des budgets de projets.',
+        bioAr: 'مساعد في الإدارة المحاسبية ومتابعة الميزانيات المخصصة للمشاريع.',
+        bioEn: 'Assists in accounting management and project budget monitoring.',
+        bioFr: 'Aide à la gestion comptable et au suivi des budgets de projets.',
         imageUrl: 'assets/images/committee.png',
         category: 'المكتب التنفيذي',
         isExecutive: true,
@@ -187,10 +169,8 @@ class MemberService {
         roleAr: 'عضو مساعد',
         roleEn: 'Executive Member',
         roleFr: 'Membre du Bureau',
-        bioAr:
-            'عضو في المكتب التنفيذي مكلفة بملف المرأة والطفولة داخل الجمعية.',
-        bioEn:
-            'Executive board member in charge of the women and children committee.',
+        bioAr: 'عضو في المكتب التنفيذي مكلفة بملف المرأة والطفولة داخل الجمعية.',
+        bioEn: 'Executive board member in charge of the women and children committee.',
         bioFr: 'Membre du bureau chargée du comité des femmes et des enfants.',
         imageUrl: 'assets/images/committee.png',
         category: 'المكتب التنفيذي',
@@ -204,12 +184,9 @@ class MemberService {
         roleAr: 'عضو مساعد',
         roleEn: 'Executive Member',
         roleFr: 'Membre du Bureau',
-        bioAr:
-            'عضو في المكتب التنفيذي مكلف بالتنسيق مع المجتمع المدني والجمعيات الشريكة.',
-        bioEn:
-            'Executive board member in charge of civil society and partner coordination.',
-        bioFr:
-            'Membre du bureau chargé de la coordination avec la société civile.',
+        bioAr: 'عضو في المكتب التنفيذي مكلف بالتنسيق مع المجتمع المدني والجمعيات الشريكة.',
+        bioEn: 'Executive board member in charge of civil society and partner coordination.',
+        bioFr: 'Membre du bureau chargé de la coordination avec la société civile.',
         imageUrl: 'assets/images/committee.png',
         category: 'المكتب التنفيذي',
         isExecutive: true,

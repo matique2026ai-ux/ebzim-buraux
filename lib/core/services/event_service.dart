@@ -142,10 +142,7 @@ class EventService {
       final response = await _ref
           .read(apiClientProvider)
           .dio
-          .get(
-            'activities',
-            options: Options(headers: {'Accept-Language': lang}),
-          );
+          .get('activities', options: Options(headers: {'Accept-Language': lang}));
 
       final dynamic responseData = response.data;
       List rawList = [];
@@ -245,11 +242,21 @@ class EventService {
   }) async {
     final Map<String, dynamic> data = {
       'categoryId': eventCategoryId,
-      'title': {'ar': title, 'fr': title, 'en': title},
-      'description': {'ar': description, 'fr': description, 'en': description},
+      'title': {
+        'ar': title,
+        'fr': title,
+        'en': title,
+      },
+      'description': {
+        'ar': description,
+        'fr': description,
+        'en': description,
+      },
       'startDate': startDate,
       'endDate': endDate,
-      'location': {'formattedAddress': location},
+      'location': {
+        'formattedAddress': location,
+      },
       'isOnline': isOnline,
       'publicationStatus': 'PUBLISHED',
       'eventStatus': 'UPCOMING',

@@ -24,20 +24,14 @@ class MembershipSuccessScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: AppTheme.secondaryColor.withValues(alpha: 0.1),
                 ),
-                child: const Icon(
-                  Icons.verified,
-                  size: 64,
-                  color: AppTheme.secondaryColor,
-                ),
+                child: const Icon(Icons.verified, size: 64, color: AppTheme.secondaryColor),
               ),
               const SizedBox(height: 32),
               Text(
                 loc.memSuccessTitle,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: Theme.of(
-                    context,
-                  ).textTheme.headlineMedium?.fontFamily,
+                  fontFamily: Theme.of(context).textTheme.headlineMedium?.fontFamily,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.primaryColor,
@@ -63,18 +57,10 @@ class MembershipSuccessScreen extends StatelessWidget {
                   backgroundColor: AppTheme.primaryColor,
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 60),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 5,
                 ),
-                child: Text(
-                  loc.memSuccessHome.toUpperCase(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                ),
+                child: Text(loc.memSuccessHome.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2)),
               ),
             ],
           ),

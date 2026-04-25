@@ -166,11 +166,8 @@ class _AdminEventCard extends ConsumerWidget {
             errorBuilder: (_, __, ___) => Container(
               width: 60,
               height: 60,
-              color: AppTheme.primaryColor.withOpacity(0.1),
-              child: const Icon(
-                Icons.event_note_rounded,
-                color: AppTheme.primaryColor,
-              ),
+            color: AppTheme.primaryColor.withOpacity(0.1),
+            child: const Icon(Icons.event_note_rounded, color: AppTheme.primaryColor),
             ),
           ),
         ),
@@ -198,48 +195,28 @@ class _AdminEventCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(
-                Icons.edit_rounded,
-                color: Colors.blueGrey,
-                size: 20,
-              ),
+              icon: const Icon(Icons.edit_rounded, color: Colors.blueGrey, size: 20),
               tooltip: 'تعديل',
-              onPressed: () =>
-                  context.push('/admin/events/create', extra: event),
+              onPressed: () => context.push('/admin/events/create', extra: event),
             ),
             IconButton(
-              icon: const Icon(
-                Icons.delete_rounded,
-                color: Colors.red,
-                size: 20,
-              ),
+              icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20),
               tooltip: 'حذف',
               onPressed: () async {
                 final confirm = await showDialog<bool>(
                   context: context,
                   builder: (_) => AlertDialog(
-                    title: Text(
-                      'حذف النشاط',
-                      style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
-                    ),
-                    content: Text(
-                      'هل أنت متأكد من حذف "${event.titleAr}"؟',
-                      style: GoogleFonts.tajawal(),
-                    ),
+                    title: Text('حذف النشاط', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+                    content: Text('هل أنت متأكد من حذف "${event.titleAr}"؟', style: GoogleFonts.tajawal()),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, false),
                         child: Text('إلغاء', style: GoogleFonts.tajawal()),
                       ),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                        ),
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                         onPressed: () => Navigator.pop(context, true),
-                        child: Text(
-                          'حذف',
-                          style: GoogleFonts.tajawal(color: Colors.white),
-                        ),
+                        child: Text('حذف', style: GoogleFonts.tajawal(color: Colors.white)),
                       ),
                     ],
                   ),
@@ -251,10 +228,7 @@ class _AdminEventCard extends ConsumerWidget {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            'تم حذف النشاط بنجاح',
-                            style: GoogleFonts.tajawal(),
-                          ),
+                          content: Text('تم حذف النشاط بنجاح', style: GoogleFonts.tajawal()),
                           backgroundColor: Colors.green,
                         ),
                       );
@@ -263,10 +237,7 @@ class _AdminEventCard extends ConsumerWidget {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            'خطأ في الحذف: $e',
-                            style: GoogleFonts.tajawal(),
-                          ),
+                          content: Text('خطأ في الحذف: $e', style: GoogleFonts.tajawal()),
                           backgroundColor: Colors.red,
                         ),
                       );

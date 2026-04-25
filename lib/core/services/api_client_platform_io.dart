@@ -12,14 +12,13 @@ void configurePlatformProxy(Dio dio) {
     adapter.createHttpClient = () {
       final client = HttpClient();
       // Bypass SSL Certificate verification for production stability on older Android devices
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-
+      client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      
       client.findProxy = (uri) {
         // Force DIRECT connection to avoid issues with local network proxies
         return 'DIRECT';
       };
-
+      
       client.connectionTimeout = const Duration(seconds: 30);
       return client;
     };

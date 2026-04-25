@@ -15,18 +15,12 @@ class MediaService {
 
   MediaService(this._dio);
 
-  Future<String> uploadMedia(
-    Uint8List fileBytes,
-    String fileName, {
-    String? filePath,
-  }) async {
+  Future<String> uploadMedia(Uint8List fileBytes, String fileName, {String? filePath}) async {
     try {
-      print(
-        '[MEDIA] Starting upload for $fileName (Path: $filePath, Bytes: ${fileBytes.length})',
-      );
-
+      print('[MEDIA] Starting upload for $fileName (Path: $filePath, Bytes: ${fileBytes.length})');
+      
       List<int> finalBytes = List<int>.from(fileBytes);
-
+      
       // If bytes are empty/null and we have a path (Android case), read from storage
       if ((finalBytes.isEmpty) && filePath != null) {
         final file = File(filePath);
@@ -39,27 +33,20 @@ class MediaService {
       }
 
       if (finalBytes.isEmpty) {
-        throw Exception(
-          'Cannot upload empty file. Try picking the image again.',
-        );
+        throw Exception('Cannot upload empty file. Try picking the image again.');
       }
 
       String mimeType = 'image';
       String subType = 'jpeg';
       final lowerName = fileName.toLowerCase();
-      if (lowerName.endsWith('.png'))
-        subType = 'png';
-      else if (lowerName.endsWith('.mp4')) {
-        mimeType = 'video';
-        subType = 'mp4';
-      } else if (lowerName.endsWith('.webp'))
-        subType = 'webp';
-      else if (lowerName.endsWith('.gif'))
-        subType = 'gif';
+      if (lowerName.endsWith('.png')) subType = 'png';
+      else if (lowerName.endsWith('.mp4')) { mimeType = 'video'; subType = 'mp4'; }
+      else if (lowerName.endsWith('.webp')) subType = 'webp';
+      else if (lowerName.endsWith('.gif')) subType = 'gif';
 
       final formData = FormData.fromMap({
         'file': MultipartFile.fromBytes(
-          finalBytes,
+          finalBytes, 
           filename: fileName,
           contentType: MediaType(mimeType, subType),
         ),
@@ -67,7 +54,7 @@ class MediaService {
 
       print('[MEDIA] Sending POST to media/upload...');
       final response = await _dio.post(
-        'media/upload',
+        'media/upload', 
         data: formData,
         options: Options(
           sendTimeout: const Duration(seconds: 60),
@@ -80,9 +67,7 @@ class MediaService {
         print('[MEDIA] Upload Success: $url');
         return url;
       } else {
-        throw Exception(
-          'Failed to upload media (Status: ${response.statusCode})',
-        );
+        throw Exception('Failed to upload media (Status: ${response.statusCode})');
       }
     } on DioException catch (e) {
       print('[MEDIA] Dio Error: ${e.message}');

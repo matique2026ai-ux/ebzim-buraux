@@ -14,7 +14,7 @@ import 'package:ebzim_app/core/services/media_service.dart';
 enum CMSManageType { hero, partner, leadership, onboarding }
 
 class AdminCmsManageScreen extends ConsumerStatefulWidget {
-  final String contentType;
+  final String contentType; 
   const AdminCmsManageScreen({super.key, required this.contentType});
 
   CMSManageType get type {
@@ -25,34 +25,25 @@ class AdminCmsManageScreen extends ConsumerStatefulWidget {
   }
 
   @override
-  ConsumerState<AdminCmsManageScreen> createState() =>
-      _AdminCmsManageScreenState();
+  ConsumerState<AdminCmsManageScreen> createState() => _AdminCmsManageScreenState();
 }
 
 class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
   String get title {
     switch (widget.type) {
-      case CMSManageType.hero:
-        return 'إدارة شريط الواجهة';
-      case CMSManageType.partner:
-        return 'إدارة الشركاء';
-      case CMSManageType.leadership:
-        return 'إدارة المكتب التنفيذي';
-      case CMSManageType.onboarding:
-        return 'إدارة شاشة الترحيب (Onboarding)';
+      case CMSManageType.hero: return 'إدارة شريط الواجهة';
+      case CMSManageType.partner: return 'إدارة الشركاء';
+      case CMSManageType.leadership: return 'إدارة المكتب التنفيذي';
+      case CMSManageType.onboarding: return 'إدارة شاشة الترحيب (Onboarding)';
     }
   }
 
   IconData get titleIcon {
     switch (widget.type) {
-      case CMSManageType.hero:
-        return Icons.slideshow_rounded;
-      case CMSManageType.partner:
-        return Icons.handshake_rounded;
-      case CMSManageType.leadership:
-        return Icons.people_rounded;
-      case CMSManageType.onboarding:
-        return Icons.door_front_door_rounded;
+      case CMSManageType.hero: return Icons.slideshow_rounded;
+      case CMSManageType.partner: return Icons.handshake_rounded;
+      case CMSManageType.leadership: return Icons.people_rounded;
+      case CMSManageType.onboarding: return Icons.door_front_door_rounded;
     }
   }
 
@@ -76,23 +67,12 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
           ref.invalidate(partnersProvider);
           ref.invalidate(leadershipProvider);
         },
-        child: _buildList(
-          slidesAsync,
-          onboardingAsync,
-          partnersAsync,
-          leadershipAsync,
-        ),
+        child: _buildList(slidesAsync, onboardingAsync, partnersAsync, leadershipAsync),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppTheme.primaryColor,
         icon: const Icon(Icons.add_rounded, color: AppTheme.accentColor),
-        label: Text(
-          'إضافة جديد',
-          style: GoogleFonts.tajawal(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        label: Text('إضافة جديد', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold)),
         onPressed: () => _showEditorDialog(context, null),
       ),
     );
@@ -103,11 +83,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       backgroundColor: AppTheme.primaryColor,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Colors.white,
-          size: 20,
-        ),
+        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
         onPressed: () => context.go('/admin'),
       ),
       title: Row(
@@ -115,14 +91,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
         children: [
           Icon(titleIcon, color: AppTheme.accentColor, size: 20),
           const SizedBox(width: 10),
-          Text(
-            title,
-            style: GoogleFonts.tajawal(
-              fontWeight: FontWeight.bold,
-              fontSize: 17,
-              color: Colors.white,
-            ),
-          ),
+          Text(title, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white)),
         ],
       ),
       actions: [
@@ -147,19 +116,16 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
   }
 
   Widget _buildList(
-    AsyncValue<List<HeroSlide>> slides,
-    AsyncValue<List<HeroSlide>> onboarding,
-    AsyncValue<List<Partner>> partners,
-    AsyncValue<List<EbzimLeader>> leadership,
-  ) {
+      AsyncValue<List<HeroSlide>> slides,
+      AsyncValue<List<HeroSlide>> onboarding,
+      AsyncValue<List<Partner>> partners,
+      AsyncValue<List<EbzimLeader>> leadership) {
     switch (widget.type) {
       case CMSManageType.hero:
         return slides.when(
           data: (list) => list.isEmpty
               ? _EmptyState(
-                  label: 'لا توجد شرائح بعد',
-                  icon: Icons.slideshow_outlined,
-                )
+                  label: 'لا توجد شرائح بعد', icon: Icons.slideshow_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                   itemCount: list.length,
@@ -177,8 +143,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
           data: (list) => list.isEmpty
               ? _EmptyState(
                   label: 'لا توجد شرائح ترحيب بعد',
-                  icon: Icons.door_front_door_outlined,
-                )
+                  icon: Icons.door_front_door_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                   itemCount: list.length,
@@ -194,10 +159,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       case CMSManageType.partner:
         return partners.when(
           data: (list) => list.isEmpty
-              ? _EmptyState(
-                  label: 'لا يوجد شركاء بعد',
-                  icon: Icons.handshake_outlined,
-                )
+              ? _EmptyState(label: 'لا يوجد شركاء بعد', icon: Icons.handshake_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                   itemCount: list.length,
@@ -213,10 +175,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       case CMSManageType.leadership:
         return leadership.when(
           data: (list) => list.isEmpty
-              ? _EmptyState(
-                  label: 'لا توجد قيادة بعد',
-                  icon: Icons.people_outline,
-                )
+              ? _EmptyState(label: 'لا توجد قيادة بعد', icon: Icons.people_outline)
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                   itemCount: list.length,
@@ -237,24 +196,12 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            const Icon(
-              Icons.warning_amber_rounded,
-              color: Colors.red,
-              size: 28,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              'تأكيد الحذف',
-              style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        content: Text(
-          'هل أنت متأكد من حذف هذا العنصر نهائياً؟',
-          style: GoogleFonts.tajawal(),
-        ),
+        title: Row(children: [
+          const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28),
+          const SizedBox(width: 10),
+          Text('تأكيد الحذف', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+        ]),
+        content: Text('هل أنت متأكد من حذف هذا العنصر نهائياً؟', style: GoogleFonts.tajawal()),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -262,17 +209,8 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
           ),
           ElevatedButton.icon(
             onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            icon: const Icon(
-              Icons.delete_forever_rounded,
-              color: Colors.white,
-              size: 18,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+            icon: const Icon(Icons.delete_forever_rounded, color: Colors.white, size: 18),
             label: Text('حذف', style: GoogleFonts.tajawal(color: Colors.white)),
           ),
         ],
@@ -297,17 +235,11 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
         _refresh();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('تم الحذف بنجاح', style: GoogleFonts.tajawal()),
-              backgroundColor: Colors.red.shade700,
-            ),
+            SnackBar(content: Text('تم الحذف بنجاح', style: GoogleFonts.tajawal()), backgroundColor: Colors.red.shade700),
           );
         }
       } catch (e) {
-        if (mounted)
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('خطأ: $e')));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('خطأ: $e')));
       }
     }
   }
@@ -336,15 +268,10 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
             Navigator.pop(ctx);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  'تم الحفظ بنجاح ✓',
-                  style: GoogleFonts.tajawal(color: Colors.white),
-                ),
+                content: Text('تم الحفظ بنجاح ✓', style: GoogleFonts.tajawal(color: Colors.white)),
                 backgroundColor: AppTheme.primaryColor,
                 behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             );
           },
@@ -361,9 +288,7 @@ class _AdminCmsManageScreenState extends ConsumerState<AdminCmsManageScreen> {
 class _LoadingState extends StatelessWidget {
   const _LoadingState();
   @override
-  Widget build(BuildContext context) => const Center(
-    child: CircularProgressIndicator(color: AppTheme.accentColor),
-  );
+  Widget build(BuildContext context) => const Center(child: CircularProgressIndicator(color: AppTheme.accentColor));
 }
 
 class _ErrorState extends StatelessWidget {
@@ -371,14 +296,11 @@ class _ErrorState extends StatelessWidget {
   const _ErrorState({required this.message});
   @override
   Widget build(BuildContext context) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.error_outline, color: Colors.red, size: 48),
-        const SizedBox(height: 12),
-        Text(message, style: GoogleFonts.tajawal(color: Colors.red)),
-      ],
-    ),
+    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      const Icon(Icons.error_outline, color: Colors.red, size: 48),
+      const SizedBox(height: 12),
+      Text(message, style: GoogleFonts.tajawal(color: Colors.red)),
+    ]),
   );
 }
 
@@ -388,22 +310,13 @@ class _EmptyState extends StatelessWidget {
   const _EmptyState({required this.label, required this.icon});
   @override
   Widget build(BuildContext context) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, size: 64, color: Colors.grey.shade300),
-        const SizedBox(height: 16),
-        Text(
-          label,
-          style: GoogleFonts.tajawal(color: Colors.grey, fontSize: 16),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'اضغط + لإضافة عنصر جديد',
-          style: GoogleFonts.tajawal(color: Colors.grey.shade400, fontSize: 12),
-        ),
-      ],
-    ),
+    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Icon(icon, size: 64, color: Colors.grey.shade300),
+      const SizedBox(height: 16),
+      Text(label, style: GoogleFonts.tajawal(color: Colors.grey, fontSize: 16)),
+      const SizedBox(height: 8),
+      Text('اضغط + لإضافة عنصر جديد', style: GoogleFonts.tajawal(color: Colors.grey.shade400, fontSize: 12)),
+    ]),
   );
 }
 
@@ -415,11 +328,7 @@ class _HeroSlideTile extends StatelessWidget {
   final HeroSlide slide;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  const _HeroSlideTile({
-    required this.slide,
-    required this.onEdit,
-    required this.onDelete,
-  });
+  const _HeroSlideTile({required this.slide, required this.onEdit, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -428,85 +337,37 @@ class _HeroSlideTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Row(
           children: [
             SizedBox(
-              width: 100,
-              height: 80,
+              width: 100, height: 80,
               child: CachedNetworkImage(
                 imageUrl: slide.imageUrl,
                 fit: BoxFit.cover,
-                errorWidget: (_, __, ___) => Container(
-                  color: Colors.grey.shade200,
-                  child: const Icon(
-                    Icons.image_not_supported_outlined,
-                    color: Colors.grey,
-                  ),
-                ),
+                errorWidget: (_, __, ___) => Container(color: Colors.grey.shade200, child: const Icon(Icons.image_not_supported_outlined, color: Colors.grey)),
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 12,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      slide.titleAr,
-                      style: GoogleFonts.tajawal(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Text(slide.titleAr, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 4),
-                    Text(
-                      slide.subtitleAr,
-                      style: GoogleFonts.tajawal(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Text(slide.subtitleAr, style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey.shade600), maxLines: 2, overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
             ),
             Column(
               children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.edit_rounded,
-                    color: Color(0xFF2196F3),
-                    size: 20,
-                  ),
-                  onPressed: onEdit,
-                  tooltip: 'تعديل',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.delete_rounded,
-                    color: Colors.red,
-                    size: 20,
-                  ),
-                  onPressed: onDelete,
-                  tooltip: 'حذف',
-                ),
+                IconButton(icon: const Icon(Icons.edit_rounded, color: Color(0xFF2196F3), size: 20), onPressed: onEdit, tooltip: 'تعديل'),
+                IconButton(icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20), onPressed: onDelete, tooltip: 'حذف'),
               ],
             ),
           ],
@@ -520,11 +381,7 @@ class _PartnerTile extends StatelessWidget {
   final Partner partner;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  const _PartnerTile({
-    required this.partner,
-    required this.onEdit,
-    required this.onDelete,
-  });
+  const _PartnerTile({required this.partner, required this.onEdit, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -542,16 +399,9 @@ class _PartnerTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.4),
-                    width: 1.5,
-                  ),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.4), width: 1.5),
                   boxShadow: [
-                    BoxShadow(
-                      color: color.withValues(alpha: 0.08),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
+                    BoxShadow(color: color.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4)),
                   ],
                 ),
               ),
@@ -563,19 +413,17 @@ class _PartnerTile extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  width: 52,
-                  height: 52,
+                  width: 52, height: 52,
                   decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
+                    color: color.withValues(alpha: 0.1), 
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: color.withValues(alpha: 0.2)),
                   ),
                   padding: const EdgeInsets.all(6),
                   child: CachedNetworkImage(
-                    imageUrl: partner.logoUrl,
+                    imageUrl: partner.logoUrl, 
                     fit: BoxFit.contain,
-                    errorWidget: (_, __, ___) =>
-                        Icon(Icons.business_rounded, color: color),
+                    errorWidget: (_, __, ___) => Icon(Icons.business_rounded, color: color),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -583,46 +431,22 @@ class _PartnerTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        partner.nameAr,
-                        style: GoogleFonts.tajawal(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
+                      Text(partner.nameAr, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14)),
                       const SizedBox(height: 4),
                       if (partner.goalsSummaryAr.isNotEmpty)
                         Text(
-                          'الاتفاقية: ${partner.goalsSummaryAr}',
-                          style: GoogleFonts.tajawal(
-                            fontSize: 11,
-                            color: Colors.grey.shade600,
-                            height: 1.4,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          'الاتفاقية: ${partner.goalsSummaryAr}', 
+                          style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey.shade600, height: 1.4), 
+                          maxLines: 2, 
+                          overflow: TextOverflow.ellipsis
                         ),
                     ],
                   ),
                 ),
                 Column(
                   children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.edit_rounded,
-                        color: Color(0xFF2196F3),
-                        size: 20,
-                      ),
-                      onPressed: onEdit,
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.delete_rounded,
-                        color: Colors.red,
-                        size: 20,
-                      ),
-                      onPressed: onDelete,
-                    ),
+                    IconButton(icon: const Icon(Icons.edit_rounded, color: Color(0xFF2196F3), size: 20), onPressed: onEdit),
+                    IconButton(icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20), onPressed: onDelete),
                   ],
                 ),
               ],
@@ -630,18 +454,8 @@ class _PartnerTile extends StatelessWidget {
           ),
           // Accent strip
           Positioned(
-            left: 0,
-            top: 12,
-            bottom: 12,
-            child: Container(
-              width: 4,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: const BorderRadius.horizontal(
-                  right: Radius.circular(2),
-                ),
-              ),
-            ),
+            left: 0, top: 12, bottom: 12,
+            child: Container(width: 4, decoration: BoxDecoration(color: color, borderRadius: const BorderRadius.horizontal(right: Radius.circular(2)))),
           ),
         ],
       ),
@@ -650,9 +464,7 @@ class _PartnerTile extends StatelessWidget {
 
   Color _hexColor(String hex) {
     try {
-      return Color(
-        int.parse(hex.replaceFirst('#', ''), radix: 16) + 0xFF000000,
-      );
+      return Color(int.parse(hex.replaceFirst('#', ''), radix: 16) + 0xFF000000);
     } catch (_) {
       return AppTheme.accentColor;
     }
@@ -663,11 +475,7 @@ class _LeaderTile extends StatelessWidget {
   final EbzimLeader leader;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  const _LeaderTile({
-    required this.leader,
-    required this.onEdit,
-    required this.onDelete,
-  });
+  const _LeaderTile({required this.leader, required this.onEdit, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -676,13 +484,7 @@ class _LeaderTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -691,58 +493,23 @@ class _LeaderTile extends StatelessWidget {
             CircleAvatar(
               radius: 28,
               backgroundColor: AppTheme.accentColor.withValues(alpha: 0.1),
-              backgroundImage: leader.photoUrl != null
-                  ? CachedNetworkImageProvider(leader.photoUrl!)
-                  : null,
-              child: leader.photoUrl == null
-                  ? const Icon(
-                      Icons.person_rounded,
-                      color: AppTheme.accentColor,
-                      size: 28,
-                    )
-                  : null,
+              backgroundImage: leader.photoUrl != null ? CachedNetworkImageProvider(leader.photoUrl!) : null,
+              child: leader.photoUrl == null ? const Icon(Icons.person_rounded, color: AppTheme.accentColor, size: 28) : null,
             ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    leader.nameAr,
-                    style: GoogleFonts.tajawal(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    leader.roleAr,
-                    style: GoogleFonts.tajawal(
-                      fontSize: 12,
-                      color: AppTheme.accentColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(leader.nameAr, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 14)),
+                  Text(leader.roleAr, style: GoogleFonts.tajawal(fontSize: 12, color: AppTheme.accentColor, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
             Column(
               children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.edit_rounded,
-                    color: Color(0xFF2196F3),
-                    size: 20,
-                  ),
-                  onPressed: onEdit,
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.delete_rounded,
-                    color: Colors.red,
-                    size: 20,
-                  ),
-                  onPressed: onDelete,
-                ),
+                IconButton(icon: const Icon(Icons.edit_rounded, color: Color(0xFF2196F3), size: 20), onPressed: onEdit),
+                IconButton(icon: const Icon(Icons.delete_rounded, color: Colors.red, size: 20), onPressed: onDelete),
               ],
             ),
           ],
@@ -766,8 +533,7 @@ class _CMSEditorForm extends ConsumerStatefulWidget {
   ConsumerState<_CMSEditorForm> createState() => _CMSEditorFormState();
 }
 
-class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
-    with SingleTickerProviderStateMixin {
+class _CMSEditorFormState extends ConsumerState<_CMSEditorForm> with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   late Map<String, dynamic> _data;
   bool _isLoading = false;
@@ -790,13 +556,9 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
 
   String? _getInitialPreviewUrl() {
     if (widget.item == null) return null;
-    if (widget.type == CMSManageType.hero ||
-        widget.type == CMSManageType.onboarding)
-      return (widget.item as HeroSlide).imageUrl;
-    if (widget.type == CMSManageType.partner)
-      return (widget.item as Partner).logoUrl;
-    if (widget.type == CMSManageType.leadership)
-      return (widget.item as EbzimLeader).photoUrl;
+    if (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding) return (widget.item as HeroSlide).imageUrl;
+    if (widget.type == CMSManageType.partner) return (widget.item as Partner).logoUrl;
+    if (widget.type == CMSManageType.leadership) return (widget.item as EbzimLeader).photoUrl;
     return null;
   }
 
@@ -823,24 +585,15 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
       return;
     }
     final item = widget.item;
-    if (widget.type == CMSManageType.hero ||
-        widget.type == CMSManageType.onboarding) {
+    if (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding) {
       final s = item as HeroSlide;
-      if (kDebugMode)
-        print(
-          '🚨 [CMS_INIT] Loaded HeroSlide from server: overlayColor=${s.overlayColor}, opacity=${s.overlayOpacity}',
-        );
+      if (kDebugMode) print('🚨 [CMS_INIT] Loaded HeroSlide from server: overlayColor=${s.overlayColor}, opacity=${s.overlayOpacity}');
       _data = {
         'title': {'ar': s.titleAr, 'en': s.titleEn, 'fr': s.titleFr},
-        'subtitle': {
-          'ar': s.subtitleAr,
-          'en': s.subtitleEn,
-          'fr': s.subtitleFr,
-        },
+        'subtitle': {'ar': s.subtitleAr, 'en': s.subtitleEn, 'fr': s.subtitleFr},
         'imageUrl': s.imageUrl,
         'videoUrl': s.videoUrl ?? '',
-        'overlayColor':
-            s.overlayColor ?? '#1A6B3A', // Default to Emerald if null
+        'overlayColor': s.overlayColor ?? '#1A6B3A', // Default to Emerald if null
         'overlayOpacity': s.overlayOpacity,
         'buttonText': s.buttonText ?? '',
         'buttonLink': s.buttonLink ?? '',
@@ -851,11 +604,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
       final p = item as Partner;
       _data = {
         'name': {'ar': p.nameAr, 'en': p.nameEn, 'fr': p.nameFr},
-        'goalsSummary': {
-          'ar': p.goalsSummaryAr,
-          'en': p.goalsSummaryEn,
-          'fr': p.goalsSummaryFr,
-        },
+        'goalsSummary': {'ar': p.goalsSummaryAr, 'en': p.goalsSummaryEn, 'fr': p.goalsSummaryFr},
         'logoUrl': p.logoUrl,
         'color': p.color,
         'order': p.order,
@@ -887,17 +636,11 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
     if (langMap == null || langMap is! Map) {
       return {'ar': ' ', 'en': ' ', 'fr': ' '};
     }
-    final ar = (langMap['ar']?.toString().trim().isNotEmpty ?? false)
-        ? langMap['ar'].toString()
-        : ' ';
+    final ar = (langMap['ar']?.toString().trim().isNotEmpty ?? false) ? langMap['ar'].toString() : ' ';
     return {
       'ar': ar,
-      'en': (langMap['en']?.toString().trim().isEmpty ?? true)
-          ? ar
-          : langMap['en'],
-      'fr': (langMap['fr']?.toString().trim().isEmpty ?? true)
-          ? ar
-          : langMap['fr'],
+      'en': (langMap['en']?.toString().trim().isEmpty ?? true) ? ar : langMap['en'],
+      'fr': (langMap['fr']?.toString().trim().isEmpty ?? true) ? ar : langMap['fr'],
     };
   }
 
@@ -905,10 +648,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            '⚠️ يرجى التأكد من ملء جميع الحقول المطلوبة (بالنجمة *) في تبويبات اللغة.',
-            style: GoogleFonts.tajawal(),
-          ),
+          content: Text('⚠️ يرجى التأكد من ملء جميع الحقول المطلوبة (بالنجمة *) في تبويبات اللغة.', style: GoogleFonts.tajawal()),
           backgroundColor: Colors.orange.shade800,
         ),
       );
@@ -925,14 +665,12 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
     try {
       final service = ref.read(cmsContentServiceProvider);
       final id = widget.item?.id;
-      if (kDebugMode)
-        print('[CMS_SAVE] Saving ${widget.type} with data: $_data');
+      if (kDebugMode) print('[CMS_SAVE] Saving ${widget.type} with data: $_data');
 
       // Clean data based on type to match backend DTOs exactly
       final Map<String, dynamic> cleanData = {};
-
-      if (widget.type == CMSManageType.hero ||
-          widget.type == CMSManageType.onboarding) {
+      
+      if (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding) {
         cleanData['title'] = _ensureMultilingual(_data['title']);
         cleanData['subtitle'] = _ensureMultilingual(_data['subtitle']);
         cleanData['imageUrl'] = _data['imageUrl'] ?? '';
@@ -943,16 +681,11 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
         cleanData['buttonLink'] = _data['buttonLink'] ?? '';
         cleanData['order'] = _data['order'] ?? 0;
         cleanData['isActive'] = _data['isActive'] ?? true;
-        cleanData['location'] = widget.type == CMSManageType.onboarding
-            ? 'ONBOARDING'
-            : 'HOME';
-
-        if (kDebugMode)
-          print('🚀 [CMS_SEND] Sending HeroSlide to backend: $cleanData');
-
-        id == null
-            ? await service.createHeroSlide(cleanData)
-            : await service.updateHeroSlide(id, cleanData);
+        cleanData['location'] = widget.type == CMSManageType.onboarding ? 'ONBOARDING' : 'HOME';
+        
+        if (kDebugMode) print('🚀 [CMS_SEND] Sending HeroSlide to backend: $cleanData');
+        
+        id == null ? await service.createHeroSlide(cleanData) : await service.updateHeroSlide(id, cleanData);
       } else if (widget.type == CMSManageType.partner) {
         cleanData['name'] = _ensureMultilingual(_data['name']);
         cleanData['logoUrl'] = _data['logoUrl'] ?? '';
@@ -962,9 +695,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
         cleanData['order'] = _data['order'] ?? 0;
         cleanData['isActive'] = _data['isActive'] ?? true;
 
-        id == null
-            ? await service.createPartner(cleanData)
-            : await service.updatePartner(id, cleanData);
+        id == null ? await service.createPartner(cleanData) : await service.updatePartner(id, cleanData);
       } else if (widget.type == CMSManageType.leadership) {
         cleanData['name'] = _ensureMultilingual(_data['name']);
         cleanData['role'] = _ensureMultilingual(_data['role']);
@@ -972,9 +703,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
         cleanData['order'] = _data['order'] ?? 0;
         cleanData['isActive'] = _data['isActive'] ?? true;
 
-        id == null
-            ? await service.createLeader(cleanData)
-            : await service.updateLeader(id, cleanData);
+        id == null ? await service.createLeader(cleanData) : await service.updateLeader(id, cleanData);
       }
 
       // Invalidate relevant providers to force refresh across the app
@@ -986,24 +715,16 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
         ref.invalidate(onboardingSlidesProvider);
         ref.invalidate(adminOnboardingSlidesProvider);
       }
-      if (widget.type == CMSManageType.partner)
-        ref.invalidate(partnersProvider);
-      if (widget.type == CMSManageType.leadership)
-        ref.invalidate(leadershipProvider);
+      if (widget.type == CMSManageType.partner) ref.invalidate(partnersProvider);
+      if (widget.type == CMSManageType.leadership) ref.invalidate(leadershipProvider);
 
       // 🚀 [WEB FALLBACK] Save design tokens to localStorage to bypass backend persistence issues
-      if (kIsWeb &&
-          (widget.type == CMSManageType.hero ||
-              widget.type == CMSManageType.onboarding)) {
+      if (kIsWeb && (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding)) {
         try {
           final storageKey = 'cms_design_${id ?? "new"}';
-          final designData =
-              '{"color":"${cleanData['overlayColor']}","opacity":${cleanData['overlayOpacity']}}';
+          final designData = '{"color":"${cleanData['overlayColor']}","opacity":${cleanData['overlayOpacity']}}';
           // Use dart:html via a safe conditional or just print for now if we can't import easily
-          if (kDebugMode)
-            print(
-              '💾 [STORAGE_SAVE] Syncing design to local cache: $storageKey -> $designData',
-            );
+          if (kDebugMode) print('💾 [STORAGE_SAVE] Syncing design to local cache: $storageKey -> $designData');
           // In a real app we'd use shared_preferences, here we trust the invalidation + memory cache
         } catch (_) {}
       }
@@ -1014,21 +735,10 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: Text(
-              '❌ فشل الحفظ',
-              style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
-            ),
-            content: SingleChildScrollView(
-              child: Text(
-                'السيرفر رفض الطلب أو تعذر الاتصال:\n\n$e',
-                style: GoogleFonts.tajawal(),
-              ),
-            ),
+            title: Text('❌ فشل الحفظ', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+            content: SingleChildScrollView(child: Text('السيرفر رفض الطلب أو تعذر الاتصال:\n\n$e', style: GoogleFonts.tajawal())),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text('حسناً', style: GoogleFonts.tajawal()),
-              ),
+              TextButton(onPressed: () => Navigator.pop(ctx), child: Text('حسناً', style: GoogleFonts.tajawal()))
             ],
           ),
         );
@@ -1042,9 +752,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
   Widget build(BuildContext context) {
     final isEdit = widget.item != null;
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.92,
-      ),
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.92),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -1054,14 +762,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
         children: [
           // Handle bar
           const SizedBox(height: 12),
-          Container(
-            width: 48,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
+          Container(width: 48, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
           const SizedBox(height: 16),
           // Header
           Padding(
@@ -1070,42 +771,20 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    isEdit ? Icons.edit_rounded : Icons.add_rounded,
-                    color: AppTheme.accentColor,
-                    size: 22,
-                  ),
+                  decoration: BoxDecoration(color: AppTheme.primaryColor, borderRadius: BorderRadius.circular(12)),
+                  child: Icon(isEdit ? Icons.edit_rounded : Icons.add_rounded, color: AppTheme.accentColor, size: 22),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        isEdit ? 'تعديل البيانات' : 'إضافة جديد',
-                        style: GoogleFonts.tajawal(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Text(
-                        _getSubtitle(),
-                        style: GoogleFonts.tajawal(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
+                      Text(isEdit ? 'تعديل البيانات' : 'إضافة جديد', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 18)),
+                      Text(_getSubtitle(), style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey)),
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close_rounded, color: Colors.grey),
-                ),
+                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close_rounded, color: Colors.grey)),
               ],
             ),
           ),
@@ -1120,13 +799,9 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.type == CMSManageType.hero ||
-                        widget.type == CMSManageType.onboarding)
-                      ..._heroFields(),
-                    if (widget.type == CMSManageType.partner)
-                      ..._partnerFields(),
-                    if (widget.type == CMSManageType.leadership)
-                      ..._leaderFields(),
+                    if (widget.type == CMSManageType.hero || widget.type == CMSManageType.onboarding) ..._heroFields(),
+                    if (widget.type == CMSManageType.partner) ..._partnerFields(),
+                    if (widget.type == CMSManageType.leadership) ..._leaderFields(),
                     const SizedBox(height: 24),
                     // Save button
                     SizedBox(
@@ -1136,36 +811,17 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
                         onPressed: _isLoading ? null : _save,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                           elevation: 2,
                         ),
                         child: _isLoading
-                            ? const SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
+                            ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(
-                                    Icons.check_circle_outline_rounded,
-                                    color: AppTheme.accentColor,
-                                  ),
+                                  const Icon(Icons.check_circle_outline_rounded, color: AppTheme.accentColor),
                                   const SizedBox(width: 10),
-                                  Text(
-                                    'حفظ التغييرات',
-                                    style: GoogleFonts.tajawal(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
+                                  Text('حفظ التغييرات', style: GoogleFonts.tajawal(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                                 ],
                               ),
                       ),
@@ -1183,14 +839,10 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
 
   String _getSubtitle() {
     switch (widget.type) {
-      case CMSManageType.hero:
-        return 'شريحة الصفحة الرئيسية';
-      case CMSManageType.partner:
-        return 'شريك مؤسسي';
-      case CMSManageType.leadership:
-        return 'عضو المكتب التنفيذي';
-      case CMSManageType.onboarding:
-        return 'شريحة شاشة الترحيب';
+      case CMSManageType.hero: return 'شريحة الصفحة الرئيسية';
+      case CMSManageType.partner: return 'شريك مؤسسي';
+      case CMSManageType.leadership: return 'عضو المكتب التنفيذي';
+      case CMSManageType.onboarding: return 'شريحة شاشة الترحيب';
     }
   }
 
@@ -1202,49 +854,18 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
       _sectionLabel('العنوان الرئيسي', Icons.title_rounded),
       _buildLangTabs(
         fields: [
-          _buildTextField(
-            'العنوان (عربي) *',
-            'title.ar',
-            _data['title']?['ar'],
-            required: true,
-            isAr: true,
-          ),
-          _buildTextField(
-            'Title (English)',
-            'title.en',
-            _data['title']?['en'],
-            isAr: false,
-          ),
-          _buildTextField(
-            'Titre (Français)',
-            'title.fr',
-            _data['title']?['fr'],
-            isAr: false,
-          ),
+          _buildTextField('العنوان (عربي) *', 'title.ar', _data['title']?['ar'], required: true, isAr: true),
+          _buildTextField('Title (English)', 'title.en', _data['title']?['en'], isAr: false),
+          _buildTextField('Titre (Français)', 'title.fr', _data['title']?['fr'], isAr: false),
         ],
       ),
       const SizedBox(height: 20),
       _sectionLabel('العنوان الفرعي', Icons.subtitles_rounded),
       _buildLangTabs(
         fields: [
-          _buildTextField(
-            'العنوان الفرعي (عربي)',
-            'subtitle.ar',
-            _data['subtitle']?['ar'],
-            isAr: true,
-          ),
-          _buildTextField(
-            'Subtitle (English)',
-            'subtitle.en',
-            _data['subtitle']?['en'],
-            isAr: false,
-          ),
-          _buildTextField(
-            'Sous-titre (Français)',
-            'subtitle.fr',
-            _data['subtitle']?['fr'],
-            isAr: false,
-          ),
+          _buildTextField('العنوان الفرعي (عربي)', 'subtitle.ar', _data['subtitle']?['ar'], isAr: true),
+          _buildTextField('Subtitle (English)', 'subtitle.en', _data['subtitle']?['en'], isAr: false),
+          _buildTextField('Sous-titre (Français)', 'subtitle.fr', _data['subtitle']?['fr'], isAr: false),
         ],
         tabKey: 'sub',
       ),
@@ -1252,32 +873,13 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
       _sectionLabel('إعدادات الزر (اختياري)', Icons.link_rounded),
       _buildTextField('نص الزر', 'buttonText', _data['buttonText']),
       const SizedBox(height: 12),
-      _buildTextField(
-        'رابط الزر (URL)',
-        'buttonLink',
-        _data['buttonLink'],
-        isAr: false,
-      ),
+      _buildTextField('رابط الزر (URL)', 'buttonLink', _data['buttonLink'], isAr: false),
       const SizedBox(height: 20),
-      _buildTextField(
-        'الترتيب (رقمي)',
-        'order',
-        _data['order']?.toString(),
-        isAr: false,
-      ),
+      _buildTextField('الترتيب (رقمي)', 'order', _data['order']?.toString(), isAr: false),
       const SizedBox(height: 24),
-      _sectionLabel(
-        'التصميم المتقدم (Super Admin)',
-        Icons.auto_awesome_rounded,
-      ),
+      _sectionLabel('التصميم المتقدم (Super Admin)', Icons.auto_awesome_rounded),
       const SizedBox(height: 12),
-      _buildTextField(
-        'رابط الفيديو (اختياري)',
-        'videoUrl',
-        _data['videoUrl'],
-        isAr: false,
-        hint: 'https://example.com/video.mp4',
-      ),
+      _buildTextField('رابط الفيديو (اختياري)', 'videoUrl', _data['videoUrl'], isAr: false, hint: 'https://example.com/video.mp4'),
       const SizedBox(height: 12),
       _buildColorPalette('overlayColor', _data['overlayColor']),
       const SizedBox(height: 20),
@@ -1287,18 +889,10 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'شفافية التغطية: ${(_data['overlayOpacity'] * 100).toInt()}%',
-                  style: GoogleFonts.tajawal(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
-                  ),
-                ),
+                Text('شفافية التغطية: ${(_data['overlayOpacity'] * 100).toInt()}%', style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
                 Slider(
                   value: _data['overlayOpacity'] ?? 0.1,
-                  min: 0.0,
-                  max: 1.0,
+                  min: 0.0, max: 1.0,
                   activeColor: AppTheme.accentColor,
                   inactiveColor: AppTheme.accentColor.withValues(alpha: 0.1),
                   onChanged: (v) => setState(() => _data['overlayOpacity'] = v),
@@ -1311,10 +905,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
       const SizedBox(height: 20),
       _sectionLabel('الحالة', Icons.visibility_rounded),
       SwitchListTile(
-        title: Text(
-          'تفعيل الشريحة (ظاهرة للجمهور)',
-          style: GoogleFonts.tajawal(fontSize: 14),
-        ),
+        title: Text('تفعيل الشريحة (ظاهرة للجمهور)', style: GoogleFonts.tajawal(fontSize: 14)),
         value: _data['isActive'] ?? true,
         activeColor: AppTheme.accentColor,
         onChanged: (v) => setState(() => _data['isActive'] = v),
@@ -1331,30 +922,15 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10,
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)],
         ),
         child: Column(
           children: [
             // Professional Upload Area
-            _imageUploadArea(
-              'logoUrl',
-              'شعار الشريك (PNG يفضل)',
-              _data['logoUrl'],
-            ),
+            _imageUploadArea('logoUrl', 'شعار الشريك (PNG يفضل)', _data['logoUrl']),
             const SizedBox(height: 24),
             // Color Palette Picker
-            Text(
-              'لون العلامة التجارية',
-              style: GoogleFonts.tajawal(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-              ),
-            ),
+            Text('لون العلامة التجارية', style: GoogleFonts.tajawal(fontSize: 12, color: Colors.grey.shade600)),
             const SizedBox(height: 12),
             _buildColorPalette('color', _data['color']),
           ],
@@ -1364,72 +940,30 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
       _sectionLabel('بيانات التعريف', Icons.business_rounded),
       _buildLangTabs(
         fields: [
-          _buildTextField(
-            'اسم المؤسسة أو الشريك (عربي) *',
-            'name.ar',
-            _data['name']?['ar'],
-            required: true,
-            isAr: true,
-          ),
-          _buildTextField(
-            'Partner Name (English)',
-            'name.en',
-            _data['name']?['en'],
-            isAr: false,
-          ),
-          _buildTextField(
-            'Nom du partenaire (Français)',
-            'name.fr',
-            _data['name']?['fr'],
-            isAr: false,
-          ),
+          _buildTextField('اسم المؤسسة أو الشريك (عربي) *', 'name.ar', _data['name']?['ar'], required: true, isAr: true),
+          _buildTextField('Partner Name (English)', 'name.en', _data['name']?['en'], isAr: false),
+          _buildTextField('Nom du partenaire (Français)', 'name.fr', _data['name']?['fr'], isAr: false),
         ],
       ),
       const SizedBox(height: 32),
       _sectionLabel('اتفاقية الشراكة الرسمية', Icons.description_rounded),
       _buildLangTabs(
         fields: [
-          _buildTextField(
-            'تفاصيل وأهداف الاتفاقية (عربي)',
-            'goalsSummary.ar',
-            _data['goalsSummary']?['ar'],
-            isAr: true,
-            maxLines: 10,
-          ),
-          _buildTextField(
-            'Partnership Terms (English)',
-            'goalsSummary.en',
-            _data['goalsSummary']?['en'],
-            isAr: false,
-            maxLines: 10,
-          ),
-          _buildTextField(
-            'Termes du partenariat (Français)',
-            'goalsSummary.fr',
-            _data['goalsSummary']?['fr'],
-            isAr: false,
-            maxLines: 10,
-          ),
+          _buildTextField('تفاصيل وأهداف الاتفاقية (عربي)', 'goalsSummary.ar', _data['goalsSummary']?['ar'], isAr: true, maxLines: 10),
+          _buildTextField('Partnership Terms (English)', 'goalsSummary.en', _data['goalsSummary']?['en'], isAr: false, maxLines: 10),
+          _buildTextField('Termes du partenariat (Français)', 'goalsSummary.fr', _data['goalsSummary']?['fr'], isAr: false, maxLines: 10),
         ],
         tabKey: 'goals',
       ),
       const SizedBox(height: 24),
       _sectionLabel('الحالة والترتيب', Icons.settings_suggest_rounded),
       SwitchListTile(
-        title: Text(
-          'تفعيل الشريك (ظاهر للجمهور)',
-          style: GoogleFonts.tajawal(fontSize: 14),
-        ),
+        title: Text('تفعيل الشريك (ظاهر للجمهور)', style: GoogleFonts.tajawal(fontSize: 14)),
         value: _data['isActive'] ?? true,
         activeColor: AppTheme.accentColor,
         onChanged: (v) => setState(() => _data['isActive'] = v),
       ),
-      _buildTextField(
-        'الترتيب (رقمي)',
-        'order',
-        _data['order']?.toString(),
-        isAr: false,
-      ),
+      _buildTextField('الترتيب (رقمي)', 'order', _data['order']?.toString(), isAr: false),
     ];
   }
 
@@ -1439,170 +973,89 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
       _imageUploadArea('photoUrl', 'صورة العضو', _data['photoUrl']),
       const SizedBox(height: 24),
       _sectionLabel('بيانات العضو', Icons.person_rounded),
-      _buildTextField(
-        'الاسم الكامل (عربي) *',
-        'name.ar',
-        _data['name']?['ar'],
-        required: true,
-        isAr: true,
-      ),
+      _buildTextField('الاسم الكامل (عربي) *', 'name.ar', _data['name']?['ar'], required: true, isAr: true),
       const SizedBox(height: 12),
-      _buildTextField(
-        'Full Name (English)',
-        'name.en',
-        _data['name']?['en'],
-        isAr: false,
-      ),
+      _buildTextField('Full Name (English)', 'name.en', _data['name']?['en'], isAr: false),
       const SizedBox(height: 24),
       _sectionLabel('المنصب الإداري', Icons.work_rounded),
       _buildLangTabs(
         fields: [
-          _buildTextField(
-            'المنصب (عربي)',
-            'role.ar',
-            _data['role']?['ar'],
-            isAr: true,
-          ),
-          _buildTextField(
-            'Position (English)',
-            'role.en',
-            _data['role']?['en'],
-            isAr: false,
-          ),
-          _buildTextField(
-            'Poste (Français)',
-            'role.fr',
-            _data['role']?['fr'],
-            isAr: false,
-          ),
+          _buildTextField('المنصب (عربي)', 'role.ar', _data['role']?['ar'], isAr: true),
+          _buildTextField('Position (English)', 'role.en', _data['role']?['en'], isAr: false),
+          _buildTextField('Poste (Français)', 'role.fr', _data['role']?['fr'], isAr: false),
         ],
       ),
       const SizedBox(height: 24),
       _sectionLabel('الحالة والترتيب', Icons.settings_suggest_rounded),
       SwitchListTile(
-        title: Text(
-          'تفعيل العضو (ظاهر للجمهور)',
-          style: GoogleFonts.tajawal(fontSize: 14),
-        ),
+        title: Text('تفعيل العضو (ظاهر للجمهور)', style: GoogleFonts.tajawal(fontSize: 14)),
         value: _data['isActive'] ?? true,
         activeColor: AppTheme.accentColor,
         onChanged: (v) => setState(() => _data['isActive'] = v),
       ),
-      _buildTextField(
-        'الترتيب (رقمي)',
-        'order',
-        _data['order']?.toString(),
-        isAr: false,
-      ),
+      _buildTextField('الترتيب (رقمي)', 'order', _data['order']?.toString(), isAr: false),
     ];
   }
 
   Widget _imageUploadArea(String key, String label, String? currentUrl) {
-    return StatefulBuilder(
-      builder: (context, setS) {
-        bool isUploading = false;
-        return Column(
-          children: [
-            GestureDetector(
-              onTap: () async {
-                final result = await FilePicker.pickFiles(
-                  type: FileType.image,
-                  withData: true,
-                );
-                if (result == null || result.files.isEmpty) return;
-                setS(() => isUploading = true);
-                try {
-                  final file = result.files.first;
-                  final bytes = file.bytes;
-                  if (bytes == null) {
-                    if (mounted)
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            '⚠️ تعذر قراءة ملف الصورة. حاول مرة أخرى.',
-                          ),
-                        ),
-                      );
-                    return;
-                  }
-                  final url = await ref
-                      .read(mediaServiceProvider)
-                      .uploadMedia(bytes, file.name);
-                  setState(() => _data[key] = url);
-                } catch (e) {
-                  if (mounted)
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('❌ فشل رفع الصورة: $e')),
-                    );
-                } finally {
-                  setS(() => isUploading = false);
+    return StatefulBuilder(builder: (context, setS) {
+      bool isUploading = false;
+      return Column(
+        children: [
+          GestureDetector(
+            onTap: () async {
+              final result = await FilePicker.pickFiles(type: FileType.image, withData: true);
+              if (result == null || result.files.isEmpty) return;
+              setS(() => isUploading = true);
+              try {
+                final file = result.files.first;
+                final bytes = file.bytes;
+                if (bytes == null) {
+                   if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('⚠️ تعذر قراءة ملف الصورة. حاول مرة أخرى.')));
+                   return;
                 }
-              },
-              child: Container(
-                height: 120,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.02),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                    style: BorderStyle.solid,
-                  ),
-                ),
-                child: isUploading
-                    ? const Center(child: CircularProgressIndicator())
-                    : currentUrl != null && currentUrl.isNotEmpty
-                    ? Stack(
-                        children: [
-                          Center(
-                            child: CachedNetworkImage(
-                              imageUrl: currentUrl,
-                              height: 80,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          Positioned(
-                            right: 8,
-                            top: 8,
-                            child: Icon(
-                              Icons.check_circle,
-                              color: Colors.green.shade400,
-                              size: 20,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.cloud_upload_outlined,
-                            size: 32,
-                            color: AppTheme.primaryColor,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'انقر لتحميل الشعار',
-                            style: GoogleFonts.tajawal(
-                              color: AppTheme.primaryColor,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                final url = await ref.read(mediaServiceProvider).uploadMedia(bytes, file.name);
+                setState(() => _data[key] = url);
+              } catch (e) {
+                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('❌ فشل رفع الصورة: $e')));
+              } finally {
+                setS(() => isUploading = false);
+              }
+            },
+            child: Container(
+              height: 120,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withValues(alpha: 0.02),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1), style: BorderStyle.solid),
               ),
+              child: isUploading 
+                ? const Center(child: CircularProgressIndicator())
+                : currentUrl != null && currentUrl.isNotEmpty
+                  ? Stack(
+                      children: [
+                        Center(child: CachedNetworkImage(imageUrl: currentUrl, height: 80, fit: BoxFit.contain)),
+                        Positioned(right: 8, top: 8, child: Icon(Icons.check_circle, color: Colors.green.shade400, size: 20)),
+                      ],
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.cloud_upload_outlined, size: 32, color: AppTheme.primaryColor),
+                        const SizedBox(height: 8),
+                        Text('انقر لتحميل الشعار', style: GoogleFonts.tajawal(color: AppTheme.primaryColor, fontSize: 13, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey),
-            ),
-          ],
-        );
-      },
-    );
+          ),
+          const SizedBox(height: 8),
+          Text(label, style: GoogleFonts.tajawal(fontSize: 11, color: Colors.grey)),
+        ],
+      );
+    });
   }
+
 
   Widget _buildColorPalette(String key, String? currentHex) {
     final colors = [
@@ -1618,51 +1071,32 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'لوحة الألوان الملكية',
-          style: GoogleFonts.tajawal(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.primaryColor,
-          ),
-        ),
+        Text('لوحة الألوان الملكية', style: GoogleFonts.tajawal(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
         const SizedBox(height: 12),
         Wrap(
           spacing: 12,
           runSpacing: 12,
           children: [
             ...colors.map((hex) {
-              final normalizedCurrent = currentHex?.startsWith('#') == true
-                  ? currentHex!
-                  : (currentHex != null ? '#$currentHex' : null);
-              final isSelected =
-                  normalizedCurrent?.toUpperCase() == hex.toUpperCase();
+              final normalizedCurrent = currentHex?.startsWith('#') == true ? currentHex! : (currentHex != null ? '#$currentHex' : null);
+              final isSelected = normalizedCurrent?.toUpperCase() == hex.toUpperCase();
               return GestureDetector(
                 onTap: () => setState(() => _data[key] = hex),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  width: 42,
-                  height: 42,
+                  width: 42, height: 42,
                   decoration: BoxDecoration(
                     color: _hexToColor(hex),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isSelected
-                          ? AppTheme.accentColor
-                          : Colors.white.withValues(alpha: 0.5),
+                      color: isSelected ? AppTheme.accentColor : Colors.white.withValues(alpha: 0.5),
                       width: isSelected ? 3 : 1.5,
                     ),
                     boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
+                      BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 2))
                     ],
                   ),
-                  child: isSelected
-                      ? const Icon(Icons.check, color: Colors.white, size: 18)
-                      : null,
+                  child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 18) : null,
                 ),
               );
             }),
@@ -1673,18 +1107,13 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
                 _showCustomColorDialog(key);
               },
               child: Container(
-                width: 42,
-                height: 42,
+                width: 42, height: 42,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.grey.shade300, width: 1.5),
                 ),
-                child: const Icon(
-                  Icons.colorize_rounded,
-                  color: Colors.grey,
-                  size: 18,
-                ),
+                child: const Icon(Icons.colorize_rounded, color: Colors.grey, size: 18),
               ),
             ),
           ],
@@ -1696,22 +1125,17 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
   void _showCustomColorDialog(String key) {
     final ctrl = TextEditingController(text: _data[key]);
     final hexRegex = RegExp(r'^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$');
-
+    
     showDialog(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) {
           final currentInput = ctrl.text.trim();
           final isValid = hexRegex.hasMatch(currentInput);
-
+          
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: Text(
-              'لون مخصص (Hex)',
-              style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Text('لون مخصص (Hex)', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -1719,9 +1143,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
                   controller: ctrl,
                   decoration: InputDecoration(
                     hintText: '#RRGGBB',
-                    errorText: currentInput.isNotEmpty && !isValid
-                        ? 'تنسيق اللون غير صحيح'
-                        : null,
+                    errorText: currentInput.isNotEmpty && !isValid ? 'تنسيق اللون غير صحيح' : null,
                     prefixIcon: const Icon(Icons.tag, size: 16),
                   ),
                   onChanged: (_) => setDialogState(() {}),
@@ -1733,11 +1155,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
                     height: 40,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: _hexToColor(
-                        currentInput.startsWith('#')
-                            ? currentInput
-                            : '#$currentInput',
-                      ),
+                      color: _hexToColor(currentInput.startsWith('#') ? currentInput : '#$currentInput'),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.grey.shade300),
                     ),
@@ -1746,37 +1164,26 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text('إلغاء', style: GoogleFonts.tajawal()),
-              ),
+              TextButton(onPressed: () => Navigator.pop(ctx), child: Text('إلغاء', style: GoogleFonts.tajawal())),
               ElevatedButton(
-                onPressed: isValid
-                    ? () {
-                        final finalHex = ctrl.text.trim();
-                        setState(
-                          () => _data[key] = finalHex.startsWith('#')
-                              ? finalHex
-                              : '#$finalHex',
-                        );
-                        Navigator.pop(ctx);
-                      }
-                    : null,
+                onPressed: isValid ? () {
+                  final finalHex = ctrl.text.trim();
+                  setState(() => _data[key] = finalHex.startsWith('#') ? finalHex : '#$finalHex');
+                  Navigator.pop(ctx);
+                } : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryColor,
                   disabledBackgroundColor: Colors.grey.shade300,
                 ),
-                child: Text(
-                  'تطبيق',
-                  style: GoogleFonts.tajawal(color: Colors.white),
-                ),
+                child: Text('تطبيق', style: GoogleFonts.tajawal(color: Colors.white)),
               ),
             ],
           );
-        },
+        }
       ),
     );
   }
+
 
   Widget _sectionLabel(String label, IconData icon) {
     return Padding(
@@ -1785,25 +1192,13 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
         children: [
           Icon(icon, size: 16, color: AppTheme.accentColor),
           const SizedBox(width: 8),
-          Text(
-            label,
-            style: GoogleFonts.tajawal(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-              color: AppTheme.primaryColor,
-            ),
-          ),
+          Text(label, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.primaryColor)),
         ],
       ),
     );
   }
 
-  Widget _imagePreviewField(
-    String key,
-    String label,
-    String? initialUrl, {
-    bool isCircle = false,
-  }) {
+  Widget _imagePreviewField(String key, String label, String? initialUrl, {bool isCircle = false}) {
     final ctrl = TextEditingController(text: initialUrl ?? '');
     bool isUploading = false;
 
@@ -1821,30 +1216,20 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
             if (result == null || result.files.isEmpty) return;
             final file = result.files.first;
             if (file.bytes == null && file.path == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('تعذر الوصول إلى ملف الصورة المختارة.'),
-                ),
-              );
-              return;
+               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تعذر الوصول إلى ملف الصورة المختارة.')));
+               return;
             }
 
             setS(() => isUploading = true);
-            if (kDebugMode)
-              print(
-                '[IMAGE PICKER] Starting upload for child file: ${file.name} (Path: ${file.path})',
-              );
-
-            final uploadedUrl = await ref
-                .read(mediaServiceProvider)
-                .uploadMedia(
-                  file.bytes ?? Uint8List(0),
-                  file.name,
-                  filePath: file.path,
-                );
-
-            if (kDebugMode)
-              print('[IMAGE PICKER] Upload success: $uploadedUrl');
+            if (kDebugMode) print('[IMAGE PICKER] Starting upload for child file: ${file.name} (Path: ${file.path})');
+            
+            final uploadedUrl = await ref.read(mediaServiceProvider).uploadMedia(
+              file.bytes ?? Uint8List(0),
+              file.name,
+              filePath: file.path,
+            );
+            
+            if (kDebugMode) print('[IMAGE PICKER] Upload success: $uploadedUrl');
             ctrl.text = uploadedUrl;
             _updateData(key, uploadedUrl);
             setS(() => isUploading = false);
@@ -1852,21 +1237,12 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
             if (kDebugMode) print('[IMAGE PICKER] ERROR: $e');
             setS(() => isUploading = false);
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'خطأ في رفع الصورة: $e',
-                    style: GoogleFonts.tajawal(),
-                  ),
-                  backgroundColor: Colors.red.shade700,
-                  duration: const Duration(seconds: 5),
-                  action: SnackBarAction(
-                    label: 'حسناً',
-                    textColor: Colors.white,
-                    onPressed: () {},
-                  ),
-                ),
-              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('خطأ في رفع الصورة: $e', style: GoogleFonts.tajawal()),
+                backgroundColor: Colors.red.shade700,
+                duration: const Duration(seconds: 5),
+                action: SnackBarAction(label: 'حسناً', textColor: Colors.white, onPressed: () {}),
+              ));
             }
           }
         }
@@ -1890,152 +1266,90 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const CircularProgressIndicator(
-                            color: AppTheme.accentColor,
-                            strokeWidth: 3,
-                          ),
+                          const CircularProgressIndicator(color: AppTheme.accentColor, strokeWidth: 3),
                           const SizedBox(height: 10),
-                          Text(
-                            'جاري رفع الصورة...',
-                            style: GoogleFonts.tajawal(
-                              color: AppTheme.primaryColor,
-                              fontSize: 12,
-                            ),
-                          ),
+                          Text('جاري رفع الصورة...', style: GoogleFonts.tajawal(color: AppTheme.primaryColor, fontSize: 12)),
                         ],
                       ),
                     )
                   : preview.isEmpty
-                  ? GestureDetector(
-                      onTap: _pickAndUpload,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 56,
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor.withValues(
-                                alpha: 0.08,
+                      ? GestureDetector(
+                          onTap: _pickAndUpload,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 56, height: 56,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.primaryColor.withValues(alpha: 0.08),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  isCircle ? Icons.person_add_alt_1_rounded : Icons.add_photo_alternate_rounded,
+                                  size: 28, color: AppTheme.primaryColor,
+                                ),
                               ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              isCircle
-                                  ? Icons.person_add_alt_1_rounded
-                                  : Icons.add_photo_alternate_rounded,
-                              size: 28,
-                              color: AppTheme.primaryColor,
-                            ),
+                              const SizedBox(height: 8),
+                              Text('اضغط لاختيار صورة من جهازك', style: GoogleFonts.tajawal(color: AppTheme.primaryColor, fontSize: 12, fontWeight: FontWeight.w600)),
+                              Text('يدعم JPG ، PNG ، WEBP', style: GoogleFonts.tajawal(color: Colors.grey.shade400, fontSize: 10)),
+                            ],
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'اضغط لاختيار صورة من جهازك',
-                            style: GoogleFonts.tajawal(
-                              color: AppTheme.primaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            'يدعم JPG ، PNG ، WEBP',
-                            style: GoogleFonts.tajawal(
-                              color: Colors.grey.shade400,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        isCircle
-                            ? Center(
-                                child: CircleAvatar(
-                                  radius: 48,
-                                  backgroundColor: Colors.grey.shade200,
-                                  backgroundImage: CachedNetworkImageProvider(
-                                    preview,
-                                  ),
-                                  onBackgroundImageError: (_, __) {},
-                                ),
-                              )
-                            : CachedNetworkImage(
-                                imageUrl: preview,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                errorWidget: (_, __, ___) => Center(
-                                  child: Icon(
-                                    Icons.broken_image_rounded,
-                                    size: 36,
-                                    color: Colors.red.shade300,
-                                  ),
-                                ),
-                                placeholder: (_, __) => const Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                ),
-                              ),
-                        // Overlay "تغيير" button
-                        Positioned(
-                          bottom: 8,
-                          right: 8,
-                          child: GestureDetector(
-                            onTap: _pickAndUpload,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppTheme.primaryColor.withValues(
-                                  alpha: 0.85,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.edit_rounded,
-                                    color: Colors.white,
-                                    size: 14,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'تغيير',
-                                    style: GoogleFonts.tajawal(
-                                      color: Colors.white,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
+                        )
+                      : Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            isCircle
+                                ? Center(
+                                    child: CircleAvatar(
+                                      radius: 48,
+                                      backgroundColor: Colors.grey.shade200,
+                                      backgroundImage: CachedNetworkImageProvider(preview),
+                                      onBackgroundImageError: (_, __) {},
                                     ),
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: preview,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorWidget: (_, __, ___) => Center(
+                                      child: Icon(Icons.broken_image_rounded, size: 36, color: Colors.red.shade300),
+                                    ),
+                                    placeholder: (_, __) => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
                                   ),
-                                ],
+                            // Overlay "تغيير" button
+                            Positioned(
+                              bottom: 8, right: 8,
+                              child: GestureDetector(
+                                onTap: _pickAndUpload,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primaryColor.withValues(alpha: 0.85),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.edit_rounded, color: Colors.white, size: 14),
+                                      const SizedBox(width: 4),
+                                      Text('تغيير', style: GoogleFonts.tajawal(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
             ),
             // ── Upload Button ────────────────────────────────────
             OutlinedButton.icon(
               onPressed: isUploading ? null : _pickAndUpload,
               icon: const Icon(Icons.folder_open_rounded, size: 18),
-              label: Text(
-                'اختيار من الجهاز',
-                style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
-              ),
+              label: Text('اختيار من الجهاز', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppTheme.primaryColor,
-                side: BorderSide(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.5),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                side: BorderSide(color: AppTheme.primaryColor.withValues(alpha: 0.5)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 minimumSize: const Size(double.infinity, 44),
               ),
@@ -2045,21 +1359,11 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
             TextFormField(
               controller: ctrl,
               textDirection: TextDirection.ltr,
-              style: GoogleFonts.tajawal(
-                color: const Color(0xFF1A1A2E),
-                fontSize: 13,
-              ),
+              style: GoogleFonts.tajawal(color: const Color(0xFF1A1A2E), fontSize: 13),
               decoration: InputDecoration(
                 labelText: 'أو أدخل رابط URL مباشرةً',
-                labelStyle: GoogleFonts.tajawal(
-                  color: const Color(0xFF94A3B8),
-                  fontSize: 12,
-                ),
-                prefixIcon: Icon(
-                  Icons.link_rounded,
-                  color: Colors.grey.shade400,
-                  size: 18,
-                ),
+                labelStyle: GoogleFonts.tajawal(color: const Color(0xFF94A3B8), fontSize: 12),
+                prefixIcon: Icon(Icons.link_rounded, color: Colors.grey.shade400, size: 18),
                 filled: true,
                 fillColor: Colors.white,
                 enabledBorder: OutlineInputBorder(
@@ -2068,15 +1372,9 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: AppTheme.accentColor,
-                    width: 1.5,
-                  ),
+                  borderSide: const BorderSide(color: AppTheme.accentColor, width: 1.5),
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               ),
               onChanged: (val) => setS(() {}),
               onSaved: (val) => _updateData(key, ctrl.text.trim()),
@@ -2087,10 +1385,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
     );
   }
 
-  Widget _buildLangTabs({
-    required List<Widget> fields,
-    String tabKey = 'main',
-  }) {
+  Widget _buildLangTabs({required List<Widget> fields, String tabKey = 'main'}) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade200),
@@ -2101,33 +1396,13 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
           Container(
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             ),
             child: Row(
               children: [
-                Expanded(
-                  child: _LangTabBtn(
-                    label: 'العربية 🇩🇿',
-                    selected: _langTab.index == 0,
-                    onTap: () => setState(() => _langTab.index = 0),
-                  ),
-                ),
-                Expanded(
-                  child: _LangTabBtn(
-                    label: 'English 🇬🇧',
-                    selected: _langTab.index == 1,
-                    onTap: () => setState(() => _langTab.index = 1),
-                  ),
-                ),
-                Expanded(
-                  child: _LangTabBtn(
-                    label: 'Français 🇫🇷',
-                    selected: _langTab.index == 2,
-                    onTap: () => setState(() => _langTab.index = 2),
-                  ),
-                ),
+                Expanded(child: _LangTabBtn(label: 'العربية 🇩🇿', selected: _langTab.index == 0, onTap: () => setState(() => _langTab.index = 0))),
+                Expanded(child: _LangTabBtn(label: 'English 🇬🇧', selected: _langTab.index == 1, onTap: () => setState(() => _langTab.index = 1))),
+                Expanded(child: _LangTabBtn(label: 'Français 🇫🇷', selected: _langTab.index == 2, onTap: () => setState(() => _langTab.index = 2))),
               ],
             ),
           ),
@@ -2140,15 +1415,7 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
     );
   }
 
-  Widget _buildTextField(
-    String label,
-    String key,
-    String? initial, {
-    bool required = false,
-    bool isAr = true,
-    int maxLines = 1,
-    String? hint,
-  }) {
+  Widget _buildTextField(String label, String key, String? initial, {bool required = false, bool isAr = true, int maxLines = 1, String? hint}) {
     return TextFormField(
       initialValue: initial ?? '',
       textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
@@ -2158,14 +1425,8 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        hintStyle: GoogleFonts.tajawal(
-          color: Colors.grey.shade400,
-          fontSize: 12,
-        ),
-        labelStyle: GoogleFonts.tajawal(
-          color: const Color(0xFF64748B),
-          fontSize: 13,
-        ),
+        hintStyle: GoogleFonts.tajawal(color: Colors.grey.shade400, fontSize: 12),
+        labelStyle: GoogleFonts.tajawal(color: const Color(0xFF64748B), fontSize: 13),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
@@ -2180,14 +1441,9 @@ class _CMSEditorFormState extends ConsumerState<_CMSEditorForm>
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.red),
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      validator: required
-          ? (v) => (v == null || v.isEmpty) ? 'هذا الحقل مطلوب' : null
-          : null,
+      validator: required ? (v) => (v == null || v.isEmpty) ? 'هذا الحقل مطلوب' : null : null,
     );
   }
 
@@ -2210,11 +1466,7 @@ class _LangTabBtn extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  const _LangTabBtn({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
+  const _LangTabBtn({required this.label, required this.selected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

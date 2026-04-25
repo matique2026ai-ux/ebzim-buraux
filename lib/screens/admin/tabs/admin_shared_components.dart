@@ -156,7 +156,11 @@ class AdminEmptyState extends StatelessWidget {
   final String message;
   final IconData icon;
 
-  const AdminEmptyState({super.key, required this.message, required this.icon});
+  const AdminEmptyState({
+    super.key,
+    required this.message,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -215,11 +219,7 @@ class AdminErrorState extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            const Icon(
-              Icons.error_outline_rounded,
-              color: Colors.red,
-              size: 40,
-            ),
+            const Icon(Icons.error_outline_rounded, color: Colors.red, size: 40),
             const SizedBox(height: 12),
             Text(
               'حدث خطأ: $error',
@@ -266,11 +266,7 @@ class AdminExportButton extends StatelessWidget {
                 ),
               )
             else
-              const Icon(
-                Icons.file_download_outlined,
-                color: Colors.white,
-                size: 16,
-              ),
+              const Icon(Icons.file_download_outlined, color: Colors.white, size: 16),
             const SizedBox(width: 8),
             Text(
               'تصدير Excel',
@@ -340,12 +336,12 @@ SnackBar adminSuccessSnack(String message) {
   return SnackBar(
     content: Row(
       children: [
-        const Icon(
-          Icons.check_circle_outline_rounded,
-          color: AppTheme.accentColor,
-        ),
+        const Icon(Icons.check_circle_outline_rounded, color: AppTheme.accentColor),
         const SizedBox(width: 12),
-        Text(message, style: GoogleFonts.tajawal(fontWeight: FontWeight.bold)),
+        Text(
+          message,
+          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+        ),
       ],
     ),
     backgroundColor: const Color(0xFF052011),

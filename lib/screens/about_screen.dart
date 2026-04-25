@@ -36,6 +36,7 @@ class AboutScreen extends ConsumerWidget {
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
+
             // ── Transparent AppBar with back navigation ────────────────────
             SliverAppBar(
               pinned: true,
@@ -51,19 +52,13 @@ class AboutScreen extends ConsumerWidget {
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? Colors.black.withValues(alpha: 0.35)
-                            : Colors.white.withValues(alpha: 0.6),
+                        color: isDark ? Colors.black.withValues(alpha: 0.35) : Colors.white.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppTheme.accentColor.withValues(alpha: 0.2),
-                        ),
+                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                       ),
                       child: IconButton(
                         icon: Icon(
-                          isAr
-                              ? Icons.arrow_forward_ios_rounded
-                              : Icons.arrow_back_ios_rounded,
+                          isAr ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_rounded,
                           color: AppTheme.accentColor,
                           size: 18,
                         ),
@@ -94,11 +89,7 @@ class AboutScreen extends ConsumerWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => Container(
                         color: AppTheme.backgroundDark,
-                        child: const Icon(
-                          Icons.account_balance,
-                          size: 80,
-                          color: AppTheme.accentColor,
-                        ),
+                        child: const Icon(Icons.account_balance, size: 80, color: AppTheme.accentColor),
                       ),
                     ),
                   ),
@@ -114,9 +105,7 @@ class AboutScreen extends ConsumerWidget {
                             Colors.black.withValues(alpha: 0.3),
                             Colors.transparent,
                             AppTheme.backgroundDark.withValues(alpha: 0.7),
-                            isDark
-                                ? AppTheme.backgroundDark
-                                : const Color(0xFFF3EFE6),
+                            isDark ? AppTheme.backgroundDark : const Color(0xFFF3EFE6),
                           ],
                         ),
                       ),
@@ -131,28 +120,16 @@ class AboutScreen extends ConsumerWidget {
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                           decoration: BoxDecoration(
                             color: Colors.black.withValues(alpha: 0.55),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: const Color(
-                                0xFF009FDA,
-                              ).withValues(alpha: 0.5),
-                              width: 1.5,
-                            ),
+                            border: Border.all(color: const Color(0xFF009FDA).withValues(alpha: 0.5), width: 1.5),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
-                                Icons.public_rounded,
-                                color: Color(0xFF009FDA),
-                                size: 16,
-                              ),
+                              const Icon(Icons.public_rounded, color: Color(0xFF009FDA), size: 16),
                               const SizedBox(width: 6),
                               Text(
                                 'UNESCO',
@@ -181,26 +158,23 @@ class AboutScreen extends ConsumerWidget {
                           label: isAr
                               ? 'جمعية ولائية • سطيف'
                               : isFr
-                              ? 'Association Wilayale • Sétif'
-                              : 'Wilaya Association • Sétif',
+                                  ? 'Association Wilayale • Sétif'
+                                  : 'Wilaya Association • Sétif',
                         ),
                         const SizedBox(height: 12),
                         Text(
                           isAr
                               ? 'جمعية إبزيم\nللثقافة والمواطنة'
                               : isFr
-                              ? 'Association Ebzim\npour la Culture et la Citoyenneté'
-                              : 'Ebzim Association\nfor Culture & Citizenship',
+                                  ? 'Association Ebzim\npour la Culture et la Citoyenneté'
+                                  : 'Ebzim Association\nfor Culture & Citizenship',
                           style: GoogleFonts.tajawal(
                             fontSize: 34,
                             fontWeight: FontWeight.w900,
                             color: Colors.white,
                             height: 1.15,
                             shadows: [
-                              Shadow(
-                                color: Colors.black.withValues(alpha: 0.5),
-                                blurRadius: 20,
-                              ),
+                              Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 20),
                             ],
                           ),
                         ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.15),
@@ -224,11 +198,7 @@ class AboutScreen extends ConsumerWidget {
                     children: [
                       _SectionHeader(
                         icon: Icons.auto_stories_outlined,
-                        label: isAr
-                            ? 'قصتنا'
-                            : isFr
-                            ? 'Notre Histoire'
-                            : 'Our Story',
+                        label: isAr ? 'قصتنا' : isFr ? 'Notre Histoire' : 'Our Story',
                         isDark: isDark,
                       ),
                       const SizedBox(height: 16),
@@ -236,26 +206,17 @@ class AboutScreen extends ConsumerWidget {
                         isAr
                             ? 'تأسست جمعية إبزيم للثقافة والمواطنة في ولاية سطيف، لتُشكّل فضاءً مدنياً راقياً يجمع بين الفعل الثقافي والمواطنة الفاعلة. نشأت من رحم التزام عميق بصون الذاكرة الجزائرية وتعزيز الهوية الحضارية لمنطقة سطيف ذات الإرث الحضاري العريق.'
                             : isFr
-                            ? 'Fondée à Sétif, l\'association Ebzim pour la Culture et la Citoyenneté incarne un espace civique d\'excellence, alliant l\'action culturelle à une citoyenneté active. Elle est née d\'un engagement profond pour la sauvegarde de la mémoire algérienne et la valorisation de l\'identité civilisationnelle de la région de Sétif.'
-                            : 'Founded in Sétif, the Ebzim Association for Culture and Citizenship embodies a civic space of excellence, combining cultural action with active citizenship. Born from a deep commitment to safeguarding Algerian memory and enhancing the civilizational identity of the Sétif region.',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          height: 1.75,
-                        ),
+                                ? 'Fondée à Sétif, l\'association Ebzim pour la Culture et la Citoyenneté incarne un espace civique d\'excellence, alliant l\'action culturelle à une citoyenneté active. Elle est née d\'un engagement profond pour la sauvegarde de la mémoire algérienne et la valorisation de l\'identité civilisationnelle de la région de Sétif.'
+                                : 'Founded in Sétif, the Ebzim Association for Culture and Citizenship embodies a civic space of excellence, combining cultural action with active citizenship. Born from a deep commitment to safeguarding Algerian memory and enhancing the civilizational identity of the Sétif region.',
+                        style: theme.textTheme.bodyMedium?.copyWith(height: 1.75),
                       ),
                       const SizedBox(height: 24),
                       // Quote
                       Container(
-                        padding: const EdgeInsetsDirectional.only(
-                          start: 18,
-                          top: 12,
-                          bottom: 12,
-                        ),
+                        padding: const EdgeInsetsDirectional.only(start: 18, top: 12, bottom: 12),
                         decoration: BoxDecoration(
                           border: BorderDirectional(
-                            start: BorderSide(
-                              color: AppTheme.accentColor,
-                              width: 3,
-                            ),
+                            start: BorderSide(color: AppTheme.accentColor, width: 3),
                           ),
                         ),
                         child: Column(
@@ -265,8 +226,8 @@ class AboutScreen extends ConsumerWidget {
                               isAr
                                   ? '"الثقافة ليست ترفاً، بل هي السلاح الأبقى لصون الهوية وبناء المواطن."'
                                   : isFr
-                                  ? '"La culture n\'est pas un luxe, c\'est l\'arme la plus durable pour préserver l\'identité et former le citoyen."'
-                                  : '"Culture is not a luxury — it is the most enduring weapon for preserving identity and building the citizen."',
+                                      ? '"La culture n\'est pas un luxe, c\'est l\'arme la plus durable pour préserver l\'identité et former le citoyen."'
+                                      : '"Culture is not a luxury — it is the most enduring weapon for preserving identity and building the citizen."',
                               style: GoogleFonts.cairo(
                                 fontSize: 13,
                                 // fontStyle removed for accessibility,
@@ -280,15 +241,8 @@ class AboutScreen extends ConsumerWidget {
                               onPressed: () => context.push('/statute'),
                               icon: const Icon(Icons.gavel_rounded, size: 14),
                               label: Text(
-                                isAr
-                                    ? 'اقرأ القانون الأساسي'
-                                    : isFr
-                                    ? 'Lire les statuts'
-                                    : 'Read Founding Charter',
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                isAr ? 'اقرأ القانون الأساسي' : isFr ? 'Lire les statuts' : 'Read Founding Charter',
+                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
                               ),
                               style: TextButton.styleFrom(
                                 foregroundColor: AppTheme.accentColor,
@@ -317,16 +271,12 @@ class AboutScreen extends ConsumerWidget {
                     Expanded(
                       child: _MiniCard(
                         icon: Icons.track_changes_rounded,
-                        title: isAr
-                            ? 'الرسالة'
-                            : isFr
-                            ? 'Mission'
-                            : 'Mission',
+                        title: isAr ? 'الرسالة' : isFr ? 'Mission' : 'Mission',
                         body: isAr
                             ? 'نشر الثقافة وتعزيز المواطنة وصون تراث ولاية سطيف الحضاري.'
                             : isFr
-                            ? 'Diffuser la culture, renforcer la citoyenneté et préserver le patrimoine de Sétif.'
-                            : 'Spread culture, strengthen citizenship, and preserve the heritage of Sétif.',
+                                ? 'Diffuser la culture, renforcer la citoyenneté et préserver le patrimoine de Sétif.'
+                                : 'Spread culture, strengthen citizenship, and preserve the heritage of Sétif.',
                         isDark: isDark,
                       ),
                     ),
@@ -334,16 +284,12 @@ class AboutScreen extends ConsumerWidget {
                     Expanded(
                       child: _MiniCard(
                         icon: Icons.visibility_outlined,
-                        title: isAr
-                            ? 'الرؤية'
-                            : isFr
-                            ? 'Vision'
-                            : 'Vision',
+                        title: isAr ? 'الرؤية' : isFr ? 'Vision' : 'Vision',
                         body: isAr
                             ? 'جمعية رائدة تُجسّد نموذج المجتمع المدني الجزائري الفاعل وطنياً ودولياً.'
                             : isFr
-                            ? 'Une association pionnière incarnant le modèle de la société civile algérienne active.'
-                            : 'A pioneering association embodying the model of active Algerian civil society nationally and internationally.',
+                                ? 'Une association pionnière incarnant le modèle de la société civile algérienne active.'
+                                : 'A pioneering association embodying the model of active Algerian civil society nationally and internationally.',
                         isDark: isDark,
                       ),
                     ),
@@ -365,36 +311,18 @@ class AboutScreen extends ConsumerWidget {
                     children: [
                       _SectionHeader(
                         icon: Icons.handshake_outlined,
-                        label: isAr
-                            ? 'شراكاتنا الاستراتيجية'
-                            : isFr
-                            ? 'Partenariats Stratégiques'
-                            : 'Strategic Partnerships',
+                        label: isAr ? 'شراكاتنا الاستراتيجية' : isFr ? 'Partenariats Stratégiques' : 'Strategic Partnerships',
                         isDark: isDark,
                       ),
                       const SizedBox(height: 20),
                       partnersAsync.when(
                         data: (partners) {
-                          if (partners.isEmpty)
-                            return _NoDataPlaceholder(isAr: isAr);
+                          if (partners.isEmpty) return _NoDataPlaceholder(isAr: isAr);
                           return Column(
-                            children: partners
-                                .map(
-                                  (p) => _PartnerDossier(
-                                    partner: p,
-                                    lang: isAr
-                                        ? 'ar'
-                                        : isFr
-                                        ? 'fr'
-                                        : 'en',
-                                    isDark: isDark,
-                                  ),
-                                )
-                                .toList(),
+                            children: partners.map((p) => _PartnerDossier(partner: p, lang: isAr ? 'ar' : isFr ? 'fr' : 'en', isDark: isDark)).toList(),
                           );
                         },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
+                        loading: () => const Center(child: CircularProgressIndicator()),
                         error: (_, __) => _NoDataPlaceholder(isAr: isAr),
                       ),
                     ],
@@ -409,11 +337,7 @@ class AboutScreen extends ConsumerWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _ProjectShowcaseCard(
-                  isDark: isDark,
-                  isAr: isAr,
-                  isFr: isFr,
-                ),
+                child: _ProjectShowcaseCard(isDark: isDark, isAr: isAr, isFr: isFr),
               ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.06),
             ),
 
@@ -430,39 +354,25 @@ class AboutScreen extends ConsumerWidget {
                     children: [
                       _SectionHeader(
                         icon: Icons.people_alt_outlined,
-                        label: isAr
-                            ? 'المكتب التنفيذي'
-                            : isFr
-                            ? 'Bureau Exécutif'
-                            : 'Executive Board',
+                        label: isAr ? 'المكتب التنفيذي' : isFr ? 'Bureau Exécutif' : 'Executive Board',
                         isDark: isDark,
                       ),
                       const SizedBox(height: 20),
                       leadershipAsync.when(
                         data: (leaders) {
-                          if (leaders.isEmpty)
-                            return _NoDataPlaceholder(isAr: isAr);
+                          if (leaders.isEmpty) return _NoDataPlaceholder(isAr: isAr);
                           return Column(
-                            children: leaders
-                                .map(
-                                  (leader) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 16),
-                                    child: _DynamicLeaderCard(
-                                      leader: leader,
-                                      lang: isAr
-                                          ? 'ar'
-                                          : isFr
-                                          ? 'fr'
-                                          : 'en',
-                                      isDark: isDark,
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                            children: leaders.map((leader) => Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: _DynamicLeaderCard(
+                                leader: leader,
+                                lang: isAr ? 'ar' : isFr ? 'fr' : 'en',
+                                isDark: isDark,
+                              ),
+                            )).toList(),
                           );
                         },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
+                        loading: () => const Center(child: CircularProgressIndicator()),
                         error: (_, __) => _NoDataPlaceholder(isAr: isAr),
                       ),
                     ],
@@ -484,20 +394,14 @@ class AboutScreen extends ConsumerWidget {
                     children: [
                       _SectionHeader(
                         icon: Icons.diamond_outlined,
-                        label: isAr
-                            ? 'قيمنا'
-                            : isFr
-                            ? 'Nos Valeurs'
-                            : 'Our Values',
+                        label: isAr ? 'قيمنا' : isFr ? 'Nos Valeurs' : 'Our Values',
                         isDark: isDark,
                       ),
                       const SizedBox(height: 16),
                       Wrap(
                         spacing: 10,
                         runSpacing: 10,
-                        children: _values(isAr, isFr)
-                            .map((v) => _ValueChip(label: v, isDark: isDark))
-                            .toList(),
+                        children: _values(isAr, isFr).map((v) => _ValueChip(label: v, isDark: isDark)).toList(),
                       ),
                     ],
                   ),
@@ -518,31 +422,19 @@ class AboutScreen extends ConsumerWidget {
                     children: [
                       _SectionHeader(
                         icon: Icons.auto_stories_outlined,
-                        label: isAr
-                            ? 'الموارد المؤسساتية'
-                            : isFr
-                            ? 'Ressources Institutionnelles'
-                            : 'Institutional Resources',
+                        label: isAr ? 'الموارد المؤسساتية' : isFr ? 'Ressources Institutionnelles' : 'Institutional Resources',
                         isDark: isDark,
                       ),
                       const SizedBox(height: 16),
                       _ResourceButton(
-                        label: isAr
-                            ? 'المكتبة الرقمية والبحوث'
-                            : isFr
-                            ? 'Bibliothèque et Recherches'
-                            : 'Library & Research',
+                        label: isAr ? 'المكتبة الرقمية والبحوث' : isFr ? 'Bibliothèque et Recherches' : 'Library & Research',
                         icon: Icons.library_books_outlined,
                         onTap: () => context.push('/library'),
                         isDark: isDark,
                       ),
                       const SizedBox(height: 12),
                       _ResourceButton(
-                        label: isAr
-                            ? 'القانون الأساسي للجمعية'
-                            : isFr
-                            ? 'Statut de l\'Association'
-                            : 'Association Statute',
+                        label: isAr ? 'القانون الأساسي للجمعية' : isFr ? 'Statut de l\'Association' : 'Association Statute',
                         icon: Icons.gavel_outlined,
                         onTap: () => context.push('/statute'),
                         isDark: isDark,
@@ -571,28 +463,19 @@ class AboutScreen extends ConsumerWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    border: Border.all(
-                      color: AppTheme.accentColor.withValues(alpha: 0.3),
-                      width: 1.5,
-                    ),
+                    border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1.5),
                   ),
                   child: Column(
                     children: [
-                      const Icon(
-                        Icons.workspace_premium_rounded,
-                        color: AppTheme.accentColor,
-                        size: 42,
-                      ),
+                      const Icon(Icons.workspace_premium_rounded, color: AppTheme.accentColor, size: 42),
                       const SizedBox(height: 14),
                       Text(
                         isAr
                             ? 'انضم إلى إبزيم'
                             : isFr
-                            ? 'Rejoignez Ebzim'
-                            : 'Join Ebzim',
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontSize: 24,
-                        ),
+                                ? 'Rejoignez Ebzim'
+                                : 'Join Ebzim',
+                        style: theme.textTheme.headlineMedium?.copyWith(fontSize: 24),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
@@ -600,8 +483,8 @@ class AboutScreen extends ConsumerWidget {
                         isAr
                             ? 'كن جزءاً من مجتمع يصنع الفارق في الحفاظ على الهوية الجزائرية'
                             : isFr
-                            ? 'Faites partie d\'une communauté qui fait la différence dans la préservation de l\'identité algérienne'
-                            : 'Be part of a community making a difference in preserving Algerian identity',
+                                ? 'Faites partie d\'une communauté qui fait la différence dans la préservation de l\'identité algérienne'
+                                : 'Be part of a community making a difference in preserving Algerian identity',
                         style: theme.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
@@ -612,20 +495,11 @@ class AboutScreen extends ConsumerWidget {
                           backgroundColor: AppTheme.accentColor,
                           foregroundColor: AppTheme.backgroundDark,
                           minimumSize: const Size(double.infinity, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
                         child: Text(
-                          isAr
-                              ? 'قدّم طلب الانخراط'
-                              : isFr
-                              ? 'Déposer une adhésion'
-                              : 'Apply for Membership',
-                          style: GoogleFonts.tajawal(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15,
-                          ),
+                          isAr ? 'قدّم طلب الانخراط' : isFr ? 'Déposer une adhésion' : 'Apply for Membership',
+                          style: GoogleFonts.tajawal(fontWeight: FontWeight.w800, fontSize: 15),
                         ),
                       ),
                     ],
@@ -651,34 +525,10 @@ class AboutScreen extends ConsumerWidget {
 // (Board data moved to StatuteService)
 
 List<String> _values(bool isAr, bool isFr) => isAr
-    ? [
-        'النزاهة',
-        'المواطنة الفاعلة',
-        'صون التراث',
-        'الإبداع',
-        'التطوع',
-        'الشفافية',
-        'الانفتاح',
-      ]
+    ? ['النزاهة', 'المواطنة الفاعلة', 'صون التراث', 'الإبداع', 'التطوع', 'الشفافية', 'الانفتاح']
     : isFr
-    ? [
-        'Intégrité',
-        'Citoyenneté Active',
-        'Patrimoine',
-        'Créativité',
-        'Bénévolat',
-        'Transparence',
-        'Ouverture',
-      ]
-    : [
-        'Integrity',
-        'Active Citizenship',
-        'Heritage',
-        'Creativity',
-        'Volunteerism',
-        'Transparency',
-        'Openness',
-      ];
+        ? ['Intégrité', 'Citoyenneté Active', 'Patrimoine', 'Créativité', 'Bénévolat', 'Transparence', 'Ouverture']
+        : ['Integrity', 'Active Citizenship', 'Heritage', 'Creativity', 'Volunteerism', 'Transparency', 'Openness'];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Reusable Widgets
@@ -727,11 +577,7 @@ class _SectionHeader extends StatelessWidget {
   final IconData icon;
   final String label;
   final bool isDark;
-  const _SectionHeader({
-    required this.icon,
-    required this.label,
-    required this.isDark,
-  });
+  const _SectionHeader({required this.icon, required this.label, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -787,12 +633,7 @@ class _MiniCard extends StatelessWidget {
   final String title;
   final String body;
   final bool isDark;
-  const _MiniCard({
-    required this.icon,
-    required this.title,
-    required this.body,
-    required this.isDark,
-  });
+  const _MiniCard({required this.icon, required this.title, required this.body, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -803,15 +644,9 @@ class _MiniCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.white.withValues(alpha: 0.7),
+            color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppTheme.accentColor.withValues(
-                alpha: isDark ? 0.1 : 0.15,
-              ),
-            ),
+            border: Border.all(color: AppTheme.accentColor.withValues(alpha: isDark ? 0.1 : 0.15)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -820,17 +655,12 @@ class _MiniCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 15, fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 8),
               Text(
                 body,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(height: 1.5),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.5),
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -846,11 +676,7 @@ class _PartnerDossier extends StatelessWidget {
   final Partner partner;
   final String lang;
   final bool isDark;
-  const _PartnerDossier({
-    required this.partner,
-    required this.lang,
-    required this.isDark,
-  });
+  const _PartnerDossier({required this.partner, required this.lang, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -866,9 +692,7 @@ class _PartnerDossier extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.03)
-            : color.withValues(alpha: 0.05),
+        color: isDark ? Colors.white.withValues(alpha: 0.03) : color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
@@ -884,18 +708,12 @@ class _PartnerDossier extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
                 ),
                 child: CachedNetworkImage(
                   imageUrl: partner.logoUrl,
                   fit: BoxFit.contain,
-                  errorWidget: (_, __, ___) =>
-                      Icon(Icons.business, color: color),
+                  errorWidget: (_, __, ___) => Icon(Icons.business, color: color),
                 ),
               ),
               const SizedBox(width: 14),
@@ -905,18 +723,11 @@ class _PartnerDossier extends StatelessWidget {
                   children: [
                     Text(
                       partner.getName(lang),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     Text(
                       'شريك استراتيجي', // Fixed type or could be derived later
-                      style: TextStyle(
-                        color: color,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -928,11 +739,7 @@ class _PartnerDossier extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               partner.getGoals(lang),
-              style: TextStyle(
-                fontSize: 12,
-                color: isDark ? Colors.white70 : Colors.black87,
-                height: 1.5,
-              ),
+              style: TextStyle(fontSize: 12, color: isDark ? Colors.white70 : Colors.black87, height: 1.5),
             ),
           ],
         ],
@@ -945,11 +752,7 @@ class _ProjectShowcaseCard extends StatelessWidget {
   final bool isDark;
   final bool isAr;
   final bool isFr;
-  const _ProjectShowcaseCard({
-    required this.isDark,
-    required this.isAr,
-    required this.isFr,
-  });
+  const _ProjectShowcaseCard({required this.isDark, required this.isAr, required this.isFr});
 
   @override
   Widget build(BuildContext context) {
@@ -965,11 +768,7 @@ class _ProjectShowcaseCard extends StatelessWidget {
             errorBuilder: (_, __, ___) => Container(
               height: 220,
               color: AppTheme.primaryColor,
-              child: const Icon(
-                Icons.apartment_outlined,
-                size: 60,
-                color: AppTheme.accentColor,
-              ),
+              child: const Icon(Icons.apartment_outlined, size: 60, color: AppTheme.accentColor),
             ),
           ),
           Positioned.fill(
@@ -978,10 +777,7 @@ class _ProjectShowcaseCard extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.75),
-                  ],
+                  colors: [Colors.transparent, Colors.black.withValues(alpha: 0.75)],
                 ),
               ),
             ),
@@ -994,26 +790,14 @@ class _ProjectShowcaseCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: const Color(0xFF22C55E).withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    isAr
-                        ? 'جارٍ التنفيذ'
-                        : isFr
-                        ? 'En cours'
-                        : 'In Progress',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 9,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1,
-                    ),
+                    isAr ? 'جارٍ التنفيذ' : isFr ? 'En cours' : 'In Progress',
+                    style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w800, letterSpacing: 1),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -1021,39 +805,23 @@ class _ProjectShowcaseCard extends StatelessWidget {
                   isAr
                       ? 'ترميم الثكنة العسكرية — الحامة، سطيف'
                       : isFr
-                      ? 'Restauration de la Caserne — El Hamman, Sétif'
-                      : 'Military Barracks Restoration — El Hamman, Sétif',
+                          ? 'Restauration de la Caserne — El Hamman, Sétif'
+                          : 'Military Barracks Restoration — El Hamman, Sétif',
                   style: GoogleFonts.tajawal(
                     color: Colors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        blurRadius: 10,
-                      ),
-                    ],
+                    shadows: [Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 10)],
                   ),
                 ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    const Icon(
-                      Icons.military_tech_outlined,
-                      color: Colors.white60,
-                      size: 14,
-                    ),
+                    const Icon(Icons.military_tech_outlined, color: Colors.white60, size: 14),
                     const SizedBox(width: 4),
                     Text(
-                      isAr
-                          ? 'وزارة المجاهدين وذوي الحقوق'
-                          : isFr
-                          ? 'Min. des Moudjahidines'
-                          : 'Ministry of Mujahideen',
-                      style: const TextStyle(
-                        color: Colors.white60,
-                        fontSize: 11,
-                      ),
+                      isAr ? 'وزارة المجاهدين وذوي الحقوق' : isFr ? 'Min. des Moudjahidines' : 'Ministry of Mujahideen',
+                      style: const TextStyle(color: Colors.white60, fontSize: 11),
                     ),
                   ],
                 ),
@@ -1070,11 +838,7 @@ class _DynamicLeaderCard extends StatelessWidget {
   final EbzimLeader leader;
   final String lang;
   final bool isDark;
-  const _DynamicLeaderCard({
-    required this.leader,
-    required this.lang,
-    required this.isDark,
-  });
+  const _DynamicLeaderCard({required this.leader, required this.lang, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -1086,27 +850,18 @@ class _DynamicLeaderCard extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppTheme.accentColor.withValues(alpha: 0.1),
-            border: Border.all(
-              color: AppTheme.accentColor.withValues(alpha: 0.3),
-              width: 1,
-            ),
+            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3), width: 1),
           ),
           child: leader.photoUrl != null
               ? ClipOval(
                   child: CachedNetworkImage(
                     imageUrl: leader.photoUrl!,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        const Icon(Icons.person, color: AppTheme.accentColor),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.person, color: AppTheme.accentColor),
+                    placeholder: (context, url) => const Icon(Icons.person, color: AppTheme.accentColor),
+                    errorWidget: (context, url, error) => const Icon(Icons.person, color: AppTheme.accentColor),
                   ),
                 )
-              : const Icon(
-                  Icons.person_outline_rounded,
-                  color: AppTheme.accentColor,
-                  size: 24,
-                ),
+              : const Icon(Icons.person_outline_rounded, color: AppTheme.accentColor, size: 24),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -1115,18 +870,11 @@ class _DynamicLeaderCard extends StatelessWidget {
             children: [
               Text(
                 leader.getName(lang),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               Text(
                 leader.getRole(lang),
-                style: TextStyle(
-                  color: AppTheme.accentColor,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(color: AppTheme.accentColor, fontSize: 11, fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -1141,14 +889,11 @@ class _NoDataPlaceholder extends StatelessWidget {
   const _NoDataPlaceholder({required this.isAr});
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 20),
-    child: Center(
-      child: Text(
-        isAr ? 'لا توجد بيانات متاحة حالياً' : 'Aucune donnée disponible',
-        style: const TextStyle(color: Colors.grey, fontSize: 12),
-      ),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Center(
+            child: Text(isAr ? 'لا توجد بيانات متاحة حالياً' : 'Aucune donnée disponible',
+                style: const TextStyle(color: Colors.grey, fontSize: 12))),
+      );
 }
 
 class _ValueChip extends StatelessWidget {
@@ -1163,18 +908,12 @@ class _ValueChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.accentColor.withValues(alpha: isDark ? 0.07 : 0.06),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: AppTheme.accentColor.withValues(alpha: isDark ? 0.2 : 0.25),
-        ),
+        border: Border.all(color: AppTheme.accentColor.withValues(alpha: isDark ? 0.2 : 0.25)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.check_circle_outline_rounded,
-            color: AppTheme.accentColor,
-            size: 13,
-          ),
+          const Icon(Icons.check_circle_outline_rounded, color: AppTheme.accentColor, size: 13),
           const SizedBox(width: 6),
           Text(
             label,
@@ -1240,11 +979,7 @@ class _ResourceButton extends StatelessWidget {
                   ),
                 ),
               ),
-              const Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: AppTheme.accentColor,
-                size: 14,
-              ),
+              const Icon(Icons.arrow_forward_ios_rounded, color: AppTheme.accentColor, size: 14),
             ],
           ),
         ),
@@ -1252,3 +987,4 @@ class _ResourceButton extends StatelessWidget {
     );
   }
 }
+

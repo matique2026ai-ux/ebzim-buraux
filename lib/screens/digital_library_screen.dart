@@ -21,8 +21,7 @@ class DigitalLibraryScreen extends ConsumerStatefulWidget {
   const DigitalLibraryScreen({super.key});
 
   @override
-  ConsumerState<DigitalLibraryScreen> createState() =>
-      _DigitalLibraryScreenState();
+  ConsumerState<DigitalLibraryScreen> createState() => _DigitalLibraryScreenState();
 }
 
 class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
@@ -34,23 +33,13 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);
-
-    final allPublications = ref
-        .watch(publicationServiceProvider)
-        .getPublications();
-
+    
+    final allPublications = ref.watch(publicationServiceProvider).getPublications();
+    
     final filteredPublications = allPublications.where((p) {
-      final matchesSearch =
-          p
-              .getTitle(isAr ? 'ar' : 'en')
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()) ||
-          p
-              .getAuthor(isAr ? 'ar' : 'en')
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase());
-      final matchesCat =
-          _selectedCategory == null || p.category == _selectedCategory;
+      final matchesSearch = p.getTitle(isAr ? 'ar' : 'en').toLowerCase().contains(_searchQuery.toLowerCase()) || 
+                           p.getAuthor(isAr ? 'ar' : 'en').toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesCat = _selectedCategory == null || p.category == _selectedCategory;
       return matchesSearch && matchesCat;
     }).toList();
 
@@ -75,48 +64,40 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
         child: Column(
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top + 56),
-
+            
             // ── Search & Filter ─────────────────────────────────────────────
             _SearchAndFilterBar(
               onSearch: (v) => setState(() => _searchQuery = v),
-              onCategoryToggle: (cat) => setState(
-                () =>
-                    _selectedCategory = (_selectedCategory == cat ? null : cat),
-              ),
+              onCategoryToggle: (cat) => setState(() => _selectedCategory = (_selectedCategory == cat ? null : cat)),
               selectedCategory: _selectedCategory,
               isAr: isAr,
               isDark: isDark,
             ),
-
+            
             // ── Grid ────────────────────────────────────────────────────────
             Expanded(
               child: filteredPublications.isEmpty
-                  ? _NoResults(isAr: isAr)
-                  : GridView.builder(
-                      padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
-                      physics: const BouncingScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.62,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
-                      itemCount: filteredPublications.length,
-                      itemBuilder: (context, index) {
-                        final pub = filteredPublications[index];
-                        return _PublicationCard(
-                              pub: pub,
-                              isAr: isAr,
-                              isDark: isDark,
-                              onTap: () =>
-                                  _showDetails(context, pub, isAr, isDark),
-                            )
-                            .animate()
-                            .fadeIn(delay: Duration(milliseconds: 50 * index))
-                            .slideY(begin: 0.05);
-                      },
+                ? _NoResults(isAr: isAr)
+                : GridView.builder(
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.62,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
                     ),
+                    itemCount: filteredPublications.length,
+                    itemBuilder: (context, index) {
+                      final pub = filteredPublications[index];
+                      return _PublicationCard(
+                        pub: pub,
+                        isAr: isAr,
+                        isDark: isDark,
+                        onTap: () => _showDetails(context, pub, isAr, isDark),
+                      ).animate().fadeIn(delay: Duration(milliseconds: 50 * index)).slideY(begin: 0.05);
+                    },
+                  ),
             ),
           ],
         ),
@@ -124,18 +105,12 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
     );
   }
 
-  void _showDetails(
-    BuildContext context,
-    Publication pub,
-    bool isAr,
-    bool isDark,
-  ) {
+  void _showDetails(BuildContext context, Publication pub, bool isAr, bool isDark) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) =>
-          _PublicationDetailsSheet(pub: pub, isAr: isAr, isDark: isDark),
+      builder: (context) => _PublicationDetailsSheet(pub: pub, isAr: isAr, isDark: isDark),
     );
   }
 }
@@ -167,27 +142,17 @@ class _SearchAndFilterBar extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           child: Container(
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.white.withValues(alpha: 0.5),
+              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: AppTheme.accentColor.withValues(alpha: 0.1),
-              ),
+              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.1)),
             ),
             child: TextField(
               onChanged: onSearch,
               style: GoogleFonts.tajawal(fontSize: 14),
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.libSearchHint,
-                hintStyle: GoogleFonts.tajawal(
-                  color: isDark ? Colors.white30 : Colors.black26,
-                ),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: AppTheme.accentColor,
-                  size: 20,
-                ),
+                hintStyle: GoogleFonts.tajawal(color: isDark ? Colors.white30 : Colors.black26),
+                prefixIcon: const Icon(Icons.search, color: AppTheme.accentColor, size: 20),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 16),
               ),
@@ -212,18 +177,10 @@ class _SearchAndFilterBar extends StatelessWidget {
                   labelStyle: GoogleFonts.tajawal(
                     fontSize: 11,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
-                    color: isSelected
-                        ? Colors.white
-                        : (isDark ? Colors.white70 : AppTheme.primaryColor),
+                    color: isSelected ? Colors.white : (isDark ? Colors.white70 : AppTheme.primaryColor),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  side: BorderSide(
-                    color: isSelected
-                        ? Colors.transparent
-                        : AppTheme.accentColor.withValues(alpha: 0.2),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  side: BorderSide(color: isSelected ? Colors.transparent : AppTheme.accentColor.withValues(alpha: 0.2)),
                   showCheckmark: false,
                 ),
               );
@@ -242,33 +199,26 @@ class _PublicationCard extends StatelessWidget {
   final bool isDark;
   final VoidCallback onTap;
 
-  const _PublicationCard({
-    required this.pub,
-    required this.isAr,
-    required this.isDark,
-    required this.onTap,
-  });
+  const _PublicationCard({required this.pub, required this.isAr, required this.isDark, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
-        crossAxisAlignment: isAr
-            ? CrossAxisAlignment.end
-            : CrossAxisAlignment.start,
+        crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Expanded(
             child: GlassCard(
               padding: EdgeInsets.zero,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isDark
+                color: isDark 
                     ? AppTheme.accentColor.withValues(alpha: 0.15)
                     : AppTheme.accentColor.withValues(alpha: 0.1),
                 width: 1.5,
               ),
-              color: isDark
+              color: isDark 
                   ? Colors.white.withValues(alpha: 0.02)
                   : Colors.white.withValues(alpha: 0.65),
               child: ClipRRect(
@@ -277,10 +227,8 @@ class _PublicationCard extends StatelessWidget {
                   children: [
                     CachedNetworkImage(
                       imageUrl: pub.thumbnailUrl,
-                      placeholder: (context, url) =>
-                          Container(color: Colors.grey.withValues(alpha: 0.2)),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                      placeholder: (context, url) => Container(color: Colors.grey.withValues(alpha: 0.2)),
+                      errorWidget: (context, url, error) => const Icon(Icons.error),
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,
@@ -290,23 +238,14 @@ class _PublicationCard extends StatelessWidget {
                       right: isAr ? 8 : null,
                       left: isAr ? null : 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: AppTheme.accentColor.withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          pub.category
-                              .getLabel(isAr ? 'ar' : 'en')
-                              .toUpperCase(),
-                          style: GoogleFonts.playfairDisplay(
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                          pub.category.getLabel(isAr ? 'ar' : 'en').toUpperCase(),
+                          style: GoogleFonts.playfairDisplay(fontSize: 8, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                     ),
@@ -321,11 +260,7 @@ class _PublicationCard extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: isAr ? TextAlign.end : TextAlign.start,
-            style: GoogleFonts.tajawal(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-              height: 1.2,
-            ),
+            style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, height: 1.2),
           ),
           const SizedBox(height: 2),
           Text(
@@ -333,10 +268,7 @@ class _PublicationCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: isAr ? TextAlign.end : TextAlign.start,
-            style: GoogleFonts.tajawal(
-              fontSize: 10,
-              color: isDark ? Colors.white54 : Colors.black45,
-            ),
+            style: GoogleFonts.tajawal(fontSize: 10, color: isDark ? Colors.white54 : Colors.black45),
           ),
         ],
       ),
@@ -349,11 +281,7 @@ class _PublicationDetailsSheet extends StatelessWidget {
   final bool isAr;
   final bool isDark;
 
-  const _PublicationDetailsSheet({
-    required this.pub,
-    required this.isAr,
-    required this.isDark,
-  });
+  const _PublicationDetailsSheet({required this.pub, required this.isAr, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -362,9 +290,7 @@ class _PublicationDetailsSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1A2E26) : const Color(0xFFFAF9F6),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 40),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 40)],
       ),
       child: Stack(
         children: [
@@ -374,14 +300,7 @@ class _PublicationDetailsSheet extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+                    Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(10))),
                     Padding(
                       padding: const EdgeInsets.all(32),
                       child: Column(
@@ -391,30 +310,18 @@ class _PublicationDetailsSheet extends StatelessWidget {
                           Text(
                             pub.getTitle(isAr ? 'ar' : 'en'),
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.tajawal(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w900,
-                              height: 1.2,
-                            ),
+                            style: GoogleFonts.tajawal(fontSize: 22, fontWeight: FontWeight.w900, height: 1.2),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             pub.getAuthor(isAr ? 'ar' : 'en'),
-                            style: GoogleFonts.tajawal(
-                              fontSize: 15,
-                              color: AppTheme.accentColor,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: GoogleFonts.tajawal(fontSize: 15, color: AppTheme.accentColor, fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 24),
                           Text(
                             pub.getSummary(isAr ? 'ar' : 'en'),
                             textAlign: isAr ? TextAlign.end : TextAlign.start,
-                            style: GoogleFonts.cairo(
-                              fontSize: 14,
-                              height: 1.6,
-                              color: isDark ? Colors.white70 : Colors.black54,
-                            ),
+                            style: GoogleFonts.cairo(fontSize: 14, height: 1.6, color: isDark ? Colors.white70 : Colors.black54),
                           ),
                         ],
                       ),
@@ -448,20 +355,11 @@ class _PublicationHero extends StatelessWidget {
       height: 220,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(14),
-        child: CachedNetworkImage(
-          imageUrl: pub.thumbnailUrl,
-          fit: BoxFit.cover,
-        ),
+        child: CachedNetworkImage(imageUrl: pub.thumbnailUrl, fit: BoxFit.cover),
       ),
     );
   }
@@ -472,11 +370,7 @@ class _ActionBottomBar extends StatelessWidget {
   final bool isAr;
   final bool isDark;
 
-  const _ActionBottomBar({
-    required this.pub,
-    required this.isAr,
-    required this.isDark,
-  });
+  const _ActionBottomBar({required this.pub, required this.isAr, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -486,14 +380,8 @@ class _ActionBottomBar extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
           decoration: BoxDecoration(
-            color: (isDark ? Colors.black : Colors.white).withValues(
-              alpha: 0.7,
-            ),
-            border: Border(
-              top: BorderSide(
-                color: AppTheme.accentColor.withValues(alpha: 0.2),
-              ),
-            ),
+            color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.7),
+            border: Border(top: BorderSide(color: AppTheme.accentColor.withValues(alpha: 0.2))),
           ),
           child: Row(
             children: [
@@ -506,9 +394,7 @@ class _ActionBottomBar extends StatelessWidget {
                     backgroundColor: AppTheme.accentColor,
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 54),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     elevation: 0,
                   ),
                 ),
@@ -520,9 +406,7 @@ class _ActionBottomBar extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppTheme.accentColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: AppTheme.accentColor.withValues(alpha: 0.2),
-                  ),
+                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                 ),
                 child: const IconButton(
                   onPressed: null, // Share functionality could go here
@@ -547,18 +431,11 @@ class _NoResults extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.search_off_rounded,
-            size: 64,
-            color: AppTheme.accentColor.withValues(alpha: 0.3),
-          ),
+          Icon(Icons.search_off_rounded, size: 64, color: AppTheme.accentColor.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text(
             isAr ? 'لم يتم العثور على نتائج' : 'No results found',
-            style: GoogleFonts.tajawal(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
+            style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: Colors.grey),
           ),
         ],
       ),

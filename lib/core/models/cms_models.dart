@@ -48,12 +48,7 @@ class HeroSlide {
       subtitleFr: subtitle['fr']?.toString() ?? '',
       imageUrl: json['imageUrl']?.toString() ?? '',
       videoUrl: json['videoUrl']?.toString(),
-      overlayColor:
-          (json['overlayColor'] ??
-                  json['overlay_color'] ??
-                  json['glassColor'] ??
-                  json['glass_color'])
-              ?.toString(),
+      overlayColor: (json['overlayColor'] ?? json['overlay_color'] ?? json['glassColor'] ?? json['glass_color'])?.toString(),
       overlayOpacity: _parseOpacity(json),
       buttonText: json['buttonText']?.toString(),
       buttonLink: json['buttonLink']?.toString(),
@@ -74,35 +69,24 @@ class HeroSlide {
 
   String getTitle(String lang) {
     String val = titleEn;
-    if (lang == 'ar' && !_isJunk(titleAr))
-      val = titleAr;
-    else if (lang == 'fr' && !_isJunk(titleFr))
-      val = titleFr;
-    else if (!_isJunk(titleEn))
-      val = titleEn;
-    else
-      val = lang == 'ar' ? 'إرث سطيف، هوية وطن' : 'L\'héritage de Sétif';
+    if (lang == 'ar' && !_isJunk(titleAr)) val = titleAr;
+    else if (lang == 'fr' && !_isJunk(titleFr)) val = titleFr;
+    else if (!_isJunk(titleEn)) val = titleEn;
+    else val = lang == 'ar' ? 'إرث سطيف، هوية وطن' : 'L\'héritage de Sétif';
     return val;
   }
 
   String getSubtitle(String lang) {
     String val = subtitleEn;
-    if (lang == 'ar' && !_isJunk(subtitleAr))
-      val = subtitleAr;
-    else if (lang == 'fr' && !_isJunk(subtitleFr))
-      val = subtitleFr;
-    else if (!_isJunk(subtitleEn))
-      val = subtitleEn;
-    else
-      val = lang == 'ar'
-          ? 'جمعية إبزيم هي المساحة الولائية لتسخير المعارف والوسائل في سبيل حماية الهوية الجزائرية.'
-          : 'L\'association Ebzim est l\'espace pour la protection de l\'identité algérienne.';
+    if (lang == 'ar' && !_isJunk(subtitleAr)) val = subtitleAr;
+    else if (lang == 'fr' && !_isJunk(subtitleFr)) val = subtitleFr;
+    else if (!_isJunk(subtitleEn)) val = subtitleEn;
+    else val = lang == 'ar' ? 'جمعية إبزيم هي المساحة الولائية لتسخير المعارف والوسائل في سبيل حماية الهوية الجزائرية.' : 'L\'association Ebzim est l\'espace pour la protection de l\'identité algérienne.';
     return val;
   }
 
   static double _parseOpacity(Map<String, dynamic> json) {
-    final val =
-        json['overlayOpacity'] ?? json['overlay_opacity'] ?? json['opacity'];
+    final val = json['overlayOpacity'] ?? json['overlay_opacity'] ?? json['opacity'];
     if (val == null) return 0.1;
     return double.tryParse(val.toString()) ?? 0.1;
   }

@@ -38,19 +38,13 @@ class MembershipDiscoverScreen extends ConsumerWidget {
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? Colors.black.withValues(alpha: 0.4)
-                      : Colors.white.withValues(alpha: 0.6),
+                  color: isDark ? Colors.black.withValues(alpha: 0.4) : Colors.white.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: AppTheme.accentColor.withValues(alpha: 0.2),
-                  ),
+                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                 ),
                 child: IconButton(
                   icon: Icon(
-                    isAr
-                        ? Icons.arrow_forward_ios_rounded
-                        : Icons.arrow_back_ios_rounded,
+                    isAr ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_rounded,
                     color: AppTheme.accentColor,
                     size: 18,
                   ),
@@ -74,49 +68,33 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                   children: [
                     // Gold pill
                     Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 7,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppTheme.accentColor.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              color: AppTheme.accentColor.withValues(
-                                alpha: 0.4,
-                              ),
-                              width: 1,
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                      decoration: BoxDecoration(
+                        color: AppTheme.accentColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.4), width: 1),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.workspace_premium_rounded, color: AppTheme.accentColor, size: 14),
+                          const SizedBox(width: 6),
+                          Text(
+                            (isAr
+                                ? 'العضوية الرسمية'
+                                : isFr
+                                    ? 'Adhésion Officielle'
+                                    : 'Official Membership').toUpperCase(),
+                            style: GoogleFonts.playfairDisplay(
+                              color: AppTheme.accentColor,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 2,
                             ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.workspace_premium_rounded,
-                                color: AppTheme.accentColor,
-                                size: 14,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                (isAr
-                                        ? 'العضوية الرسمية'
-                                        : isFr
-                                        ? 'Adhésion Officielle'
-                                        : 'Official Membership')
-                                    .toUpperCase(),
-                                style: GoogleFonts.playfairDisplay(
-                                  color: AppTheme.accentColor,
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                        .animate()
-                        .fadeIn(delay: 100.ms)
-                        .scale(begin: const Offset(0.9, 0.9)),
+                        ],
+                      ),
+                    ).animate().fadeIn(delay: 100.ms).scale(begin: const Offset(0.9, 0.9)),
 
                     const SizedBox(height: 18),
 
@@ -124,8 +102,8 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                       isAr
                           ? 'كن جزءاً من\nإبزيم'
                           : isFr
-                          ? 'Rejoignez\nEbzim'
-                          : 'Become Part\nof Ebzim',
+                              ? 'Rejoignez\nEbzim'
+                              : 'Become Part\nof Ebzim',
                       style: theme.textTheme.headlineLarge?.copyWith(
                         fontSize: 46,
                         fontWeight: FontWeight.w900,
@@ -139,8 +117,8 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                       isAr
                           ? 'انضم إلى جمعية رائدة تجمع الثقافة والمواطنة والتراث في ولاية سطيف'
                           : isFr
-                          ? 'Rejoignez une association pionnière qui unit culture, citoyenneté et patrimoine à Sétif'
-                          : 'Join a pioneering association uniting culture, citizenship and heritage in Sétif',
+                              ? 'Rejoignez une association pionnière qui unit culture, citoyenneté et patrimoine à Sétif'
+                              : 'Join a pioneering association uniting culture, citizenship and heritage in Sétif',
                       style: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
                     ).animate().fadeIn(delay: 350.ms),
 
@@ -151,31 +129,19 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                       children: [
                         _StatChip(
                           value: '2024',
-                          label: isAr
-                              ? 'تأسست'
-                              : isFr
-                              ? 'Fondée'
-                              : 'Founded',
+                          label: isAr ? 'تأسست' : isFr ? 'Fondée' : 'Founded',
                           isDark: isDark,
                         ),
                         const SizedBox(width: 12),
                         _StatChip(
                           value: '3',
-                          label: isAr
-                              ? 'شراكات'
-                              : isFr
-                              ? 'Partenariats'
-                              : 'Partnerships',
+                          label: isAr ? 'شراكات' : isFr ? 'Partenariats' : 'Partnerships',
                           isDark: isDark,
                         ),
                         const SizedBox(width: 12),
                         _StatChip(
                           value: 'سطيف',
-                          label: isAr
-                              ? 'الولاية'
-                              : isFr
-                              ? 'Wilaya'
-                              : 'Wilaya',
+                          label: isAr ? 'الولاية' : isFr ? 'Wilaya' : 'Wilaya',
                           isDark: isDark,
                         ),
                       ],
@@ -195,11 +161,7 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _SectionLabel(
-                      label: isAr
-                          ? 'لماذا تنخرط؟'
-                          : isFr
-                          ? 'Pourquoi adhérer ?'
-                          : 'Why Join?',
+                      label: isAr ? 'لماذا تنخرط؟' : isFr ? 'Pourquoi adhérer ?' : 'Why Join?',
                       isDark: isDark,
                     ),
                     const SizedBox(height: 16),
@@ -207,10 +169,9 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                       final i = e.key;
                       final p = e.value;
                       return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: _PillarCard(pillar: p, isDark: isDark),
-                          )
-                          .animate()
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _PillarCard(pillar: p, isDark: isDark),
+                      ).animate()
                           .fadeIn(delay: Duration(milliseconds: 500 + i * 80))
                           .slideX(begin: 0.04, curve: Curves.easeOutCubic);
                     }),
@@ -229,11 +190,7 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _SectionLabel(
-                      label: isAr
-                          ? 'شروط الانخراط'
-                          : isFr
-                          ? 'Conditions d\'adhésion'
-                          : 'Membership Conditions',
+                      label: isAr ? 'شروط الانخراط' : isFr ? 'Conditions d\'adhésion' : 'Membership Conditions',
                       isDark: isDark,
                     ),
                     const SizedBox(height: 16),
@@ -248,77 +205,52 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                                 ? Colors.white.withValues(alpha: 0.03)
                                 : Colors.white.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: AppTheme.accentColor.withValues(
-                                alpha: 0.12,
-                              ),
-                            ),
+                            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.12)),
                           ),
                           child: Column(
-                            children: _conditions(isAr, isFr)
-                                .asMap()
-                                .entries
-                                .map((e) {
-                                  final isLast =
-                                      e.key ==
-                                      _conditions(isAr, isFr).length - 1;
-                                  return Column(
+                            children: _conditions(isAr, isFr).asMap().entries.map((e) {
+                              final isLast = e.key == _conditions(isAr, isFr).length - 1;
+                              return Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: 32,
-                                            height: 32,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: AppTheme.accentColor
-                                                  .withValues(
-                                                    alpha: isDark ? 0.12 : 0.1,
-                                                  ),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                '${e.key + 1}',
-                                                style: TextStyle(
-                                                  color: AppTheme.accentColor,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w800,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 14),
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                top: 6,
-                                              ),
-                                              child: Text(
-                                                e.value,
-                                                style: theme
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith(height: 1.5),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      if (!isLast)
-                                        Divider(
-                                          height: 20,
-                                          color: isDark
-                                              ? Colors.white10
-                                              : Colors.black.withValues(
-                                                  alpha: 0.06,
-                                                ),
+                                      Container(
+                                        width: 32, height: 32,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppTheme.accentColor.withValues(alpha: isDark ? 0.12 : 0.1),
                                         ),
+                                        child: Center(
+                                          child: Text(
+                                            '${e.key + 1}',
+                                            style: TextStyle(
+                                              color: AppTheme.accentColor,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 6),
+                                          child: Text(
+                                            e.value,
+                                            style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                                          ),
+                                        ),
+                                      ),
                                     ],
-                                  );
-                                })
-                                .toList(),
+                                  ),
+                                  if (!isLast) Divider(
+                                    height: 20,
+                                    color: isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.06),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
                           ),
                         ),
                       ),
@@ -337,30 +269,22 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(
-                      0xFF22C55E,
-                    ).withValues(alpha: isDark ? 0.07 : 0.05),
+                    color: const Color(0xFF22C55E).withValues(alpha: isDark ? 0.07 : 0.05),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: const Color(0xFF22C55E).withValues(alpha: 0.2),
-                    ),
+                    border: Border.all(color: const Color(0xFF22C55E).withValues(alpha: 0.2)),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(
-                        Icons.verified_outlined,
-                        color: Color(0xFF22C55E),
-                        size: 20,
-                      ),
+                      const Icon(Icons.verified_outlined, color: Color(0xFF22C55E), size: 20),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           isAr
                               ? 'الانخراط خاضع لدفع الاشتراك السنوي ومراجعة اللجنة التنفيذية وفقاً للقانون الأساسي المصادق عليه في 14 ديسمبر 2024.'
                               : isFr
-                              ? 'L\'adhésion est soumise au paiement d\'une cotisation annuelle et à l\'examen du bureau exécutif conformément aux statuts ratifiés le 14 décembre 2024.'
-                              : 'Membership requires annual subscription payment and is subject to executive board review per the statutes ratified December 14, 2024.',
+                                  ? 'L\'adhésion est soumise au paiement d\'une cotisation annuelle et à l\'examen du bureau exécutif conformément aux statuts ratifiés le 14 décembre 2024.'
+                                  : 'Membership requires annual subscription payment and is subject to executive board review per the statutes ratified December 14, 2024.',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: const Color(0xFF22C55E),
                             height: 1.5,
@@ -380,118 +304,74 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     // Primary CTA
-                    ref
-                        .watch(membershipStatusProvider)
-                        .when(
-                          data: (status) {
-                            final isSubmitted =
-                                status == 'SUBMITTED' ||
-                                status == 'INVESTIGATING';
-                            final isApproved = status == 'APPROVED';
-
-                            return Container(
-                                  height: 62,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(18),
-                                    gradient: LinearGradient(
-                                      colors: isApproved
-                                          ? [
-                                              const Color(0xFF15803D),
-                                              const Color(0xFF166534),
-                                            ]
-                                          : isSubmitted
-                                          ? [
-                                              const Color(0xFFB45309),
-                                              const Color(0xFF92400E),
-                                            ]
-                                          : [
-                                              AppTheme.accentColor,
-                                              const Color(0xFFB8941E),
-                                            ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
+                    ref.watch(membershipStatusProvider).when(
+                      data: (status) {
+                        final isSubmitted = status == 'SUBMITTED' || status == 'INVESTIGATING';
+                        final isApproved = status == 'APPROVED';
+                        
+                        return Container(
+                          height: 62,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                            gradient: LinearGradient(
+                              colors: isApproved 
+                                ? [const Color(0xFF15803D), const Color(0xFF166534)]
+                                : isSubmitted
+                                  ? [const Color(0xFFB45309), const Color(0xFF92400E)]
+                                  : [AppTheme.accentColor, const Color(0xFFB8941E)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: (isApproved ? const Color(0xFF15803D) : isSubmitted ? const Color(0xFFB45309) : AppTheme.accentColor).withValues(alpha: 0.35),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: isSubmitted || isApproved ? null : () {
+                                HapticFeedback.mediumImpact();
+                                context.push('/membership/apply');
+                              },
+                              borderRadius: BorderRadius.circular(18),
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      isApproved ? Icons.verified_user_rounded : isSubmitted ? Icons.pending_actions_rounded : Icons.how_to_reg_rounded, 
+                                      color: Colors.white, 
+                                      size: 20
                                     ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color:
-                                            (isApproved
-                                                    ? const Color(0xFF15803D)
-                                                    : isSubmitted
-                                                    ? const Color(0xFFB45309)
-                                                    : AppTheme.accentColor)
-                                                .withValues(alpha: 0.35),
-                                        blurRadius: 20,
-                                        offset: const Offset(0, 8),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: isSubmitted || isApproved
-                                          ? null
-                                          : () {
-                                              HapticFeedback.mediumImpact();
-                                              context.push('/membership/apply');
-                                            },
-                                      borderRadius: BorderRadius.circular(18),
-                                      child: Center(
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              isApproved
-                                                  ? Icons.verified_user_rounded
-                                                  : isSubmitted
-                                                  ? Icons
-                                                        .pending_actions_rounded
-                                                  : Icons.how_to_reg_rounded,
-                                              color: Colors.white,
-                                              size: 20,
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              isApproved
-                                                  ? (isAr
-                                                        ? 'عضوية مفعلة'
-                                                        : 'Adhésion Activée')
-                                                  : isSubmitted
-                                                  ? (isAr
-                                                        ? 'الطلب قيد المراجعة'
-                                                        : 'Demande en cours')
-                                                  : (isAr
-                                                        ? 'قدّم طلب الانخراط'
-                                                        : isFr
-                                                        ? 'Déposer une adhésion'
-                                                        : 'Apply for Membership'),
-                                              style: GoogleFonts.tajawal(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w800,
-                                                letterSpacing: 0.3,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      isApproved 
+                                        ? (isAr ? 'عضوية مفعلة' : 'Adhésion Activée')
+                                        : isSubmitted
+                                          ? (isAr ? 'الطلب قيد المراجعة' : 'Demande en cours')
+                                          : (isAr ? 'قدّم طلب الانخراط' : isFr ? 'Déposer une adhésion' : 'Apply for Membership'),
+                                      style: GoogleFonts.tajawal(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 0.3,
                                       ),
                                     ),
-                                  ),
-                                )
-                                .animate()
-                                .fadeIn(delay: 950.ms)
-                                .scale(
-                                  begin: const Offset(0.96, 0.96),
-                                  curve: Curves.easeOutBack,
-                                );
-                          },
-                          loading: () => const Center(
-                            child: CircularProgressIndicator(
-                              color: AppTheme.accentColor,
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                          error: (_, __) => const SizedBox(),
-                        ),
+                        ).animate().fadeIn(delay: 950.ms).scale(begin: const Offset(0.96, 0.96), curve: Curves.easeOutBack);
+                      },
+                      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.accentColor)),
+                      error: (_, __) => const SizedBox(),
+                    ),
 
                     const SizedBox(height: 14),
 
@@ -500,8 +380,8 @@ class MembershipDiscoverScreen extends ConsumerWidget {
                       isAr
                           ? 'العضوية منفصلة عن حساب التطبيق'
                           : isFr
-                          ? 'L\'adhésion est distincte du compte applicatif'
-                          : 'Membership is separate from your app account',
+                              ? 'L\'adhésion est distincte du compte applicatif'
+                              : 'Membership is separate from your app account',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodySmall?.copyWith(
                         // fontStyle removed for accessibility,
@@ -532,16 +412,7 @@ class _Pillar {
   final String bodyEn;
   final String bodyFr;
   final Color color;
-  const _Pillar({
-    required this.icon,
-    required this.titleAr,
-    required this.titleEn,
-    required this.titleFr,
-    required this.bodyAr,
-    required this.bodyEn,
-    required this.bodyFr,
-    required this.color,
-  });
+  const _Pillar({required this.icon, required this.titleAr, required this.titleEn, required this.titleFr, required this.bodyAr, required this.bodyEn, required this.bodyFr, required this.color});
 }
 
 List<_Pillar> _pillars(bool isAr, bool isFr) => [
@@ -551,10 +422,8 @@ List<_Pillar> _pillars(bool isAr, bool isFr) => [
     titleEn: 'Governance & Transparency',
     titleFr: 'Gouvernance et Transparence',
     bodyAr: 'تسيير رشيد ومؤسسي مع إعلانات دورية في الجريدة الرسمية للجمعيات.',
-    bodyEn:
-        'Institutional and transparent management with periodic publications in the official associations gazette.',
-    bodyFr:
-        'Gestion institutionnelle et transparente, avec publications périodiques au Journal des Associations.',
+    bodyEn: 'Institutional and transparent management with periodic publications in the official associations gazette.',
+    bodyFr: 'Gestion institutionnelle et transparente, avec publications périodiques au Journal des Associations.',
     color: AppTheme.accentColor,
   ),
   const _Pillar(
@@ -562,12 +431,9 @@ List<_Pillar> _pillars(bool isAr, bool isFr) => [
     titleAr: 'مشاريع وطنية حقيقية',
     titleEn: 'Real National Projects',
     titleFr: 'Projets Nationaux Concrets',
-    bodyAr:
-        'ترميم الثكنة العسكرية، شراكة المتحف الوطني للآثار، وعضوية شبكة اليونسكو.',
-    bodyEn:
-        'Military barracks restoration, National Museum of Antiquities partnership, and UNESCO network membership.',
-    bodyFr:
-        'Restauration de la caserne, partenariat Musée National des Antiquités, adhésion réseau UNESCO.',
+    bodyAr: 'ترميم الثكنة العسكرية، شراكة المتحف الوطني للآثار، وعضوية شبكة اليونسكو.',
+    bodyEn: 'Military barracks restoration, National Museum of Antiquities partnership, and UNESCO network membership.',
+    bodyFr: 'Restauration de la caserne, partenariat Musée National des Antiquités, adhésion réseau UNESCO.',
     color: Color(0xFF22C55E),
   ),
   const _Pillar(
@@ -575,12 +441,9 @@ List<_Pillar> _pillars(bool isAr, bool isFr) => [
     titleAr: 'مجتمع مدني فاعل',
     titleEn: 'Active Civil Society',
     titleFr: 'Société Civile Active',
-    bodyAr:
-        'كن صوتاً فاعلاً في الفعل الثقافي المواطني والرقابة على الموروث العمراني.',
-    bodyEn:
-        'Be an active voice in civic cultural action and oversight of the built heritage.',
-    bodyFr:
-        'Soyez une voix active dans l\'action culturelle civique et la sauvegarde du patrimoine bâti.',
+    bodyAr: 'كن صوتاً فاعلاً في الفعل الثقافي المواطني والرقابة على الموروث العمراني.',
+    bodyEn: 'Be an active voice in civic cultural action and oversight of the built heritage.',
+    bodyFr: 'Soyez une voix active dans l\'action culturelle civique et la sauvegarde du patrimoine bâti.',
     color: Color(0xFF8B5CF6),
   ),
 ];
@@ -593,18 +456,18 @@ List<String> _conditions(bool isAr, bool isFr) => isAr
         'أن يسدّد الاشتراك السنوي للجمعية كشرط أساسي لتفعيل العضوية والتمتع بكامل الحقوق.',
       ]
     : isFr
-    ? [
-        'Être actif dans le domaine social, culturel ou artistique, ou contribuer au bien public.',
-        'Être de bonne moralité et n\'avoir aucune activité contraire aux intérêts supérieurs de la nation algérienne.',
-        'S\'engager à respecter les statuts, le règlement intérieur et les valeurs fondatrices de l\'association (Article 10).',
-        'S\'acquitter de la cotisation annuelle de l\'association, condition indispensable à l\'activation de l\'adhésion.',
-      ]
-    : [
-        'Be active in the social, cultural or artistic field, or contribute to public welfare.',
-        'Be of good moral standing and have no activity contrary to the supreme interests of the Algerian nation.',
-        'Commit to abide by the association\'s statutes, internal regulations, and founding values (Article 10).',
-        'Pay the annual membership subscription as a mandatory condition to activate membership rights.',
-      ];
+        ? [
+            'Être actif dans le domaine social, culturel ou artistique, ou contribuer au bien public.',
+            'Être de bonne moralité et n\'avoir aucune activité contraire aux intérêts supérieurs de la nation algérienne.',
+            'S\'engager à respecter les statuts, le règlement intérieur et les valeurs fondatrices de l\'association (Article 10).',
+            'S\'acquitter de la cotisation annuelle de l\'association, condition indispensable à l\'activation de l\'adhésion.',
+          ]
+        : [
+            'Be active in the social, cultural or artistic field, or contribute to public welfare.',
+            'Be of good moral standing and have no activity contrary to the supreme interests of the Algerian nation.',
+            'Commit to abide by the association\'s statutes, internal regulations, and founding values (Article 10).',
+            'Pay the annual membership subscription as a mandatory condition to activate membership rights.',
+          ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Widgets
@@ -614,11 +477,7 @@ class _StatChip extends StatelessWidget {
   final String value;
   final String label;
   final bool isDark;
-  const _StatChip({
-    required this.value,
-    required this.label,
-    required this.isDark,
-  });
+  const _StatChip({required this.value, required this.label, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -626,13 +485,9 @@ class _StatChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
         decoration: BoxDecoration(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.04)
-              : Colors.white.withValues(alpha: 0.65),
+          color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.65),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppTheme.accentColor.withValues(alpha: 0.15),
-          ),
+          border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.15)),
         ),
         child: Column(
           children: [
@@ -647,9 +502,7 @@ class _StatChip extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               label,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(fontSize: 10),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10),
               textAlign: TextAlign.center,
             ),
           ],
@@ -669,8 +522,7 @@ class _SectionLabel extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 28,
-          height: 3,
+          width: 28, height: 3,
           decoration: BoxDecoration(
             color: AppTheme.accentColor,
             borderRadius: BorderRadius.circular(2),
@@ -733,11 +585,7 @@ class _PillarCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isAr
-                          ? pillar.titleAr
-                          : isFr
-                          ? pillar.titleFr
-                          : pillar.titleEn,
+                      isAr ? pillar.titleAr : isFr ? pillar.titleFr : pillar.titleEn,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
@@ -746,14 +594,8 @@ class _PillarCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      isAr
-                          ? pillar.bodyAr
-                          : isFr
-                          ? pillar.bodyFr
-                          : pillar.bodyEn,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall?.copyWith(height: 1.55),
+                      isAr ? pillar.bodyAr : isFr ? pillar.bodyFr : pillar.bodyEn,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.55),
                     ),
                   ],
                 ),

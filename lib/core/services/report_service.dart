@@ -22,7 +22,9 @@ class ReportService {
           'title': '${category.toUpperCase()} Report',
           'incidentCategory': category.toUpperCase(),
           'description': description,
-          'locationData': {'formattedAddress': location},
+          'locationData': {
+            'formattedAddress': location,
+          },
           'isAnonymous': isAnonymous,
         },
       );
@@ -37,10 +39,7 @@ class ReportService {
   /// Lists reports for the current user (if they are authority/admin).
   Future<List<dynamic>> getReports({int page = 1}) async {
     try {
-      final response = await _apiClient.dio.get(
-        'reports',
-        queryParameters: {'page': page},
-      );
+      final response = await _apiClient.dio.get('reports', queryParameters: {'page': page});
       return response.data['data'] ?? [];
     } catch (e) {
       return [];
@@ -49,11 +48,7 @@ class ReportService {
 
   /// Updates the status of a civic report (Admin Only).
   /// Statuses: PENDING, INVESTIGATING, RESOLVED, REJECTED.
-  Future<void> updateReportStatus(
-    String id,
-    String status, {
-    String? adminComment,
-  }) async {
+  Future<void> updateReportStatus(String id, String status, {String? adminComment}) async {
     try {
       await _apiClient.dio.patch(
         'reports/$id/status',

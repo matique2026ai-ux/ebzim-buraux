@@ -20,8 +20,7 @@ class StatuteScreen extends ConsumerStatefulWidget {
   ConsumerState<StatuteScreen> createState() => _StatuteScreenState();
 }
 
-class _StatuteScreenState extends ConsumerState<StatuteScreen>
-    with TickerProviderStateMixin {
+class _StatuteScreenState extends ConsumerState<StatuteScreen> with TickerProviderStateMixin {
   late TabController _subLocaleController;
   final ScrollController _scrollController = ScrollController();
 
@@ -63,13 +62,9 @@ class _StatuteScreenState extends ConsumerState<StatuteScreen>
             margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.black.withValues(alpha: 0.3)
-                  : Colors.white.withValues(alpha: 0.5),
+              color: isDark ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: AppTheme.accentColor.withValues(alpha: 0.2),
-              ),
+              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
             ),
             child: TabBar(
               controller: _subLocaleController,
@@ -80,13 +75,8 @@ class _StatuteScreenState extends ConsumerState<StatuteScreen>
                 borderRadius: BorderRadius.circular(8),
               ),
               labelColor: isDark ? AppTheme.primaryColor : Colors.white,
-              unselectedLabelColor: isDark
-                  ? Colors.white54
-                  : AppTheme.primaryColor.withValues(alpha: 0.6),
-              labelStyle: GoogleFonts.tajawal(
-                fontWeight: FontWeight.w800,
-                fontSize: 12,
-              ),
+              unselectedLabelColor: isDark ? Colors.white54 : AppTheme.primaryColor.withValues(alpha: 0.6),
+              labelStyle: GoogleFonts.tajawal(fontWeight: FontWeight.w800, fontSize: 12),
               tabs: const [
                 Tab(text: 'ARABIC'),
                 Tab(text: 'ENGLISH'),
@@ -124,7 +114,7 @@ class _StatuteListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top + 130;
-
+    
     return ListView.builder(
       padding: EdgeInsets.fromLTRB(24, topPadding, 24, 100),
       physics: const BouncingScrollPhysics(),
@@ -132,44 +122,25 @@ class _StatuteListView extends StatelessWidget {
       itemBuilder: (context, index) {
         final article = statutes[index];
         final isAr = localeIdx == 0;
-        final title = [
-          article.titleAr,
-          article.titleEn,
-          article.titleFr,
-        ][localeIdx];
-        final content = [
-          article.contentAr,
-          article.contentEn,
-          article.contentFr,
-        ][localeIdx];
-        final label = [
-          article.sectionLabelAr,
-          article.sectionLabelEn,
-          article.sectionLabelFr,
-        ][localeIdx];
+        final title = [article.titleAr, article.titleEn, article.titleFr][localeIdx];
+        final content = [article.contentAr, article.contentEn, article.contentFr][localeIdx];
+        final label = [article.sectionLabelAr, article.sectionLabelEn, article.sectionLabelFr][localeIdx];
 
         return Column(
-          crossAxisAlignment: isAr
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+          crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            if (index == 0 ||
-                statutes[index - 1].sectionLabelAr !=
-                    article.sectionLabelAr) ...[
+            if (index == 0 || statutes[index-1].sectionLabelAr != article.sectionLabelAr) ...[
               const SizedBox(height: 32),
               _SectionHeader(label: label, isDark: isDark, isAr: isAr),
               const SizedBox(height: 16),
             ],
             _ArticleCard(
-                  articleNumber: article.number,
-                  title: title,
-                  content: content,
-                  isDark: isDark,
-                  isAr: isAr,
-                )
-                .animate()
-                .fadeIn(delay: Duration(milliseconds: 100 * index))
-                .slideY(begin: 0.05),
+              articleNumber: article.number,
+              title: title,
+              content: content,
+              isDark: isDark,
+              isAr: isAr,
+            ).animate().fadeIn(delay: Duration(milliseconds: 100 * index)).slideY(begin: 0.05),
             const SizedBox(height: 12),
           ],
         );
@@ -182,24 +153,14 @@ class _SectionHeader extends StatelessWidget {
   final String label;
   final bool isDark;
   final bool isAr;
-  const _SectionHeader({
-    required this.label,
-    required this.isDark,
-    required this.isAr,
-  });
+  const _SectionHeader({required this.label, required this.isDark, required this.isAr});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        if (!isAr)
-          Container(
-            width: 24,
-            height: 2,
-            color: AppTheme.accentColor,
-            margin: const EdgeInsets.only(right: 8),
-          ),
+        if (!isAr) Container(width: 24, height: 2, color: AppTheme.accentColor, margin: const EdgeInsets.only(right: 8)),
         Text(
           label.toUpperCase(),
           style: GoogleFonts.tajawal(
@@ -209,13 +170,7 @@ class _SectionHeader extends StatelessWidget {
             letterSpacing: 2,
           ),
         ),
-        if (isAr)
-          Container(
-            width: 24,
-            height: 2,
-            color: AppTheme.accentColor,
-            margin: const EdgeInsets.only(left: 8),
-          ),
+        if (isAr) Container(width: 24, height: 2, color: AppTheme.accentColor, margin: const EdgeInsets.only(left: 8)),
       ],
     );
   }
@@ -241,23 +196,19 @@ class _ArticleCard extends StatelessWidget {
     return GlassCard(
       padding: const EdgeInsets.all(24),
       border: Border.all(
-        color: isDark
+        color: isDark 
             ? AppTheme.accentColor.withValues(alpha: 0.15)
             : AppTheme.accentColor.withValues(alpha: 0.1),
         width: 1.5,
       ),
-      color: isDark
+      color: isDark 
           ? Colors.white.withValues(alpha: 0.02)
           : Colors.white.withValues(alpha: 0.65),
       child: Column(
-        crossAxisAlignment: isAr
-            ? CrossAxisAlignment.end
-            : CrossAxisAlignment.start,
+        crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: isAr
-                ? MainAxisAlignment.end
-                : MainAxisAlignment.start,
+            mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               if (!isAr) _NumberBadge(number: articleNumber),
               if (!isAr) const SizedBox(width: 16),
@@ -268,9 +219,7 @@ class _ArticleCard extends StatelessWidget {
                   style: GoogleFonts.tajawal(
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
-                    color: isDark
-                        ? const Color(0xFFF0EDE6)
-                        : AppTheme.primaryColor,
+                    color: isDark ? const Color(0xFFF0EDE6) : AppTheme.primaryColor,
                     letterSpacing: 0.2,
                   ),
                 ),
@@ -286,8 +235,8 @@ class _ArticleCard extends StatelessWidget {
             style: GoogleFonts.cairo(
               fontSize: 14,
               height: 1.8, // Enhanced reading height for institutional text
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.85)
+              color: isDark 
+                  ? Colors.white.withValues(alpha: 0.85) 
                   : AppTheme.primaryColor.withValues(alpha: 0.8),
             ),
           ),

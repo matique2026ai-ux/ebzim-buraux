@@ -24,61 +24,41 @@ enum EbzimRole {
 
   static EbzimRole fromString(String role) {
     switch (role.toUpperCase()) {
-      case 'SUPER_ADMIN':
-        return EbzimRole.superAdmin;
-      case 'ADMIN':
-        return EbzimRole.admin;
-      case 'AUTHORITY':
-        return EbzimRole.authority;
-      case 'MEMBER':
-        return EbzimRole.member;
-      default:
-        return EbzimRole.public;
+      case 'SUPER_ADMIN': return EbzimRole.superAdmin;
+      case 'ADMIN': return EbzimRole.admin;
+      case 'AUTHORITY': return EbzimRole.authority;
+      case 'MEMBER': return EbzimRole.member;
+      default: return EbzimRole.public;
     }
   }
 
   String getLabel(String lang) {
     if (lang == 'ar') {
       switch (this) {
-        case superAdmin:
-          return 'رئيس الجمعية';
-        case admin:
-          return 'عضو المكتب التنفيذي';
-        case authority:
-          return 'شريك مؤسساتي';
-        case member:
-          return 'عضو عامل';
-        case public:
-          return 'زائر المنصة';
+        case superAdmin: return 'رئيس الجمعية';
+        case admin: return 'عضو المكتب التنفيذي';
+        case authority: return 'شريك مؤسساتي';
+        case member: return 'عضو عامل';
+        case public: return 'زائر المنصة';
       }
     } else {
       switch (this) {
-        case superAdmin:
-          return 'President of Association';
-        case admin:
-          return 'Executive Board Member';
-        case authority:
-          return 'Institutional Partner';
-        case member:
-          return 'Active Member';
-        case public:
-          return 'Platform Guest';
+        case superAdmin: return 'President of Association';
+        case admin: return 'Executive Board Member';
+        case authority: return 'Institutional Partner';
+        case member: return 'Active Member';
+        case public: return 'Platform Guest';
       }
     }
   }
 
   Color getBadgeColor() {
     switch (this) {
-      case superAdmin:
-        return const Color(0xFFD4AF37); // Gold
-      case admin:
-        return const Color(0xFF052011); // Ebzim Emerald
-      case authority:
-        return const Color(0xFFB91C1C); // Deep Red
-      case member:
-        return const Color(0xFF0369A1); // Deep Blue
-      case public:
-        return Colors.grey;
+      case superAdmin: return const Color(0xFFD4AF37); // Gold
+      case admin: return const Color(0xFF052011); // Ebzim Emerald
+      case authority: return const Color(0xFFB91C1C); // Deep Red
+      case member: return const Color(0xFF0369A1); // Deep Blue
+      case public: return Colors.grey;
     }
   }
 }
@@ -130,12 +110,8 @@ class UserProfile {
       role: EbzimRole.fromString(json['role'] ?? 'PUBLIC'),
       membershipBadge: json['membershipBadge'],
       status: json['status'] ?? 'ACTIVE',
-      membershipExpiry: json['membershipExpiry'] != null
-          ? DateTime.parse(json['membershipExpiry'])
-          : null,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : null,
+      membershipExpiry: json['membershipExpiry'] != null ? DateTime.parse(json['membershipExpiry']) : null,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       bio: profile['bio'],
     );
   }

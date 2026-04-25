@@ -30,7 +30,7 @@ class SettingsScreen extends ConsumerWidget {
           physics: const BouncingScrollPhysics(),
           slivers: [
             const EbzimSliverAppBar(),
-
+            
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24, 140, 24, 40),
@@ -38,69 +38,35 @@ class SettingsScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _SettingsSection(
-                      title: loc.settingsTitle,
+                      title: loc.settingsTitle, 
                       children: [
                         ListTile(
-                          leading: const Icon(
-                            Icons.language_rounded,
-                            color: AppTheme.accentColor,
-                            size: 22,
-                          ),
-                          title: Text(
-                            loc.settingsLang,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
+                          leading: const Icon(Icons.language_rounded, color: AppTheme.accentColor, size: 22),
+                          title: Text(loc.settingsLang, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16)),
                           trailing: DropdownButton<String>(
                             value: locale.languageCode,
-                            dropdownColor: isDark
-                                ? AppTheme.primaryColor.withValues(alpha: 0.95)
-                                : Colors.white,
+                            dropdownColor: isDark ? AppTheme.primaryColor.withValues(alpha: 0.95) : Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             underline: const SizedBox(),
-                            style: const TextStyle(
-                              color: AppTheme.accentColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: const TextStyle(color: AppTheme.accentColor, fontWeight: FontWeight.bold),
                             items: const [
-                              DropdownMenuItem(
-                                value: 'en',
-                                child: Text('English'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'ar',
-                                child: Text('العربية'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'fr',
-                                child: Text('Français'),
-                              ),
+                              DropdownMenuItem(value: 'en', child: Text('English')),
+                              DropdownMenuItem(value: 'ar', child: Text('العربية')),
+                              DropdownMenuItem(value: 'fr', child: Text('Français')),
                             ],
                             onChanged: (val) {
                               if (val != null) {
-                                ref
-                                    .read(localeProvider.notifier)
-                                    .setLocale(Locale(val));
+                                ref.read(localeProvider.notifier).setLocale(Locale(val));
                               }
                             },
                           ),
                         ),
                         const Divider(indent: 56),
                         ListTile(
-                          leading: const Icon(
-                            Icons.palette_outlined,
-                            color: AppTheme.accentColor,
-                            size: 22,
-                          ),
-                          title: Text(
-                            loc.settingsTheme,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
+                          leading: const Icon(Icons.palette_outlined, color: AppTheme.accentColor, size: 22),
+                          title: Text(loc.settingsTheme, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16)),
                           trailing: Switch.adaptive(
-                            value: isDark,
+                            value: isDark, 
                             activeTrackColor: AppTheme.accentColor,
                             onChanged: (v) {
                               ref.read(themeProvider.notifier).toggleTheme();
@@ -109,86 +75,37 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                         const Divider(indent: 56),
                         ListTile(
-                          leading: const Icon(
-                            Icons.notifications_none_rounded,
-                            color: AppTheme.accentColor,
-                            size: 22,
-                          ),
-                          title: Text(
-                            loc.settingsNotif,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right_rounded,
-                            color: isDark ? Colors.white24 : Colors.black26,
-                          ),
+                          leading: const Icon(Icons.notifications_none_rounded, color: AppTheme.accentColor, size: 22),
+                          title: Text(loc.settingsNotif, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16)),
+                          trailing: Icon(Icons.chevron_right_rounded, color: isDark ? Colors.white24 : Colors.black26),
                           onTap: () => context.push('/notifications'),
                         ),
                       ],
                     ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.05),
-
+                    
                     const SizedBox(height: 32),
-
+                    
                     _SettingsSection(
                       title: loc.settingsAbout,
                       children: [
                         ListTile(
-                          leading: const Icon(
-                            Icons.verified_user_outlined,
-                            color: AppTheme.accentColor,
-                            size: 22,
-                          ),
-                          title: Text(
-                            loc.settingsPrivacy,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.open_in_new_rounded,
-                            color: isDark ? Colors.white24 : Colors.black26,
-                            size: 18,
-                          ),
+                          leading: const Icon(Icons.verified_user_outlined, color: AppTheme.accentColor, size: 22),
+                          title: Text(loc.settingsPrivacy, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16)),
+                          trailing: Icon(Icons.open_in_new_rounded, color: isDark ? Colors.white24 : Colors.black26, size: 18),
                           onTap: () => context.push('/auth/privacy'),
                         ),
                         const Divider(indent: 56),
                         ListTile(
-                          leading: const Icon(
-                            Icons.help_outline_rounded,
-                            color: AppTheme.accentColor,
-                            size: 22,
-                          ),
-                          title: Text(
-                            loc.settingsHelp,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right_rounded,
-                            color: isDark ? Colors.white24 : Colors.black26,
-                          ),
-                          onTap: () => context.push('/support'),
+                          leading: const Icon(Icons.help_outline_rounded, color: AppTheme.accentColor, size: 22),
+                          title: Text(loc.settingsHelp, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16)),
+                          trailing: Icon(Icons.chevron_right_rounded, color: isDark ? Colors.white24 : Colors.black26),
+                          onTap: () => context.push('/support'), 
                         ),
                         const Divider(indent: 56),
                         ListTile(
-                          leading: const Icon(
-                            Icons.auto_awesome_outlined,
-                            color: AppTheme.accentColor,
-                            size: 22,
-                          ),
-                          title: Text(
-                            loc.settingsAbout,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right_rounded,
-                            color: isDark ? Colors.white24 : Colors.black26,
-                          ),
+                          leading: const Icon(Icons.auto_awesome_outlined, color: AppTheme.accentColor, size: 22),
+                          title: Text(loc.settingsAbout, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16)),
+                          trailing: Icon(Icons.chevron_right_rounded, color: isDark ? Colors.white24 : Colors.black26),
                           onTap: () => context.push('/about'),
                         ),
                       ],
@@ -206,33 +123,18 @@ class SettingsScreen extends ConsumerWidget {
                         },
                         borderRadius: BorderRadius.circular(20),
                         child: GlassCard(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 24,
-                          ),
-                          border: Border.all(
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.05)
-                                : Colors.black.withValues(alpha: 0.05),
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+                          border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.logout_rounded,
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.5)
-                                    : Colors.black.withValues(alpha: 0.5),
-                                size: 20,
-                              ),
+                              Icon(Icons.logout_rounded, color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.5), size: 20),
                               const SizedBox(width: 12),
                               Text(
-                                loc.settingsLogout,
+                                loc.settingsLogout, 
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.7)
-                                      : Colors.black.withValues(alpha: 0.7),
+                                  fontWeight: FontWeight.bold, 
+                                  color: isDark ? Colors.white.withValues(alpha: 0.7) : Colors.black.withValues(alpha: 0.7),
                                   fontSize: 16,
                                   letterSpacing: 1,
                                 ),
@@ -242,7 +144,7 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                       ),
                     ).animate().fadeIn(delay: 600.ms),
-
+                    
                     const SizedBox(height: 100),
                   ],
                 ),
@@ -269,11 +171,11 @@ class _SettingsSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
-            title.toUpperCase(),
+            title.toUpperCase(), 
             style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
+              fontSize: 10, 
+              fontWeight: FontWeight.bold, 
+              letterSpacing: 2, 
               color: AppTheme.accentColor,
             ),
           ),
@@ -281,7 +183,7 @@ class _SettingsSection extends StatelessWidget {
         GlassCard(
           padding: EdgeInsets.zero,
           child: Column(children: children),
-        ),
+        )
       ],
     );
   }

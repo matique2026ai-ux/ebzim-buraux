@@ -243,22 +243,16 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
               
               // Top Filter Bar
               Positioned(
-                top: MediaQuery.of(context).padding.top + 70,
-                left: 0, right: 0,
+                top: 100, left: 20, right: 20,
                 child: _buildFilterBar(isAr, isDark),
               ),
 
               // Selection Card
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutCubic,
-                bottom: _selectedItem != null ? 30 : -400,
-                left: 20,
-                right: 20,
-                child: _selectedItem == null
-                    ? const SizedBox.shrink()
-                    : _buildDetailCard(_selectedItem, isAr, isDark),
-              ),
+              if (_selectedItem != null)
+                Positioned(
+                  bottom: 20, left: 20, right: 20,
+                  child: _buildDetailCard(_selectedItem, isAr, isDark),
+                ),
 
               // Floating Layer Switcher
               PositionedDirectional(
@@ -345,8 +339,13 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
             boxShadow: [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 15, spreadRadius: 2)],
           ),
           child: Icon(icon, color: Colors.white, size: 22),
-        ).animate(target: isSelected ? 1 : 0)
-         .scale(duration: 400.ms, curve: Curves.elasticOut),
+        ).animate()
+         .scale(
+           duration: 400.ms, 
+           curve: Curves.elasticOut,
+           begin: const Offset(1, 1),
+           end: isSelected ? const Offset(1.2, 1.2) : const Offset(1, 1),
+         ),
       ],
     );
   }

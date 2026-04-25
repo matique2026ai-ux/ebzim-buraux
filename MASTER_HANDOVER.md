@@ -568,12 +568,11 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 
 21. **✅ [DONE] Cloud/Live Sync & Path Alignment (April 25, 2026)**:
     - **CRITICAL DISCOVERY**: Fixed a major desync where the Web app was pointing to `localhost:3000` (seeing local data) while the Mobile app was pointing to the Cloud (seeing nothing due to 404 on old `/activities` paths).
-    - **Action Taken**: 
+    - **Action Taken**:
         1. Renamed all API paths from `/activities` to `/events` globally (Frontend & Backend) to match the stable Cloud production environment.
         2. Unified `api_client_platform_web.dart` and `api_client_platform_io.dart` to point EXCLUSIVELY to the Render production URL.
     - **Outcome**: The browser now reflects the EXACT state of the cloud server, same as the phone, ensuring what you see in the IDE is what the user sees in the APK.
     - **Protocol Reinforcement**: NEVER trust `localhost` for testing production features. Always verify against the live Render API.
-
 
 **Current State: Admin Dashboard 100% modularized and stabilized. Dynamic Satellite Map successfully integrated. Infinite Spinner resolved. Backend schema updated to support content differentiation. Development workflow stabilized via Hot Restart pattern.**
 

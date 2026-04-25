@@ -42,9 +42,10 @@ class EbzimApp extends ConsumerWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: const [
-          Locale('ar'), // Arabic
-          Locale('en'), // English
-          Locale('fr'), // French
+          Locale('ar', 'DZ'), // Arabic (Algeria) - for Latin numbers
+          Locale('ar'),      // Generic Arabic
+          Locale('en'),      // English
+          Locale('fr'),      // French
         ],
         
         routerConfig: ref.watch(appRouterProvider),

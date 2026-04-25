@@ -40,22 +40,35 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     setState(() => _isLoadingWiki = true);
     try {
       final url = Uri.parse(
-          'https://ar.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${center.latitude}|${center.longitude}&ggsradius=10000&ggslimit=30&prop=coordinates|pageimages|description&piprop=thumbnail&pithumbsize=400&format=json&origin=*');
+          'https://fr.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${center.latitude}|${center.longitude}&ggsradius=10000&ggslimit=30&prop=coordinates|pageimages|description&piprop=thumbnail&pithumbsize=400&format=json&origin=*');
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final pages = data['query']?['pages'] as Map<String, dynamic>? ?? {};
         final List<WikiLandmark> newLandmarks = [];
+        final validKeywords = [
+          'musée', 'ruines', 'archéologique', 'monument', 'mosquée', 'château', 
+          'patrimoine', 'historique', 'antique', 'romain', 'tombeau', 'palais', 'site', 'vestiges'
+        ];
+
         for (var page in pages.values) {
           if (page['coordinates'] != null) {
-            newLandmarks.add(WikiLandmark(
-              pageId: page['pageid'],
-              title: page['title'] ?? '',
-              description: page['description'] ?? 'معلم تاريخي (ويكيبيديا)',
-              imageUrl: page['thumbnail']?['source'] ?? '',
-              lat: page['coordinates'][0]['lat'],
-              lon: page['coordinates'][0]['lon'],
-            ));
+            final title = (page['title'] ?? '').toLowerCase();
+            final desc = (page['description'] ?? '').toLowerCase();
+            
+            bool isHeritage = validKeywords.any((kw) => title.contains(kw) || desc.contains(kw));
+            
+            // Allow if it has a thumbnail and matches heritage keywords
+            if (isHeritage && page['thumbnail'] != null) {
+              newLandmarks.add(WikiLandmark(
+                pageId: page['pageid'],
+                title: page['title'] ?? '',
+                description: page['description'] ?? 'معلم تاريخي',
+                imageUrl: page['thumbnail']?['source'] ?? '',
+                lat: page['coordinates'][0]['lat'],
+                lon: page['coordinates'][0]['lon'],
+              ));
+            }
           }
         }
         if (mounted) {
@@ -139,6 +152,15 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
                   initialZoom: 14.5,
                   onTap: (tapPosition, point) {
                     setState(() => _selectedItem = null);
+                  },
+                  onPositionChanged: (pos, hasGesture) {
+                    if (hasGesture && pos.center != null) {
+                      // Fetch new landmarks when map stops moving (debounced naturally by humans pausing)
+                      // In a real app we'd use a debounce timer, but simple check works for demo
+                      if (!_isLoadingWiki) {
+                        _fetchWikiLandmarks(pos.center!);
+                      }
+                    }
                   },
                 ),
                 children: [

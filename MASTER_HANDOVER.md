@@ -358,6 +358,7 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 13. **✅ [DONE] Backend Stability**: Resolved critical merge conflicts in `app.controller.ts` and cleared port 3000 zombies to ensure reliable local development.
 14. **✅ [DONE] Map Logic & UX Refactoring**: Resolved the logical gap between the CMS and the Map screen. Added a satellite map picker to the admin dashboard, and converted the public map into a dynamic, filterable discovery engine.
 15. **✅ [DONE] Global Category & Logic Synchronization:** Enforced strict `contentType` checking ('PROJECT' vs 'NEWS') on the Home Screen. Synchronized public project filter chips and card labels to perfectly match the 6 official associative standards established in the Admin Dashboard.
+16. **✅ [DONE] Wikipedia Global Heritage API:** Integrated the Wikipedia GeoSearch API (fr.wikipedia.org) to dynamically fetch global historical landmarks as the user pans the map. Added a smart 'Heritage Filter' to exclude non-historical POIs (airports, modern buildings) and ensure only museums, archaeological sites, and monuments render dynamically alongside localized data.
 
 ---
 

@@ -246,23 +246,17 @@ class _SearchAndFilterBar extends ConsumerWidget {
             children: [
               _buildFilterChip(context, ref, 'all', isAr ? 'الكل' : 'Tous', filter == 'all'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'heritage', isAr ? 'تراثي' : 'Patrimonial', filter == 'heritage'),
+              _buildFilterChip(context, ref, 'associative', isAr ? 'نشاط جمعوي' : 'Activité Associative', filter == 'associative'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'scientific', isAr ? 'علمي' : 'Scientifique', filter == 'scientific'),
+              _buildFilterChip(context, ref, 'project', isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel', filter == 'project'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'cultural', isAr ? 'ثقافي' : 'Culturel', filter == 'cultural'),
+              _buildFilterChip(context, ref, 'restoration', isAr ? 'حماية التراث' : 'Protection du Patrimoine', filter == 'restoration'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'artistic', isAr ? 'فني' : 'Artistique', filter == 'artistic'),
+              _buildFilterChip(context, ref, 'cultural', isAr ? 'نشاط ثقافي' : 'Activité Culturelle', filter == 'cultural'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'restoration', isAr ? 'ترميم' : 'Restauration', filter == 'restoration'),
+              _buildFilterChip(context, ref, 'social', isAr ? 'مبادرة اجتماعية' : 'Initiative Sociale', filter == 'social'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'partnership', isAr ? 'شراكة' : 'Partenariat', filter == 'partnership'),
-              const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'event_report', isAr ? 'تقارير' : 'Rapports', filter == 'event_report'),
-              const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'associative', isAr ? 'جمعوي' : 'Associatif', filter == 'associative'),
-              const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'social', isAr ? 'اجتماعي' : 'Social', filter == 'social'),
+              _buildFilterChip(context, ref, 'scientific', isAr ? 'بحث علمي' : 'Recherche Scientifique', filter == 'scientific'),
             ],
           ),
         ),
@@ -307,20 +301,13 @@ class _ProjectCard extends StatelessWidget {
 
   String _getCategoryLabel(String category, bool isAr) {
     switch (category.toUpperCase()) {
-      case 'HERITAGE': return isAr ? 'تراثي' : 'Patrimonial';
-      case 'PROJECT': return isAr ? 'مشروع ميداني' : 'Projet Terrain';
-      case 'RESTORATION': return isAr ? 'ترميم' : 'Restauration';
-      case 'CULTURAL': return isAr ? 'ثقافي' : 'Culturel';
-      case 'SCIENTIFIC': return isAr ? 'علمي' : 'Scientifique';
-      case 'ARTISTIC': return isAr ? 'فني' : 'Artistique';
-      case 'PARTNERSHIP': return isAr ? 'شراكة إستراتيجية' : 'Partenariat Stratégique';
-      case 'EVENT_REPORT': return isAr ? 'تقرير ميداني' : 'Rapport Terrain';
-      case 'MEMORY': return isAr ? 'ذاكرة وطنية' : 'Mémoire Nationale';
-      case 'TOURISM': return isAr ? 'سياحي' : 'Touristique';
-      case 'CHILD': return isAr ? 'طفولة' : 'Enfance';
+      case 'PROJECT': return isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel';
+      case 'RESTORATION': return isAr ? 'حماية التراث والآثار' : 'Protection du Patrimoine';
+      case 'CULTURAL': return isAr ? 'مهرجان / نشاط ثقافي' : 'Activité Culturelle';
+      case 'SCIENTIFIC': return isAr ? 'ندوة / بحث علمي' : 'Recherche Scientifique';
       case 'ASSOCIATIVE': return isAr ? 'نشاط جمعوي' : 'Activité Associative';
-      case 'SOCIAL': return isAr ? 'عمل اجتماعي' : 'Action Sociale';
-      default: return isAr ? 'نشاط عام' : 'Activité Générale';
+      case 'SOCIAL': return isAr ? 'مبادرة اجتماعية' : 'Initiative Sociale';
+      default: return isAr ? 'مشروع ميداني' : 'Projet Terrain';
     }
   }
 
@@ -522,20 +509,13 @@ class _ProjectDetailsSheet extends StatelessWidget {
 
   String _getCategoryLabel(String category, bool isAr) {
     switch (category.toUpperCase()) {
-      case 'HERITAGE': return isAr ? 'تراثي' : 'Patrimonial';
-      case 'PROJECT': return isAr ? 'مشروع ميداني' : 'Projet Terrain';
-      case 'RESTORATION': return isAr ? 'ترميم' : 'Restauration';
-      case 'CULTURAL': return isAr ? 'ثقافي' : 'Culturel';
-      case 'SCIENTIFIC': return isAr ? 'علمي' : 'Scientifique';
-      case 'ARTISTIC': return isAr ? 'فني' : 'Artistique';
-      case 'PARTNERSHIP': return isAr ? 'شراكة إستراتيجية' : 'Partenariat Stratégique';
-      case 'EVENT_REPORT': return isAr ? 'تقرير ميداني' : 'Rapport Terrain';
-      case 'MEMORY': return isAr ? 'ذاكرة وطنية' : 'Mémoire Nationale';
-      case 'TOURISM': return isAr ? 'سياحي' : 'Touristique';
-      case 'CHILD': return isAr ? 'طفولة' : 'Enfance';
+      case 'PROJECT': return isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel';
+      case 'RESTORATION': return isAr ? 'حماية التراث والآثار' : 'Protection du Patrimoine';
+      case 'CULTURAL': return isAr ? 'مهرجان / نشاط ثقافي' : 'Activité Culturelle';
+      case 'SCIENTIFIC': return isAr ? 'ندوة / بحث علمي' : 'Recherche Scientifique';
       case 'ASSOCIATIVE': return isAr ? 'نشاط جمعوي' : 'Activité Associative';
-      case 'SOCIAL': return isAr ? 'عمل اجتماعي' : 'Action Sociale';
-      default: return isAr ? 'نشاط عام' : 'Activité Générale';
+      case 'SOCIAL': return isAr ? 'مبادرة اجتماعية' : 'Initiative Sociale';
+      default: return isAr ? 'مشروع ميداني' : 'Projet Terrain';
     }
   }
 

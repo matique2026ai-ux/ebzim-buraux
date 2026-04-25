@@ -100,7 +100,13 @@ export class EventsController {
   }
 
   @Get('detail/:id')
-  @ApiOperation({ summary: 'Get single event details' })
+  @ApiOperation({ summary: 'Get single event details (by detail path)' })
+  async findOneByDetail(@Param('id') id: string) {
+    return this.eventsService.findOne(id);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get single event details (by id)' })
   async findOne(@Param('id') id: string) {
     return this.eventsService.findOne(id);
   }

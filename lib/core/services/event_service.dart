@@ -210,7 +210,7 @@ class EventService {
         .read(apiClientProvider)
         .dio
         .get(
-          'events/detail/$id',
+          'events/$id',
           options: Options(headers: {'Accept-Language': lang}),
         );
 

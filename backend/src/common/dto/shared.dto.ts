@@ -2,7 +2,9 @@ import {
   IsString,
   IsOptional,
   IsNotEmpty,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class MultilingualTextDto {
   @IsString()
@@ -10,12 +12,10 @@ export class MultilingualTextDto {
   ar: string;
 
   @IsString()
-  @IsOptional()
-  fr?: string;
+  fr: string;
 
   @IsString()
-  @IsOptional()
-  en?: string;
+  en: string;
 }
 
 export class LocationDataDto {

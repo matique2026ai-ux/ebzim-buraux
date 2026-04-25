@@ -27,7 +27,9 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
 
   dynamic _selectedItem;
   List<WikiLandmark> _wikiLandmarks = [];
+  final Set<int> _loadedWikiIds = {}; // Track IDs to prevent duplicates
   bool _isLoadingWiki = false;
+  LatLng? _lastFetchCenter;
 
   // Global Wonders to show when zooming out
   final List<WikiLandmark> _globalWonders = [
@@ -82,14 +84,17 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     if (_isLoadingWiki) return;
     setState(() => _isLoadingWiki = true);
     try {
+      final lang = ref.read(localeProvider).languageCode;
+      final wikiSub = lang == 'ar' ? 'ar' : (lang == 'fr' ? 'fr' : 'en');
       final url = Uri.parse(
-          'https://fr.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${center.latitude}|${center.longitude}&ggsradius=10000&ggslimit=30&prop=coordinates|pageimages|description&piprop=thumbnail&pithumbsize=400&format=json&origin=*');
+          'https://$wikiSub.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${center.latitude}|${center.longitude}&ggsradius=10000&ggslimit=30&prop=coordinates|pageimages|description&piprop=thumbnail&pithumbsize=400&format=json&origin=*');
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final pages = data['query']?['pages'] as Map<String, dynamic>? ?? {};
         final List<WikiLandmark> newLandmarks = [];
-        // Blacklist approach: exclude modern/irrelevant infrastructure instead of restricting to strict heritage keywords
+        
+        // ... (blacklist logic)
         final blacklistedKeywords = [
           'aeroport', 'universite', 'stade', 'hopital', 'gare', 'clinique', 
           'ecole', 'lycee', 'hotel', 'commune', 'wilaya', 'daira', 'entreprise',
@@ -97,16 +102,17 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
         ];
 
         for (var page in pages.values) {
-          if (page['coordinates'] != null) {
+          final int pageId = page['pageid'] ?? 0;
+          if (page['coordinates'] != null && !_loadedWikiIds.contains(pageId)) {
             final title = _stripDiacritics((page['title'] ?? '').toLowerCase());
             final desc = _stripDiacritics((page['description'] ?? '').toLowerCase());
             
             bool isBlacklisted = blacklistedKeywords.any((kw) => title.contains(kw) || desc.contains(kw));
             
-            // Allow if it has a thumbnail and is NOT blacklisted
             if (!isBlacklisted && page['thumbnail'] != null) {
+              _loadedWikiIds.add(pageId);
               newLandmarks.add(WikiLandmark(
-                pageId: page['pageid'],
+                pageId: pageId,
                 title: page['title'] ?? '',
                 description: page['description'] ?? 'معلم أو مكان بارز',
                 imageUrl: page['thumbnail']?['source'] ?? '',
@@ -118,7 +124,8 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
         }
         if (mounted) {
           setState(() {
-            _wikiLandmarks = newLandmarks;
+            _wikiLandmarks.addAll(newLandmarks);
+            _lastFetchCenter = center;
           });
         }
       }
@@ -207,9 +214,14 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
                   },
                   onPositionChanged: (pos, hasGesture) {
                     if (hasGesture && pos.center != null) {
-                      // Fetch new landmarks when map stops moving (debounced naturally by humans pausing)
-                      // In a real app we'd use a debounce timer, but simple check works for demo
-                      if (!_isLoadingWiki) {
+                      // Only fetch if moved more than ~2km from last fetch
+                      double distance = 0;
+                      if (_lastFetchCenter != null) {
+                        const Distance distanceCalculator = Distance();
+                        distance = distanceCalculator.as(LengthUnit.Meter, _lastFetchCenter!, pos.center!);
+                      }
+
+                      if (!_isLoadingWiki && (_lastFetchCenter == null || distance > 2000)) {
                         _fetchWikiLandmarks(pos.center!);
                       }
                     }

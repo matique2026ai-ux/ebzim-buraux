@@ -83,7 +83,10 @@ export class EventsController {
   @Roles(Role.SUPER_ADMIN, Role.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an existing event' })
-  async updateEvent(@Param('id') id: string, @Body() updateData: any) {
+  async updateEvent(
+    @Param('id') id: string,
+    @Body() updateData: Record<string, any>,
+  ) {
     return this.eventsService.updateEvent(id, updateData);
   }
 

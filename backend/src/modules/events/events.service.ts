@@ -21,15 +21,14 @@ export class EventsService {
     const limit = options.limit && options.limit > 0 ? options.limit : 10;
     const query: any = { publicationStatus: 'PUBLISHED' };
 
+    // If a cursor is provided, we can use it for pagination, but we don't force 'upcoming only' by default anymore
     if (options.cursor) {
-      query.startDate = { $gte: new Date(options.cursor) }; // Fetch upcoming
-    } else {
-      query.startDate = { $gte: new Date() }; // Default: From now
+      query.startDate = { $lt: new Date(options.cursor) }; 
     }
 
     const events = await this.eventModel
       .find(query)
-      .sort({ startDate: 1 }) // Chronological order
+      .sort({ startDate: -1 }) // Show latest first (including recent past)
       .limit(limit)
       .exec();
 

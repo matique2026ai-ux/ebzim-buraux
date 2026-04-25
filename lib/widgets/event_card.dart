@@ -18,9 +18,11 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lang = Localizations.localeOf(context).languageCode;
-    final monthFormat = DateFormat('MMM', lang);
-    final dayFormat = DateFormat('dd');
+    final locale = Localizations.localeOf(context);
+    final lang = locale.languageCode;
+    final fullLocale = locale.toString();
+    final monthFormat = DateFormat('MMM', fullLocale);
+    final dayFormat = DateFormat('dd', fullLocale);
     final theme = Theme.of(context);
 
     return GestureDetector(

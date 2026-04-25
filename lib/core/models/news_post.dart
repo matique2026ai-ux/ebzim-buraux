@@ -103,7 +103,12 @@ class NewsPost {
     required this.publishedAt,
     this.milestones = const [],
     this.partnerName,
+    this.latitude,
+    this.longitude,
   });
+
+  final double? latitude;
+  final double? longitude;
 
   factory NewsPost.fromJson(Map<String, dynamic> json) {
     final title = json['title'] is Map ? json['title'] : {};
@@ -158,6 +163,8 @@ class NewsPost {
       publishedAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
       milestones: miles,
       partnerName: metadata['partnerName'],
+      latitude: metadata['latitude'] != null ? double.tryParse(metadata['latitude'].toString()) : null,
+      longitude: metadata['longitude'] != null ? double.tryParse(metadata['longitude'].toString()) : null,
     );
   }
 

@@ -27,8 +27,10 @@ class EventDetailsScreen extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.accentColor)),
           error: (e, s) => Center(child: Text(e.toString(), style: const TextStyle(color: Colors.white))),
           data: (event) {
-            final lang = Localizations.localeOf(context).languageCode;
-            final dateFormat = DateFormat('MMMM dd, yyyy', lang);
+            final locale = Localizations.localeOf(context);
+            final lang = locale.languageCode;
+            final fullLocale = locale.toString();
+            final dateFormat = DateFormat('MMMM dd, yyyy', fullLocale);
             final title = event.getTitle(lang);
             final description = event.getDescription(lang);
             final location = event.getLocation(lang);
@@ -106,7 +108,7 @@ class EventDetailsScreen extends ConsumerWidget {
                           runSpacing: 16,
                           children: [
                             _buildIconLabel(Icons.calendar_today, dateFormat.format(event.date)),
-                            _buildIconLabel(Icons.schedule, DateFormat('HH:mm').format(event.date)),
+                            _buildIconLabel(Icons.schedule, DateFormat('HH:mm', fullLocale).format(event.date)),
                             _buildIconLabel(Icons.location_on_outlined, location),
                           ],
                         ),

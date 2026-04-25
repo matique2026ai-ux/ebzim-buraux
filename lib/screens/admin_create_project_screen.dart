@@ -12,6 +12,8 @@ import 'package:ebzim_app/core/common_widgets/ebzim_image.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class AdminCreateProjectScreen extends ConsumerStatefulWidget {
   final NewsPost? existingPost;
@@ -38,6 +40,8 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
   late TextEditingController _contentArController;
   late TextEditingController _contentFrController;
   late TextEditingController _contentEnController;
+  late TextEditingController _latController;
+  late TextEditingController _lngController;
   
   String _category = 'RESTORATION';
   String _status = 'PREPARING';
@@ -59,6 +63,8 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
     _contentArController = TextEditingController(text: widget.existingPost?.bodyAr ?? '');
     _contentFrController = TextEditingController(text: widget.existingPost?.bodyFr ?? '');
     _contentEnController = TextEditingController(text: widget.existingPost?.bodyEn ?? '');
+    _latController = TextEditingController(text: widget.existingPost?.latitude?.toString() ?? '');
+    _lngController = TextEditingController(text: widget.existingPost?.longitude?.toString() ?? '');
     
     if (widget.existingPost != null) {
       _category = widget.existingPost!.category;
@@ -82,6 +88,8 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
     _contentArController.dispose();
     _contentFrController.dispose();
     _contentEnController.dispose();
+    _latController.dispose();
+    _lngController.dispose();
     super.dispose();
   }
 
@@ -95,6 +103,8 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
         'milestones': _milestones.map((m) => m.toJson()).toList(),
         'projectStatus': _status,
         'category': _category,
+        'latitude': double.tryParse(_latController.text),
+        'longitude': double.tryParse(_lngController.text),
       };
 
       if (widget.existingPost != null) {
@@ -287,6 +297,32 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                     _buildCategoryDropdown(),
                     const SizedBox(height: 16),
                     _buildStatusDropdown(),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader('الموقع الجغرافي (على الخريطة)', Icons.map_rounded),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            controller: _latController,
+                            label: 'خط العرض (Lat)',
+                            hint: '36.1895',
+                            icon: Icons.location_on_outlined,
+                            isRequired: false,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildTextField(
+                            controller: _lngController,
+                            label: 'خط الطول (Lng)',
+                            hint: '5.4098',
+                            icon: Icons.location_on_outlined,
+                            isRequired: false,
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 24),
                     _buildProgressSlider(),
                     const SizedBox(height: 32),
@@ -310,6 +346,10 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                         ),
                       ),
                     ],
+                    const SizedBox(height: 32),
+                    _buildSectionHeader('تحديد الموقع بدقة', Icons.ads_click_rounded),
+                    const SizedBox(height: 16),
+                    _buildMapPicker(),
                     const SizedBox(height: 40),
                     _buildSubmitButton(),
                     const SizedBox(height: 60),
@@ -725,6 +765,72 @@ class _AdminCreateProjectScreenState extends ConsumerState<AdminCreateProjectScr
                           ),
                         ],
                       ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMapPicker() {
+    final lat = double.tryParse(_latController.text) ?? 36.1915;
+    final lng = double.tryParse(_lngController.text) ?? 5.4110;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      children: [
+        Container(
+          height: 300,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withOpacity(0.1)),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: FlutterMap(
+              options: MapOptions(
+                initialCenter: LatLng(lat, lng),
+                initialZoom: 13,
+                onTap: (tapPosition, point) {
+                  setState(() {
+                    _latController.text = point.latitude.toStringAsFixed(6);
+                    _lngController.text = point.longitude.toStringAsFixed(6);
+                  });
+                },
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                  userAgentPackageName: 'com.ebzim.app',
+                ),
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: LatLng(
+                        double.tryParse(_latController.text) ?? lat,
+                        double.tryParse(_lngController.text) ?? lng,
+                      ),
+                      width: 50,
+                      height: 50,
+                      child: const Icon(
+                        Icons.location_on_rounded,
+                        color: AppTheme.accentColor,
+                        size: 40,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'انقر على الخريطة لتحديد موقع المشروع بدقة',
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.5),
+            fontSize: 12,
+            fontFamily: 'Cairo',
           ),
         ),
       ],

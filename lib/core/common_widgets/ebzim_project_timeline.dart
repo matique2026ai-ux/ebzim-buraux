@@ -24,6 +24,17 @@ class EbzimProjectTimeline extends StatelessWidget {
         final milestone = entry.value;
         final isLast = idx == milestones.length - 1;
 
+        String formattedDate = DateFormat.yMMMMd(isAr ? 'ar_DZ' : 'fr').format(milestone.date);
+        
+        // Forced conversion to Latin numerals to be 100% sure
+        if (isAr) {
+          final eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+          final western = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+          for (int i = 0; i < 10; i++) {
+            formattedDate = formattedDate.replaceAll(eastern[i], western[i]);
+          }
+        }
+
         return IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +90,7 @@ class EbzimProjectTimeline extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        DateFormat.yMMMMd(isAr ? 'ar' : 'fr').format(milestone.date),
+                        formattedDate,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.6),
                           fontSize: 12,

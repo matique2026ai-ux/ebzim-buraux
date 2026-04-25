@@ -80,7 +80,7 @@ c:\ebzim-buraux\
 ### Step 2 — Configure API for Live Testing (THE GOLDEN RULE)
 
 > [!CAUTION]
-> **MANDATORY:** We ALWAYS test against LIVE data even in development mode. However, for **Deep Backend Debugging** (e.g., modifying stats or schemas), you may switch to `localhost:3000` in `lib/core/services/api_client_platform_web.dart`. Just ensure you revert to the Production URL before pushing to Git.
+> **MANDATORY:** We ALWAYS test against LIVE data even in development mode. For **Deep Backend Debugging** (e.g., modifying stats or schemas), you may switch to `localhost:3000` in `lib/core/services/api_client_platform_web.dart`. Just ensure you revert to the Production URL before pushing to Git.
 
 Go to `lib/core/services/api_client_platform_web.dart` and ensure `getPlatformBaseUrl` returns the **Production URL**:
 
@@ -297,6 +297,8 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 - **Financial Contributions:** Linked to projects. Payment receipts tracked.
 - **Live Stats:** `publicStatsProvider` feeds the `StatsStrip` widget on both Home and Admin screens.
 - **[APRIL 25] News & Projects Separation:** Complete structural separation achieved. News has `newsType` (Urgent/Important/Normal) and Projects have enforced `contentType: 'PROJECT'`.
+- **[APRIL 25] Dynamic Geospatial Map:** Overhauled the public `/heritage` map to fetch live projects with coordinates. Replaced the static pale map with an interactive high-resolution Satellite Map (Esri World Imagery) and a top-level category filter (`All`, `Heritage`, `Associative`, `Cultural`).
+- **[APRIL 25] Interactive Location Picker:** Upgraded the Admin Project Creation screen with an interactive `flutter_map` widget. Admins can now simply tap the map to precisely capture latitude/longitude without manual data entry.
 
 ---
 
@@ -328,25 +330,36 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 
 ---
 
-## 📌 10. Immediate Priorities for the Next Agent
+## 🚀 10. Recommended Stable Development Workflow
+To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent Hang" syndrome), the following methodology is currently employed and highly recommended:
+1. **Targeted Micro-Edits**: Instead of rewriting entire files, updates are applied via precise chunk replacements (`replace_file_content` tools).
+2. **Instant Hot Restart Validation**: After a UI or logical change is applied, a `Hot Restart` (`R` via command input) is sent to the running Flutter web process on port 8080. This instantly flushes the state and applies the new code without requiring a full rebuild or stopping the server.
+3. **Continuous State Tracking**: The NestJS backend remains untouched unless the DTO/Schema demands a change, isolating frontend rapid-prototyping from backend recompilation.
+
+---
+
+## 📌 11. Immediate Priorities for the Next Agent
 
 1. **✅ [DONE] Identity Architecture Migration:** Replaced the string-based `membershipLevel` with a type-safe `EbzimRole` enum across all authentication, routing, and administrative modules.
 2. **✅ [DONE] Branding Simplification:** Condensed the platform title to "إبزيم | Ebzim" across `main.dart`, `web/index.html`, and all UI surfaces.
 3. **✅ [DONE] Null-Safety Hardening:** Applied project-wide null-safety fixes for user data (especially `imageUrl` and `phone`) to prevent runtime crashes.
-4. **✅ [DONE] infinite Loading Resolution:** Eliminated all `SlideTransition` usage in the router as it was confirmed to cause infinite hangs on Flutter Web.
+4. **✅ [DONE] Infinite Loading Resolution:** Eliminated all `SlideTransition` usage in the router as it was confirmed to cause infinite hangs on Flutter Web.
 5. **✅ [DONE] Model Enhancement:** Added `profileCompletionPercentage` and `getName(lang)` methods to `UserProfile` for a professional UI experience.
 6. **✅ [DONE] Admin Lockout Prevention:** Updated backend `AuthService` to allow login for both `ACTIVE` and `APPROVED` statuses, preventing lockout when admins update their own membership status.
 7. **✅ [DONE] Profile Completion (100%):** Added the missing 'Bio' field to `edit_profile_screen.dart` and implemented 'Smart Routing' in `UserProfileService` to handle production API sync delays.
 8. **✅ [DONE] Project Content Persistence & UX:** Resolved image saving/parsing issues by implementing a fallback for `imageUrl` in the model and adding provider invalidation in the Admin UI.
 9. **✅ [DONE] Category Alignment:** Expanded project support to include `ASSOCIATIVE` and `SOCIAL` categories.
 10. **✅ [DONE] Image Stability:** Fixed "EncodingError" on web by sanitizing URLs (trimming) and using `CachedNetworkImage` across all critical components.
-11. **✅ [DONE] Structural News/Project Separation:** Successfully decoupled news from projects at the DB, API, and UI levels.
+11. **✅ [DONE] Global Numeral Standardization**: Switched Arabic locale to `ar_DZ` and updated all `DateFormat` instances to use full locale strings. This forces the use of Latin numerals (0, 1, 2...) instead of Eastern Arabic ones, providing a modern look consistent with North African standards.
+12. **✅ [DONE] Backend-Frontend Mapping Integrity**: Fixed the `posts.service.ts` mapping to ensure `metadata` (milestones/progress) and `createdAt` are preserved during DTO transformation.
+13. **✅ [DONE] Backend Stability**: Resolved critical merge conflicts in `app.controller.ts` and cleared port 3000 zombies to ensure reliable local development.
+14. **✅ [DONE] Map Logic & UX Refactoring**: Resolved the logical gap between the CMS and the Map screen. Added a satellite map picker to the admin dashboard, and converted the public map into a dynamic, filterable discovery engine.
 
 ---
 
-### 🏁 Handover Status: STABLE & MODULARIZED — Last updated: April 25, 2026
+### 🏁 Handover Status: STABLE, MODULARIZED & DYNAMIC — Last updated: April 25, 2026
 
-**Current State: Admin Dashboard 100% modularized and stabilized. News and Projects are completely separated with dedicated schemas and specialized creation screens. Infinite Spinner resolved. Backend schema updated to support content differentiation.**
+**Current State: Admin Dashboard 100% modularized and stabilized. Dynamic Satellite Map successfully integrated. Infinite Spinner resolved. Backend schema updated to support content differentiation. Development workflow stabilized via Hot Restart pattern.**
 
 ### 🚨 NEXT AGENT FOCUS
 

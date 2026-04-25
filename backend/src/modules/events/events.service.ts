@@ -19,18 +19,18 @@ export class EventsService {
     locale: string,
     options: { limit?: number; cursor?: string },
   ) {
-    // For events, cursor could reasonably be startDate instead of _id to fetch approaching ones
     const limit = options.limit && options.limit > 0 ? options.limit : 10;
-    const query: any = { publicationStatus: 'PUBLISHED' };
+    
+    // Explicitly type the query to avoid 'any' member access errors
+    const query: Record<string, any> = { publicationStatus: 'PUBLISHED' };
 
-    // If a cursor is provided, we can use it for pagination, but we don't force 'upcoming only' by default anymore
     if (options.cursor) {
       query.startDate = { $lt: new Date(options.cursor) };
     }
 
     const events = await this.eventModel
-      .find(query)
-      .sort({ startDate: -1 }) // Show latest first (including recent past)
+      .find(query as Record<string, any>)
+      .sort({ startDate: -1 })
       .limit(limit)
       .exec();
 
@@ -51,7 +51,7 @@ export class EventsService {
     return { data: localizedEvents, meta: { nextCursor, hasNextPage } };
   }
 
-  async getAdminTable(options: any) {
+  async getAdminTable(options: { page?: number; limit?: number }) {
     const { skip, limit, page } = buildOffsetPagination(options);
     const [events, total] = await Promise.all([
       this.eventModel
@@ -69,7 +69,7 @@ export class EventsService {
     return this.eventModel.create(dto);
   }
 
-  async updateEvent(id: string, dto: any) {
+  async updateEvent(id: string, dto: Record<string, any>) {
     return this.eventModel.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 
@@ -88,8 +88,10 @@ export class EventsService {
         userId,
         status: 'REGISTERED',
       });
-    } catch (e: any) {
-      if (e.code === 11000) {
+    } catch (e: unknown) {
+      // Use type guard or cast to handle 'code' property
+      const error = e as { code?: number };
+      if (error.code === 11000) {
         throw new ConflictException(
           'User already formally registered for this event',
         );

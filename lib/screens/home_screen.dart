@@ -123,52 +123,6 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
 
-          // ════════════════════════════════════════
-          // INSTITUTIONAL PROJECTS SECTION
-          // ════════════════════════════════════════
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
-              child: _SectionHeader(
-                title: lang == 'ar' ? 'المشاريع المؤسساتية' : 'Projets Institutionnels',
-                onViewAll: () => context.go('/heritage'),
-                lang: lang,
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: newsAsync.when(
-              data: (posts) {
-                // Filter specifically for projects
-                final projects = posts.where((p) => 
-                  p.contentType == 'PROJECT' || p.isFieldProject
-                ).take(4).toList();
-
-                if (projects.isEmpty) return const SizedBox.shrink();
-
-                return SizedBox(
-                  height: 360,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: projects.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 16),
-                    itemBuilder: (ctx, index) {
-                      final project = projects[index];
-                      return _HomeProjectCard(
-                        project: project,
-                        lang: lang,
-                        isDark: theme.brightness == Brightness.dark,
-                      ).animate(delay: (index * 150).ms).fadeIn(duration: 600.ms).slideX(begin: 0.1);
-                    },
-                  ),
-                );
-              },
-              loading: () => const SizedBox(height: 340, child: Center(child: CircularProgressIndicator())),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-          ),
 
           // ════════════════════════════════════════
           // PARTNERSHIPS BANNER
@@ -1281,104 +1235,132 @@ class _InstitutionalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color cardBgStrong = isDark ? const Color(0xFF0F1A0F) : Colors.white;
-    Color textPrimary = isDark ? Colors.white : const Color(0xFF1A1C1A);
-    Color textMuted = isDark ? const Color(0x73FFFFFF) : Colors.black54;
+    final Color cardBg = isDark
+        ? const Color(0xFF0D1117).withValues(alpha: 0.85)
+        : Colors.white.withValues(alpha: 0.9);
+    final Color textPrimary = isDark ? Colors.white : const Color(0xFF0D1117);
+    final Color textMuted = isDark ? const Color(0x99FFFFFF) : const Color(0x88000000);
+    final Color glowColor = iconColor.withValues(alpha: isDark ? 0.25 : 0.12);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: cardBgStrong,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: isDark ? iconColor.withValues(alpha: 0.2) : iconColor.withValues(alpha: 0.1),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: cardBg,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: iconColor.withValues(alpha: 0.35),
+            width: 1.2,
           ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(24),
-          splashColor: iconColor.withValues(alpha: 0.1),
-          child: Padding(
-            padding: const EdgeInsets.all(22),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
+          boxShadow: [
+            BoxShadow(
+              color: iconColor.withValues(alpha: isDark ? 0.18 : 0.08),
+              blurRadius: 24,
+              spreadRadius: -4,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            children: [
+              // Glow background blob
+              PositionedDirectional(
+                top: -20,
+                start: -20,
+                child: Container(
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
-                    color: iconColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: iconColor.withValues(alpha: 0.2)),
+                    shape: BoxShape.circle,
+                    color: glowColor,
                   ),
-                  child: Icon(icon, color: iconColor, size: 28),
-                ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(0.95, 0.95), end: const Offset(1.05, 1.05), duration: 2.seconds),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        tag,
-                        style: GoogleFonts.tajawal(
-                          color: iconColor,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.2,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                child: Row(
+                  children: [
+                    // Animated icon
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [iconColor.withValues(alpha: 0.25), iconColor.withValues(alpha: 0.08)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: iconColor.withValues(alpha: 0.4), width: 1.5),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        title,
-                        style: GoogleFonts.tajawal(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.cairo(
-                          fontSize: 13,
-                          color: textMuted,
-                          height: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      Row(
+                      child: Icon(icon, color: iconColor, size: 26),
+                    ).animate(onPlay: (c) => c.repeat(reverse: true))
+                      .scaleXY(begin: 0.96, end: 1.04, duration: 2200.ms, curve: Curves.easeInOut),
+                    const SizedBox(width: 18),
+                    // Text content
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            buttonLabel,
-                            style: GoogleFonts.cairo(
+                            tag.toUpperCase(),
+                            style: GoogleFonts.tajawal(
                               color: iconColor,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w800,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 1.5,
                             ),
                           ),
-                          const SizedBox(width: 6),
-                          Icon(buttonIcon, color: iconColor, size: 16),
+                          const SizedBox(height: 5),
+                          Text(
+                            title,
+                            style: GoogleFonts.tajawal(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900,
+                              color: textPrimary,
+                              height: 1.2,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            subtitle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.cairo(
+                              fontSize: 12,
+                              color: textMuted,
+                              height: 1.5,
+                            ),
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Arrow button
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: iconColor.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: iconColor.withValues(alpha: 0.3)),
+                      ),
+                      child: Icon(buttonIcon, color: iconColor, size: 16),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ),
-    ).animate().fadeIn(delay: Duration(milliseconds: delay)).slideX(begin: 0.05);
+      )
+      .animate(delay: delay.ms)
+      .fadeIn(duration: 600.ms)
+      .slideY(begin: 0.12, curve: Curves.easeOutCubic),
+    );
   }
 }
 

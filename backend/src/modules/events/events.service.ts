@@ -1,6 +1,6 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, FilterQuery, UpdateQuery } from 'mongoose';
+import { Model } from 'mongoose';
 import { EventDocument, EventRsvpDocument } from './schemas/event.schema';
 import {
   buildOffsetPagination,
@@ -15,10 +15,13 @@ export class EventsService {
     @InjectModel('EventRsvp') private rsvpModel: Model<EventRsvpDocument>,
   ) {}
 
-  async getPublicFeed(locale: string, options: { limit?: number; cursor?: string }) {
+  async getPublicFeed(
+    locale: string,
+    options: { limit?: number; cursor?: string },
+  ) {
     // For events, cursor could reasonably be startDate instead of _id to fetch approaching ones
     const limit = options.limit && options.limit > 0 ? options.limit : 10;
-    const query: FilterQuery<EventDocument> = { publicationStatus: 'PUBLISHED' };
+    const query: any = { publicationStatus: 'PUBLISHED' };
 
     // If a cursor is provided, we can use it for pagination, but we don't force 'upcoming only' by default anymore
     if (options.cursor) {
@@ -66,7 +69,7 @@ export class EventsService {
     return this.eventModel.create(dto);
   }
 
-  async updateEvent(id: string, dto: UpdateQuery<EventDocument>) {
+  async updateEvent(id: string, dto: any) {
     return this.eventModel.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 

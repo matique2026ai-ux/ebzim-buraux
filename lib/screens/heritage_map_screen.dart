@@ -266,6 +266,25 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
                 end: 20,
                 child: _buildLayerSwitcher(isAr, isDark),
               ),
+
+              // Manual Refresh Button (for network issues)
+              PositionedDirectional(
+                bottom: 300,
+                end: 20,
+                child: FloatingActionButton.small(
+                  onPressed: () {
+                    setState(() {
+                      _loadedWikiIds.clear();
+                      _wikiLandmarks.clear();
+                      _lastFetchCenter = null;
+                    });
+                    _fetchWikiLandmarks(_mapController.camera.center);
+                    ref.invalidate(newsProvider);
+                  },
+                  backgroundColor: isDark ? Colors.black87 : Colors.white,
+                  child: Icon(Icons.refresh_rounded, color: AppTheme.accentColor),
+                ),
+              ),
             ],
           );
         },

@@ -21,8 +21,8 @@ export class EventsService {
   ) {
     const limit = options.limit && options.limit > 0 ? options.limit : 10;
 
-    // Diagnosis: Include DRAFT to see if they appear
-    const query: Record<string, any> = {};
+    // Explicitly type the query to avoid 'any' member access errors
+    const query: Record<string, any> = { publicationStatus: 'PUBLISHED' };
 
     if (options.cursor) {
       query.startDate = { $lt: new Date(options.cursor) };

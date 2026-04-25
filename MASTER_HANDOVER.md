@@ -345,7 +345,7 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 ---
 
 **Handover Status: 🏁 STABLE & HARDENED — Last updated: April 25, 2026**
-**Current State: Admin Dashboard modularized and stabilized. Activity/Event saving logic hardened for mobile use. Multilingual validation relaxed to support optional French/English inputs. All DTOs synchronized with backend schemas.**
+**Current State: Admin Dashboard modularized and stabilized. Activity and News saving logic hardened. Trilingual fields for fr/en are now optional but validated as strings to maintain compatibility with existing CMS modules. All DTOs synchronized.**
 
 🚨 **NEXT AGENT FOCUS:**
 

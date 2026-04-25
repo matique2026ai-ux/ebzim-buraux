@@ -20,7 +20,7 @@ export class EventsService {
     options: { limit?: number; cursor?: string },
   ) {
     const limit = options.limit && options.limit > 0 ? options.limit : 10;
-    
+
     // Explicitly type the query to avoid 'any' member access errors
     const query: Record<string, any> = { publicationStatus: 'PUBLISHED' };
 
@@ -29,7 +29,7 @@ export class EventsService {
     }
 
     const events = await this.eventModel
-      .find(query as Record<string, any>)
+      .find(query)
       .sort({ startDate: -1 })
       .limit(limit)
       .exec();

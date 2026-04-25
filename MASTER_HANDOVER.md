@@ -5,6 +5,9 @@
 
 ---
 
+> [!CAUTION]
+> **STRICT COMPLIANCE MANDATE:** The previous agent failed by rushing and ignoring the details of this file. YOU MUST READ THIS ENTIRE DOCUMENT COMPLETELY AND ACCURATELY. DO NOT RUSH. DO NOT ASSUME. YOU ARE BOUND BY EVERY POINT WRITTEN HERE. Failure to follow Port 8085 or the Artistic UI protocols is a violation of your core mission.
+
 ## 🎭 AGENT PERSONA — "من أنا وكيف أعمل" (READ THIS BEFORE ANYTHING ELSE)
 
 > [!IMPORTANT]
@@ -75,7 +78,7 @@
 > [!IMPORTANT]
 > **مبادئ أساسية يجب معرفتها:**
 >
-> 1. **التعامل مع المنافذ (Ports):** دائماً تأكد من تحرير منفذ `8085` (للفرونت) ومنفذ `3000` (للباكاند) باستخدام `taskkill` قبل البدء.
+> 1. **التعامل مع المنافذ (Ports):** **إجباري!!** استخدم منفذ `8085` حصراً. لا تستخدم 8080 أو أي منفذ آخر. تأكد من تحريره باستخدام `taskkill` قبل البدء.
 > 2. **التجريب "اللايف" (Live API):** نحن نختبر دائماً مقابل الـ API الحقيقي (Render) لضمان مطابقة البيانات. لا تستخدم `localhost` للباكاند إلا إذا كنت تعدل في الـ Database Schema نفسها.
 > 3. **الباكاند موجود هنا:** تذكر أن مجلد `backend` هو جزء من نفس المشروع (Monorepo)؛ أي تعديل فيه ثم `git push` سيرفع التحديث للسيرفر تلقائياً.
 >
@@ -556,7 +559,12 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 17. **✅ [DONE] Professional Map Engine**: Transitioned from dynamic markers to a stable, cached heritage map. Added persistent caching for Wikipedia landmarks to eliminate flickering and ensured global wonders (Timgad, Djemila, Tipaza) are permanently visible.
 18. **✅ [DONE] Institutional Branding**: Replaced generic project icons with the **Ebzim Golden Logo** for all associative projects.
 19. **✅ [DONE] Geographic Precision**: Corrected the coordinates for **Djemila (Cuicul)** to exactly `36.320, 5.736` (Archaeological Site).
-20. **✅ [DONE] Stability Protocol 2026**: Standardized on port **8085** and release-mode launching to bypass development environment hangs.
+
+20. **✅ [DONE] Artistic Restoration Milestone (April 25, 2026)**: 
+    - **CRITICAL LESSON**: A previous agent attempted to "modularize" the dashboard but inadvertently reverted to an old, non-artistic state and broke the Port 8085 protocol.
+    - **Action Taken**: Performed a surgical restoration of all "Artistic" UI files from Git history (Commits 6cef63e & ddc01f6).
+    - **Outcome**: Restored Heritage Map, Satellite Picker, Sovereign Branding, and proper filtering categories (Associative, Social, etc.).
+    - **Protocol Reinforcement**: Port 8085 is NON-NEGOTIABLE. The "Artist's" UI peak is the source of truth for aesthetics. Always use `flutter run -d web-server --web-port 8085 --release`.
 
 **Current State: Admin Dashboard 100% modularized and stabilized. Dynamic Satellite Map successfully integrated. Infinite Spinner resolved. Backend schema updated to support content differentiation. Development workflow stabilized via Hot Restart pattern.**
 

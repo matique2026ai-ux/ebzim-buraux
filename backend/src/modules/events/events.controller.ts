@@ -27,7 +27,7 @@ import { Role } from '../../common/enums/role.enum';
 import { CreateEventDto } from './dto/create-event.dto';
 
 @ApiTags('Events & RSVP')
-@Controller('activities')
+@Controller('events')
 export class EventsController {
   @Get('test-route')
   async testRoute() {

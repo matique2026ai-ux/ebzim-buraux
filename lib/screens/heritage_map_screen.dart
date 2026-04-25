@@ -22,29 +22,6 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   final MapController _mapController = MapController();
   String _selectedFilter = 'ALL';
   
-  // Static seeded historical landmarks in Sétif
-  final List<_Landmark> _staticLandmarks = [
-    _Landmark(
-      id: "ain_elfouara",
-      nameAr: "عين الفوارة",
-      nameFr: "Ain El Fouara",
-      descAr: "المعلم التاريخي الأبرز في سطيف.",
-      descFr: "Le monument historique le plus célèbre de Sétif.",
-      location: const LatLng(36.1895, 5.4098),
-      category: "HERITAGE",
-      image: "https://res.cloudinary.com/do3ygqlnl/image/upload/v1777077119/ebzim/static/ain_fouara.jpg"
-    ),
-    _Landmark(
-      id: "museum_setif",
-      nameAr: "المتحف الوطني للآثار",
-      nameFr: "Musée National",
-      descAr: "شريك جمعية إبزيم، يحتوي على أندر المقتنيات الرومانية.",
-      descFr: "Partenaire d'Ebzim, contenant des objets romains rares.",
-      location: const LatLng(36.1911, 5.4128),
-      category: "HERITAGE",
-      image: "https://res.cloudinary.com/do3ygqlnl/image/upload/v1777077119/ebzim/static/museum.jpg"
-    ),
-  ];
 
   dynamic _selectedItem;
 
@@ -92,13 +69,6 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
           final projects = posts.where((p) => p.latitude != null && p.longitude != null).toList();
           
           final List<Marker> markers = [];
-          
-          // Add static landmarks if filtered
-          if (_selectedFilter == 'ALL' || _selectedFilter == 'HERITAGE') {
-            for (var l in _staticLandmarks) {
-              markers.add(_buildMarker(l, isDark));
-            }
-          }
           
           // Add dynamic projects
           for (var p in projects) {
@@ -154,13 +124,12 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     );
   }
 
-  Marker _buildMarker(dynamic item, bool isDark) {
-    final String id = item is _Landmark ? item.id : (item as NewsPost).id;
-    final LatLng loc = item is _Landmark ? item.location : LatLng(item.latitude!, item.longitude!);
-    final String cat = item is _Landmark ? item.category : (item as NewsPost).category;
+  Marker _buildMarker(NewsPost item, bool isDark) {
+    final String id = item.id;
+    final LatLng loc = LatLng(item.latitude!, item.longitude!);
+    final String cat = item.category;
     
-    final bool isSelected = (_selectedItem is _Landmark && (_selectedItem as _Landmark).id == id) ||
-                           (_selectedItem is NewsPost && (_selectedItem as NewsPost).id == id);
+    final bool isSelected = _selectedItem is NewsPost && (_selectedItem as NewsPost).id == id;
 
     return Marker(
       point: loc,
@@ -253,14 +222,26 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
     );
   }
 
-  Widget _buildDetailCard(dynamic item, bool isAr, bool isDark) {
-    final String title = item is _Landmark ? (isAr ? item.nameAr : item.nameFr) : (item as NewsPost).getTitle(isAr ? 'ar' : 'fr');
-    final String desc = item is _Landmark ? (isAr ? item.descAr : item.descFr) : (item as NewsPost).getSummary(isAr ? 'ar' : 'fr');
-    final String img = item is _Landmark ? item.image : (item as NewsPost).imageUrl;
-    final String cat = item is _Landmark ? item.category : (item as NewsPost).category;
+  String _getCategoryLabel(String category, bool isAr) {
+    switch (category.toUpperCase()) {
+      case 'PROJECT': return isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel';
+      case 'RESTORATION': return isAr ? 'حماية التراث والآثار' : 'Protection du Patrimoine';
+      case 'CULTURAL': return isAr ? 'مهرجان / نشاط ثقافي' : 'Activité Culturelle';
+      case 'SCIENTIFIC': return isAr ? 'ندوة / بحث علمي' : 'Recherche Scientifique';
+      case 'ASSOCIATIVE': return isAr ? 'نشاط جمعوي' : 'Activité Associative';
+      case 'SOCIAL': return isAr ? 'مبادرة اجتماعية' : 'Initiative Sociale';
+      default: return isAr ? 'مشروع ميداني' : 'Projet Terrain';
+    }
+  }
+
+  Widget _buildDetailCard(NewsPost item, bool isAr, bool isDark) {
+    final String title = item.getTitle(isAr ? 'ar' : 'fr');
+    final String desc = item.getSummary(isAr ? 'ar' : 'fr');
+    final String img = item.imageUrl;
+    final String cat = _getCategoryLabel(item.category, isAr);
 
     return GestureDetector(
-      onTap: item is NewsPost ? () => context.push('/news/${item.id}', extra: item) : null,
+      onTap: () => context.push('/project/${item.id}', extra: item),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E2124) : Colors.white,
@@ -301,26 +282,4 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       ),
     );
   }
-}
-
-class _Landmark {
-  final String id;
-  final String nameAr;
-  final String nameFr;
-  final String descAr;
-  final String descFr;
-  final LatLng location;
-  final String category;
-  final String image;
-
-  const _Landmark({
-    required this.id,
-    required this.nameAr,
-    required this.nameFr,
-    required this.descAr,
-    required this.descFr,
-    required this.location,
-    required this.category,
-    required this.image,
-  });
 }

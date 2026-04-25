@@ -58,7 +58,10 @@ export class PostsService {
       const image = media.find((m) => m.type === 'IMAGE');
 
       return {
+        ...p, // Spread the original object to ensure no fields (like metadata) are lost
         _id: p._id.toString(),
+        id: p._id.toString(), // Add id for frontend compatibility
+        createdAt: p.createdAt, // Ensure createdAt is explicitly present
         title: p.title,
         summary: p.summary,
         content: p.content,

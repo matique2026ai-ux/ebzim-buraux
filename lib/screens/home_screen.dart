@@ -38,6 +38,7 @@ class HomeScreen extends ConsumerWidget {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
+
           // ════════════════════════════════════════
           // DYNAMIC HERO CAROUSEL
           // ════════════════════════════════════════
@@ -89,19 +90,14 @@ class HomeScreen extends ConsumerWidget {
             child: newsAsync.when(
               data: (posts) {
                 // Filter to only show general news/announcements, excluding projects
-                final newsPosts = posts
-                    .where((p) => p.isInstitutionalNews || p.category.isEmpty)
-                    .toList();
+                final newsPosts = posts.where((p) => 
+                  p.contentType == 'NEWS' || p.category.toUpperCase() == 'ANNOUNCEMENT'
+                ).toList();
 
                 if (newsPosts.isEmpty) return const SizedBox.shrink();
-
-                final pinned = newsPosts
-                    .where((p) => p.isPinned)
-                    .take(2)
-                    .toList();
-                final toShow = pinned.isNotEmpty
-                    ? pinned
-                    : newsPosts.take(2).toList();
+                
+                final pinned = newsPosts.where((p) => p.isPinned).take(2).toList();
+                final toShow = pinned.isNotEmpty ? pinned : newsPosts.take(2).toList();
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
                   child: Column(
@@ -112,10 +108,7 @@ class HomeScreen extends ConsumerWidget {
                         padding: const EdgeInsets.only(bottom: 12),
                         child: _NewsPreviewCard(post: post, lang: lang)
                             .animate()
-                            .fadeIn(
-                              delay: Duration(milliseconds: i * 100),
-                              duration: const Duration(milliseconds: 600),
-                            )
+                            .fadeIn(delay: Duration(milliseconds: i * 100), duration: const Duration(milliseconds: 600))
                             .slideY(begin: 0.1),
                       );
                     }).toList(),
@@ -137,9 +130,7 @@ class HomeScreen extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
               child: _SectionHeader(
-                title: lang == 'ar'
-                    ? 'المشاريع المؤسساتية'
-                    : 'Projets Institutionnels',
+                title: lang == 'ar' ? 'المشاريع المؤسساتية' : 'Projets Institutionnels',
                 onViewAll: () => context.go('/heritage'),
                 lang: lang,
               ),
@@ -149,14 +140,9 @@ class HomeScreen extends ConsumerWidget {
             child: newsAsync.when(
               data: (posts) {
                 // Filter specifically for projects
-                final projects = posts
-                    .where(
-                      (p) =>
-                          p.category.toUpperCase() != 'ANNOUNCEMENT' &&
-                          p.category.isNotEmpty,
-                    )
-                    .take(4)
-                    .toList();
+                final projects = posts.where((p) => 
+                  p.contentType == 'PROJECT' || p.isFieldProject
+                ).take(4).toList();
 
                 if (projects.isEmpty) return const SizedBox.shrink();
 
@@ -171,21 +157,15 @@ class HomeScreen extends ConsumerWidget {
                     itemBuilder: (ctx, index) {
                       final project = projects[index];
                       return _HomeProjectCard(
-                            project: project,
-                            lang: lang,
-                            isDark: theme.brightness == Brightness.dark,
-                          )
-                          .animate(delay: (index * 150).ms)
-                          .fadeIn(duration: 600.ms)
-                          .slideX(begin: 0.1);
+                        project: project,
+                        lang: lang,
+                        isDark: theme.brightness == Brightness.dark,
+                      ).animate(delay: (index * 150).ms).fadeIn(duration: 600.ms).slideX(begin: 0.1);
                     },
                   ),
                 );
               },
-              loading: () => const SizedBox(
-                height: 340,
-                child: Center(child: CircularProgressIndicator()),
-              ),
+              loading: () => const SizedBox(height: 340, child: Center(child: CircularProgressIndicator())),
               error: (_, __) => const SizedBox.shrink(),
             ),
           ),
@@ -200,9 +180,7 @@ class HomeScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _SectionHeader(
-                    title: lang == 'ar'
-                        ? 'شركاؤنا الرسميون'
-                        : 'Nos partenaires officiels',
+                    title: lang == 'ar' ? 'شركاؤنا الرسميون' : 'Nos partenaires officiels',
                     lang: lang,
                   ),
                   const SizedBox(height: 16),
@@ -215,8 +193,7 @@ class HomeScreen extends ConsumerWidget {
                           scrollDirection: Axis.horizontal,
                           physics: const BouncingScrollPhysics(),
                           itemCount: partners.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(width: 12),
+                          separatorBuilder: (_, __) => const SizedBox(width: 12),
                           itemBuilder: (ctx, index) {
                             final p = partners[index];
                             return _DynamicPartnerCard(partner: p, lang: lang);
@@ -224,8 +201,7 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       );
                     },
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                    loading: () => const Center(child: CircularProgressIndicator()),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
                 ],
@@ -254,9 +230,7 @@ class HomeScreen extends ConsumerWidget {
                   if (events.isEmpty) {
                     return Center(
                       child: Text(
-                        lang == 'ar'
-                            ? 'لا توجد أنشطة مجدولة'
-                            : 'Aucune activité planifiée',
+                        lang == 'ar' ? 'لا توجد أنشطة مجدولة' : 'Aucune activité planifiée',
                         style: TextStyle(color: Colors.grey.shade400),
                       ),
                     );
@@ -266,22 +240,14 @@ class HomeScreen extends ConsumerWidget {
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
                     itemCount: events.take(6).length,
-                    itemBuilder: (context, index) =>
-                        EventCard(
-                              event: events[index],
-                              onTap: () =>
-                                  context.push('/event/${events[index].id}'),
-                            )
-                            .animate(delay: Duration(milliseconds: index * 150))
-                            .fadeIn(duration: const Duration(milliseconds: 600))
-                            .slideX(begin: 0.1),
+                    itemBuilder: (context, index) => EventCard(
+                      event: events[index],
+                      onTap: () => context.push('/event/${events[index].id}'),
+                    ).animate(delay: Duration(milliseconds: index * 150)).fadeIn(duration: const Duration(milliseconds: 600)).slideX(begin: 0.1),
                   );
                 },
                 loading: () => const Center(
-                  child: CircularProgressIndicator(
-                    color: AppTheme.primaryColor,
-                    strokeWidth: 2,
-                  ),
+                  child: CircularProgressIndicator(color: AppTheme.primaryColor, strokeWidth: 2),
                 ),
                 error: (_, _) => const SizedBox.shrink(),
               ),
@@ -315,10 +281,7 @@ class HomeScreen extends ConsumerWidget {
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(32),
-                      border: Border.all(
-                        color: AppTheme.accentColor.withValues(alpha: 0.1),
-                        width: 1.5,
-                      ),
+                      border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.1), width: 1.5),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.4),
@@ -331,10 +294,7 @@ class HomeScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: AppTheme.accentColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(6),
@@ -371,71 +331,54 @@ class HomeScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 32),
                         GestureDetector(
-                              onTap: () => context.push('/about'),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 28,
-                                  vertical: 16,
+                          onTap: () => context.push('/about'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                            decoration: BoxDecoration(
+                              color: AppTheme.accentColor,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppTheme.accentColor.withValues(alpha: 0.3),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 5),
                                 ),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.accentColor,
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppTheme.accentColor.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                      blurRadius: 15,
-                                      offset: const Offset(0, 5),
-                                    ),
-                                  ],
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  lang == 'ar' ? 'اكتشف المزيد' : 'Découvrir plus',
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 14,
+                                  ),
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      lang == 'ar'
-                                          ? 'اكتشف المزيد'
-                                          : 'Découvrir plus',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Icon(
-                                      lang == 'ar'
-                                          ? Icons.arrow_back_rounded
-                                          : Icons.arrow_forward_rounded,
-                                      color: Colors.black,
-                                      size: 18,
-                                    ),
-                                  ],
+                                const SizedBox(width: 8),
+                                Icon(
+                                  lang == 'ar' ? Icons.arrow_back_rounded : Icons.arrow_forward_rounded,
+                                  color: Colors.black,
+                                  size: 18,
                                 ),
-                              ),
-                            )
-                            .animate(onPlay: (c) => c.repeat(reverse: true))
-                            .shimmer(delay: 3.seconds, duration: 2.seconds),
+                              ],
+                            ),
+                          ),
+                        ).animate(onPlay: (c) => c.repeat(reverse: true)).shimmer(delay: 3.seconds, duration: 2.seconds),
                       ],
                     ),
                   ),
                   // Decorative Icon
                   Positioned(
-                        bottom: -20,
-                        left: lang == 'ar' ? -20 : null,
-                        right: lang == 'fr' ? -20 : null,
-                        child: Opacity(
-                          opacity: 0.05,
-                          child: Icon(
-                            Icons.account_balance_rounded,
-                            size: 180,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                      .animate(onPlay: (c) => c.repeat(reverse: true))
-                      .rotate(begin: -0.05, end: 0.05, duration: 5.seconds),
+                    bottom: -20,
+                    left: lang == 'ar' ? -20 : null,
+                    right: lang == 'fr' ? -20 : null,
+                    child: Opacity(
+                      opacity: 0.05,
+                      child: Icon(Icons.account_balance_rounded, size: 180, color: Colors.white),
+                    ),
+                  ).animate(onPlay: (c) => c.repeat(reverse: true)).rotate(begin: -0.05, end: 0.05, duration: 5.seconds),
                 ],
               ),
             ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
@@ -465,8 +408,7 @@ class _GlassIconButton extends StatelessWidget {
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
           child: Container(
-            width: 40,
-            height: 40,
+            width: 40, height: 40,
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
@@ -485,27 +427,20 @@ class _HeroButton extends StatelessWidget {
   final bool isPrimary;
   final IconData icon;
   final VoidCallback onTap;
-  const _HeroButton({
-    required this.label,
-    required this.isPrimary,
-    required this.icon,
-    required this.onTap,
-  });
+  const _HeroButton({required this.label, required this.isPrimary, required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: isPrimary
-            ? [
-                BoxShadow(
-                  color: AppTheme.accentColor.withValues(alpha: 0.3),
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
-                ),
-              ]
-            : [],
+        boxShadow: isPrimary ? [
+          BoxShadow(
+            color: AppTheme.accentColor.withValues(alpha: 0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          )
+        ] : [],
       ),
       child: Material(
         color: Colors.transparent,
@@ -516,22 +451,15 @@ class _HeroButton extends StatelessWidget {
             duration: 300.ms,
             padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              gradient: isPrimary
-                  ? LinearGradient(
-                      colors: [
-                        AppTheme.accentColor,
-                        AppTheme.accentColor.withValues(alpha: 0.8),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                  : null,
+              gradient: isPrimary ? LinearGradient(
+                colors: [AppTheme.accentColor, AppTheme.accentColor.withValues(alpha: 0.8)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ) : null,
               color: isPrimary ? null : Colors.white.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isPrimary
-                    ? Colors.white24
-                    : Colors.white.withValues(alpha: 0.1),
+                color: isPrimary ? Colors.white24 : Colors.white.withValues(alpha: 0.1),
                 width: 1.2,
               ),
             ),
@@ -563,8 +491,7 @@ class _HeroVideoCardBackground extends StatefulWidget {
   const _HeroVideoCardBackground({required this.videoUrl});
 
   @override
-  State<_HeroVideoCardBackground> createState() =>
-      _HeroVideoCardBackgroundState();
+  State<_HeroVideoCardBackground> createState() => _HeroVideoCardBackgroundState();
 }
 
 class _HeroVideoCardBackgroundState extends State<_HeroVideoCardBackground> {
@@ -608,15 +535,12 @@ class _HeroVideoCardBackgroundState extends State<_HeroVideoCardBackground> {
   }
 }
 
+
 class _SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onViewAll;
   final String lang;
-  const _SectionHeader({
-    required this.title,
-    this.onViewAll,
-    required this.lang,
-  });
+  const _SectionHeader({required this.title, this.onViewAll, required this.lang});
 
   @override
   Widget build(BuildContext context) {
@@ -643,17 +567,10 @@ class _SectionHeader extends StatelessWidget {
               height: 3,
               width: 40,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppTheme.accentColor, Colors.transparent],
-                ),
+                gradient: const LinearGradient(colors: [AppTheme.accentColor, Colors.transparent]),
                 borderRadius: BorderRadius.circular(1.5),
               ),
-            ).animate().scaleX(
-              begin: 0,
-              end: 1,
-              duration: 600.ms,
-              curve: Curves.easeOutBack,
-            ),
+            ).animate().scaleX(begin: 0, end: 1, duration: 600.ms, curve: Curves.easeOutBack),
           ],
         ),
         if (onViewAll != null)
@@ -665,15 +582,9 @@ class _SectionHeader extends StatelessWidget {
               child: Container(
                 constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 7,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: AppTheme.accentColor.withValues(alpha: 0.5),
-                    width: 1,
-                  ),
+                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5), width: 1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -682,25 +593,12 @@ class _SectionHeader extends StatelessWidget {
                     Text(
                       lang == 'ar' ? 'عرض الكل' : 'Voir tout',
                       style: lang == 'ar'
-                          ? GoogleFonts.cairo(
-                              color: AppTheme.accentColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            )
-                          : GoogleFonts.playfairDisplay(
-                              color: AppTheme.accentColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          ? GoogleFonts.cairo(color: AppTheme.accentColor, fontSize: 12, fontWeight: FontWeight.bold)
+                          : GoogleFonts.playfairDisplay(color: AppTheme.accentColor, fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(width: 4),
-                    Icon(
-                      lang == 'ar'
-                          ? Icons.arrow_back_ios_rounded
-                          : Icons.arrow_forward_ios_rounded,
-                      color: AppTheme.accentColor,
-                      size: 10,
-                    ),
+                    Icon(lang == 'ar' ? Icons.arrow_back_ios_rounded : Icons.arrow_forward_ios_rounded,
+                        color: AppTheme.accentColor, size: 10),
                   ],
                 ),
               ),
@@ -721,24 +619,22 @@ class _NewsPreviewCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final isAr = lang == 'ar';
-
+    
     return Container(
       height: 120,
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF0F1A0F) : Colors.white,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: post.isPinned
-              ? AppTheme.accentColor.withValues(alpha: 0.3)
-              : (isDark
-                    ? Colors.white.withValues(alpha: 0.05)
-                    : AppTheme.primaryColor.withValues(alpha: 0.05)),
+          color: post.isPinned 
+              ? AppTheme.accentColor.withValues(alpha: 0.3) 
+              : (isDark ? Colors.white.withValues(alpha: 0.05) : AppTheme.primaryColor.withValues(alpha: 0.05)),
           width: post.isPinned ? 1.5 : 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: post.isPinned
-                ? AppTheme.accentColor.withValues(alpha: 0.1)
+            color: post.isPinned 
+                ? AppTheme.accentColor.withValues(alpha: 0.1) 
                 : Colors.black.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 8),
@@ -768,10 +664,8 @@ class _NewsPreviewCard extends StatelessWidget {
                           ? CachedNetworkImage(
                               imageUrl: post.imageUrl,
                               fit: BoxFit.cover,
-                              placeholder: (ctx, url) =>
-                                  Container(color: Colors.black12),
-                              errorWidget: (ctx, url, err) =>
-                                  _buildPlaceholder(isDark),
+                              placeholder: (ctx, url) => Container(color: Colors.black12),
+                              errorWidget: (ctx, url, err) => _buildPlaceholder(isDark),
                             )
                           : _buildPlaceholder(isDark),
                       if (post.isPinned)
@@ -781,22 +675,15 @@ class _NewsPreviewCard extends StatelessWidget {
                           right: isAr ? null : 8,
                           child: Container(
                             padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: AppTheme.accentColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.push_pin_rounded,
-                              size: 10,
-                              color: Colors.black,
-                            ),
+                            decoration: const BoxDecoration(color: AppTheme.accentColor, shape: BoxShape.circle),
+                            child: const Icon(Icons.push_pin_rounded, size: 10, color: Colors.black),
                           ),
                         ),
                     ],
                   ),
                 ),
               ),
-
+              
               // Content
               Expanded(
                 child: Padding(
@@ -806,16 +693,9 @@ class _NewsPreviewCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color:
-                              (post.isPinned
-                                      ? AppTheme.accentColor
-                                      : AppTheme.primaryColor)
-                                  .withValues(alpha: 0.1),
+                          color: (post.isPinned ? AppTheme.accentColor : AppTheme.primaryColor).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -823,11 +703,7 @@ class _NewsPreviewCard extends StatelessWidget {
                           style: GoogleFonts.playfairDisplay(
                             fontSize: 9,
                             fontWeight: FontWeight.w900,
-                            color: post.isPinned
-                                ? AppTheme.accentColor
-                                : (isDark
-                                      ? Colors.white70
-                                      : AppTheme.primaryColor),
+                            color: post.isPinned ? AppTheme.accentColor : (isDark ? Colors.white70 : AppTheme.primaryColor),
                             letterSpacing: 1,
                           ),
                         ),
@@ -847,19 +723,11 @@ class _NewsPreviewCard extends StatelessWidget {
                       const Spacer(),
                       Row(
                         children: [
-                          Icon(
-                            Icons.event_note_rounded,
-                            size: 12,
-                            color: theme.hintColor.withValues(alpha: 0.5),
-                          ),
+                          Icon(Icons.event_note_rounded, size: 12, color: theme.hintColor.withValues(alpha: 0.5)),
                           const SizedBox(width: 6),
                           Text(
                             '${post.publishedAt.day}/${post.publishedAt.month}/${post.publishedAt.year}',
-                            style: GoogleFonts.outfit(
-                              fontSize: 11,
-                              color: theme.hintColor.withValues(alpha: 0.7),
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: GoogleFonts.outfit(fontSize: 11, color: theme.hintColor.withValues(alpha: 0.7), fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -867,13 +735,11 @@ class _NewsPreviewCard extends StatelessWidget {
                   ),
                 ),
               ),
-
+              
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Icon(
-                  isAr
-                      ? Icons.chevron_left_rounded
-                      : Icons.chevron_right_rounded,
+                  isAr ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
                   color: AppTheme.accentColor.withValues(alpha: 0.3),
                   size: 20,
                 ),
@@ -887,15 +753,11 @@ class _NewsPreviewCard extends StatelessWidget {
 
   Widget _buildPlaceholder(bool isDark) {
     return Container(
-      color: isDark
-          ? Colors.white.withValues(alpha: 0.1)
-          : AppTheme.primaryColor.withValues(alpha: 0.1),
+      color: isDark ? Colors.white.withValues(alpha: 0.1) : AppTheme.primaryColor.withValues(alpha: 0.1),
       child: Center(
         child: Icon(
           Icons.newspaper_rounded,
-          color: isDark
-              ? Colors.white12
-              : AppTheme.primaryColor.withValues(alpha: 0.1),
+          color: isDark ? Colors.white12 : AppTheme.primaryColor.withValues(alpha: 0.1),
           size: 32,
         ),
       ),
@@ -910,9 +772,7 @@ class _DynamicPartnerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = partner.color != null
-        ? Color(int.parse(partner.color!.replaceFirst('#', '0xFF')))
-        : AppTheme.primaryColor;
+    final color = partner.color != null ? Color(int.parse(partner.color!.replaceFirst('#', '0xFF'))) : AppTheme.primaryColor;
     return Container(
       width: 160,
       padding: const EdgeInsets.all(16),
@@ -934,10 +794,8 @@ class _DynamicPartnerCard extends StatelessWidget {
           Expanded(
             child: CachedNetworkImage(
               imageUrl: partner.logoUrl,
-              placeholder: (context, url) =>
-                  Container(color: Colors.grey.shade50),
-              errorWidget: (context, url, error) =>
-                  const Icon(Icons.business, size: 40, color: Colors.grey),
+              placeholder: (context, url) => Container(color: Colors.grey.shade50),
+              errorWidget: (context, url, error) => const Icon(Icons.business, size: 40, color: Colors.grey),
               fit: BoxFit.contain,
             ),
           ),
@@ -1023,8 +881,7 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
                       CachedNetworkImage(
                         imageUrl: slide.imageUrl,
                         fit: BoxFit.cover,
-                        placeholder: (ctx, url) =>
-                            Container(color: AppTheme.primaryColor),
+                        placeholder: (ctx, url) => Container(color: AppTheme.primaryColor),
                       ).animate().fadeIn(duration: 1200.ms),
                       // Standard subtle overlay for readability (Fixed, not using slide tokens)
                       Container(
@@ -1071,54 +928,38 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
 
   Widget _buildTopBar(BuildContext context) {
     return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Hero(
+          tag: 'app_logo',
+          child: Image.asset('assets/images/logo.png', height: 44, color: Colors.white, colorBlendMode: BlendMode.srcIn),
+        ),
+        Row(
           children: [
-            Hero(
-              tag: 'app_logo',
-              child: Image.asset(
-                'assets/images/logo.png',
-                height: 44,
-                color: Colors.white,
-                colorBlendMode: BlendMode.srcIn,
+            if (kDebugMode)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8),
+                child: _GlassIconButton(
+                  icon: Icons.logout_rounded, 
+                  onTap: () async {
+                    await ref.read(authProvider.notifier).logout();
+                    if (context.mounted) context.go('/login');
+                  },
+                ),
               ),
-            ),
-            Row(
-              children: [
-                if (kDebugMode)
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 8),
-                    child: _GlassIconButton(
-                      icon: Icons.logout_rounded,
-                      onTap: () async {
-                        await ref.read(authProvider.notifier).logout();
-                        if (context.mounted) context.go('/login');
-                      },
-                    ),
-                  ),
-                _GlassIconButton(
-                  icon: Icons.translate_outlined,
-                  onTap: () => context.push('/language'),
-                ),
-                const SizedBox(width: 8),
-                _GlassIconButton(
-                  icon: Icons.person_outline,
-                  onTap: () => context.go('/dashboard'),
-                ),
-              ],
-            ),
+            _GlassIconButton(icon: Icons.translate_outlined, onTap: () => context.push('/language')),
+            const SizedBox(width: 8),
+            _GlassIconButton(icon: Icons.person_outline, onTap: () => context.go('/dashboard')),
           ],
-        )
-        .animate()
-        .fadeIn(duration: const Duration(milliseconds: 600))
-        .slideY(begin: -0.2);
+        ),
+      ],
+    ).animate().fadeIn(duration: const Duration(milliseconds: 600)).slideY(begin: -0.2);
   }
 
   Widget _buildSlideContent(HeroSlide slide) {
     final theme = Theme.of(context);
-    final hasContent =
-        slide.getTitle(widget.lang).trim().isNotEmpty ||
-        slide.getSubtitle(widget.lang).trim().isNotEmpty;
-
+    final hasContent = slide.getTitle(widget.lang).trim().isNotEmpty || slide.getSubtitle(widget.lang).trim().isNotEmpty;
+    
     // Check membership status to conditionally show 'Join Now'
     final userState = ref.watch(currentUserProvider);
     final user = userState.value;
@@ -1128,251 +969,169 @@ class _SunriseCarouselState extends ConsumerState<_SunriseCarousel> {
     // 🛡️ Robust Design Token Parsing
     // 1. Determine definitive opacity (fallback to 0.1)
     final double finalOpacity = slide.overlayOpacity;
-
+    
     // 2. Determine base color (fallback to black)
     Color glassBaseColor = Colors.black;
-
+    
     if (slide.overlayColor != null && slide.overlayColor!.trim().isNotEmpty) {
       try {
-        String hex = slide.overlayColor!.trim().toUpperCase().replaceFirst(
-          '#',
-          '',
-        );
-
+        String hex = slide.overlayColor!.trim().toUpperCase().replaceFirst('#', '');
+        
         // Handle short hex (3 digits)
         if (hex.length == 3) {
           hex = hex.split('').map((c) => c + c).join('');
         }
-
+        
         // Ensure 8-digit hex for Color (ARGB)
         if (hex.length == 6) {
           hex = 'FF$hex';
         }
-
+        
         if (hex.length == 8) {
           glassBaseColor = Color(int.parse(hex, radix: 16));
         }
       } catch (e) {
-        if (kDebugMode)
-          print(
-            '🚨 [CMS_RENDER] Error parsing hex "${slide.overlayColor}": $e',
-          );
+        if (kDebugMode) print('🚨 [CMS_RENDER] Error parsing hex "${slide.overlayColor}": $e');
         glassBaseColor = AppTheme.primaryColor; // Safe fallback
       }
     }
-
+    
     // 3. Final color with definitive opacity applied
-    final Color finaloverlayColor = glassBaseColor.withValues(
-      alpha: finalOpacity,
-    );
+    final Color finaloverlayColor = glassBaseColor.withValues(alpha: finalOpacity);
 
     return ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(32),
-            child: BackdropFilter(
-              filter: ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-              child: Container(
-                padding: const EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: finaloverlayColor,
-                  borderRadius: BorderRadius.circular(32),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 30,
-                      offset: const Offset(0, 10),
+      constraints: const BoxConstraints(maxWidth: 600),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: finaloverlayColor,
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 30,
+                  offset: const Offset(0, 10),
+                )
+              ],
+            ),
+            child: Stack(
+              children: [
+                // Video Background inside Card
+                if (slide.videoUrl != null && slide.videoUrl!.isNotEmpty)
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: 0.3, // Faint video as requested
+                      child: _HeroVideoCardBackground(videoUrl: slide.videoUrl!),
                     ),
-                  ],
-                ),
-                child: Stack(
+                  ),
+
+                // Content
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Video Background inside Card
-                    if (slide.videoUrl != null && slide.videoUrl!.isNotEmpty)
-                      Positioned.fill(
-                        child: Opacity(
-                          opacity: 0.3, // Faint video as requested
-                          child: _HeroVideoCardBackground(
-                            videoUrl: slide.videoUrl!,
+                    if (hasContent) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.accentColor.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
+                        ),
+                        child: Text(
+                          widget.lang == 'ar' ? 'اكتشف إرثنا' : 'DISCOVER HERITAGE',
+                          style: GoogleFonts.playfairDisplay(
+                            color: AppTheme.accentColor,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 2,
                           ),
                         ),
+                      ).animate(key: ValueKey('chip_${slide.id}')).fadeIn(duration: 600.ms).slideX(begin: -0.1),
+                      const SizedBox(height: 24),
+                      Text(
+                        slide.getTitle(widget.lang),
+                        style: GoogleFonts.tajawal(
+                          color: Colors.white,
+                          fontSize: 38,
+                          height: 1.1,
+                          fontWeight: FontWeight.w900,
+                          shadows: [Shadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 2))],
+                        ),
+                      ).animate(key: ValueKey('title_${slide.id}')).fadeIn(delay: 100.ms, duration: 800.ms).slideY(begin: 0.1),
+                      const SizedBox(height: 18),
+                      Text(
+                        slide.getSubtitle(widget.lang),
+                        style: GoogleFonts.cairo(
+                          fontSize: 16,
+                          color: Colors.white.withValues(alpha: 0.85),
+                          height: 1.7,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ).animate(key: ValueKey('sub_${slide.id}')).fadeIn(delay: 300.ms, duration: 800.ms).slideY(begin: 0.1),
+                      const SizedBox(height: 40),
+                    ],
+
+                    // Mind-blowing Buttons
+                    if (slide.buttonText != null && slide.buttonText!.isNotEmpty) ...[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _HeroButton(
+                              label: slide.buttonText!,
+                              isPrimary: true,
+                              icon: Icons.auto_awesome_rounded,
+                              onTap: () {
+                                if (slide.buttonLink != null && slide.buttonLink!.isNotEmpty) {
+                                  if (slide.buttonLink!.startsWith('http')) {
+                                    WebHelper.launchURL(slide.buttonLink!);
+                                  } else {
+                                    context.push(slide.buttonLink!);
+                                  }
+                                }
+                              },
+                            ).animate(key: ValueKey('btn1_${slide.id}')).scale(delay: 400.ms, duration: 600.ms, curve: Curves.elasticOut),
+                          ),
+                        ],
                       ),
-
-                    // Content
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (hasContent) ...[
-                          Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.accentColor.withValues(
-                                    alpha: 0.15,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: AppTheme.accentColor.withValues(
-                                      alpha: 0.2,
-                                    ),
-                                  ),
-                                ),
-                                child: Text(
-                                  widget.lang == 'ar'
-                                      ? 'اكتشف إرثنا'
-                                      : 'DISCOVER HERITAGE',
-                                  style: GoogleFonts.playfairDisplay(
-                                    color: AppTheme.accentColor,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 2,
-                                  ),
-                                ),
-                              )
-                              .animate(key: ValueKey('chip_${slide.id}'))
-                              .fadeIn(duration: 600.ms)
-                              .slideX(begin: -0.1),
-                          const SizedBox(height: 24),
-                          Text(
-                                slide.getTitle(widget.lang),
-                                style: GoogleFonts.tajawal(
-                                  color: Colors.white,
-                                  fontSize: 38,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w900,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black26,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              .animate(key: ValueKey('title_${slide.id}'))
-                              .fadeIn(delay: 100.ms, duration: 800.ms)
-                              .slideY(begin: 0.1),
-                          const SizedBox(height: 18),
-                          Text(
-                                slide.getSubtitle(widget.lang),
-                                style: GoogleFonts.cairo(
-                                  fontSize: 16,
-                                  color: Colors.white.withValues(alpha: 0.85),
-                                  height: 1.7,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                              .animate(key: ValueKey('sub_${slide.id}'))
-                              .fadeIn(delay: 300.ms, duration: 800.ms)
-                              .slideY(begin: 0.1),
-                          const SizedBox(height: 40),
-                        ],
-
-                        // Mind-blowing Buttons
-                        if (slide.buttonText != null &&
-                            slide.buttonText!.isNotEmpty) ...[
-                          Row(
-                            children: [
-                              Expanded(
-                                child:
-                                    _HeroButton(
-                                          label: slide.buttonText!,
-                                          isPrimary: true,
-                                          icon: Icons.auto_awesome_rounded,
-                                          onTap: () {
-                                            if (slide.buttonLink != null &&
-                                                slide.buttonLink!.isNotEmpty) {
-                                              if (slide.buttonLink!.startsWith(
-                                                'http',
-                                              )) {
-                                                WebHelper.launchURL(
-                                                  slide.buttonLink!,
-                                                );
-                                              } else {
-                                                context.push(slide.buttonLink!);
-                                              }
-                                            }
-                                          },
-                                        )
-                                        .animate(
-                                          key: ValueKey('btn1_${slide.id}'),
-                                        )
-                                        .scale(
-                                          delay: 400.ms,
-                                          duration: 600.ms,
-                                          curve: Curves.elasticOut,
-                                        ),
-                              ),
-                            ],
-                          ),
-                        ] else ...[
-                          Row(
-                            children: [
-                              if (!isMember) ...[
-                                Expanded(
-                                  child:
-                                      _HeroButton(
-                                            label: widget.lang == 'ar'
-                                                ? 'طلب عضوية'
-                                                : 'Join Now',
-                                            isPrimary: true,
-                                            icon: Icons.auto_awesome_rounded,
-                                            onTap: () => context.push(
-                                              '/membership/apply',
-                                            ),
-                                          )
-                                          .animate(
-                                            key: ValueKey('btn1_${slide.id}'),
-                                          )
-                                          .scale(
-                                            delay: 400.ms,
-                                            duration: 600.ms,
-                                            curve: Curves.elasticOut,
-                                          ),
-                                ),
-                                const SizedBox(width: 16),
-                              ],
-                              Expanded(
-                                child:
-                                    _HeroButton(
-                                          label: widget.lang == 'ar'
-                                              ? 'تصفح النشاطات'
-                                              : 'Explore',
-                                          isPrimary: isMember ? true : false,
-                                          icon: Icons.rocket_launch_rounded,
-                                          onTap: () =>
-                                              context.go('/activities'),
-                                        )
-                                        .animate(
-                                          key: ValueKey('btn2_${slide.id}'),
-                                        )
-                                        .scale(
-                                          delay: 500.ms,
-                                          duration: 600.ms,
-                                          curve: Curves.elasticOut,
-                                        ),
-                              ),
-                            ],
+                    ] else ...[
+                      Row(
+                        children: [
+                          if (!isMember) ...[
+                            Expanded(
+                              child: _HeroButton(
+                                label: widget.lang == 'ar' ? 'طلب عضوية' : 'Join Now',
+                                isPrimary: true,
+                                icon: Icons.auto_awesome_rounded,
+                                onTap: () => context.push('/membership/apply'),
+                              ).animate(key: ValueKey('btn1_${slide.id}')).scale(delay: 400.ms, duration: 600.ms, curve: Curves.elasticOut),
+                            ),
+                            const SizedBox(width: 16),
+                          ],
+                          Expanded(
+                            child: _HeroButton(
+                              label: widget.lang == 'ar' ? 'تصفح النشاطات' : 'Explore',
+                              isPrimary: isMember ? true : false,
+                              icon: Icons.rocket_launch_rounded,
+                              onTap: () => context.go('/activities'),
+                            ).animate(key: ValueKey('btn2_${slide.id}')).scale(delay: 500.ms, duration: 600.ms, curve: Curves.elasticOut),
                           ),
                         ],
-                      ],
-                    ),
+                      ),
+                    ],
                   ],
                 ),
-              ),
+              ],
             ),
           ),
-        )
-        .animate()
-        .fadeIn(duration: 1.seconds)
-        .scale(begin: const Offset(0.95, 0.95));
+        ),
+      ),
+    ).animate().fadeIn(duration: 1.seconds).scale(begin: const Offset(0.95, 0.95));
   }
 }
 
@@ -1380,20 +1139,12 @@ class _FallbackHero extends StatelessWidget {
   final String lang;
   const _FallbackHero({required this.lang});
   @override
-  Widget build(BuildContext context) => Container(
-    height: 300,
-    color: AppTheme.primaryColor,
-    child: const Center(child: Text("EBZIM")),
-  );
+  Widget build(BuildContext context) => Container(height: 300, color: AppTheme.primaryColor, child: const Center(child: Text("EBZIM")));
 }
 
 class _HeroLoading extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Container(
-    height: 620,
-    color: AppTheme.primaryColor.withValues(alpha: 0.1),
-    child: const Center(child: CircularProgressIndicator()),
-  );
+  Widget build(BuildContext context) => Container(height: 620, color: AppTheme.primaryColor.withValues(alpha: 0.1), child: const Center(child: CircularProgressIndicator()));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1415,19 +1166,12 @@ class _InstitutionalSection extends StatelessWidget {
         Row(
           children: [
             Container(
-              width: 36,
-              height: 3,
-              decoration: BoxDecoration(
-                color: AppTheme.accentColor,
-                borderRadius: BorderRadius.circular(2),
-              ),
+              width: 36, height: 3,
+              decoration: BoxDecoration(color: AppTheme.accentColor, borderRadius: BorderRadius.circular(2)),
               margin: const EdgeInsetsDirectional.only(end: 12),
             ),
             Text(
-              (isAr
-                      ? 'ابزيم تعمل • مشاريع ميدانية'
-                      : 'Ebzim en action • Projets terrain')
-                  .toUpperCase(),
+              (isAr ? 'ابزيم تعمل • مشاريع ميدانية' : 'Ebzim en action • Projets terrain').toUpperCase(),
               style: GoogleFonts.playfairDisplay(
                 color: AppTheme.accentColor,
                 fontSize: 10,
@@ -1494,9 +1238,7 @@ class _InstitutionalSection extends StatelessWidget {
         _InstitutionalCard(
           icon: Icons.shield_outlined,
           iconColor: const Color(0xFF22C55E),
-          tag: isAr
-              ? 'مجتمع مدني • إبلاغ مدني'
-              : 'Société civile • Signalement civique',
+          tag: isAr ? 'مجتمع مدني • إبلاغ مدني' : 'Société civile • Signalement civique',
           title: isAr ? 'بلّغ عن انتهاك' : 'Signaler une violation',
           subtitle: isAr
               ? 'تراث عمراني، سرقة أثرية، تشويه الفضاء العام…'
@@ -1544,112 +1286,99 @@ class _InstitutionalCard extends StatelessWidget {
     Color textMuted = isDark ? const Color(0x73FFFFFF) : Colors.black54;
 
     return Container(
-          decoration: BoxDecoration(
-            color: cardBgStrong,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: isDark
-                  ? iconColor.withValues(alpha: 0.2)
-                  : iconColor.withValues(alpha: 0.1),
-              width: 1.5,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
+      decoration: BoxDecoration(
+        color: cardBgStrong,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isDark ? iconColor.withValues(alpha: 0.2) : iconColor.withValues(alpha: 0.1),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(24),
-              splashColor: iconColor.withValues(alpha: 0.1),
-              child: Padding(
-                padding: const EdgeInsets.all(22),
-                child: Row(
-                  children: [
-                    Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: iconColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(
-                              color: iconColor.withValues(alpha: 0.2),
-                            ),
-                          ),
-                          child: Icon(icon, color: iconColor, size: 28),
-                        )
-                        .animate(onPlay: (c) => c.repeat(reverse: true))
-                        .scale(
-                          begin: const Offset(0.95, 0.95),
-                          end: const Offset(1.05, 1.05),
-                          duration: 2.seconds,
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(24),
+          splashColor: iconColor.withValues(alpha: 0.1),
+          child: Padding(
+            padding: const EdgeInsets.all(22),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: iconColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: iconColor.withValues(alpha: 0.2)),
+                  ),
+                  child: Icon(icon, color: iconColor, size: 28),
+                ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(0.95, 0.95), end: const Offset(1.05, 1.05), duration: 2.seconds),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tag,
+                        style: GoogleFonts.tajawal(
+                          color: iconColor,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.2,
                         ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        title,
+                        style: GoogleFonts.tajawal(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.cairo(
+                          fontSize: 13,
+                          color: textMuted,
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            tag,
-                            style: GoogleFonts.tajawal(
-                              color: iconColor,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            title,
-                            style: GoogleFonts.tajawal(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w900,
-                              color: textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            subtitle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            buttonLabel,
                             style: GoogleFonts.cairo(
+                              color: iconColor,
                               fontSize: 13,
-                              color: textMuted,
-                              height: 1.5,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
-                          const SizedBox(height: 14),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                buttonLabel,
-                                style: GoogleFonts.cairo(
-                                  color: iconColor,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Icon(buttonIcon, color: iconColor, size: 16),
-                            ],
-                          ),
+                          const SizedBox(width: 6),
+                          Icon(buttonIcon, color: iconColor, size: 16),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        )
-        .animate()
-        .fadeIn(delay: Duration(milliseconds: delay))
-        .slideX(begin: 0.05);
+        ),
+      ),
+    ).animate().fadeIn(delay: Duration(milliseconds: delay)).slideX(begin: 0.05);
   }
 }
 
@@ -1657,22 +1386,10 @@ class _InstitutionalCard extends StatelessWidget {
 // PLATFORM THEME HELPERS (Shared with Dashboard)
 // ─────────────────────────────────────────────────────────────────────────────
 const Color _kGold = AppTheme.accentColor;
-Color _cardBorder(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? const Color(0x22FFFFFF)
-    : Colors.black.withValues(alpha: 0.1);
-Color _cardBgStrong(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? const Color(0x12FFFFFF)
-    : Colors.white.withValues(alpha: 0.1);
-Color _textPrimary(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? Colors.white
-    : const Color(0xFF1A1C1A);
-Color _textSecondary(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-    ? const Color(0xCCFFFFFF)
-    : Colors.black87;
+Color _cardBorder(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x22FFFFFF) : Colors.black.withValues(alpha: 0.1);
+Color _cardBgStrong(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0x12FFFFFF) : Colors.white.withValues(alpha: 0.1);
+Color _textPrimary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1C1A);
+Color _textSecondary(BuildContext context) => Theme.of(context).brightness == Brightness.dark ? const Color(0xCCFFFFFF) : Colors.black87;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PUBLIC PLATFORM INTRO CARD
@@ -1684,179 +1401,132 @@ class _PublicPlatformCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
+    
     return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isDark
-                  ? [const Color(0xFF081C10), const Color(0xFF04140B)]
-                  : [Colors.white, const Color(0xFFF0F9F4)],
-            ),
-            borderRadius: BorderRadius.circular(32),
-            border: Border.all(
-              color: AppTheme.accentColor.withValues(alpha: 0.2),
-              width: 1.5,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.accentColor.withValues(alpha: 0.05),
-                blurRadius: 40,
-                spreadRadius: 2,
-              ),
-            ],
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark 
+            ? [const Color(0xFF081C10), const Color(0xFF04140B)]
+            : [Colors.white, const Color(0xFFF0F9F4)],
+        ),
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(
+          color: AppTheme.accentColor.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.accentColor.withValues(alpha: 0.05),
+            blurRadius: 40,
+            spreadRadius: 2,
           ),
-          clipBehavior: Clip.antiAlias,
-          child: Stack(
-            children: [
-              // Background Glow
-              Positioned(
-                    top: -50,
-                    right: -50,
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: RadialGradient(
-                          colors: [
-                            AppTheme.accentColor.withValues(alpha: 0.1),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                  .animate(onPlay: (c) => c.repeat())
-                  .shimmer(duration: 3.seconds, color: Colors.white10),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          // Background Glow
+          Positioned(
+            top: -50,
+            right: -50,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [AppTheme.accentColor.withValues(alpha: 0.1), Colors.transparent],
+                ),
+              ),
+            ),
+          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 3.seconds, color: Colors.white10),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(
-                        alpha: isDark ? 0.03 : 0.4,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: isDark ? 0.03 : 0.4),
+                  border: Border(
+                    bottom: BorderSide(color: AppTheme.accentColor.withValues(alpha: 0.1)),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: AppTheme.accentColor.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
                       ),
-                      border: Border(
-                        bottom: BorderSide(
-                          color: AppTheme.accentColor.withValues(alpha: 0.1),
-                        ),
+                      child: const Icon(Icons.auto_awesome_mosaic_rounded, color: AppTheme.accentColor, size: 24),
+                    ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(0.95, 0.95), end: const Offset(1.05, 1.05), duration: 2.seconds),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            loc.dashPublicIntroTitle,
+                            style: GoogleFonts.tajawal(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w900,
+                              color: isDark ? Colors.white : AppTheme.primaryColor,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          Container(
+                            height: 2,
+                            width: 60,
+                            margin: const EdgeInsets.only(top: 4),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(colors: [AppTheme.accentColor, Colors.transparent]),
+                              borderRadius: BorderRadius.circular(1),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      loc.dashPublicIntroDesc,
+                      style: GoogleFonts.cairo(
+                        fontSize: 15,
+                        color: isDark ? Colors.white70 : Colors.black87,
+                        height: 1.7,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
                       children: [
-                        Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: AppTheme.accentColor.withValues(
-                                  alpha: 0.1,
-                                ),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: AppTheme.accentColor.withValues(
-                                    alpha: 0.2,
-                                  ),
-                                ),
-                              ),
-                              child: const Icon(
-                                Icons.auto_awesome_mosaic_rounded,
-                                color: AppTheme.accentColor,
-                                size: 24,
-                              ),
-                            )
-                            .animate(onPlay: (c) => c.repeat(reverse: true))
-                            .scale(
-                              begin: const Offset(0.95, 0.95),
-                              end: const Offset(1.05, 1.05),
-                              duration: 2.seconds,
-                            ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                loc.dashPublicIntroTitle,
-                                style: GoogleFonts.tajawal(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w900,
-                                  color: isDark
-                                      ? Colors.white
-                                      : AppTheme.primaryColor,
-                                  letterSpacing: -0.5,
-                                ),
-                              ),
-                              Container(
-                                height: 2,
-                                width: 60,
-                                margin: const EdgeInsets.only(top: 4),
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      AppTheme.accentColor,
-                                      Colors.transparent,
-                                    ],
-                                  ),
-                                  borderRadius: BorderRadius.circular(1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        _PremiumPillarChip(icon: Icons.palette_rounded, label: loc.dashPillar1, color: const Color(0xFFD4AF37)),
+                        _PremiumPillarChip(icon: Icons.account_balance_rounded, label: loc.dashPillar2, color: const Color(0xFF22C55E)),
+                        _PremiumPillarChip(icon: Icons.people_alt_rounded, label: loc.dashPillar3, color: const Color(0xFF3B82F6)),
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          loc.dashPublicIntroDesc,
-                          style: GoogleFonts.cairo(
-                            fontSize: 15,
-                            color: isDark ? Colors.white70 : Colors.black87,
-                            height: 1.7,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 28),
-                        Wrap(
-                          spacing: 12,
-                          runSpacing: 12,
-                          children: [
-                            _PremiumPillarChip(
-                              icon: Icons.palette_rounded,
-                              label: loc.dashPillar1,
-                              color: const Color(0xFFD4AF37),
-                            ),
-                            _PremiumPillarChip(
-                              icon: Icons.account_balance_rounded,
-                              label: loc.dashPillar2,
-                              color: const Color(0xFF22C55E),
-                            ),
-                            _PremiumPillarChip(
-                              icon: Icons.people_alt_rounded,
-                              label: loc.dashPillar3,
-                              color: const Color(0xFF3B82F6),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
-        )
-        .animate()
-        .fadeIn(duration: 800.ms)
-        .slideY(begin: 0.1, curve: Curves.easeOutCubic);
+        ],
+      ),
+    ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.1, curve: Curves.easeOutCubic);
   }
 }
 
@@ -1864,48 +1534,37 @@ class _PremiumPillarChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
-  const _PremiumPillarChip({
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
+  const _PremiumPillarChip({required this.icon, required this.label, required this.color});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: GoogleFonts.tajawal(
+              fontSize: 13,
+              color: isDark ? Colors.white.withValues(alpha: 0.9) : Colors.black87,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, color: color, size: 18),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: GoogleFonts.tajawal(
-                  fontSize: 13,
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.9)
-                      : Colors.black87,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        )
-        .animate(onPlay: (c) => c.repeat(reverse: true))
-        .shimmer(
-          delay: 2.seconds,
-          duration: 1.5.seconds,
-          color: Colors.white10,
-        );
+        ],
+      ),
+    ).animate(onPlay: (c) => c.repeat(reverse: true)).shimmer(delay: 2.seconds, duration: 1.5.seconds, color: Colors.white10);
   }
 }
+
 
 class _HomeProjectCard extends StatelessWidget {
   final NewsPost project;
@@ -1930,9 +1589,7 @@ class _HomeProjectCard extends StatelessWidget {
           color: isDark ? const Color(0xFF0F1A0F) : Colors.white,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(
-            color: isDark
-                ? AppTheme.accentColor.withValues(alpha: 0.1)
-                : AppTheme.primaryColor.withValues(alpha: 0.05),
+            color: isDark ? AppTheme.accentColor.withValues(alpha: 0.1) : AppTheme.primaryColor.withValues(alpha: 0.05),
             width: 1.5,
           ),
           boxShadow: [
@@ -1958,27 +1615,18 @@ class _HomeProjectCard extends StatelessWidget {
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
                       color: Colors.black12,
-                      child: const Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
+                      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
                     ),
                     errorWidget: (context, url, error) => Container(
                       color: Colors.black26,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.image_not_supported_outlined,
-                            color: Colors.white54,
-                            size: 40,
-                          ),
+                          const Icon(Icons.image_not_supported_outlined, color: Colors.white54, size: 40),
                           const SizedBox(height: 8),
                           Text(
                             isAr ? 'فشل تحميل الصورة' : 'Image error',
-                            style: const TextStyle(
-                              color: Colors.white38,
-                              fontSize: 10,
-                            ),
+                            style: const TextStyle(color: Colors.white38, fontSize: 10),
                           ),
                         ],
                       ),
@@ -1990,10 +1638,7 @@ class _HomeProjectCard extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.9),
-                          ],
+                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.9)],
                         ),
                       ),
                     ),
@@ -2011,20 +1656,11 @@ class _HomeProjectCard extends StatelessWidget {
                           children: [
                             Text(
                               isAr ? 'تقدم المشروع' : 'PROGRÈS',
-                              style: GoogleFonts.playfairDisplay(
-                                color: Colors.white70,
-                                fontSize: 9,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 1,
-                              ),
+                              style: GoogleFonts.playfairDisplay(color: Colors.white70, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 1),
                             ),
                             Text(
                               '${(project.progressPercentage * 100).toInt()}%',
-                              style: const TextStyle(
-                                color: AppTheme.accentColor,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w900,
-                              ),
+                              style: const TextStyle(color: AppTheme.accentColor, fontSize: 13, fontWeight: FontWeight.w900),
                             ),
                           ],
                         ),
@@ -2033,9 +1669,7 @@ class _HomeProjectCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
                             value: project.progressPercentage,
-                            backgroundColor: Colors.white.withValues(
-                              alpha: 0.1,
-                            ),
+                            backgroundColor: Colors.white.withValues(alpha: 0.1),
                             color: AppTheme.accentColor,
                             minHeight: 5,
                           ),
@@ -2049,28 +1683,15 @@ class _HomeProjectCard extends StatelessWidget {
                     left: isAr ? null : 12,
                     right: isAr ? 12 : null,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppTheme.accentColor,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.3),
-                            blurRadius: 10,
-                          ),
-                        ],
+                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10)],
                       ),
                       child: Text(
                         _getStatusLabel(project.projectStatus, isAr),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'Cairo',
-                        ),
+                        style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.w900, fontFamily: 'Cairo'),
                       ),
                     ),
                   ),
@@ -2083,10 +1704,7 @@ class _HomeProjectCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: AppTheme.accentColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
@@ -2138,14 +1756,10 @@ class _HomeProjectCard extends StatelessWidget {
 
   String _getStatusLabel(String status, bool isAr) {
     switch (status) {
-      case 'PREPARING':
-        return isAr ? 'تحضير' : 'Prép.';
-      case 'ONGOING':
-        return isAr ? 'جاري' : 'En cours';
-      case 'COMPLETED':
-        return isAr ? 'مكتمل' : 'Terminé';
-      default:
-        return isAr ? 'ميداني' : 'Terrain';
+      case 'PREPARING': return isAr ? 'تحضير' : 'Prép.';
+      case 'ONGOING': return isAr ? 'جاري' : 'En cours';
+      case 'COMPLETED': return isAr ? 'مكتمل' : 'Terminé';
+      default: return isAr ? 'ميداني' : 'Terrain';
     }
   }
 }

@@ -14,13 +14,13 @@ class NewsService {
       final response = await _ref.read(apiClientProvider).dio.get('posts');
       final dynamic responseData = response.data;
       List rawList = [];
-
+      
       if (responseData is List) {
         rawList = responseData;
       } else if (responseData is Map && responseData['data'] is List) {
         rawList = responseData['data'];
       }
-
+      
       return rawList.map((e) => NewsPost.fromJson(e)).toList();
     } catch (e) {
       if (kDebugMode) print('DEBUG: NewsService error: $e');
@@ -30,19 +30,16 @@ class NewsService {
 
   Future<List<NewsPost>> getAdminNews() async {
     try {
-      final response = await _ref
-          .read(apiClientProvider)
-          .dio
-          .get('posts/admin');
+      final response = await _ref.read(apiClientProvider).dio.get('posts/admin');
       final dynamic responseData = response.data;
       List rawList = [];
-
+      
       if (responseData is List) {
         rawList = responseData;
       } else if (responseData is Map && responseData['data'] is List) {
         rawList = responseData['data'];
       }
-
+      
       return rawList.map((e) => NewsPost.fromJson(e)).toList();
     } catch (e) {
       return [];
@@ -82,9 +79,7 @@ class NewsService {
       'category': category,
       'projectStatus': projectStatus,
       'title': {
-        'ar': (category != 'ANNOUNCEMENT' && !title.startsWith('[PROJ]'))
-            ? '[PROJ]$title'
-            : title,
+        'ar': (category != 'ANNOUNCEMENT' && !title.startsWith('[PROJ]')) ? '[PROJ]$title' : title,
         'fr': (titleFr != null && titleFr.isNotEmpty) ? titleFr : title,
         'en': (titleEn != null && titleEn.isNotEmpty) ? titleEn : title,
       },
@@ -114,7 +109,7 @@ class NewsService {
           'type': 'IMAGE',
           'cloudinaryUrl': imageUrl,
           'publicId': imageUrl.split('/').last.split('.').first,
-        },
+        }
       ];
     }
 
@@ -144,9 +139,7 @@ final adminNewsProvider = FutureProvider<List<NewsPost>>((ref) {
 
 final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
   final news = await ref.watch(newsServiceProvider).getNews();
-  return news
-      .where((p) => p.contentType == 'PROJECT' || p.isFieldProject)
-      .toList();
+  return news.where((p) => p.contentType == 'PROJECT' || p.isFieldProject).toList();
 });
 
 final postDetailsProvider = FutureProvider.family<NewsPost?, String>((ref, id) {

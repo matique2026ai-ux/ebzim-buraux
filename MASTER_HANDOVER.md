@@ -576,7 +576,7 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 
 22. **✅ [DONE] Zero-Lint Backend & Render Deployment Mastery (April 26, 2026)**:
     - **CRITICAL LESSON**: The user expects ZERO linting errors in the backend (`unsafe-member-access`, implicit `any`). Previous agents used `any` or `FilterQuery` from mongoose incorrectly, breaking the build. Additionally, Render's auto-deploy can take up to 15-20 minutes, causing a temporary mismatch between the Live URL and the pushed GitHub code.
-    - **Action Taken**: 
+    - **Action Taken**:
         1. Stripped all `any` usages from `events.service.ts` and `events.controller.ts`, replacing them with `Record<string, unknown>` or strictly typed assertions (`as { code?: number }`).
         2. Removed the `startDate >= new Date()` filter from `events.service.ts` -> `getPublicFeed` to allow ALL `PUBLISHED` events to show regardless of their date.
         3. Built and verified the Mobile APK pointing exactly to the production Render URL.

@@ -299,6 +299,7 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 - **[APRIL 25] News & Projects Separation:** Complete structural separation achieved. News has `newsType` (Urgent/Important/Normal) and Projects have enforced `contentType: 'PROJECT'`.
 - **[APRIL 25] Dynamic Geospatial Map:** Overhauled the public `/heritage` map to fetch live projects with coordinates. Replaced the static pale map with an interactive high-resolution Satellite Map (Esri World Imagery) and a top-level category filter (`All`, `Heritage`, `Associative`, `Cultural`).
 - **[APRIL 25] Interactive Location Picker:** Upgraded the Admin Project Creation screen with an interactive `flutter_map` widget. Admins can now simply tap the map to precisely capture latitude/longitude without manual data entry.
+- **[APRIL 25] Unified Associative Taxonomy:** The public Project filters and card labels are now strictly mapped to the 6 official admin dashboard categories (ASSOCIATIVE, PROJECT, RESTORATION, CULTURAL, SOCIAL, SCIENTIFIC). Extraneous filters were removed from the public project screens to maintain logical separation.
 
 ---
 
@@ -356,6 +357,7 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 12. **✅ [DONE] Backend-Frontend Mapping Integrity**: Fixed the `posts.service.ts` mapping to ensure `metadata` (milestones/progress) and `createdAt` are preserved during DTO transformation.
 13. **✅ [DONE] Backend Stability**: Resolved critical merge conflicts in `app.controller.ts` and cleared port 3000 zombies to ensure reliable local development.
 14. **✅ [DONE] Map Logic & UX Refactoring**: Resolved the logical gap between the CMS and the Map screen. Added a satellite map picker to the admin dashboard, and converted the public map into a dynamic, filterable discovery engine.
+15. **✅ [DONE] Global Category & Logic Synchronization:** Enforced strict `contentType` checking ('PROJECT' vs 'NEWS') on the Home Screen. Synchronized public project filter chips and card labels to perfectly match the 6 official associative standards established in the Admin Dashboard.
 
 ---
 

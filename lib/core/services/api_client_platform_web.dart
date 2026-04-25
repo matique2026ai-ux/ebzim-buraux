@@ -7,6 +7,6 @@ void configurePlatformProxy(Dio dio) {
 bool get isPlatformTest => false;
 
 String getPlatformBaseUrl(bool isTest) {
-  // Local Dev
-  return 'http://localhost:3000/api/v1/';
+  // Use the production Render URL for consistency with mobile
+  return 'https://ebzim-api-prod.onrender.com/api/v1/';
 }

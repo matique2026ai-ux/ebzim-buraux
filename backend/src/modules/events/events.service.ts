@@ -1,10 +1,8 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, FilterQuery, UpdateQuery } from 'mongoose';
 import { EventDocument, EventRsvpDocument } from './schemas/event.schema';
 import {
-  buildCursorPagination,
-  formatCursorPaginatedResponse,
   buildOffsetPagination,
   formatOffsetPaginatedResponse,
 } from '../../common/utils/pagination.util';
@@ -16,14 +14,14 @@ export class EventsService {
     @InjectModel('EventRsvp') private rsvpModel: Model<EventRsvpDocument>,
   ) {}
 
-  async getPublicFeed(locale: string, options: any) {
+  async getPublicFeed(locale: string, options: { limit?: number; cursor?: string }) {
     // For events, cursor could reasonably be startDate instead of _id to fetch approaching ones
     const limit = options.limit && options.limit > 0 ? options.limit : 10;
-    const query: any = { publicationStatus: 'PUBLISHED' };
+    const query: FilterQuery<EventDocument> = { publicationStatus: 'PUBLISHED' };
 
     // If a cursor is provided, we can use it for pagination, but we don't force 'upcoming only' by default anymore
     if (options.cursor) {
-      query.startDate = { $lt: new Date(options.cursor) }; 
+      query.startDate = { $lt: new Date(options.cursor) };
     }
 
     const events = await this.eventModel
@@ -63,11 +61,11 @@ export class EventsService {
     return formatOffsetPaginatedResponse(events, total, page, limit);
   }
 
-  async createEvent(dto: any) {
+  async createEvent(dto: Partial<EventDocument>) {
     return this.eventModel.create(dto);
   }
 
-  async updateEvent(id: string, dto: any) {
+  async updateEvent(id: string, dto: UpdateQuery<EventDocument>) {
     return this.eventModel.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 
@@ -86,7 +84,7 @@ export class EventsService {
         userId,
         status: 'REGISTERED',
       });
-    } catch (e) {
+    } catch (e: any) {
       if (e.code === 11000) {
         throw new ConflictException(
           'User already formally registered for this event',

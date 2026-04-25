@@ -74,6 +74,12 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       imageUrl: 'https://images.unsplash.com/photo-1647466184964-b0a708a38757?w=400&auto=format&fit=crop', 
       lat: 36.7458, lon: 3.0597
     ),
+    WikiLandmark(
+      pageId: -9, title: 'عين الفوارة - سطيف', 
+      description: 'أيقونة مدينة سطيف وأشهر نافورة في الجزائر، تحفة فنية ومعلم تاريخي يتوسط قلب المدينة.',
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Ain_El_Fouara_2013.JPG/800px-Ain_El_Fouara_2013.JPG',
+      lat: 36.189444, lon: 5.405
+    ),
   ];
 
   String _stripDiacritics(String str) {
@@ -104,7 +110,7 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
         'generator': 'geosearch',
         'ggscoord': '${center.latitude}|${center.longitude}',
         'ggsradius': '10000',
-        'ggslimit': '30',
+        'ggslimit': '50',
         'prop': 'coordinates|pageimages|description',
         'piprop': 'thumbnail',
         'pithumbsize': '400',
@@ -275,10 +281,7 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
 
               // Selection Card
               if (_selectedItem != null)
-                Positioned(
-                  bottom: 20, left: 20, right: 20,
-                  child: _buildDetailCard(_selectedItem, isAr, isDark),
-                ),
+                _buildDetailCard(_selectedItem, isAr, isDark),
 
               // Floating Layer Switcher
               PositionedDirectional(
@@ -315,6 +318,11 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   }
 
   Marker _buildWikiMarker(WikiLandmark item, bool isDark, bool isSelected) {
+    // Special theme for Global Wonders (like Ain El Fouara)
+    final bool isWonder = item.pageId < 0;
+    final Color markerColor = isWonder ? Colors.amber : Colors.purpleAccent;
+    final IconData markerIcon = isWonder ? Icons.museum_rounded : Icons.auto_awesome;
+
     return Marker(
       point: LatLng(item.lat, item.lon),
       width: 65, height: 65,
@@ -323,7 +331,7 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
           setState(() => _selectedItem = item);
           _mapController.move(LatLng(item.lat, item.lon), 16.0);
         },
-        child: _buildMarkerWidget(Icons.auto_awesome, Colors.purpleAccent, isSelected),
+        child: _buildMarkerWidget(markerIcon, markerColor, isSelected),
       ),
     );
   }
@@ -459,7 +467,7 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       desc = item.description;
       img = item.imageUrl;
       cat = isAr ? 'موسوعة ويكيبيديا' : 'Wikipedia';
-      onTap = null; // Maybe open external link in future
+      onTap = null;
     } else if (item is NewsPost) {
       title = item.getTitle(isAr ? 'ar' : 'fr');
       desc = item.getSummary(isAr ? 'ar' : 'fr');
@@ -468,66 +476,125 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       onTap = () => context.push('/project/${item.id}', extra: item);
     }
 
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E2124) : Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 30, offset: const Offset(0, 10))],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (img.isNotEmpty)
-                    SizedBox(
-                      height: 140,
-                      width: double.infinity,
-                      child: CachedNetworkImage(imageUrl: img, fit: BoxFit.cover),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
+    return Positioned(
+      bottom: 24,
+      left: 16,
+      right: 16,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Hero(
+            tag: 'detail_card',
+            child: Material(
+              color: Colors.transparent,
+              child: GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF1E2124) : Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 40,
+                        offset: const Offset(0, 15),
+                      )
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(color: AppTheme.accentColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
-                          child: Text(cat, style: const TextStyle(color: AppTheme.accentColor, fontSize: 10, fontWeight: FontWeight.bold)),
+                        if (img.isNotEmpty)
+                          SizedBox(
+                            height: 140,
+                            width: double.infinity,
+                            child: CachedNetworkImage(
+                              imageUrl: img,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                color: Colors.black12,
+                                child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                color: AppTheme.accentColor.withValues(alpha: 0.1),
+                                child: const Center(
+                                  child: Icon(Icons.museum_outlined, color: AppTheme.accentColor, size: 40),
+                                ),
+                              ),
+                            ),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.accentColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  cat,
+                                  style: const TextStyle(
+                                    color: AppTheme.accentColor,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                title,
+                                style: GoogleFonts.cairo(
+                                  color: isDark ? Colors.white : Colors.black87,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                desc,
+                                style: TextStyle(
+                                  color: isDark ? Colors.white70 : Colors.black54,
+                                  fontSize: 13,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(title, style: GoogleFonts.cairo(color: isDark ? Colors.white : Colors.black87, fontSize: 18, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 4),
-                        Text(desc, style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
                       ],
                     ),
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-        PositionedDirectional(
-          top: 12,
-          end: 12,
-          child: GestureDetector(
-            onTap: () => setState(() => _selectedItem = null),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.6),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white24, width: 1),
+          Positioned(
+            top: 12,
+            right: 12,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => setState(() => _selectedItem = null),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppTheme.accentColor,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(color: Colors.black45, blurRadius: 10, offset: const Offset(0, 2))
+                  ],
+                ),
+                child: const Icon(Icons.close, color: Colors.white, size: 18),
               ),
-              child: const Icon(Icons.close, color: Colors.white, size: 20),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

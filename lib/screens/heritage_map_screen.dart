@@ -32,32 +32,32 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   final List<WikiLandmark> _globalWonders = [
     WikiLandmark(
       pageId: -1, title: 'أهرامات الجيزة', description: 'من عجائب الدنيا السبع القديمة', 
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/400px-All_Gizah_Pyramids.jpg', 
+      imageUrl: 'https://images.unsplash.com/photo-1539667468225-eebb663053e6?w=400&auto=format&fit=crop', 
       lat: 29.9792, lon: 31.1342
     ),
     WikiLandmark(
       pageId: -2, title: 'برج إيفل', description: 'المعلم الأيقوني لمدينة باريس', 
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg/400px-Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg', 
+      imageUrl: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=400&auto=format&fit=crop', 
       lat: 48.8584, lon: 2.2945
     ),
     WikiLandmark(
       pageId: -3, title: 'برج بيزا المائل', description: 'برج جرس إيطالي مشهور بميلانه', 
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/The_Leaning_Tower_of_Pisa_SB.jpeg/400px-The_Leaning_Tower_of_Pisa_SB.jpeg', 
+      imageUrl: 'https://images.unsplash.com/photo-1528114039593-4366cc08227d?w=400&auto=format&fit=crop', 
       lat: 43.7230, lon: 10.3966
     ),
     WikiLandmark(
       pageId: -4, title: 'الكولوسيوم', description: 'مدرج روماني أثري في روما', 
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/400px-Colosseo_2020.jpg', 
+      imageUrl: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&auto=format&fit=crop', 
       lat: 41.8902, lon: 12.4922
     ),
     WikiLandmark(
       pageId: -5, title: 'البتراء', description: 'المدينة الوردية الأثرية بالأردن', 
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Al_Khazneh_Petra_2024.jpg/400px-Al_Khazneh_Petra_2024.jpg', 
+      imageUrl: 'https://images.unsplash.com/photo-1579606031201-987efecab8ac?w=400&auto=format&fit=crop', 
       lat: 30.3285, lon: 35.4444
     ),
     WikiLandmark(
       pageId: -6, title: 'تاج محل', description: 'ضريح رخامي ضخم في الهند', 
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Taj_Mahal_in_March_2004.jpg/400px-Taj_Mahal_in_March_2004.jpg', 
+      imageUrl: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&auto=format&fit=crop', 
       lat: 27.1751, lon: 78.0421
     ),
   ];

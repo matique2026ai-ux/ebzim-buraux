@@ -95,11 +95,12 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
         final pages = data['query']?['pages'] as Map<String, dynamic>? ?? {};
         final List<WikiLandmark> newLandmarks = [];
         
-        // ... (blacklist logic)
+        // Robust Blacklist: Remove administrative and modern infrastructure
         final blacklistedKeywords = [
           'aeroport', 'universite', 'stade', 'hopital', 'gare', 'clinique', 
           'ecole', 'lycee', 'hotel', 'commune', 'wilaya', 'daira', 'entreprise',
-          'ville', 'village', 'arrondissement', 'quartier', 'centre', 'usine', 'barrage', 'institut', 'faculte'
+          'ville', 'village', 'arrondissement', 'quartier', 'centre', 'usine', 'barrage', 'institut', 'faculte',
+          'بلدية', 'ولاية', 'دائرة', 'مدينة', 'قرية', 'حي ', 'مستشفى', 'جامعة', 'مطار', 'ثانوية', 'ابتدائية', 'متوسطة', 'فندق'
         ];
 
         for (var page in pages.values) {

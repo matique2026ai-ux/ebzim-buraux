@@ -6,6 +6,7 @@ import {
   buildOffsetPagination,
   formatOffsetPaginatedResponse,
 } from '../../common/utils/pagination.util';
+import { CreateEventDto } from './dto/create-event.dto';
 
 @Injectable()
 export class EventsService {
@@ -61,7 +62,7 @@ export class EventsService {
     return formatOffsetPaginatedResponse(events, total, page, limit);
   }
 
-  async createEvent(dto: Partial<EventDocument>) {
+  async createEvent(dto: CreateEventDto) {
     return this.eventModel.create(dto);
   }
 

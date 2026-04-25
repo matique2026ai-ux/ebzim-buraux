@@ -84,7 +84,7 @@ export class EventsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an existing event' })
   async updateEvent(@Param('id') id: string, @Body() updateData: any) {
-    return this.eventsService.updateEvent(id, updateData);
+    return this.eventsService.updateEvent(id, updateData as any);
   }
 
   @Delete(':id')

@@ -331,7 +331,9 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 ---
 
 ## 🚀 10. Recommended Stable Development Workflow
+
 To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent Hang" syndrome), the following methodology is currently employed and highly recommended:
+
 1. **Targeted Micro-Edits**: Instead of rewriting entire files, updates are applied via precise chunk replacements (`replace_file_content` tools).
 2. **Instant Hot Restart Validation**: After a UI or logical change is applied, a `Hot Restart` (`R` via command input) is sent to the running Flutter web process on port 8080. This instantly flushes the state and applies the new code without requiring a full rebuild or stopping the server.
 3. **Continuous State Tracking**: The NestJS backend remains untouched unless the DTO/Schema demands a change, isolating frontend rapid-prototyping from backend recompilation.

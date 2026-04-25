@@ -64,6 +64,16 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       imageUrl: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&auto=format&fit=crop', 
       lat: 27.1751, lon: 78.0421
     ),
+    WikiLandmark(
+      pageId: -7, title: 'تمثال الحرية', description: 'رمز الحرية في نيويورك، الولايات المتحدة', 
+      imageUrl: 'https://images.unsplash.com/photo-1527549993586-dff825b37782?w=400&auto=format&fit=crop', 
+      lat: 40.6892, lon: -74.0445
+    ),
+    WikiLandmark(
+      pageId: -8, title: 'مقام الشهيد', description: 'رمز الاستقلال الجزائري - الجزائر العاصمة', 
+      imageUrl: 'https://images.unsplash.com/photo-1647466184964-b0a708a38757?w=400&auto=format&fit=crop', 
+      lat: 36.7458, lon: 3.0597
+    ),
   ];
 
   String _stripDiacritics(String str) {
@@ -84,12 +94,26 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   Future<void> _fetchWikiLandmarks(LatLng center) async {
     if (_isLoadingWiki) return;
     setState(() => _isLoadingWiki = true);
+    
     try {
       final lang = ref.read(localeProvider).languageCode;
       final wikiSub = lang == 'ar' ? 'ar' : (lang == 'fr' ? 'fr' : 'en');
-      final url = Uri.parse(
-          'https://$wikiSub.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${center.latitude}|${center.longitude}&ggsradius=10000&ggslimit=30&prop=coordinates|pageimages|description&piprop=thumbnail&pithumbsize=400&format=json&origin=*');
-      final response = await http.get(url);
+      
+      final uri = Uri.https('$wikiSub.wikipedia.org', '/w/api.php', {
+        'action': 'query',
+        'generator': 'geosearch',
+        'ggscoord': '${center.latitude}|${center.longitude}',
+        'ggsradius': '10000',
+        'ggslimit': '30',
+        'prop': 'coordinates|pageimages|description',
+        'piprop': 'thumbnail',
+        'pithumbsize': '400',
+        'format': 'json',
+        'origin': '*',
+      });
+
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final pages = data['query']?['pages'] as Map<String, dynamic>? ?? {};
@@ -111,12 +135,12 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
             
             bool isBlacklisted = blacklistedKeywords.any((kw) => title.contains(kw) || desc.contains(kw));
             
-            if (!isBlacklisted && page['thumbnail'] != null) {
+            if (!isBlacklisted) {
               _loadedWikiIds.add(pageId);
               newLandmarks.add(WikiLandmark(
                 pageId: pageId,
                 title: page['title'] ?? '',
-                description: page['description'] ?? 'معلم أو مكان بارز',
+                description: page['description'] ?? (lang == 'ar' ? 'معلم تاريخي أو موقع أثري' : 'Site historique ou monument'),
                 imageUrl: page['thumbnail']?['source'] ?? '',
                 lat: page['coordinates'][0]['lat'],
                 lon: page['coordinates'][0]['lon'],
@@ -215,7 +239,9 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
                   initialCenter: const LatLng(36.1915, 5.4110),
                   initialZoom: 14.5,
                   onTap: (tapPosition, point) {
-                    setState(() => _selectedItem = null);
+                    if (_selectedItem != null) {
+                      setState(() => _selectedItem = null);
+                    }
                   },
                   onPositionChanged: (pos, hasGesture) {
                     if (hasGesture && pos.center != null) {
@@ -486,18 +512,18 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
           ),
         ),
         PositionedDirectional(
-          top: 10,
-          end: 10,
-          child: Material(
-            color: Colors.black54,
-            shape: const CircleBorder(),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: () => setState(() => _selectedItem = null),
-              child: const Padding(
-                padding: EdgeInsets.all(6.0),
-                child: Icon(Icons.close, color: Colors.white, size: 18),
+          top: 12,
+          end: 12,
+          child: GestureDetector(
+            onTap: () => setState(() => _selectedItem = null),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.6),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white24, width: 1),
               ),
+              child: const Icon(Icons.close, color: Colors.white, size: 20),
             ),
           ),
         ),

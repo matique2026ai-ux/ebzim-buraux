@@ -140,7 +140,9 @@ class NewsPost {
       bodyEn: content['en'] ?? '',
       bodyFr: content['fr'] ?? '',
       imageUrl: img,
-      category: json['category'] ?? metadata['category'] ?? 'ANNOUNCEMENT',
+      category: json['category'] ?? 
+                metadata['category'] ?? 
+                ((title['ar'] != null && title['ar'].toString().contains('[PROJ]')) ? 'PROJECT' : 'ANNOUNCEMENT'),
       projectStatus: json['projectStatus'] ?? metadata['projectStatus'] ?? 'GENERAL',
       progressPercentage: (metadata['progressPercentage'] != null) 
           ? double.tryParse(metadata['progressPercentage'].toString()) ?? 0.0 

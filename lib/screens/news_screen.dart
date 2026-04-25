@@ -23,6 +23,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
     ('ANNOUNCEMENT', 'إعلانات', 'Annonces'),
     ('PARTNERSHIP', 'شراكات', 'Partenariats'),
     ('EVENT_REPORT', 'تقارير', 'Comptes-rendus'),
+    ('PRESS_RELEASE', 'بيان صحفي', 'Communiqué'),
   ];
 
   /* String _catLabel(String code, String lang) { // Removed to fix unused element warning
@@ -134,9 +135,9 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
           newsAsync.when(
             data: (posts) {
               final filtered = _selectedCategory == 'ALL'
-                  ? posts.where((p) => const {'ANNOUNCEMENT', 'PARTNERSHIP', 'EVENT_REPORT'}.contains(p.category.toUpperCase()) || p.category.isEmpty).toList()
+                  ? posts.where((p) => p.isInstitutionalNews || p.category.isEmpty).toList()
                   : posts
-                      .where((p) => p.category == _selectedCategory)
+                      .where((p) => p.category.toUpperCase() == _selectedCategory.toUpperCase())
                       .toList();
 
               if (filtered.isEmpty) {

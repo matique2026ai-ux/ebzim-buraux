@@ -9,9 +9,9 @@ export class AppController {
   getDebug() {
     return {
       status: 'EBZIM_DEPLOY_SYNCED',
-      version: '1.2.1-FORCED',
+      version: '1.2.1-STABLE',
       timestamp: new Date().toISOString(),
-      deploymentTag: '1.2.1_FINAL_FIX',
+      deploymentTag: 'APRIL_25_PRODUCTION_SYNC',
     };
   }
 

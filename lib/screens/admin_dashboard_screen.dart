@@ -39,11 +39,12 @@ class AdminDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Reactive Auth Guard: Redirect to login if session is lost/expired
     final auth = ref.watch(authProvider);
-    if (!auth.isAuthenticated && !auth.isInitializing) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) context.go('/login');
-      });
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (auth.isInitializing) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: AppTheme.accentColor),
+        ),
+      );
     }
 
     final userAsync = ref.watch(currentUserProvider);

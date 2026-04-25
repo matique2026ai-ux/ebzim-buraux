@@ -91,7 +91,7 @@ class HomeScreen extends ConsumerWidget {
               data: (posts) {
                 // Filter to only show general news/announcements, excluding projects
                 final newsPosts = posts.where((p) => 
-                  p.category.toUpperCase() == 'ANNOUNCEMENT' || 
+                  p.isInstitutionalNews || 
                   p.category.isEmpty
                 ).toList();
 

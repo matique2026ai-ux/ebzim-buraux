@@ -40,17 +40,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
       print('[DEBUG AUTH] Token found: ${token != null}');
       if (token != null) {
         print('[DEBUG AUTH] Fetching user profile...');
-        final user = await _ref.read(userProfileServiceProvider).fetchUserProfile();
-        print('[DEBUG AUTH] User profile fetched: ${user.getName('en')}');
-        state = AuthState(isAuthenticated: true, user: user, isInitializing: false);
+        try {
+          final user = await _ref.read(userProfileServiceProvider).fetchUserProfile();
+          // Guard: If state was changed (e.g. logout) while waiting, don't overwrite
+          if (!state.isInitializing) return;
+          
+          print('[DEBUG AUTH] User profile fetched: ${user.getName('en')}');
+          state = AuthState(isAuthenticated: true, user: user, isInitializing: false);
+        } catch (e) {
+          print('[DEBUG AUTH] Error fetching profile, likely invalid token: $e');
+          await _ref.read(storageServiceProvider).deleteToken();
+          state = AuthState(isInitializing: false);
+        }
       } else {
         print('[DEBUG AUTH] No token, setting initializing to false');
-        state = AuthState(); // isInitializing defaults to false
+        state = AuthState(isInitializing: false);
       }
     } catch (e) {
-      print('[DEBUG AUTH] Error in _loadSession: $e');
-      await _ref.read(storageServiceProvider).deleteToken();
-      state = AuthState(); // Now correctly defaults isInitializing to false
+      print('[DEBUG AUTH] Critical error in _loadSession: $e');
+      state = AuthState(isInitializing: false);
     }
   }
 

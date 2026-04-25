@@ -42,8 +42,13 @@ class ApiClient {
         onError: (DioException e, handler) {
           if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
             // If unauthorized or forbidden, clear token and trigger global logout
-            _ref.read(storageServiceProvider).deleteToken();
-            _ref.read(authProvider.notifier).logout();
+            _ref.read(storageServiceProvider).deleteToken().then((_) {
+              final authNotifier = _ref.read(authProvider.notifier);
+              // Only trigger logout if we are currently authenticated to avoid loops
+              if (_ref.read(authProvider).isAuthenticated) {
+                authNotifier.logout();
+              }
+            });
           }
           return handler.next(e);
         },
@@ -85,8 +90,8 @@ final apiClientProvider = Provider((ref) {
 
   final dio = Dio(BaseOptions(
     baseUrl: baseUrl,
-    connectTimeout: const Duration(seconds: 90),
-    receiveTimeout: const Duration(seconds: 90),
+    connectTimeout: const Duration(seconds: 60), // Give Render time to wake up
+    receiveTimeout: const Duration(seconds: 60),
   ));
 
   return ApiClient(dio: dio, storageService: storageService, ref: ref);

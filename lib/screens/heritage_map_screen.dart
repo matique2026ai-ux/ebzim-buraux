@@ -46,9 +46,11 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
         final data = jsonDecode(response.body);
         final pages = data['query']?['pages'] as Map<String, dynamic>? ?? {};
         final List<WikiLandmark> newLandmarks = [];
-        final validKeywords = [
-          'musée', 'ruines', 'archéologique', 'monument', 'mosquée', 'château', 
-          'patrimoine', 'historique', 'antique', 'romain', 'tombeau', 'palais', 'site', 'vestiges'
+        // Blacklist approach: exclude modern/irrelevant infrastructure instead of restricting to strict heritage keywords
+        final blacklistedKeywords = [
+          'aéroport', 'aeroport', 'université', 'universite', 'stade', 'hôpital', 'hopital', 'gare', 'clinique', 
+          'école', 'ecole', 'lycée', 'lycee', 'hôtel', 'hotel', 'commune', 'wilaya', 'daira', 'daïra', 'entreprise',
+          'ville', 'village', 'arrondissement', 'quartier', 'centre', 'usine', 'barrage', 'institut', 'faculté'
         ];
 
         for (var page in pages.values) {
@@ -56,14 +58,14 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
             final title = (page['title'] ?? '').toLowerCase();
             final desc = (page['description'] ?? '').toLowerCase();
             
-            bool isHeritage = validKeywords.any((kw) => title.contains(kw) || desc.contains(kw));
+            bool isBlacklisted = blacklistedKeywords.any((kw) => title.contains(kw) || desc.contains(kw));
             
-            // Allow if it has a thumbnail and matches heritage keywords
-            if (isHeritage && page['thumbnail'] != null) {
+            // Allow if it has a thumbnail and is NOT blacklisted
+            if (!isBlacklisted && page['thumbnail'] != null) {
               newLandmarks.add(WikiLandmark(
                 pageId: page['pageid'],
                 title: page['title'] ?? '',
-                description: page['description'] ?? 'معلم تاريخي',
+                description: page['description'] ?? 'معلم أو مكان بارز',
                 imageUrl: page['thumbnail']?['source'] ?? '',
                 lat: page['coordinates'][0]['lat'],
                 lon: page['coordinates'][0]['lon'],

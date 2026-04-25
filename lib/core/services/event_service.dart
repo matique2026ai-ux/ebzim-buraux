@@ -243,14 +243,14 @@ class EventService {
     final Map<String, dynamic> data = {
       'categoryId': eventCategoryId,
       'title': {
-        'ar': title,
-        'fr': title,
-        'en': title,
+        'ar': title.trim().isEmpty ? ' ' : title,
+        'fr': title.trim().isEmpty ? ' ' : title,
+        'en': title.trim().isEmpty ? ' ' : title,
       },
       'description': {
-        'ar': description,
-        'fr': description,
-        'en': description,
+        'ar': description.trim().isEmpty ? ' ' : description,
+        'fr': description.trim().isEmpty ? ' ' : description,
+        'en': description.trim().isEmpty ? ' ' : description,
       },
       'startDate': startDate,
       'endDate': endDate,

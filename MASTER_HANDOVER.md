@@ -9,32 +9,39 @@
 
 > [!IMPORTANT]
 > **بروتوكول التشغيل والتجريب (Mandatory Testing Protocol):**
+>
 > 1. **التعامل مع المنافذ (Ports):** دائماً تأكد من تحرير منفذ `8080` (للفرونت) ومنفذ `3000` (للباكاند) باستخدام `taskkill` قبل البدء.
 > 2. **التجريب "اللايف" (Live API):** نحن نختبر دائماً مقابل الـ API الحقيقي (Render) لضمان مطابقة البيانات. لا تستخدم `localhost` للباكاند إلا إذا كنت تعدل في الـ Database Schema نفسها.
 > 3. **طريقة التشغيل:** استخدم دائماً: `flutter run -d web-server --web-port 8080 --release` لتجنب تعليق المتصفح (Infinite Spinner).
 > 4. **الباكاند موجود هنا:** تذكر أن مجلد `backend` هو جزء من نفس المشروع (Monorepo)؛ أي تعديل فيه ثم `git push` سيرفع التحديث للسيرفر تلقائياً.
 
 ### 1. The "Infinite Spinner" Incident
+
 - **Issue:** A custom CSS/HTML loader in `index.html` caused an infinite hang because it didn't account for Flutter initialization failures or environment mismatches.
 - **Lesson:** **NEVER** modify the low-level `index.html` or `main.dart` boot sequence unless testing incrementally. We have restored the **Classic Flutter Web Loader** for maximum compatibility.
 - **Rule:** If the app stays white or spins forever, the root cause is usually a **Data Parsing Error** (Crash) in `main.dart` or **Infinite Redirection Loop** (fighting between Router and Widgets).
 
 ### 2. Defensive Data Parsing & API Pathing
-- **The Bug:** Requests starting with `/` (e.g., `/posts`) caused 404s when the `baseUrl` included `api/v1`. 
+
+- **The Bug:** Requests starting with `/` (e.g., `/posts`) caused 404s when the `baseUrl` included `api/v1`.
 - **Lesson:** Always use **Relative Paths** in Dio requests (e.g., `posts` instead of `/posts`).
 - **Cloud vs Local:** The production cloud API (Render) returns data wrapped in a `{"data": [...]}` object. Always use defensive parsing.
-- **Code Pattern:** 
+- **Code Pattern:**
+
   ```dart
   final responseData = response.data;
   List rawList = (responseData is Map) ? (responseData['data'] ?? []) : (responseData as List);
   ```
+
 - **Failure Consequence:** If a `Provider` throws an unhandled error during `HomeScreen` build, the UI will freeze or stay in a loading state (infinite spinner).
 
 ### 4. Port Management & Process Orphanage
+
 - **Issue:** On Windows, Flutter Web and NestJS processes can become "orphaned," holding ports (8080 or 3000) and causing `EADDRINUSE` errors.
 - **Lesson:** Always use `netstat -ano | findstr :<port>` and `taskkill /F /PID <PID>` before starting servers to ensure a clean launch.
 
 ### 5. Localization Path Resolution
+
 - **Issue:** Absolute imports for `AppLocalizations` (e.g., `import 'package:ebzim_app/core/localization/l10n/app_localizations.dart'`) can sometimes fail in specific build environments.
 - **Lesson:** Prefer **Relative Imports** for the localization file (e.g., `import '../core/localization/l10n/app_localizations.dart'`) to ensure portability across different Flutter toolchains.
 
@@ -42,13 +49,13 @@
 
 ## ⚡ QUICK START: AI AGENT LAUNCH PROTOCOL (MANDATORY)
 
-**🚨 TO ALL FUTURE AI AGENTS: READ THIS ENTIRE SECTION BEFORE TOUCHING ANYTHING 🚨**
+### 🚨 TO ALL FUTURE AI AGENTS: READ THIS ENTIRE SECTION BEFORE TOUCHING ANYTHING 🚨
 
 ### Step 1 — Understand the Monorepo Structure
 
 This is a **MONOREPO** containing both the frontend and backend:
 
-```
+```text
 c:\ebzim-buraux\
 ├── lib/                        ← Flutter Web (Frontend)
 ├── backend/                    ← NestJS API (Backend) ← DO NOT IGNORE THIS
@@ -104,7 +111,7 @@ Every `git push origin main` triggers a redeploy of the **NestJS Backend** on Re
 ## 🏗️ 1. Project Identity & Platform Overview
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | **Association** | Ebzim Association for Culture and Citizenship (جمعية إبزيم للثقافة والمواطنة) |
 | **Type** | Provincial Association — Sétif, Algeria (Law 06/12) |
 | **UNESCO Status** | Distinguished Member of the UNESCO Network in Algeria |
@@ -134,7 +141,7 @@ The platform serves 4 audiences:
 ### All Backend Modules (`backend/src/modules/`)
 
 | Module | Purpose |
-|---|---|
+| --- | --- |
 | `auth` | JWT-based authentication (Login, Register, OTP, Password Reset) |
 | `users` | User profiles, roles (`SUPER_ADMIN`, `ADMIN`, `AUTHORITY`, `MEMBER`) |
 | `memberships` | Membership applications, approval workflow, status tracking |
@@ -166,7 +173,7 @@ The platform serves 4 audiences:
 ### Key Screens (`lib/screens/`)
 
 | Screen | Route | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `splash_screen.dart` | `/` | Auto-login check — redirects to admin or home if session is valid |
 | `language_selection_screen.dart` | `/lang` | First-run language picker |
 | `onboarding_slider_screen.dart` | `/onboarding` | Intro slides (uses `HeroSlide` with `location: ONBOARDING`) |
@@ -189,7 +196,7 @@ The platform serves 4 audiences:
 ### Key Services (`lib/core/services/`)
 
 | Service | Purpose |
-|---|---|
+| --- | --- |
 | `api_client.dart` | Central Dio HTTP client with JWT interceptors |
 | `api_client_platform_web.dart` | **Edit this to switch between Production/Local API** |
 | `auth_service.dart` | Authentication logic and Riverpod providers |
@@ -255,7 +262,7 @@ The platform serves 4 audiences:
 The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageType`:
 
 | Type | Schema | Backend Route |
-|---|---|---|
+| --- | --- | --- |
 | `hero` | `HeroSlide` | `PATCH /hero-slides/:id` |
 | `onboarding` | `HeroSlide` (location: ONBOARDING) | `PATCH /hero-slides/:id` |
 | `partner` | `Partner` | `PATCH /partners/:id` |
@@ -285,7 +292,7 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 
 ## 🛠️ 9. Deployment & Git Workflow
 
-```
+```text
 Developer Machine
        │
        │ git push origin main
@@ -338,6 +345,7 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 **Current State: Admin Dashboard 100% modularized and stabilized. All tabs (Users, News, Events, Projects, etc.) are extracted into high-performance modular widgets. Production-ready delete functionality enabled for News and Events. Layout overflows resolved.**
 
 🚨 **NEXT AGENT FOCUS:**
+
 1. **Maintain the Modular Architecture:** Never add logic directly to `admin_dashboard_screen.dart`. Use `lib/screens/admin/tabs/`.
 2. **Tab Synchronization:** Ensure all tabs use `RefreshIndicator` and `SingleChildScrollView` for consistent UX.
 3. **API Integrity:** Monitor for 404s on specific detail routes (e.g., `/events/:id`) which might indicate backend route gaps.

@@ -1,5 +1,4 @@
 import {
-  IsString,
   IsNotEmpty,
   IsOptional,
   IsBoolean,
@@ -51,4 +50,11 @@ export class CreateEventDto {
   @IsEnum(['UPCOMING', 'ONGOING', 'COMPLETED', 'CANCELLED'])
   @IsOptional()
   eventStatus?: string;
+
+  @IsOptional()
+  coverImage?: { url: string; publicId: string };
+
+  @IsBoolean()
+  @IsOptional()
+  isFeatured?: boolean;
 }

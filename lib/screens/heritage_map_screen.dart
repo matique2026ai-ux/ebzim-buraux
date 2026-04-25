@@ -413,46 +413,66 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
       onTap = () => context.push('/project/${item.id}', extra: item);
     }
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E2124) : Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 30, offset: const Offset(0, 10))],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (img.isNotEmpty)
-                SizedBox(
-                  height: 140,
-                  width: double.infinity,
-                  child: CachedNetworkImage(imageUrl: img, fit: BoxFit.cover),
-                ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(color: AppTheme.accentColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
-                      child: Text(cat, style: const TextStyle(color: AppTheme.accentColor, fontSize: 10, fontWeight: FontWeight.bold)),
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E2124) : Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 30, offset: const Offset(0, 10))],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (img.isNotEmpty)
+                    SizedBox(
+                      height: 140,
+                      width: double.infinity,
+                      child: CachedNetworkImage(imageUrl: img, fit: BoxFit.cover),
                     ),
-                    const SizedBox(height: 8),
-                    Text(title, style: GoogleFonts.cairo(color: isDark ? Colors.white : Colors.black87, fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Text(desc, style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
-                  ],
-                ),
-              )
-            ],
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(color: AppTheme.accentColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
+                          child: Text(cat, style: const TextStyle(color: AppTheme.accentColor, fontSize: 10, fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(title, style: GoogleFonts.cairo(color: isDark ? Colors.white : Colors.black87, fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 4),
+                        Text(desc, style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        PositionedDirectional(
+          top: 10,
+          end: 10,
+          child: Material(
+            color: Colors.black54,
+            shape: const CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: () => setState(() => _selectedItem = null),
+              child: const Padding(
+                padding: EdgeInsets.all(6.0),
+                child: Icon(Icons.close, color: Colors.white, size: 18),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

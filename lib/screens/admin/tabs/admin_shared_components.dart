@@ -23,7 +23,7 @@ class AdminSectionHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppTheme.primaryColor.withValues(alpha: 0.1),
+            color: AppTheme.primaryColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: AppTheme.primaryColor, size: 24),
@@ -80,7 +80,7 @@ class AdminStatCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -135,7 +135,7 @@ class AdminMiniMetric extends StatelessWidget {
           label,
           style: GoogleFonts.tajawal(
             fontSize: 10,
-            color: AppTheme.primaryColor.withValues(alpha: 0.5),
+            color: AppTheme.primaryColor.withOpacity(0.5),
           ),
         ),
         const SizedBox(height: 2),
@@ -316,9 +316,9 @@ class AdminStatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Text(
         text,
@@ -387,9 +387,9 @@ class AdminGlassInfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.primaryColor.withValues(alpha: 0.1),
+        color: AppTheme.primaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.primaryColor.withOpacity(0.1)),
       ),
       child: Row(
         children: [
@@ -412,7 +412,7 @@ class AdminGlassInfoCard extends StatelessWidget {
                   message,
                   style: GoogleFonts.tajawal(
                     fontSize: 11,
-                    color: AppTheme.primaryColor.withValues(alpha: 0.7),
+                    color: AppTheme.primaryColor.withOpacity(0.7),
                     height: 1.5,
                   ),
                 ),

@@ -23,7 +23,7 @@ class ProjectsTab extends ConsumerWidget {
       onRefresh: () async => ref.invalidate(adminNewsProvider),
       child: newsAsync.when(
         data: (allPosts) {
-          final projects = allPosts.where((p) => p.isFieldProject).toList();
+          final projects = allPosts.where((p) => p.contentType == 'PROJECT' || p.isFieldProject).toList();
           final avgProgress = projects.isEmpty
               ? 0
               : (projects
@@ -171,7 +171,7 @@ class _AdminProjectCardState extends ConsumerState<_AdminProjectCard> {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

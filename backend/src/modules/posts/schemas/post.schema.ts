@@ -58,6 +58,20 @@ export class Post {
 
   @Prop({
     type: String,
+    enum: ['NEWS', 'PROJECT'],
+    default: 'NEWS',
+  })
+  contentType: string;
+
+  @Prop({
+    type: String,
+    enum: ['NORMAL', 'URGENT', 'IMPORTANT'],
+    default: 'NORMAL',
+  })
+  newsType: string;
+
+  @Prop({
+    type: String,
     enum: [
       'PREPARING',
       'LAUNCHING',
@@ -65,8 +79,6 @@ export class Post {
       'ON_HOLD',
       'COMPLETED',
       'GENERAL',
-      'URGENT',
-      'IMPORTANT',
     ],
     default: 'GENERAL',
   })

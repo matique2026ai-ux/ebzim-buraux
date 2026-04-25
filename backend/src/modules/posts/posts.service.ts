@@ -1,20 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, UpdateQuery } from 'mongoose';
 import { PostDocument } from './schemas/post.schema';
 import {
   buildCursorPagination,
-  formatCursorPaginatedResponse,
   buildOffsetPagination,
+  formatCursorPaginatedResponse,
   formatOffsetPaginatedResponse,
+  CursorPaginationOptions,
+  OffsetPaginationOptions,
 } from '../../common/utils/pagination.util';
+
+interface PostMedia {
+  type: string;
+  cloudinaryUrl: string;
+}
+
+interface PostDocumentObject {
+  _id: { toString(): string };
+  title: string;
+  summary: string;
+  content: string;
+  media?: PostMedia[];
+  publishedAt?: Date;
+  createdAt: Date;
+  category?: string;
+  contentType?: string;
+  newsType?: string;
+  projectStatus?: string;
+  metadata?: Record<string, any>;
+}
 
 @Injectable()
 export class PostsService {
   constructor(@InjectModel('Post') private postModel: Model<PostDocument>) {}
 
   async getPublicFeedSystemFixed(locale: string, options: any) {
-    const pagination = buildCursorPagination(options);
+    const pagination = buildCursorPagination(
+      options as CursorPaginationOptions,
+    );
     const query: Record<string, any> = pagination.query;
     const limit = pagination.limit;
 
@@ -29,15 +53,20 @@ export class PostsService {
 
     // Multilingual payload map: Strip unneeded languages to save mobile parsing speed
     const localizedPosts = posts.map((post) => {
-      const p = post.toObject();
+      const p = post.toObject() as unknown as PostDocumentObject;
+      const media = p.media || [];
+      const image = media.find((m) => m.type === 'IMAGE');
+
       return {
-        _id: p._id,
+        _id: p._id.toString(),
         title: p.title,
         summary: p.summary,
         content: p.content,
-        imageUrl: p.media?.find((m: any) => m.type === 'IMAGE')?.cloudinaryUrl || '',
-        publishedAt: p.publishedAt || (p as any).createdAt,
+        imageUrl: image?.cloudinaryUrl || '',
+        publishedAt: p.publishedAt || p.createdAt,
         category: p.category || 'ANNOUNCEMENT',
+        contentType: p.contentType || 'NEWS',
+        newsType: p.newsType || 'NORMAL',
         projectStatus: p.projectStatus || 'GENERAL',
         metadata: p.metadata || {},
       };
@@ -45,12 +74,14 @@ export class PostsService {
 
     return {
       version: '1.2.1-metadata-fix',
-      ...formatCursorPaginatedResponse(localizedPosts)
+      ...formatCursorPaginatedResponse(localizedPosts),
     };
   }
 
   async getAdminTable(options: any) {
-    const { skip, limit, page } = buildOffsetPagination(options);
+    const { skip, limit, page } = buildOffsetPagination(
+      options as OffsetPaginationOptions,
+    );
 
     const [posts, total] = await Promise.all([
       this.postModel
@@ -68,11 +99,16 @@ export class PostsService {
 
   async createPost(dto: any, authorId: string) {
     // Implementation uses native mongoose creation
-    return this.postModel.create({ ...dto, authorId });
+    return this.postModel.create({
+      ...(dto as Partial<PostDocument>),
+      authorId,
+    });
   }
 
   async updatePost(id: string, dto: any) {
-    return this.postModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+    return this.postModel
+      .findByIdAndUpdate(id, dto as UpdateQuery<PostDocument>, { new: true })
+      .exec();
   }
 
   async findOne(id: string) {

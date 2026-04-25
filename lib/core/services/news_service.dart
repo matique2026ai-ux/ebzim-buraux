@@ -139,20 +139,7 @@ final adminNewsProvider = FutureProvider<List<NewsPost>>((ref) {
 
 final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
   final news = await ref.watch(newsServiceProvider).getNews();
-  const projectCategories = {
-    'HERITAGE', 
-    'PROJECT', 
-    'RESTORATION', 
-    'SCIENTIFIC', 
-    'CULTURAL', 
-    'ARTISTIC',
-    'MEMORY',
-    'TOURISM',
-    'CHILD',
-    'ASSOCIATIVE',
-    'SOCIAL'
-  };
-  return news.where((p) => projectCategories.contains(p.category.toUpperCase())).toList();
+  return news.where((p) => p.contentType == 'PROJECT' || p.isFieldProject).toList();
 });
 
 final postDetailsProvider = FutureProvider.family<NewsPost?, String>((ref, id) {

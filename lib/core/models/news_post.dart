@@ -77,6 +77,8 @@ class NewsPost {
   final bool isFeatured;
   final DateTime publishedAt;
   final List<ProjectMilestone> milestones;
+  final String contentType;
+  final String newsType;
   final String? partnerName;
 
   NewsPost({
@@ -92,6 +94,8 @@ class NewsPost {
     required this.bodyFr,
     required this.imageUrl,
     required this.category,
+    this.contentType = 'NEWS',
+    this.newsType = 'NORMAL',
     this.projectStatus = 'GENERAL',
     this.progressPercentage = 0.0,
     this.isPinned = false,
@@ -143,6 +147,8 @@ class NewsPost {
       category: json['category'] ?? 
                 metadata['category'] ?? 
                 ((title['ar'] != null && title['ar'].toString().contains('[PROJ]')) ? 'PROJECT' : 'ANNOUNCEMENT'),
+      contentType: json['contentType'] ?? 'NEWS',
+      newsType: json['newsType'] ?? 'NORMAL',
       projectStatus: json['projectStatus'] ?? metadata['projectStatus'] ?? 'GENERAL',
       progressPercentage: (metadata['progressPercentage'] != null) 
           ? double.tryParse(metadata['progressPercentage'].toString()) ?? 0.0 

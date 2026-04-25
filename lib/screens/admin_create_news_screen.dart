@@ -40,11 +40,9 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
   bool _isPinned = false;
   bool _isLoading = false;
 
-  // Project-specific fields
+  // News-specific fields
   String _category = 'ANNOUNCEMENT';
-  String _projectStatus = 'GENERAL';
-  double _progressPercentage = 0.0;
-  final List<ProjectMilestone> _milestones = [];
+  String _newsType = 'NORMAL';
 
   @override
   void initState() {
@@ -63,15 +61,9 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       _existingImageUrl = p.imageUrl;
       _isPinned = p.isPinned;
       _category = p.category;
-      _projectStatus = p.projectStatus;
-      _progressPercentage = p.progressPercentage;
-      _milestones.addAll(p.milestones);
+      _newsType = p.newsType;
     } else if (widget.initialCategory != null) {
       _category = widget.initialCategory!;
-      // Default project status if it's a project category
-      if (_category != 'ANNOUNCEMENT') {
-        _projectStatus = 'PREPARING';
-      }
     }
   }
 
@@ -132,11 +124,9 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         'isFeatured': false,
         'isPinned': _isPinned,
         'category': _category,
-        'projectStatus': _projectStatus,
-        'metadata': {
-          'progressPercentage': _progressPercentage,
-          'milestones': _milestones.map((m) => m.toJson()).toList(),
-        }
+        'contentType': 'NEWS',
+        'newsType': _newsType,
+        'metadata': {}
       };
 
       if (finalImageUrl != null && finalImageUrl.isNotEmpty) {
@@ -165,10 +155,10 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
               imageUrl: finalImageUrl,
               isPinned: _isPinned,
               category: _category,
-              projectStatus: _projectStatus,
+              projectStatus: 'GENERAL',
               metadata: {
-                'progressPercentage': _progressPercentage,
-                'milestones': _milestones.map((m) => m.toJson()).toList(),
+                'contentType': 'NEWS',
+                'newsType': _newsType,
               },
             );
       }
@@ -177,8 +167,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         ref.invalidate(adminNewsProvider);
         ref.invalidate(newsProvider);
 
-        final typeLabel = _category == 'ANNOUNCEMENT' ? 'الخبر' : 'المشروع';
-        final successMsg = isEditing ? '✅ تم تحديث $typeLabel بنجاح!' : '✅ تم نشر $typeLabel بنجاح!';
+        final successMsg = isEditing ? '✅ تم تحديث الخبر بنجاح!' : '✅ تم نشر الخبر بنجاح!';
         ScaffoldMessenger.of(context).showSnackBar(
            SnackBar(
             content: Text(successMsg),
@@ -252,17 +241,15 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: _kGreen.withValues(alpha: 0.15),
+                        color: _kGreen.withOpacity(0.15),
                         shape: BoxShape.circle,
-                        border: Border.all(color: _kGreen.withValues(alpha: 0.4), width: 1.5),
+                        border: Border.all(color: _kGreen.withOpacity(0.4), width: 1.5),
                       ),
                       child: const Icon(Icons.post_add_rounded, size: 36, color: _kGreen),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      widget.existingPost != null 
-                        ? (_category == 'ANNOUNCEMENT' ? 'تعديل هذا الخبر' : 'تعديل هذا المشروع')
-                        : (_category == 'ANNOUNCEMENT' ? 'إضافة خبر جديد' : 'إضافة مشروع جديد'),
+                      widget.existingPost != null ? 'تعديل هذا الخبر' : 'إضافة خبر جديد',
                       style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 24),
@@ -295,7 +282,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                           border: Border.all(
                             color: (_selectedFileBytes != null || _existingImageUrl != null)
                                 ? const Color(0xFF22C55E)
-                                : _kGreen.withValues(alpha: 0.5),
+                                : _kGreen.withOpacity(0.5),
                             width: 2,
                           ),
                           color: const Color(0xFF1A2E1A),
@@ -318,7 +305,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                       decoration: BoxDecoration(
-                                        color: Colors.black.withValues(alpha: 0.5),
+                                        color: Colors.black.withOpacity(0.5),
                                         borderRadius: BorderRadius.circular(30),
                                       ),
                                       child: Row(
@@ -336,16 +323,16 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.add_photo_alternate_rounded, size: 48, color: _kGreen.withValues(alpha: 0.7)),
+                                  Icon(Icons.add_photo_alternate_rounded, size: 48, color: _kGreen.withOpacity(0.7)),
                                   const SizedBox(height: 10),
                                   Text(
                                     'اضغط لاختيار صورة الغلاف',
-                                    style: TextStyle(color: _kGreen.withValues(alpha: 0.9), fontWeight: FontWeight.bold, fontSize: 15),
+                                    style: TextStyle(color: _kGreen.withOpacity(0.9), fontWeight: FontWeight.bold, fontSize: 15),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     'JPG · PNG · WEBP',
-                                    style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
+                                    style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -354,7 +341,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 28),
 
-                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'عنوان الخبر (متعدد اللغات) *' : 'عنوان المشروع (متعدد اللغات) *'),
+                    _buildLabel('عنوان الخبر (متعدد اللغات) *'),
                     const SizedBox(height: 8),
                     DefaultTabController(
                       length: 3,
@@ -378,7 +365,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 20),
 
-                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'ملخص سريع (متعدد اللغات)' : 'ملخص المشروع (متعدد اللغات)'),
+                    _buildLabel('ملخص سريع (متعدد اللغات)'),
                     const SizedBox(height: 8),
                     DefaultTabController(
                       length: 3,
@@ -401,7 +388,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
 
                     const SizedBox(height: 20),
 
-                    _buildLabel(_category == 'ANNOUNCEMENT' ? 'المحتوى التفصيلي (متعدد اللغات) *' : 'وصف المشروع (متعدد اللغات) *'),
+                    _buildLabel('المحتوى التفصيلي (متعدد اللغات) *'),
                     const SizedBox(height: 8),
                     DefaultTabController(
                       length: 3,
@@ -553,164 +540,36 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                     ),
                     
                     const SizedBox(height: 32),
-                    _buildLabel(_category != 'ANNOUNCEMENT' ? 'حالة المشروع' : 'نوع الخبر'),
+                    const SizedBox(height: 32),
+                    _buildLabel('نوع الخبر (درجة الأهمية)'),
                     const SizedBox(height: 10),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          if (_category != 'ANNOUNCEMENT') ...[
-                            _StatusChip(
-                              label: 'قيد التحضير',
-                              color: Colors.blue.shade300,
-                              isSelected: _projectStatus == 'PREPARING',
-                              onTap: () => setState(() => _projectStatus = 'PREPARING'),
-                            ),
-                            const SizedBox(width: 10),
-                            _StatusChip(
-                              label: 'انطلاق الإنجاز',
-                              color: Colors.indigo.shade400,
-                              isSelected: _projectStatus == 'LAUNCHING',
-                              onTap: () => setState(() => _projectStatus = 'LAUNCHING'),
-                            ),
-                            const SizedBox(width: 10),
-                            _StatusChip(
-                              label: 'نشط',
-                              color: Colors.green.shade600,
-                              isSelected: _projectStatus == 'ACTIVE',
-                              onTap: () => setState(() => _projectStatus = 'ACTIVE'),
-                            ),
-                            const SizedBox(width: 10),
-                            _StatusChip(
-                              label: 'متوقف مؤقتاً',
-                              color: Colors.orange.shade700,
-                              isSelected: _projectStatus == 'ON_HOLD',
-                              onTap: () => setState(() => _projectStatus = 'ON_HOLD'),
-                            ),
-                            const SizedBox(width: 10),
-                            _StatusChip(
-                              label: 'تم الإنجاز',
-                              color: _kGold,
-                              isSelected: _projectStatus == 'COMPLETED',
-                              onTap: () => setState(() => _projectStatus = 'COMPLETED'),
-                            ),
-                          ] else ...[
-                            _StatusChip(
-                              label: 'خبر عام',
-                              color: Colors.grey,
-                              isSelected: _projectStatus == 'GENERAL' || _projectStatus == 'ANNOUNCEMENT',
-                              onTap: () => setState(() => _projectStatus = 'GENERAL'),
-                            ),
-                            const SizedBox(width: 10),
-                            _StatusChip(
-                              label: 'خبر هام',
-                              color: Colors.orange,
-                              isSelected: _projectStatus == 'IMPORTANT',
-                              onTap: () => setState(() => _projectStatus = 'IMPORTANT'),
-                            ),
-                            const SizedBox(width: 10),
-                            _StatusChip(
-                              label: 'خبر عاجل',
-                              color: Colors.red,
-                              isSelected: _projectStatus == 'URGENT',
-                              onTap: () => setState(() => _projectStatus = 'URGENT'),
-                            ),
-                          ],
+                          _StatusChip(
+                            label: 'خبر عادي',
+                            color: Colors.grey,
+                            isSelected: _newsType == 'NORMAL',
+                            onTap: () => setState(() => _newsType = 'NORMAL'),
+                          ),
+                          const SizedBox(width: 10),
+                          _StatusChip(
+                            label: 'خبر هام',
+                            color: Colors.orange,
+                            isSelected: _newsType == 'IMPORTANT',
+                            onTap: () => setState(() => _newsType = 'IMPORTANT'),
+                          ),
+                          const SizedBox(width: 10),
+                          _StatusChip(
+                            label: 'خبر عاجل',
+                            color: Colors.red,
+                            isSelected: _newsType == 'URGENT',
+                            onTap: () => setState(() => _newsType = 'URGENT'),
+                          ),
                         ],
                       ),
                     ),
-
-                    if (_category != 'ANNOUNCEMENT') ...[
-                      const SizedBox(height: 32),
-                      _buildLabel('نسبة تقدم المشروع (${(_progressPercentage * 100).toInt()}%)'),
-                      Slider(
-                        value: _progressPercentage,
-                        onChanged: (v) => setState(() => _progressPercentage = v),
-                        activeColor: _kGreen,
-                        inactiveColor: Colors.white.withValues(alpha: 0.1),
-                        thumbColor: _kGold,
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildLabel('مراحل المشروع (Milestones)'),
-                          ElevatedButton.icon(
-                            onPressed: _addMilestone,
-                            icon: const Icon(Icons.add_circle_outline, size: 16, color: Colors.white),
-                            label: const Text('إضافة مرحلة', style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
-                            style: ElevatedButton.styleFrom(
-                            backgroundColor: _kGreen.withValues(alpha: 0.3),
-                            side: const BorderSide(color: _kGreen),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      ..._milestones.asMap().entries.map((entry) {
-                        final idx = entry.key;
-                        final milestone = entry.value;
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.03),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    _buildField(
-                                      controller: TextEditingController(text: milestone.titleAr)..selection = TextSelection.collapsed(offset: milestone.titleAr.length),
-                                      hint: 'عنوان المرحلة (مثال: انطلاق الأشغال)',
-                                      onChanged: (v) => setState(() => _milestones[idx] = ProjectMilestone(
-                                        titleAr: v,
-                                        titleEn: v,
-                                        date: milestone.date,
-                                        isCompleted: milestone.isCompleted,
-                                      )),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        TextButton(
-                                          onPressed: () => _selectMilestoneDate(idx),
-                                          child: Text(
-                                            'التاريخ: ${milestone.date.day}/${milestone.date.month}/${milestone.date.year}',
-                                            style: const TextStyle(fontSize: 11, color: Colors.white60),
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        const Text('مكتملة', style: TextStyle(fontSize: 11, color: Colors.white60)),
-                                        Checkbox(
-                                          value: milestone.isCompleted,
-                                          onChanged: (v) => setState(() => _milestones[idx] = ProjectMilestone(
-                                            titleAr: milestone.titleAr,
-                                            titleEn: milestone.titleEn,
-                                            date: milestone.date,
-                                            isCompleted: v ?? false,
-                                          )),
-                                          activeColor: _kGreen,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
-                                onPressed: () => setState(() => _milestones.removeAt(idx)),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ],
 
                     const SizedBox(height: 40),
 
@@ -739,7 +598,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           elevation: 6,
-                          shadowColor: _kGreen.withValues(alpha: 0.4),
+                          shadowColor: _kGreen.withOpacity(0.4),
                         ),
                       ),
                     ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
@@ -781,7 +640,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
       style: const TextStyle(color: Colors.white, fontSize: 14.5),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 13.5),
+        hintStyle: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 13.5),
         filled: true,
         fillColor: const Color(0xFF1E301E),
         border: OutlineInputBorder(
@@ -806,23 +665,12 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
     );
   }
 
-  void _addMilestone() {
-    setState(() {
-      _milestones.add(ProjectMilestone(
-        titleAr: '',
-        titleEn: '',
-        date: DateTime.now(),
-        isCompleted: false,
-      ));
-    });
-  }
-
   Widget _buildLanguageTabs() {
     return Container(
       height: 36,
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TabBar(
@@ -838,25 +686,6 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _selectMilestoneDate(int idx) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _milestones[idx].date,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-    );
-    if (picked != null) {
-      setState(() {
-        _milestones[idx] = ProjectMilestone(
-          titleAr: _milestones[idx].titleAr,
-          titleEn: _milestones[idx].titleEn,
-          date: picked,
-          isCompleted: _milestones[idx].isCompleted,
-        );
-      });
-    }
   }
 }
 
@@ -881,10 +710,10 @@ class _CategoryChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? _kGreen : Colors.white.withValues(alpha: 0.05),
+          color: isSelected ? _kGreen : Colors.white.withOpacity(0.05),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? _kGreen : Colors.white.withValues(alpha: 0.1),
+            color: isSelected ? _kGreen : Colors.white.withOpacity(0.1),
           ),
         ),
         child: Row(
@@ -927,10 +756,10 @@ class _StatusChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? color : color.withValues(alpha: 0.1),
+          color: isSelected ? color : color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? color : color.withValues(alpha: 0.3),
+            color: isSelected ? color : color.withOpacity(0.3),
             width: 1.5,
           ),
         ),

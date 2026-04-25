@@ -51,6 +51,14 @@ export class CreatePostDto {
   @IsOptional()
   category?: string;
 
+  @IsEnum(['NEWS', 'PROJECT'])
+  @IsOptional()
+  contentType?: string;
+
+  @IsEnum(['NORMAL', 'URGENT', 'IMPORTANT'])
+  @IsOptional()
+  newsType?: string;
+
   @IsEnum([
     'PREPARING',
     'LAUNCHING',
@@ -58,8 +66,6 @@ export class CreatePostDto {
     'ON_HOLD',
     'COMPLETED',
     'GENERAL',
-    'URGENT',
-    'IMPORTANT',
   ])
   @IsOptional()
   projectStatus?: string;

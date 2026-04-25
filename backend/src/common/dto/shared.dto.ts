@@ -2,7 +2,6 @@ import { IsString, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class MultilingualTextDto {
   @IsString()
-  @IsNotEmpty()
   ar: string;
 
   @IsString()

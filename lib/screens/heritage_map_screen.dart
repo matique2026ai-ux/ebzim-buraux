@@ -23,6 +23,7 @@ class HeritageMapScreen extends ConsumerStatefulWidget {
 class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   final MapController _mapController = MapController();
   String _selectedFilter = 'ALL';
+  String _mapLayer = 'ALL'; // ALL, PROJECTS, DISCOVERY
 
   dynamic _selectedItem;
   List<WikiLandmark> _wikiLandmarks = [];
@@ -173,21 +174,24 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
           
           final List<Marker> markers = [];
           
-          // Add dynamic projects
-          for (var p in projects) {
-            if (_selectedFilter == 'ALL' || _selectedFilter == p.category) {
-              markers.add(_buildMarker(p, isDark));
+          // Add dynamic projects (Ebzim Field Projects)
+          if (_mapLayer == 'ALL' || _mapLayer == 'PROJECTS') {
+            for (var p in projects) {
+              if (_selectedFilter == 'ALL' || _selectedFilter == p.category) {
+                markers.add(_buildMarker(p, isDark));
+              }
             }
           }
 
-          // Add Wikipedia Landmarks
-          if (_selectedFilter == 'ALL' || _selectedFilter == 'RESTORATION' || _selectedFilter == 'CULTURAL') {
-            for (var w in _wikiLandmarks) {
-              markers.add(_buildWikiMarker(w, isDark));
-            }
-            // Add Global Wonders
-            for (var gw in _globalWonders) {
-              markers.add(_buildWikiMarker(gw, isDark));
+          // Add Discovery Layer (Wikipedia + Global Wonders)
+          if (_mapLayer == 'ALL' || _mapLayer == 'DISCOVERY') {
+            if (_selectedFilter == 'ALL' || _selectedFilter == 'RESTORATION' || _selectedFilter == 'CULTURAL') {
+              for (var w in _wikiLandmarks) {
+                markers.add(_buildWikiMarker(w, isDark));
+              }
+              for (var gw in _globalWonders) {
+                markers.add(_buildWikiMarker(gw, isDark));
+              }
             }
           }
 
@@ -237,6 +241,13 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
                 child: _selectedItem == null
                     ? const SizedBox.shrink()
                     : _buildDetailCard(_selectedItem, isAr, isDark),
+              ),
+
+              // Floating Layer Switcher
+              PositionedDirectional(
+                bottom: 120,
+                end: 20,
+                child: _buildLayerSwitcher(isAr, isDark),
               ),
             ],
           );
@@ -473,6 +484,49 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildLayerSwitcher(bool isAr, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.black87 : Colors.white.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
+        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildLayerItem(Icons.layers_rounded, 'ALL', isAr ? 'الكل' : 'Tout', isDark),
+          const SizedBox(height: 4),
+          _buildLayerItem(Icons.construction_rounded, 'PROJECTS', isAr ? 'ميدانية' : 'Terrain', isDark),
+          const SizedBox(height: 4),
+          _buildLayerItem(Icons.public_rounded, 'DISCOVERY', isAr ? 'استكشاف' : 'Découverte', isDark),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLayerItem(IconData icon, String layer, String label, bool isDark) {
+    final isSelected = _mapLayer == layer;
+    return GestureDetector(
+      onTap: () => setState(() => _mapLayer = layer),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: isSelected ? AppTheme.accentColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: isSelected ? Colors.black : (isDark ? Colors.white70 : Colors.black54), size: 20),
+            const SizedBox(height: 2),
+            Text(label, style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: isSelected ? Colors.black : (isDark ? Colors.white38 : Colors.black38))),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -209,9 +209,12 @@ class _HeritageMapScreenState extends ConsumerState<HeritageMapScreen> {
   Widget _buildFilterBar(bool isAr, bool isDark) {
     final filters = [
       {'id': 'ALL', 'label': isAr ? 'الكل' : 'Tous'},
-      {'id': 'HERITAGE', 'label': isAr ? 'التراث' : 'Patrimoine'},
-      {'id': 'ASSOCIATIVE', 'label': isAr ? 'نشاط جمعوي' : 'Associatif'},
-      {'id': 'CULTURAL', 'label': isAr ? 'ثقافي' : 'Culturel'},
+      {'id': 'ASSOCIATIVE', 'label': isAr ? 'نشاط جمعوي' : 'Activité Associative'},
+      {'id': 'PROJECT', 'label': isAr ? 'مشروع مؤسساتي' : 'Projet Institutionnel'},
+      {'id': 'RESTORATION', 'label': isAr ? 'حماية التراث' : 'Protection du Patrimoine'},
+      {'id': 'CULTURAL', 'label': isAr ? 'نشاط ثقافي' : 'Activité Culturelle'},
+      {'id': 'SOCIAL', 'label': isAr ? 'مبادرة اجتماعية' : 'Initiative Sociale'},
+      {'id': 'SCIENTIFIC', 'label': isAr ? 'بحث علمي' : 'Recherche Scientifique'},
     ];
 
     return SizedBox(

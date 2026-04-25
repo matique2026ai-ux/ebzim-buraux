@@ -2,13 +2,16 @@ import { IsString, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class MultilingualTextDto {
   @IsString()
-  ar: string;
+  @IsOptional()
+  ar?: string;
 
   @IsString()
-  fr: string;
+  @IsOptional()
+  fr?: string;
 
   @IsString()
-  en: string;
+  @IsOptional()
+  en?: string;
 }
 
 export class LocationDataDto {

@@ -560,7 +560,7 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 18. **✅ [DONE] Institutional Branding**: Replaced generic project icons with the **Ebzim Golden Logo** for all associative projects.
 19. **✅ [DONE] Geographic Precision**: Corrected the coordinates for **Djemila (Cuicul)** to exactly `36.320, 5.736` (Archaeological Site).
 
-20. **✅ [DONE] Artistic Restoration Milestone (April 25, 2026)**: 
+20. **✅ [DONE] Artistic Restoration Milestone (April 25, 2026)**:
     - **CRITICAL LESSON**: A previous agent attempted to "modularize" the dashboard but inadvertently reverted to an old, non-artistic state and broke the Port 8085 protocol.
     - **Action Taken**: Performed a surgical restoration of all "Artistic" UI files from Git history (Commits 6cef63e & ddc01f6).
     - **Outcome**: Restored Heritage Map, Satellite Picker, Sovereign Branding, and proper filtering categories (Associative, Social, etc.).

@@ -110,7 +110,11 @@ export class PostsService {
 
   async updatePost(id: string, dto: any) {
     return this.postModel
-      .findByIdAndUpdate(id, dto as UpdateQuery<PostDocument>, { new: true })
+      .findByIdAndUpdate(
+        id,
+        { $set: dto as UpdateQuery<PostDocument> },
+        { new: true },
+      )
       .exec();
   }
 

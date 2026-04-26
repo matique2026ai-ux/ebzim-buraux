@@ -593,9 +593,11 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 4. **Cloud/Live Sync:** Both Web and Mobile apps MUST point to `https://ebzim-api-prod.onrender.com/api/v1/` via `api_client_platform_X.dart`.
 
 ### 🏗️ PROJECT DETAILS STABILIZATION (April 26, 2026)
+
 - **Issue**: Projects on Home/Lists only returned partial data from `/posts`, causing 0% progress and missing milestones in details.
 - **Fix**: Converted `ProjectDetailsScreen` to `ConsumerWidget`. It now performs a fresh `getPost(id)` call to fetch full metadata.
 - **Structural Fixes**: Removed illegal `SliverToBoxAdapter` inside `Column` in `AdminCreateNewsScreen` to prevent UI crashes.
 - **UI Cleanup**: Permanently removed the "Institutional Projects" section from `home_screen.dart` as per user request.
 
 🚨 **FINAL MANDATE: ZERO LINT TOLERANCE. ALWAYS TEST LIVE AFTER DEPLOYMENT.**
+

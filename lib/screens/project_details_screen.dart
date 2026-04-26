@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebzim_app/core/services/news_service.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
@@ -8,12 +9,17 @@ import 'package:ebzim_app/core/common_widgets/ebzim_project_timeline.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
-class ProjectDetailsScreen extends StatelessWidget {
+class ProjectDetailsScreen extends ConsumerWidget {
   final NewsPost project;
   const ProjectDetailsScreen({super.key, required this.project});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Fetch full details from API to get milestones & progressPercentage
+    final fullPostAsync = ref.watch(postDetailsProvider(project.id));
+    // Use fresh data if available, otherwise fall back to passed project
+    final p = fullPostAsync.maybeWhen(data: (d) => d ?? project, orElse: () => project);
+
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
@@ -145,25 +151,26 @@ class ProjectDetailsScreen extends StatelessWidget {
                     // ── Progress Section ──
                     _buildSectionHeader(isAr ? 'حالة الإنجاز' : 'État d\'avancement'),
                     const SizedBox(height: 16),
-                    _buildProgressCard(context, project.progressPercentage),
+                    _buildProgressCard(context, p.progressPercentage),
                     
                     const SizedBox(height: 32),
 
                     // ── Timeline Section ──
-                    _buildSectionHeader(isAr ? 'مراحل المشروع' : 'Étapes du projet'),
-                    const SizedBox(height: 20),
-                    EbzimProjectTimeline(
-                      milestones: project.milestones,
-                      lang: lang,
-                    ).animate().fadeIn(delay: 400.ms),
-
-                    const SizedBox(height: 32),
+                    if (p.milestones.isNotEmpty) ...[
+                      _buildSectionHeader(isAr ? 'مراحل المشروع' : 'Étapes du projet'),
+                      const SizedBox(height: 20),
+                      EbzimProjectTimeline(
+                        milestones: p.milestones,
+                        lang: lang,
+                      ).animate().fadeIn(delay: 400.ms),
+                      const SizedBox(height: 32),
+                    ],
 
                     // ── Description Section ──
                     _buildSectionHeader(isAr ? 'عن المشروع' : 'À propos du projet'),
                     const SizedBox(height: 16),
                     Text(
-                      project.getBody(lang),
+                      p.getBody(lang),
                       style: GoogleFonts.tajawal(
                         fontSize: 16,
                         height: 1.8,
@@ -171,9 +178,9 @@ class ProjectDetailsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    if (project.partnerName != null) ...[
+                    if (p.partnerName != null) ...[
                       const SizedBox(height: 32),
-                      _buildPartnerBadge(context, project.partnerName!),
+                      _buildPartnerBadge(context, p.partnerName!),
                     ],
 
                     const SizedBox(height: 100),

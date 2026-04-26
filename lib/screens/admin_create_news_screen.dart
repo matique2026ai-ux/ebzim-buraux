@@ -348,7 +348,7 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                       child: Column(
                         children: [
                           _buildLanguageTabs(),
-                          SliverToBoxAdapter(child: SizedBox(height: 10)), // Dummy spacer
+                          const SizedBox(height: 10), // Dummy spacer
                           Container(
                             height: 60,
                             child: TabBarView(

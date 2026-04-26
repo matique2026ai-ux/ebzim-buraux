@@ -124,53 +124,6 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
 
-          // ════════════════════════════════════════
-          // INSTITUTIONAL PROJECTS SECTION
-          // ════════════════════════════════════════
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
-              child: _SectionHeader(
-                title: lang == 'ar' ? 'المشاريع المؤسساتية' : 'Projets Institutionnels',
-                onViewAll: () => context.go('/heritage'),
-                lang: lang,
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: newsAsync.when(
-              data: (posts) {
-                // Filter specifically for projects
-                final projects = posts.where((p) => 
-                  p.category.toUpperCase() != 'ANNOUNCEMENT' && 
-                  p.category.isNotEmpty
-                ).take(4).toList();
-
-                if (projects.isEmpty) return const SizedBox.shrink();
-
-                return SizedBox(
-                  height: 360,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: projects.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 16),
-                    itemBuilder: (ctx, index) {
-                      final project = projects[index];
-                      return _HomeProjectCard(
-                        project: project,
-                        lang: lang,
-                        isDark: theme.brightness == Brightness.dark,
-                      ).animate(delay: (index * 150).ms).fadeIn(duration: 600.ms).slideX(begin: 0.1);
-                    },
-                  ),
-                );
-              },
-              loading: () => const SizedBox(height: 340, child: Center(child: CircularProgressIndicator())),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-          ),
 
           // ════════════════════════════════════════
           // PARTNERSHIPS BANNER

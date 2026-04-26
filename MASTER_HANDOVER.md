@@ -600,4 +600,3 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 - **UI Cleanup**: Permanently removed the "Institutional Projects" section from `home_screen.dart` as per user request.
 
 🚨 **FINAL MANDATE: ZERO LINT TOLERANCE. ALWAYS TEST LIVE AFTER DEPLOYMENT.**
-

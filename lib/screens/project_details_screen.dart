@@ -17,180 +17,181 @@ class ProjectDetailsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Fetch full details from API to get milestones & progressPercentage
     final fullPostAsync = ref.watch(postDetailsProvider(project.id));
-    // Use fresh data if available, otherwise fall back to passed project
-    final p = fullPostAsync.maybeWhen(data: (d) => d ?? project, orElse: () => project);
-
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final isAr = Localizations.localeOf(context).languageCode == 'ar';
-    final lang = isAr ? 'ar' : 'fr';
-
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      body: EbzimBackground(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            // ── Premium Header ───────────────────────────────────────────
-            SliverAppBar(
-              expandedHeight: 320,
-              pinned: true,
-              stretch: true,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.black26,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
-                  onPressed: () => context.pop(),
-                ),
-              ),
-              flexibleSpace: FlexibleSpaceBar(
-                stretchModes: const [StretchMode.zoomBackground, StretchMode.blurBackground],
-                background: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      project.imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: const Color(0xFF0A1A0A),
-                        child: const Icon(Icons.architecture_rounded, size: 80, color: AppTheme.accentColor),
-                      ),
+    
+    return fullPostAsync.when(
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (err, stack) => Scaffold(body: Center(child: Text('Error: $err'))),
+      data: (p) {
+        if (p == null) return const Scaffold(body: Center(child: Text('Project not found')));
+        
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+        final isAr = Localizations.localeOf(context).languageCode == 'ar';
+        final lang = isAr ? 'ar' : 'fr';
+        
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          body: EbzimBackground(
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                // ── Premium Header ───────────────────────────────────────────
+                SliverAppBar(
+                  expandedHeight: 320,
+                  pinned: true,
+                  stretch: true,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  leading: Container(
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.black26,
+                      shape: BoxShape.circle,
                     ),
-                    const DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black26,
-                            Colors.transparent,
-                            Colors.black87,
-                          ],
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
+                      onPressed: () => context.pop(),
+                    ),
+                  ),
+                  flexibleSpace: FlexibleSpaceBar(
+                    stretchModes: const [StretchMode.zoomBackground, StretchMode.blurBackground],
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.network(
+                          p.imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: const Color(0xFF0A1A0A),
+                            child: const Icon(Icons.architecture_rounded, size: 80, color: AppTheme.accentColor),
+                          ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 24,
-                      left: 24,
-                      right: 24,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.accentColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  _getCategoryLabel(project.category, isAr),
-                                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              if (project.projectStatus != 'GENERAL') ...[
-                                const SizedBox(width: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: _getStatusColor(project.projectStatus).withValues(alpha: 0.9),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(color: Colors.white24),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 6,
-                                        height: 6,
-                                        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        _getStatusLabel(project.projectStatus, isAr),
-                                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                        const DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black26,
+                                Colors.transparent,
+                                Colors.black87,
                               ],
-                            ],
-                          ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.2),
-                          const SizedBox(height: 12),
-                          Text(
-                            project.getTitle(lang),
-                            style: GoogleFonts.tajawal(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w900,
-                              height: 1.2,
                             ),
-                          ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 24,
+                          left: 24,
+                          right: 24,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.accentColor,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      _getCategoryLabel(p.category, isAr),
+                                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  if (p.projectStatus != 'GENERAL') ...[
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: _getStatusColor(p.projectStatus).withValues(alpha: 0.9),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.white24),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            width: 6,
+                                            height: 6,
+                                            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            _getStatusLabel(p.projectStatus, isAr),
+                                            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.2),
+                              const SizedBox(height: 12),
+                              Text(
+                                p.getTitle(lang),
+                                style: GoogleFonts.tajawal(
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w900,
+                                  height: 1.2,
+                                ),
+                              ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // ── Project Content ──────────────────────────────────────────
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ── Progress Section ──
+                        _buildSectionHeader(isAr ? 'حالة الإنجاز' : 'État d\'avancement'),
+                        const SizedBox(height: 16),
+                        _buildProgressCard(context, p.progressPercentage),
+                        
+                        const SizedBox(height: 32),
+                        // ── Timeline Section ──
+                        if (p.milestones.isNotEmpty) ...[
+                          _buildSectionHeader(isAr ? 'مراحل المشروع' : 'Étapes du projet'),
+                          const SizedBox(height: 20),
+                          EbzimProjectTimeline(
+                            milestones: p.milestones,
+                            lang: lang,
+                          ).animate().fadeIn(delay: 400.ms),
+                          const SizedBox(height: 32),
                         ],
-                      ),
+                        // ── Description Section ──
+                        _buildSectionHeader(isAr ? 'عن المشروع' : 'À propos du projet'),
+                        const SizedBox(height: 16),
+                        Text(
+                          p.getBody(lang),
+                          style: GoogleFonts.tajawal(
+                            fontSize: 16,
+                            height: 1.8,
+                            color: isDark ? Colors.white70 : Colors.black87,
+                          ),
+                        ),
+                        if (p.partnerName != null) ...[
+                          const SizedBox(height: 32),
+                          _buildPartnerBadge(context, p.partnerName!),
+                        ],
+                        const SizedBox(height: 100),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-
-            // ── Project Content ──────────────────────────────────────────
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ── Progress Section ──
-                    _buildSectionHeader(isAr ? 'حالة الإنجاز' : 'État d\'avancement'),
-                    const SizedBox(height: 16),
-                    _buildProgressCard(context, p.progressPercentage),
-                    
-                    const SizedBox(height: 32),
-
-                    // ── Timeline Section ──
-                    if (p.milestones.isNotEmpty) ...[
-                      _buildSectionHeader(isAr ? 'مراحل المشروع' : 'Étapes du projet'),
-                      const SizedBox(height: 20),
-                      EbzimProjectTimeline(
-                        milestones: p.milestones,
-                        lang: lang,
-                      ).animate().fadeIn(delay: 400.ms),
-                      const SizedBox(height: 32),
-                    ],
-
-                    // ── Description Section ──
-                    _buildSectionHeader(isAr ? 'عن المشروع' : 'À propos du projet'),
-                    const SizedBox(height: 16),
-                    Text(
-                      p.getBody(lang),
-                      style: GoogleFonts.tajawal(
-                        fontSize: 16,
-                        height: 1.8,
-                        color: isDark ? Colors.white70 : Colors.black87,
-                      ),
-                    ),
-
-                    if (p.partnerName != null) ...[
-                      const SizedBox(height: 32),
-                      _buildPartnerBadge(context, p.partnerName!),
-                    ],
-
-                    const SizedBox(height: 100),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

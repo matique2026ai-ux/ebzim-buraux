@@ -594,9 +594,14 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 
 ### 🏗️ PROJECT DETAILS STABILIZATION (April 26, 2026)
 
-- **Issue**: Projects on Home/Lists only returned partial data from `/posts`, causing 0% progress and missing milestones in details.
-- **Fix**: Converted `ProjectDetailsScreen` to `ConsumerWidget`. It now performs a fresh `getPost(id)` call to fetch full metadata.
-- **Structural Fixes**: Removed illegal `SliverToBoxAdapter` inside `Column` in `AdminCreateNewsScreen` to prevent UI crashes.
-- **UI Cleanup**: Permanently removed the "Institutional Projects" section from `home_screen.dart` as per user request.
+- **Issue 1**: Projects on Home/Lists returned partial data, causing 0% progress display on cards.
+- **Issue 2**: Saving projects in Admin reset progress to 5% or failed to persist metadata.
+- **Backend Fix**: Updated `posts.service.ts` to use `$set` in `findByIdAndUpdate`. This ensures `metadata` (progress/milestones) is merged and persisted correctly.
+- **Frontend Fixes**:
+    1. Improved `NewsPost` model to parse `progressPercentage` from multiple fallback fields.
+    2. Updated `ProjectDetailsScreen` to show a loader until full data is fetched from the API.
+    3. Verified `AdminCreateProjectScreen` layout; it is safe from Sliver-in-Box crashes.
+- **UI Cleanup**: Permanently removed the "Institutional Projects" section from `home_screen.dart`.
 
 🚨 **FINAL MANDATE: ZERO LINT TOLERANCE. ALWAYS TEST LIVE AFTER DEPLOYMENT.**
+

@@ -159,7 +159,11 @@ class NewsPost {
           ? (double.tryParse(metadata['progressPercentage'].toString()) ?? 0.0)
           : (json['progressPercentage'] != null 
               ? (double.tryParse(json['progressPercentage'].toString()) ?? 0.0) 
-              : 0.0),
+              : (metadata['progress'] != null 
+                  ? (double.tryParse(metadata['progress'].toString()) ?? 0.0)
+                  : (json['progress'] != null 
+                      ? (double.tryParse(json['progress'].toString()) ?? 0.0)
+                      : 0.0))),
       isPinned: json['isPinned'] ?? false,
       isFeatured: json['isFeatured'] ?? false,
       publishedAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),

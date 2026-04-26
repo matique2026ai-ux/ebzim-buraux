@@ -583,7 +583,7 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
     - **Outcome**: The backend is 100% strictly typed with zero errors. The DB was synced to ensure all events are `PUBLISHED`.
     - **Protocol Reinforcement**: **DO NOT USE `any` IN THE BACKEND.** If you touch the backend, YOU MUST ENSURE it compiles without ESLint warnings, or Render will FAIL to build. If you push code, DO NOT assume it's live instantly; advise the user of Render's build delay.
 
-**Current State: Admin Dashboard 100% modularized and stabilized. Backend strictly typed with zero lint errors. Mobile APK built and synced to the cloud. Render Live API is the undisputed source of truth.**
+**Current State: Admin Dashboard stabilized. Project Details fetching full metadata (Milestones/Progress). Institutional Projects section removed from Home. Red Screen crashes in Admin News fixed. All changes pushed to GitHub.**
 
 ### 🚨 NEXT AGENT FOCUS
 
@@ -591,5 +591,11 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 2. **Backend Strictness (NO ANY):** The backend Linter is unforgiving. Never assign `any` to update data or catch blocks. Use `Record<string, any>` or explicit types.
 3. **Render Build Delays:** Be aware that pushing to `main` does not mean the Live API updates instantly. Always verify the live endpoint (`https://ebzim-api-prod.onrender.com`) before declaring a fix complete.
 4. **Cloud/Live Sync:** Both Web and Mobile apps MUST point to `https://ebzim-api-prod.onrender.com/api/v1/` via `api_client_platform_X.dart`.
+
+### 🏗️ PROJECT DETAILS STABILIZATION (April 26, 2026)
+- **Issue**: Projects on Home/Lists only returned partial data from `/posts`, causing 0% progress and missing milestones in details.
+- **Fix**: Converted `ProjectDetailsScreen` to `ConsumerWidget`. It now performs a fresh `getPost(id)` call to fetch full metadata.
+- **Structural Fixes**: Removed illegal `SliverToBoxAdapter` inside `Column` in `AdminCreateNewsScreen` to prevent UI crashes.
+- **UI Cleanup**: Permanently removed the "Institutional Projects" section from `home_screen.dart` as per user request.
 
 🚨 **FINAL MANDATE: ZERO LINT TOLERANCE. ALWAYS TEST LIVE AFTER DEPLOYMENT.**

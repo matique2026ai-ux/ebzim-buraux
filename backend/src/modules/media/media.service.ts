@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 
@@ -8,7 +8,7 @@ const SUPABASE_SERVICE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1b2V6aGdrZnhjdGN4ZWNvZGFrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQwNTYxMywiZXhwIjoyMDkyOTgxNjEzfQ.Xl-LDkOENbprpuWC2v-hI28XIKgekdym6q4vdqv1nrs';
 const BUCKET_NAME = 'ebzim';
 
-const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 export interface CloudinaryResponse {
   url: string;
@@ -55,9 +55,7 @@ export class MediaService {
       throw new BadRequestException(`فشل رفع الملف: ${error.message}`);
     }
 
-    const { data } = supabase.storage
-      .from(BUCKET_NAME)
-      .getPublicUrl(fileName);
+    const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(fileName);
 
     return {
       url: data.publicUrl,

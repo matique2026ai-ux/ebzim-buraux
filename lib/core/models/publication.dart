@@ -67,6 +67,36 @@ class Publication {
     required this.publishedDate,
   });
 
+  factory Publication.fromJson(Map<String, dynamic> json) {
+    final title = json['title'] is Map ? json['title'] : {};
+    final author = json['author'] is Map ? json['author'] : {};
+    final summary = json['summary'] is Map ? json['summary'] : {};
+
+    PublicationCategory cat = PublicationCategory.other;
+    final catString = json['category']?.toString().toLowerCase();
+    if (catString == 'heritage') cat = PublicationCategory.heritage;
+    else if (catString == 'research') cat = PublicationCategory.research;
+    else if (catString == 'reports') cat = PublicationCategory.reports;
+    else if (catString == 'history') cat = PublicationCategory.history;
+
+    return Publication(
+      id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
+      titleAr: title['ar']?.toString() ?? '',
+      titleEn: title['en']?.toString() ?? '',
+      titleFr: title['fr']?.toString() ?? '',
+      authorAr: author['ar']?.toString() ?? '',
+      authorEn: author['en']?.toString() ?? '',
+      authorFr: author['fr']?.toString() ?? '',
+      summaryAr: summary['ar']?.toString() ?? '',
+      summaryEn: summary['en']?.toString() ?? '',
+      summaryFr: summary['fr']?.toString() ?? '',
+      thumbnailUrl: json['thumbnailUrl']?.toString() ?? '',
+      pdfUrl: json['pdfUrl']?.toString() ?? '',
+      category: cat,
+      publishedDate: DateTime.tryParse(json['publishedDate']?.toString() ?? '') ?? DateTime.now(),
+    );
+  }
+
   String getTitle(String lang) => lang == 'ar' ? titleAr : lang == 'fr' ? titleFr : titleEn;
   String getAuthor(String lang) => lang == 'ar' ? authorAr : lang == 'fr' ? authorFr : authorEn;
   String getSummary(String lang) => lang == 'ar' ? summaryAr : lang == 'fr' ? summaryFr : summaryEn;

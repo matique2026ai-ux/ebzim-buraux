@@ -231,7 +231,7 @@ class HomeScreen extends ConsumerWidget {
                     itemCount: events.take(6).length,
                     itemBuilder: (context, index) => EventCard(
                       event: events[index],
-                      onTap: () => context.push('/event/${events[index].id}'),
+                      onTap: () => context.push('/news/${events[index].id}'),
                     ).animate(delay: Duration(milliseconds: index * 150)).fadeIn(duration: const Duration(milliseconds: 600)).slideX(begin: 0.1),
                   );
                 },

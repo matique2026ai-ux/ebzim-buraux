@@ -208,7 +208,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                       return EventCard(
                         event: event,
                         width: double.infinity,
-                        onTap: () => context.push('/event/${event.id}'),
+                        onTap: () => context.push('/news/${event.id}'),
                       );
                     },
                     childCount: filtered.length,

@@ -61,19 +61,19 @@ Any item marked as a "Project" (Category != `ANNOUNCEMENT`) must expose:
 
 In this phase, we eliminated the "fragility" of the platform by implementing a strict, professional data-logic bridge:
 
-1.  **Backend Hardening:**
-    *   Explicitly defined `progressPercentage` and `milestones` in the `PostSchema`.
-    *   Implemented a central `_normalizePost` method in `PostsService` to auto-lift legacy metadata fields to the root level.
-    *   Resolved all TypeScript "Unsafe any" linting errors for 100% type safety.
+1. Backend Hardening:
+   - Explicitly defined `progressPercentage` and `milestones` in the `PostSchema`.
+   - Implemented a central `_normalizePost` method in `PostsService` to auto-lift legacy metadata fields to the root level.
+   - Resolved all TypeScript "Unsafe any" linting errors for 100% type safety.
 
-2.  **Frontend Synchronization:**
-    *   Standardized `NewsPost` model to rely on normalized backend fields while maintaining backwards compatibility.
-    *   Unified `HomeScreen` logic: Projects now appear dynamically in a dedicated "Latest Field Projects" section, ensuring 100% visibility.
-    *   Fixed `NewsDetailWrapper` cross-routing to treat news-based projects with the same fidelity as direct project links.
+2. Frontend Synchronization:
+   - Standardized `NewsPost` model to rely on normalized backend fields while maintaining backwards compatibility.
+   - Unified `HomeScreen` logic: Projects now appear dynamically in a dedicated "Latest Field Projects" section, ensuring 100% visibility.
+   - Fixed `NewsDetailWrapper` cross-routing to treat news-based projects with the same fidelity as direct project links.
 
-3.  **Site Map & Stability:**
-    *   Eliminated "Project Not Found" states by ensuring immediate rendering with pre-loaded data.
-    *   Resolved the initialization deadlock that occurred during session restarts on protected routes.
+3. Site Map & Stability:
+   - Eliminated "Project Not Found" states by ensuring immediate rendering with pre-loaded data.
+   - Resolved the initialization deadlock that occurred during session restarts on protected routes.
 
 **Result:** Ebzim is now a logically robust platform where data flows securely and predictably from the Admin CMS to the Public Interface. 🏁🦾⚖️💎🛰️🏁🎯🏁
 

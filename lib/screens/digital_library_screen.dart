@@ -34,7 +34,8 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);
     
-    final allPublications = ref.watch(publicationServiceProvider).getPublications();
+    final publicationsAsync = ref.watch(allPublicationsProvider);
+    final allPublications = publicationsAsync.value ?? [];
     
     final filteredPublications = allPublications.where((p) {
       final matchesSearch = p.getTitle(isAr ? 'ar' : 'en').toLowerCase().contains(_searchQuery.toLowerCase()) || 
@@ -76,28 +77,32 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
             
             // ── Grid ────────────────────────────────────────────────────────
             Expanded(
-              child: filteredPublications.isEmpty
-                ? _NoResults(isAr: isAr)
-                : GridView.builder(
-                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
-                    physics: const BouncingScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.62,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
+              child: publicationsAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.accentColor)),
+                error: (e, _) => Center(child: Text(isAr ? 'خطأ في تحميل المكتبة' : 'Error loading library')),
+                data: (_) => filteredPublications.isEmpty
+                  ? _NoResults(isAr: isAr)
+                  : GridView.builder(
+                      padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
+                      physics: const BouncingScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.62,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: filteredPublications.length,
+                      itemBuilder: (context, index) {
+                        final pub = filteredPublications[index];
+                        return _PublicationCard(
+                          pub: pub,
+                          isAr: isAr,
+                          isDark: isDark,
+                          onTap: () => _showDetails(context, pub, isAr, isDark),
+                        ).animate().fadeIn(delay: Duration(milliseconds: 50 * index)).slideY(begin: 0.05);
+                      },
                     ),
-                    itemCount: filteredPublications.length,
-                    itemBuilder: (context, index) {
-                      final pub = filteredPublications[index];
-                      return _PublicationCard(
-                        pub: pub,
-                        isAr: isAr,
-                        isDark: isDark,
-                        onTap: () => _showDetails(context, pub, isAr, isDark),
-                      ).animate().fadeIn(delay: Duration(milliseconds: 50 * index)).slideY(begin: 0.05);
-                    },
-                  ),
+              ),
             ),
           ],
         ),

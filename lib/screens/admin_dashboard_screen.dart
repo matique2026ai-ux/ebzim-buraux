@@ -88,6 +88,11 @@ class AdminDashboardScreen extends ConsumerWidget {
         'text': 'البلاغات',
         'view': ReportsTab(),
       },
+      {
+        'icon': Icons.menu_book_rounded,
+        'text': 'المكتبة',
+        'view': const Center(child: Text('قريباً: إدارة المكتبة الرقمية')),
+      },
       if (isSuperAdmin) ...[
         {
           'icon': Icons.account_balance_wallet_rounded,

@@ -19,13 +19,14 @@ import { HeroModule } from './modules/hero/hero.module';
 import { LeadershipModule } from './modules/leadership/leadership.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { UsersModule } from './modules/users/users.module';
+import { PublicationsModule } from './modules/publications/publications.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),
         serverSelectionTimeoutMS: 5000, // Fail fast if DB is unreachable
       }),
@@ -46,6 +47,7 @@ import { UsersModule } from './modules/users/users.module';
     LeadershipModule,
     AdminModule,
     UsersModule,
+    PublicationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

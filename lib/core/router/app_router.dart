@@ -311,7 +311,7 @@ final appRouterProvider = Provider((ref) {
         path: '/event/:id',
         pageBuilder: (context, state) {
           final id = state.pathParameters['id']!;
-          return _slidePage(state, EventDetailsScreen(eventId: id));
+          return _slidePage(state, NewsDetailWrapper(postId: id));
         },
       ),
       GoRoute(

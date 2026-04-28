@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
 import 'package:ebzim_app/screens/project_details_screen.dart';
+import 'package:ebzim_app/screens/event_details_screen.dart';
 
 class NewsDetailWrapper extends ConsumerWidget {
   final NewsPost? initialPost;
@@ -24,13 +25,16 @@ class NewsDetailWrapper extends ConsumerWidget {
     return projectCategories.contains(p.category.toUpperCase()) || p.contentType == 'PROJECT' || p.isFieldProject;
   }
 
+  bool _isEvent(NewsPost p) {
+    return p.contentType == 'EVENT' || p.category.toUpperCase() == 'EVENT' || p.category.toUpperCase() == 'WORKSHOP';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 1. Check if the initial post is actually a project
+    // 1. Check if initial post is a special type
     if (initialPost != null) {
-      if (_isProject(initialPost!)) {
-        return ProjectDetailsScreen(project: initialPost!);
-      }
+      if (_isProject(initialPost!)) return ProjectDetailsScreen(project: initialPost!);
+      if (_isEvent(initialPost!)) return EventDetailsScreen(eventId: initialPost!.id, initialEvent: initialPost);
       return NewsDetailScreen(post: initialPost!);
     }
     
@@ -38,17 +42,16 @@ class NewsDetailWrapper extends ConsumerWidget {
     
     return postAsync.when(
       data: (post) {
-        if (post == null) {
-          return const Scaffold(body: Center(child: Text('News not found')));
-        }
-        // 2. Dynamic redirection if fetched post is a project
-        if (_isProject(post)) {
-          return ProjectDetailsScreen(project: post);
-        }
+        if (post == null) return const Scaffold(body: Center(child: Text('Content not found')));
+        
+        // 2. Dynamic redirection based on type
+        if (_isProject(post)) return ProjectDetailsScreen(project: post);
+        if (_isEvent(post)) return EventDetailsScreen(eventId: post.id, initialEvent: post);
+        
         return NewsDetailScreen(post: post);
       },
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (_, __) => const Scaffold(body: Center(child: Text('Error loading news'))),
+      error: (_, __) => const Scaffold(body: Center(child: Text('Error loading content'))),
     );
   }
 }

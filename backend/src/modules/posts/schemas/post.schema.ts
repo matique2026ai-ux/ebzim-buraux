@@ -84,6 +84,12 @@ export class Post {
   })
   projectStatus: string;
 
+  @Prop({ type: Number, default: 0, min: 0, max: 100 })
+  progressPercentage: number;
+
+  @Prop({ type: [Object], default: [] })
+  milestones: any[];
+
   @Prop({ type: Object, default: {} })
   metadata: Record<string, any>;
 

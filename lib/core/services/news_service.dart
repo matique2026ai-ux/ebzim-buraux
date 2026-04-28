@@ -48,9 +48,17 @@ class NewsService {
 
   Future<NewsPost?> getPost(String id) async {
     try {
+      if (kDebugMode) print('DEBUG: NewsService fetching post details for ID: $id');
       final response = await _ref.read(apiClientProvider).dio.get('posts/$id');
-      return NewsPost.fromJson(response.data);
+      if (kDebugMode) print('DEBUG: NewsService post details response: ${response.data}');
+      
+      final dynamic responseData = response.data;
+      final actualData = (responseData is Map && responseData['data'] != null)
+          ? responseData['data']
+          : responseData;
+      return NewsPost.fromJson(actualData);
     } catch (e) {
+      if (kDebugMode) print('DEBUG: NewsService getPost error for ID $id: $e');
       return null;
     }
   }
@@ -139,7 +147,16 @@ final adminNewsProvider = FutureProvider<List<NewsPost>>((ref) {
 
 final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
   final news = await ref.watch(newsServiceProvider).getNews();
-  return news.where((p) => p.contentType == 'PROJECT' || p.isFieldProject).toList();
+  // Improved logic: A project is anything that belongs to a specific field category
+  const projectCategories = [
+    'PROJECT', 'HERITAGE', 'SCIENTIFIC', 'RESTORATION', 
+    'ARTISTIC', 'CULTURAL', 'TOURISM', 'CHILD', 'PARTNERSHIP'
+  ];
+  return news.where((p) => 
+    projectCategories.contains(p.category.toUpperCase()) || 
+    p.contentType == 'PROJECT' || 
+    p.isFieldProject
+  ).toList();
 });
 
 final postDetailsProvider = FutureProvider.family<NewsPost?, String>((ref, id) {

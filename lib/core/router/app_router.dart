@@ -152,7 +152,11 @@ final appRouterProvider = Provider((ref) {
       final isAllowedUnauthenticated = isLoggingIn || isRegistering || isAuthFlow || isPublicBase || isPublicDetail;
 
       if (isInitializing) {
-        if (kDebugMode) print('[ROUTER] Initializing... staying at $loc');
+        // If at a protected route while initializing, splash handles recovery
+        if (!isAllowedUnauthenticated) {
+          if (kDebugMode) print('[ROUTER] Initializing at protected route -> /splash');
+          return '/splash';
+        }
         return null;
       }
 
@@ -168,13 +172,13 @@ final appRouterProvider = Provider((ref) {
         final isAdmin = role == EbzimRole.admin || role == EbzimRole.superAdmin;
 
         if (isLoggingIn || isRegistering) {
-          if (kDebugMode) print('[ROUTER] Auth & at login/reg -> redirect to dash');
+          if (kDebugMode) print('[ROUTER] Auth & at login/reg -> redirect');
           return isAdmin ? '/admin' : '/home';
         }
 
-        final landingPages = ['/splash', '/language', '/onboarding', '/', ''];
-        if (landingPages.contains(loc) || loc == '/') {
-          if (kDebugMode) print('[ROUTER] Auth & at landing -> redirect to dash');
+        final landingPages = ['/splash', '/language', '/onboarding', '/'];
+        if (landingPages.contains(loc)) {
+          if (kDebugMode) print('[ROUTER] Auth & at landing ($loc) -> redirect');
           return isAdmin ? '/admin' : '/home';
         }
 
@@ -395,25 +399,7 @@ final appRouterProvider = Provider((ref) {
         pageBuilder: (context, state) {
           final project = state.extra as NewsPost?;
           final id = state.pathParameters['id']!;
-          
-          if (project != null) {
-            return _slidePage(state, ProjectDetailsScreen(project: project));
-          }
-
-          // Fallback for direct links / deep links
-          return CustomTransitionPage(
-            child: Consumer(
-              builder: (context, ref, _) {
-                final postAsync = ref.watch(postDetailsProvider(id));
-                return postAsync.when(
-                  data: (p) => p != null ? ProjectDetailsScreen(project: p) : const Scaffold(body: Center(child: Text('Project not found'))),
-                  loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-                  error: (_, _) => const Scaffold(body: Center(child: Text('Error loading project'))),
-                );
-              },
-            ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child),
-          );
+          return _slidePage(state, ProjectDetailsWrapper(projectId: id, initialProject: project));
         },
       ),
       GoRoute(

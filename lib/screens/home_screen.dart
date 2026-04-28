@@ -165,8 +165,42 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           // ════════════════════════════════════════
-          // UPCOMING EVENTS
+          // LATEST FIELD PROJECTS (Field Action)
           // ════════════════════════════════════════
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
+              child: _SectionHeader(
+                title: lang == 'ar' ? 'مشاريع ميدانية حديثة' : 'Projets de terrain récents',
+                onViewAll: () => context.push('/heritage'),
+                lang: lang,
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ref.watch(heritageProjectsProvider).when(
+              data: (projects) {
+                if (projects.isEmpty) return const SizedBox.shrink();
+                final latestProjects = projects.take(3).toList();
+                return SizedBox(
+                  height: 240,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: latestProjects.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 16),
+                    itemBuilder: (context, index) {
+                      final project = latestProjects[index];
+                      return _ProjectCompactCard(project: project, lang: lang);
+                    },
+                  ),
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
@@ -1521,200 +1555,104 @@ class _PremiumPillarChip extends StatelessWidget {
 }
 
 
-class _HomeProjectCard extends StatelessWidget {
+class _ProjectCompactCard extends StatelessWidget {
   final NewsPost project;
   final String lang;
-  final bool isDark;
-
-  const _HomeProjectCard({
-    required this.project,
-    required this.lang,
-    required this.isDark,
-  });
+  const _ProjectCompactCard({required this.project, required this.lang});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isAr = lang == 'ar';
+    
     return GestureDetector(
       onTap: () => context.push('/project/${project.id}', extra: project),
       child: Container(
-        width: 300,
-        margin: const EdgeInsets.symmetric(vertical: 10),
+        width: 280,
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF0F1A0F) : Colors.white,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(
-            color: isDark ? AppTheme.accentColor.withValues(alpha: 0.1) : AppTheme.primaryColor.withValues(alpha: 0.05),
-            width: 1.5,
-          ),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Image & Progress Overlay
-              Stack(
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 5,
+              child: Stack(
                 children: [
                   CachedNetworkImage(
                     imageUrl: project.imageUrl,
-                    height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.black12,
-                      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: Colors.black26,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.image_not_supported_outlined, color: Colors.white54, size: 40),
-                          const SizedBox(height: 8),
-                          Text(
-                            isAr ? 'فشل تحميل الصورة' : 'Image error',
-                            style: const TextStyle(color: Colors.white38, fontSize: 10),
-                          ),
-                        ],
-                      ),
-                    ),
+                    placeholder: (ctx, _) => Container(color: AppTheme.primaryColor.withValues(alpha: 0.1)),
+                    errorWidget: (ctx, _, __) => Container(color: AppTheme.primaryColor.withValues(alpha: 0.2)),
                   ),
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.9)],
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Progress Bar on image
-                  Positioned(
-                    bottom: 12,
-                    left: 16,
-                    right: 16,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              isAr ? 'تقدم المشروع' : 'PROGRÈS',
-                              style: GoogleFonts.playfairDisplay(color: Colors.white70, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 1),
-                            ),
-                            Text(
-                              '${(project.progressPercentage * 100).toInt()}%',
-                              style: const TextStyle(color: AppTheme.accentColor, fontSize: 13, fontWeight: FontWeight.w900),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: project.progressPercentage,
-                            backgroundColor: Colors.white.withValues(alpha: 0.1),
-                            color: AppTheme.accentColor,
-                            minHeight: 5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Status Badge
                   Positioned(
                     top: 12,
-                    left: isAr ? null : 12,
                     right: isAr ? 12 : null,
+                    left: isAr ? null : 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppTheme.accentColor,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10)],
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(color: AppTheme.accentColor, borderRadius: BorderRadius.circular(8)),
                       child: Text(
-                        _getStatusLabel(project.projectStatus, isAr),
-                        style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.w900, fontFamily: 'Cairo'),
+                        project.category, 
+                        style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold)
                       ),
                     ),
                   ),
                 ],
               ),
-              // Content
-              Padding(
-                padding: const EdgeInsets.all(20),
+            ),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: AppTheme.accentColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(4),
+                    Text(
+                      project.getTitle(lang), 
+                      style: GoogleFonts.tajawal(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 15,
+                        color: isDark ? Colors.white : AppTheme.primaryColor,
                       ),
-                      child: Text(
-                        project.category.toUpperCase(),
-                        style: const TextStyle(
-                          color: AppTheme.accentColor,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: project.progressPercentage,
+                      backgroundColor: AppTheme.accentColor.withValues(alpha: 0.1),
+                      color: AppTheme.accentColor,
+                    ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${(project.progressPercentage * 100).toInt()}%', 
+                          style: const TextStyle(color: AppTheme.accentColor, fontWeight: FontWeight.bold)
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      project.getTitle(lang),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        height: 1.2,
-                        fontFamily: 'Cairo',
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      project.getSummary(lang),
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.6),
-                        fontSize: 12,
-                        height: 1.5,
-                        fontFamily: 'Cairo',
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                        const Icon(Icons.arrow_forward_ios, size: 12, color: AppTheme.accentColor),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  String _getStatusLabel(String status, bool isAr) {
-    switch (status) {
-      case 'PREPARING': return isAr ? 'تحضير' : 'Prép.';
-      case 'ONGOING': return isAr ? 'جاري' : 'En cours';
-      case 'COMPLETED': return isAr ? 'مكتمل' : 'Terminé';
-      default: return isAr ? 'ميداني' : 'Terrain';
-    }
   }
 }

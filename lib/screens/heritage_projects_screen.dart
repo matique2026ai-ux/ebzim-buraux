@@ -14,8 +14,8 @@ import 'package:ebzim_app/core/services/news_service.dart';
 // State Providers
 // ─────────────────────────────────────────────────────────────────────────────
 
-final searchQueryProvider = StateProvider<String>((ref) => '');
-final projectFilterProvider = StateProvider<String>((ref) => 'all');
+final searchQueryProvider = StateProvider.autoDispose<String>((ref) => '');
+final projectFilterProvider = StateProvider.autoDispose<String>((ref) => 'all');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Screen
@@ -82,7 +82,7 @@ class HeritageProjectsScreen extends ConsumerWidget {
                     Text(
                       isAr
                           ? 'نواكب العصر برؤية استراتيجية في مختلف المجالات'
-                          : 'Nous suivons l\'époque avec une vision stratégique dans divers domaines',
+                          : 'Nous suivons l\'époque with a vision stratégique in diverse domains',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: isDark ? Colors.white60 : Colors.black54,
                         height: 1.5,
@@ -92,7 +92,6 @@ class HeritageProjectsScreen extends ConsumerWidget {
                 ),
               ),
             ),
-
 
             const SliverToBoxAdapter(child: SizedBox(height: 32)),
 
@@ -117,7 +116,7 @@ class HeritageProjectsScreen extends ConsumerWidget {
                                        p.titleFr.toLowerCase().contains(query) ||
                                        p.titleEn.toLowerCase().contains(query) ||
                                        p.summaryAr.toLowerCase().contains(query);
-                  final matchesFilter = filter == 'all' || p.category.toLowerCase() == filter;
+                  final matchesFilter = filter == 'all' || p.category.toUpperCase() == filter;
                   return matchesQuery && matchesFilter;
                 }).toList();
 
@@ -140,10 +139,7 @@ class HeritageProjectsScreen extends ConsumerWidget {
                       final project = filteredProjects[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        child: GestureDetector(
-                          onTap: () => context.push('/project/${project.id}', extra: project),
-                          child: _ProjectCard(project: project, isAr: isAr, isDark: isDark),
-                        ),
+                        child: _ProjectCard(project: project, isAr: isAr, isDark: isDark),
                       ).animate(key: ValueKey(project.id)).fadeIn(delay: (100 + index * 50).ms).slideY(begin: 0.08);
                     },
                     childCount: filteredProjects.length,
@@ -168,7 +164,6 @@ class HeritageProjectsScreen extends ConsumerWidget {
     );
   }
 }
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Search and Filter Bar
@@ -246,23 +241,29 @@ class _SearchAndFilterBar extends ConsumerWidget {
             children: [
               _buildFilterChip(context, ref, 'all', isAr ? 'الكل' : 'Tous', filter == 'all'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'heritage', isAr ? 'تراثي' : 'Patrimonial', filter == 'heritage'),
+              _buildFilterChip(context, ref, 'HERITAGE', isAr ? 'تراثي' : 'Patrimonial', filter == 'HERITAGE'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'scientific', isAr ? 'علمي' : 'Scientifique', filter == 'scientific'),
+              _buildFilterChip(context, ref, 'SCIENTIFIC', isAr ? 'علمي' : 'Scientifique', filter == 'SCIENTIFIC'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'cultural', isAr ? 'ثقافي' : 'Culturel', filter == 'cultural'),
+              _buildFilterChip(context, ref, 'CULTURAL', isAr ? 'ثقافي' : 'Culturel', filter == 'CULTURAL'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'artistic', isAr ? 'فني' : 'Artistique', filter == 'artistic'),
+              _buildFilterChip(context, ref, 'ARTISTIC', isAr ? 'فني' : 'Artistique', filter == 'ARTISTIC'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'restoration', isAr ? 'ترميم' : 'Restauration', filter == 'restoration'),
+              _buildFilterChip(context, ref, 'RESTORATION', isAr ? 'ترميم' : 'Restauration', filter == 'RESTORATION'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'partnership', isAr ? 'شراكة' : 'Partenariat', filter == 'partnership'),
+              _buildFilterChip(context, ref, 'PARTNERSHIP', isAr ? 'شراكة' : 'Partenariat', filter == 'PARTNERSHIP'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'event_report', isAr ? 'تقارير' : 'Rapports', filter == 'event_report'),
+              _buildFilterChip(context, ref, 'EVENT_REPORT', isAr ? 'تقرير ميداني' : 'Rapport', filter == 'EVENT_REPORT'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'associative', isAr ? 'جمعوي' : 'Associatif', filter == 'associative'),
+              _buildFilterChip(context, ref, 'ASSOCIATIVE', isAr ? 'جمعوي' : 'Associatif', filter == 'ASSOCIATIVE'),
               const SizedBox(width: 8),
-              _buildFilterChip(context, ref, 'social', isAr ? 'اجتماعي' : 'Social', filter == 'social'),
+              _buildFilterChip(context, ref, 'SOCIAL', isAr ? 'اجتماعي' : 'Social', filter == 'SOCIAL'),
+              const SizedBox(width: 8),
+              _buildFilterChip(context, ref, 'PROJECT', isAr ? 'مؤسساتي' : 'Institutionnel', filter == 'PROJECT'),
+              const SizedBox(width: 8),
+              _buildFilterChip(context, ref, 'TOURISM', isAr ? 'سياحة ثقافية' : 'Tourisme', filter == 'TOURISM'),
+              const SizedBox(width: 8),
+              _buildFilterChip(context, ref, 'CHILD', isAr ? 'لجنة الطفل' : 'Enfant', filter == 'CHILD'),
             ],
           ),
         ),
@@ -298,7 +299,6 @@ class _SearchAndFilterBar extends ConsumerWidget {
 // Project Card
 // ─────────────────────────────────────────────────────────────────────────────
 
-
 class _ProjectCard extends StatelessWidget {
   final NewsPost project;
   final bool isAr;
@@ -309,7 +309,6 @@ class _ProjectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final lang = isAr ? 'ar' : 'fr';
     final title = project.getTitle(lang);
-    final description = project.getSummary(lang);
     final partner = project.partnerName ?? (isAr ? 'شراكة إستراتيجية' : 'Partenariat Stratégique');
 
     return GestureDetector(
@@ -360,7 +359,7 @@ class _ProjectCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        isAr ? 'مشروع ميداني' : 'Projet Terrain',
+                        _getCategoryLabel(project.category, isAr),
                         style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -451,7 +450,7 @@ class _ProjectCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    description,
+                    project.getSummary(lang),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -469,207 +468,42 @@ class _ProjectCard extends StatelessWidget {
   }
 
   Color _statusColor(String status) {
-    if (status == 'PREPARING') return Colors.blue;
-    if (status == 'ACTIVE') return Colors.green;
-    if (status == 'ON_HOLD') return Colors.orange;
-    if (status == 'COMPLETED') return const Color(0xFFC5A059);
-    
-    if (status.contains('PROJECT')) return const Color(0xFFF59E0B);
-    if (status.contains('HERITAGE')) return const Color(0xFF22C55E);
-    return AppTheme.accentColor;
+    switch (status.toUpperCase()) {
+      case 'IN_PROGRESS': return Colors.blue;
+      case 'COMPLETED': return Colors.green;
+      case 'PLANNING': return Colors.orange;
+      case 'ON_HOLD': return Colors.red;
+      case 'HERITAGE': return AppTheme.accentColor;
+      case 'SCIENTIFIC': return Colors.purple;
+      case 'RESTORATION': return Colors.teal;
+      default: return AppTheme.accentColor;
+    }
   }
 
   String _statusLabel(String status, bool isAr) {
-    switch (status) {
-      case 'PREPARING': return isAr ? 'قيد التحضير' : 'En préparation';
-      case 'ACTIVE': return isAr ? 'نشط' : 'Actif';
-      case 'ON_HOLD': return isAr ? 'متوقف' : 'En pause';
+    switch (status.toUpperCase()) {
+      case 'IN_PROGRESS': return isAr ? 'قيد التنفيذ' : 'En cours';
       case 'COMPLETED': return isAr ? 'مكتمل' : 'Terminé';
-      default: return '';
+      case 'PLANNING': return isAr ? 'قيد التخطيط' : 'En planification';
+      case 'ON_HOLD': return isAr ? 'متوقف مؤقتاً' : 'En pause';
+      default: return isAr ? 'عام' : 'Général';
     }
   }
-}
 
-class _ProjectDetailsSheet extends StatelessWidget {
-  final NewsPost project;
-  final bool isAr;
-  final bool isDark;
-
-  const _ProjectDetailsSheet({
-    required this.project,
-    required this.isAr,
-    required this.isDark,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final lang = isAr ? 'ar' : 'fr';
-    return DraggableScrollableSheet(
-      initialChildSize: 0.85,
-      minChildSize: 0.5,
-      maxChildSize: 0.95,
-      builder: (context, scrollController) => Container(
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF0F1A0F) : Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-          boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 40),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-          child: ListView(
-            controller: scrollController,
-            padding: EdgeInsets.zero,
-            children: [
-              // Image Header
-              Stack(
-                children: [
-                  Image.network(
-                    project.imageUrl,
-                    height: 250,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    top: 20,
-                    right: 20,
-                    child: IconButton(
-                      icon: const Icon(Icons.close_rounded, color: Colors.white, size: 28),
-                      onPressed: () => Navigator.pop(context),
-                      style: IconButton.styleFrom(backgroundColor: Colors.black38),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: 80,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            isDark ? const Color(0xFF0F1A0F) : Colors.white,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      project.getTitle(lang),
-                      style: GoogleFonts.tajawal(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w900,
-                        color: isDark ? Colors.white : AppTheme.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: AppTheme.accentColor.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            project.partnerName ?? (isAr ? 'وزارة المجاهدين' : 'Min. Moudjahidines'),
-                            style: const TextStyle(color: AppTheme.accentColor, fontSize: 12, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          '${project.publishedAt.year}',
-                          style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                    
-                    const SizedBox(height: 32),
-                    
-                    // Progress Section
-                    Text(
-                      isAr ? 'تقرير حالة الإنجاز' : 'Rapport d\'avancement',
-                      style: GoogleFonts.tajawal(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentColor),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.03),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05)),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                isAr ? 'نسبة التقدم الكلية' : 'Progression globale',
-                                style: const TextStyle(color: Colors.white70, fontSize: 13),
-                              ),
-                              Text(
-                                '${(project.progressPercentage * 100).toInt()}%',
-                                style: GoogleFonts.playfairDisplay(color: AppTheme.accentColor, fontSize: 18, fontWeight: FontWeight.w900),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          LinearProgressIndicator(
-                            value: project.progressPercentage,
-                            backgroundColor: Colors.white10,
-                            color: AppTheme.accentColor,
-                            minHeight: 8,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ],
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 32),
-                    
-                    // Timeline Section
-                    Text(
-                      isAr ? 'المراحل الميدانية' : 'Étapes du projet',
-                      style: GoogleFonts.tajawal(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.accentColor),
-                    ),
-                    const SizedBox(height: 20),
-                    EbzimProjectTimeline(
-                      milestones: project.milestones,
-                      lang: lang,
-                    ),
-                    
-                    const SizedBox(height: 32),
-                    
-                    // Body / Details
-                    Text(
-                      project.getBody(lang),
-                      style: GoogleFonts.tajawal(
-                        fontSize: 15,
-                        height: 1.8,
-                        color: isDark ? Colors.white70 : Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 60),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  String _getCategoryLabel(String category, bool isAr) {
+    switch (category.toUpperCase()) {
+      case 'HERITAGE': return isAr ? 'تراثي' : 'Patrimonial';
+      case 'SCIENTIFIC': return isAr ? 'بحث علمي' : 'Scientifique';
+      case 'CULTURAL': return isAr ? 'ثقافي' : 'Culturel';
+      case 'ARTISTIC': return isAr ? 'فني' : 'Artistique';
+      case 'RESTORATION': return isAr ? 'ترميم' : 'Restauration';
+      case 'PARTNERSHIP': return isAr ? 'شراكة' : 'Partenariat';
+      case 'EVENT_REPORT': return isAr ? 'تقرير ميداني' : 'Rapport';
+      case 'ASSOCIATIVE': return isAr ? 'جمعوي' : 'Associatif';
+      case 'SOCIAL': return isAr ? 'اجتماعي' : 'Social';
+      case 'PROJECT': return isAr ? 'مؤسساتي' : 'Institutionnel';
+      case 'TOURISM': return isAr ? 'سياحة ثقافية' : 'Tourisme';
+      default: return isAr ? 'مشروع عام' : 'Général';
+    }
   }
 }

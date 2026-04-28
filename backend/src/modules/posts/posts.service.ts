@@ -14,69 +14,98 @@ import {
 interface PostMedia {
   type: string;
   cloudinaryUrl: string;
+  publicId: string;
 }
 
-interface PostDocumentObject {
-  _id: { toString(): string };
-  title: string;
-  summary: string;
-  content: string;
-  media?: PostMedia[];
+interface PostData {
+  _id: any;
+  id?: string;
+  authorId: any;
+  categoryId: any;
+  title: any;
+  summary: any;
+  content: any;
+  media: PostMedia[];
+  status: string;
+  isFeatured: boolean;
+  isPinned: boolean;
+  category: string;
+  contentType: string;
+  newsType: string;
+  projectStatus: string;
+  progressPercentage: number;
+  milestones: any[];
+  metadata: Record<string, any>;
   publishedAt?: Date;
   createdAt: Date;
-  category?: string;
-  contentType?: string;
-  newsType?: string;
-  projectStatus?: string;
-  metadata?: Record<string, any>;
 }
 
 @Injectable()
 export class PostsService {
   constructor(@InjectModel('Post') private postModel: Model<PostDocument>) {}
 
-  async getPublicFeedSystemFixed(locale: string, options: any) {
+  private _normalizePost(post: PostDocument): Record<string, any> {
+    const p = post.toObject() as PostData;
+    const media = p.media || [];
+    const image = media.find((m) => m.type === 'IMAGE');
+    const metadata = p.metadata || {};
+
+    // Logic Bridge: Lift metadata fields to root if root is empty
+    const progress =
+      p.progressPercentage ||
+      metadata.progress ||
+      metadata.progressPercentage ||
+      0;
+
+    const milestones =
+      p.milestones && p.milestones.length > 0
+        ? p.milestones
+        : metadata.milestones || [];
+
+    const projectStatus =
+      p.projectStatus && p.projectStatus !== 'GENERAL'
+        ? p.projectStatus
+        : metadata.projectStatus || 'GENERAL';
+
+    return {
+      ...p,
+      _id: p._id.toString(),
+      id: p._id.toString(),
+      createdAt: p.createdAt,
+      imageUrl: image?.cloudinaryUrl || '',
+      publishedAt: p.publishedAt || p.createdAt,
+      category: p.category || 'ANNOUNCEMENT',
+      contentType: p.contentType || 'NEWS',
+      newsType: p.newsType || 'NORMAL',
+      projectStatus: projectStatus,
+      progressPercentage: Number(progress),
+      milestones: milestones as any[],
+      metadata: metadata,
+    };
+  }
+
+  async getPublicFeedSystemFixed(
+    locale: string,
+    options: OffsetPaginationOptions,
+  ) {
     const pagination = buildCursorPagination(
       options as CursorPaginationOptions,
     );
     const query: Record<string, any> = pagination.query;
     const limit = pagination.limit;
 
-    // Public feed constraints
     query['status'] = 'PUBLISHED';
 
     const posts = await this.postModel
       .find(query)
-      .sort({ _id: -1 }) // Newest first
+      .sort({ _id: -1 })
       .limit(limit)
       .exec();
 
-    // Multilingual payload map: Strip unneeded languages to save mobile parsing speed
-    const localizedPosts = posts.map((post) => {
-      const p = post.toObject() as unknown as PostDocumentObject;
-      const media = p.media || [];
-      const image = media.find((m) => m.type === 'IMAGE');
-
-      return {
-        ...p, // Spread the original object to ensure no fields (like metadata) are lost
-        _id: p._id.toString(),
-        id: p._id.toString(), // Add id for frontend compatibility
-        createdAt: p.createdAt, // Ensure createdAt is explicitly present
-        title: p.title,
-        summary: p.summary,
-        content: p.content,
-        imageUrl: image?.cloudinaryUrl || '',
-        publishedAt: p.publishedAt || p.createdAt,
-        category: p.category || 'ANNOUNCEMENT',
-        contentType: p.contentType || 'NEWS',
-        newsType: p.newsType || 'NORMAL',
-        projectStatus: p.projectStatus || 'GENERAL',
-        metadata: p.metadata || {},
-      };
-    });
+    const localizedPosts = posts.map((post) => this._normalizePost(post));
 
     return {
-      version: '1.2.1-metadata-fix',
+      version: '1.3.0-professional-logic',
       ...formatCursorPaginatedResponse(localizedPosts),
     };
   }

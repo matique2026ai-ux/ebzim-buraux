@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
 import 'package:ebzim_app/core/common_widgets/ebzim_sliver_app_bar.dart';
+import 'package:ebzim_app/screens/project_details_screen.dart';
 
 class NewsDetailWrapper extends ConsumerWidget {
   final NewsPost? initialPost;
@@ -15,9 +16,21 @@ class NewsDetailWrapper extends ConsumerWidget {
 
   const NewsDetailWrapper({super.key, this.initialPost, required this.postId});
 
+  bool _isProject(NewsPost p) {
+    const projectCategories = [
+      'PROJECT', 'HERITAGE', 'SCIENTIFIC', 'RESTORATION', 
+      'ARTISTIC', 'CULTURAL', 'TOURISM', 'CHILD', 'PARTNERSHIP'
+    ];
+    return projectCategories.contains(p.category.toUpperCase()) || p.contentType == 'PROJECT' || p.isFieldProject;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 1. Check if the initial post is actually a project
     if (initialPost != null) {
+      if (_isProject(initialPost!)) {
+        return ProjectDetailsScreen(project: initialPost!);
+      }
       return NewsDetailScreen(post: initialPost!);
     }
     
@@ -27,6 +40,10 @@ class NewsDetailWrapper extends ConsumerWidget {
       data: (post) {
         if (post == null) {
           return const Scaffold(body: Center(child: Text('News not found')));
+        }
+        // 2. Dynamic redirection if fetched post is a project
+        if (_isProject(post)) {
+          return ProjectDetailsScreen(project: post);
         }
         return NewsDetailScreen(post: post);
       },

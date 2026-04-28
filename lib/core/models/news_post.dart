@@ -16,12 +16,14 @@ class ProjectMilestone {
   });
 
   factory ProjectMilestone.fromJson(Map<String, dynamic> json) {
+    // Supportive parsing for different backend naming conventions
+    final title = json['title'] is Map ? json['title'] : {};
     return ProjectMilestone(
-      titleAr: json['titleAr'] ?? '',
-      titleEn: json['titleEn'] ?? '',
-      titleFr: json['titleFr'] ?? '',
-      date: json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
-      isCompleted: json['isCompleted'] ?? false,
+      titleAr: json['titleAr'] ?? title['ar'] ?? '',
+      titleEn: json['titleEn'] ?? title['en'] ?? '',
+      titleFr: json['titleFr'] ?? title['fr'] ?? '',
+      date: json['date'] != null ? DateTime.parse(json['date'].toString()) : DateTime.now(),
+      isCompleted: json['isCompleted'] ?? json['completed'] ?? false,
     );
   }
 
@@ -122,53 +124,56 @@ class NewsPost {
       img = json['media'][0]['cloudinaryUrl'] ?? '';
     }
     
-    // Fallback for flattened responses from getPublicFeed
+    // Fallback for flattened responses
     if (img.isEmpty && json['imageUrl'] != null) {
       img = json['imageUrl'].toString().trim();
     }
     
     img = img.trim();
 
-    // Parse milestones
+    // Use the normalized fields from backend (v1.3.0) with robust fallbacks
+    final progress = json['progressPercentage'] ?? metadata['progressPercentage'] ?? metadata['progress'] ?? 0.0;
+    final milestonesJson = json['milestones'] ?? metadata['milestones'] ?? [];
+    
     List<ProjectMilestone> miles = [];
-    if (metadata['milestones'] is List) {
-      miles = (metadata['milestones'] as List)
-          .map((m) => ProjectMilestone.fromJson(m))
+    if (milestonesJson is List) {
+      miles = milestonesJson
+          .map((m) => ProjectMilestone.fromJson(m as Map<String, dynamic>))
           .toList();
+    }
+
+    double finalProgress = 0.0;
+    try {
+      finalProgress = double.parse(progress.toString());
+      // Standardize: If backend sends 85, convert to 0.85 for the UI sliders
+      if (finalProgress > 1.0) finalProgress = finalProgress / 100.0;
+    } catch (_) {
+      finalProgress = 0.0;
     }
 
     return NewsPost(
       id: json['_id'] ?? json['id'] ?? '',
-      titleAr: title['ar'] ?? '',
-      titleEn: title['en'] ?? '',
-      titleFr: title['fr'] ?? '',
-      summaryAr: summary['ar'] ?? '',
-      summaryEn: summary['en'] ?? '',
-      summaryFr: summary['fr'] ?? '',
-      bodyAr: content['ar'] ?? '',
-      bodyEn: content['en'] ?? '',
-      bodyFr: content['fr'] ?? '',
+      titleAr: title['ar'] ?? json['titleAr'] ?? '',
+      titleEn: title['en'] ?? json['titleEn'] ?? '',
+      titleFr: title['fr'] ?? json['titleFr'] ?? '',
+      summaryAr: summary['ar'] ?? json['summaryAr'] ?? '',
+      summaryEn: summary['en'] ?? json['summaryEn'] ?? '',
+      summaryFr: summary['fr'] ?? json['summaryFr'] ?? '',
+      bodyAr: content['ar'] ?? json['bodyAr'] ?? '',
+      bodyEn: content['en'] ?? json['bodyEn'] ?? '',
+      bodyFr: content['fr'] ?? json['bodyFr'] ?? '',
       imageUrl: img,
-      category: json['category'] ?? 
-                metadata['category'] ?? 
-                ((title['ar'] != null && title['ar'].toString().contains('[PROJ]')) ? 'PROJECT' : 'ANNOUNCEMENT'),
+      category: json['category'] ?? metadata['category'] ?? 'PROJECT',
       contentType: json['contentType'] ?? 'NEWS',
       newsType: json['newsType'] ?? 'NORMAL',
       projectStatus: json['projectStatus'] ?? metadata['projectStatus'] ?? 'GENERAL',
-      progressPercentage: (metadata['progressPercentage'] != null) 
-          ? (double.tryParse(metadata['progressPercentage'].toString()) ?? 0.0)
-          : (json['progressPercentage'] != null 
-              ? (double.tryParse(json['progressPercentage'].toString()) ?? 0.0) 
-              : (metadata['progress'] != null 
-                  ? (double.tryParse(metadata['progress'].toString()) ?? 0.0)
-                  : (json['progress'] != null 
-                      ? (double.tryParse(json['progress'].toString()) ?? 0.0)
-                      : 0.0))),
+      progressPercentage: finalProgress,
       isPinned: json['isPinned'] ?? false,
       isFeatured: json['isFeatured'] ?? false,
-      publishedAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
+      publishedAt: json['publishedAt'] != null ? DateTime.parse(json['publishedAt'].toString()) : 
+                  (json['createdAt'] != null ? DateTime.parse(json['createdAt'].toString()) : DateTime.now()),
       milestones: miles,
-      partnerName: metadata['partnerName'],
+      partnerName: metadata['partnerName'] ?? json['partnerName'],
       latitude: metadata['latitude'] != null ? double.tryParse(metadata['latitude'].toString()) : null,
       longitude: metadata['longitude'] != null ? double.tryParse(metadata['longitude'].toString()) : null,
     );

@@ -452,6 +452,13 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                     Row(
                       children: [
                         _CategoryChip(
+                          label: 'تراثي',
+                          icon: Icons.history_edu_rounded,
+                          isSelected: _category == 'HERITAGE',
+                          onTap: () => setState(() => _category = 'HERITAGE'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
                           label: 'علمي',
                           icon: Icons.science_rounded,
                           isSelected: _category == 'SCIENTIFIC',
@@ -459,10 +466,60 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                         ),
                         const SizedBox(width: 12),
                         _CategoryChip(
+                          label: 'ثقافي',
+                          icon: Icons.museum_rounded,
+                          isSelected: _category == 'CULTURAL',
+                          onTap: () => setState(() => _category = 'CULTURAL'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _CategoryChip(
                           label: 'فني',
                           icon: Icons.palette_rounded,
                           isSelected: _category == 'ARTISTIC',
                           onTap: () => setState(() => _category = 'ARTISTIC'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'ترميم',
+                          icon: Icons.architecture_rounded,
+                          isSelected: _category == 'RESTORATION',
+                          onTap: () => setState(() => _category = 'RESTORATION'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'سياحة',
+                          icon: Icons.map_rounded,
+                          isSelected: _category == 'TOURISM',
+                          onTap: () => setState(() => _category = 'TOURISM'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _CategoryChip(
+                          label: 'جمعوي',
+                          icon: Icons.groups_rounded,
+                          isSelected: _category == 'ASSOCIATIVE',
+                          onTap: () => setState(() => _category = 'ASSOCIATIVE'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'اجتماعي',
+                          icon: Icons.volunteer_activism_rounded,
+                          isSelected: _category == 'SOCIAL',
+                          onTap: () => setState(() => _category = 'SOCIAL'),
+                        ),
+                        const SizedBox(width: 12),
+                        _CategoryChip(
+                          label: 'لجنة الطفل',
+                          icon: Icons.child_care_rounded,
+                          isSelected: _category == 'CHILD',
+                          onTap: () => setState(() => _category = 'CHILD'),
                         ),
                       ],
                     ),
@@ -482,38 +539,9 @@ class _AdminCreateNewsScreenState extends ConsumerState<AdminCreateNewsScreen> {
                           isSelected: _category == 'EVENT_REPORT',
                           onTap: () => setState(() => _category = 'EVENT_REPORT'),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        _CategoryChip(
-                          label: 'ذاكرة وطنية',
-                          icon: Icons.history_edu_rounded,
-                          isSelected: _category == 'MEMORY',
-                          onTap: () => setState(() => _category = 'MEMORY'),
-                        ),
                         const SizedBox(width: 12),
                         _CategoryChip(
-                          label: 'سياحة ثقافية',
-                          icon: Icons.map_rounded,
-                          isSelected: _category == 'TOURISM',
-                          onTap: () => setState(() => _category = 'TOURISM'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                         _CategoryChip(
-                          label: 'لجنة الطفل',
-                          icon: Icons.child_care_rounded,
-                          isSelected: _category == 'CHILD',
-                          onTap: () => setState(() => _category = 'CHILD'),
-                        ),
-                        const SizedBox(width: 12),
-                        _CategoryChip(
-                          label: 'مشروع مؤسساتي',
+                          label: 'مؤسساتي',
                           icon: Icons.business_rounded,
                           isSelected: _category == 'PROJECT',
                           onTap: () => setState(() => _category = 'PROJECT'),

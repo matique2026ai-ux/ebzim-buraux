@@ -1,34 +1,14 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import * as admin from 'firebase-admin';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
-import * as fs from 'fs';
 
-// Initialize Firebase Admin SDK once using service account file or env vars
-if (!admin.apps.length) {
-  const keyPath = path.join(process.cwd(), 'src', 'firebase-service-account.json');
-  let credential: admin.credential.Credential;
+const SUPABASE_URL = 'https://kuoezhgkfxctcxecodak.supabase.co';
+const SUPABASE_SERVICE_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1b2V6aGdrZnhjdGN4ZWNvZGFrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQwNTYxMywiZXhwIjoyMDkyOTgxNjEzfQ.Xl-LDkOENbprpuWC2v-hI28XIKgekdym6q4vdqv1nrs';
+const BUCKET_NAME = 'ebzim';
 
-  if (fs.existsSync(keyPath)) {
-    // Local development: load from JSON file
-    const serviceAccount = JSON.parse(
-      fs.readFileSync(keyPath, 'utf-8'),
-    ) as admin.ServiceAccount;
-    credential = admin.credential.cert(serviceAccount);
-  } else {
-    // Production (Render): load from environment variables
-    credential = admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    });
-  }
-
-  admin.initializeApp({
-    credential,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? 'ebzim-storage.firebasestorage.app',
-  });
-}
+const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 export interface CloudinaryResponse {
   url: string;
@@ -48,7 +28,7 @@ interface UploadedFile {
 export class MediaService {
   async uploadImage(
     file: UploadedFile,
-    folder = 'ebzim/uploads',
+    folder = 'uploads',
   ): Promise<CloudinaryResponse> {
     if (
       !/^(image\/(jpeg|png|gif|webp)|video\/(mp4|webm)|application\/pdf)$/.test(
@@ -56,49 +36,46 @@ export class MediaService {
       )
     ) {
       throw new BadRequestException(
-        'Invalid file type. Only jpeg, png, gif, webp imagery, mp4, webm videos, or pdf documents are allowed.',
+        'نوع الملف غير مسموح. الأنواع المقبولة: jpeg, png, gif, webp, mp4, webm, pdf.',
       );
     }
 
-    try {
-      const bucket = admin.storage().bucket();
-      const ext = file.originalname ? path.extname(file.originalname) : '';
-      const fileName = `${folder}/${uuidv4()}${ext}`;
+    const ext = file.originalname ? path.extname(file.originalname) : '';
+    const fileName = `${folder}/${uuidv4()}${ext}`;
 
-      const fileRef = bucket.file(fileName);
-
-      await fileRef.save(file.buffer, {
-        metadata: {
-          contentType: file.mimetype,
-        },
+    const { error } = await supabase.storage
+      .from(BUCKET_NAME)
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false,
       });
 
-      // Make the file publicly accessible
-      await fileRef.makePublic();
-
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-
-      return {
-        url: publicUrl,
-        public_id: fileName,
-        resource_type: file.mimetype.startsWith('image/') ? 'image' : 'raw',
-        format: ext.replace('.', ''),
-      };
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[Firebase Storage Upload Error]', error);
-      throw new BadRequestException(`فشل رفع الملف: ${message}`);
+    if (error) {
+      console.error('[Supabase Upload Error]', error);
+      throw new BadRequestException(`فشل رفع الملف: ${error.message}`);
     }
+
+    const { data } = supabase.storage
+      .from(BUCKET_NAME)
+      .getPublicUrl(fileName);
+
+    return {
+      url: data.publicUrl,
+      public_id: fileName,
+      resource_type: file.mimetype.startsWith('image/') ? 'image' : 'raw',
+      format: ext.replace('.', ''),
+    };
   }
 
   async deleteMedia(publicId: string): Promise<{ result: string }> {
-    try {
-      const bucket = admin.storage().bucket();
-      await bucket.file(publicId).delete();
-      return { result: 'ok' };
-    } catch (error: unknown) {
-      console.error('[Firebase Storage Delete Error]', error);
+    const { error } = await supabase.storage
+      .from(BUCKET_NAME)
+      .remove([publicId]);
+
+    if (error) {
+      console.error('[Supabase Delete Error]', error);
       return { result: 'not_found' };
     }
+    return { result: 'ok' };
   }
 }

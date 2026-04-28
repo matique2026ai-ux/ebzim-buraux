@@ -64,3 +64,7 @@ true_errors.txt
 final_analysis*.txt
 fresh_analysis*.txt
 
+# Firebase service account keys (NEVER commit these!)
+*firebase-service-account*.json
+*firebase-key*.json
+*-adminsdk-*.json

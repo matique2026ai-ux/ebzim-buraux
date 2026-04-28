@@ -86,7 +86,7 @@ export class PostsService {
 
   async getPublicFeedSystemFixed(
     locale: string,
-    options: OffsetPaginationOptions,
+    options: CursorPaginationOptions,
   ) {
     const pagination = buildCursorPagination(
       options as CursorPaginationOptions,

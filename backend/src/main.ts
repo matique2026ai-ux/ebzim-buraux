@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as fs from 'fs';
 
 async function bootstrap() {
   // EBZIM API - Production Boot Sequence
@@ -29,6 +30,10 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       transform: true,
+      exceptionFactory: (errors) => {
+        fs.appendFileSync('validation_errors.log', new Date().toISOString() + ' ' + JSON.stringify(errors) + '\n');
+        return new BadRequestException(errors);
+      }
     }),
   );
 

@@ -27,6 +27,7 @@ import 'package:ebzim_app/screens/admin/tabs/projects_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/reports_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/financials_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/settings_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/publications_tab.dart';
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -91,7 +92,7 @@ class AdminDashboardScreen extends ConsumerWidget {
       {
         'icon': Icons.menu_book_rounded,
         'text': 'المكتبة',
-        'view': const Center(child: Text('قريباً: إدارة المكتبة الرقمية')),
+        'view': const PublicationsTab(),
       },
       if (isSuperAdmin) ...[
         {

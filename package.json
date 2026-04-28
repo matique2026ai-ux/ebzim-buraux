@@ -6,6 +6,8 @@
     "start": "cd backend && npm run start:prod"
   },
   "dependencies": {
-    "mongoose": "^9.4.1"
+    "axios": "^1.15.2",
+    "mongoose": "^9.4.1",
+    "puppeteer-core": "^24.42.0"
   }
 }

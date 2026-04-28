@@ -3,6 +3,8 @@ enum PublicationCategory {
   research,
   reports,
   history,
+  legal,
+  cultural,
   other;
 
   String getLabel(String lang) {
@@ -12,6 +14,8 @@ enum PublicationCategory {
         case research: return 'البحوث العلمية';
         case reports: return 'التقارير السنوية';
         case history: return 'تاريخ سطيف';
+        case legal: return 'قوانين وتشريعات';
+        case cultural: return 'ثقافة وفنون';
         default: return 'أخرى';
       }
     } else if (lang == 'fr') {
@@ -20,6 +24,8 @@ enum PublicationCategory {
         case research: return 'Recherche';
         case reports: return 'Rapports';
         case history: return 'Histoire locale';
+        case legal: return 'Lois et Législation';
+        case cultural: return 'Culture et Arts';
         default: return 'Autre';
       }
     } else {
@@ -28,6 +34,8 @@ enum PublicationCategory {
         case research: return 'Research';
         case reports: return 'Annual Reports';
         case history: return 'Local History';
+        case legal: return 'Laws & Legislation';
+        case cultural: return 'Culture & Arts';
         default: return 'Other';
       }
     }
@@ -95,6 +103,18 @@ class Publication {
       category: cat,
       publishedDate: DateTime.tryParse(json['publishedDate']?.toString() ?? '') ?? DateTime.now(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': {'ar': titleAr, 'en': titleEn, 'fr': titleFr},
+      'author': {'ar': authorAr, 'en': authorEn, 'fr': authorFr},
+      'summary': {'ar': summaryAr, 'en': summaryEn, 'fr': summaryFr},
+      'thumbnailUrl': thumbnailUrl,
+      'pdfUrl': pdfUrl,
+      'category': category.name.toUpperCase(),
+      'publishedDate': publishedDate.toIso8601String(),
+    };
   }
 
   String getTitle(String lang) => lang == 'ar' ? titleAr : lang == 'fr' ? titleFr : titleEn;

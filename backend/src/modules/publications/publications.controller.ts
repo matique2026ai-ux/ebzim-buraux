@@ -16,14 +16,45 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../common/enums/role.enum';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { PublicationCategory } from './schemas/publication.schema';
+import { IsString, IsObject, IsEnum, IsOptional, IsDateString, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class MultilingualString {
+  @IsString()
+  ar: string;
+  @IsString()
+  en: string;
+  @IsString()
+  fr: string;
+}
 
 export class CreatePublicationDto {
-  title: { ar: string; en: string; fr: string };
-  author: { ar: string; en: string; fr: string };
-  summary: { ar: string; en: string; fr: string };
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MultilingualString)
+  title: MultilingualString;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MultilingualString)
+  author: MultilingualString;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MultilingualString)
+  summary: MultilingualString;
+
+  @IsString()
   thumbnailUrl: string;
+
+  @IsString()
   pdfUrl: string;
+
+  @IsEnum(PublicationCategory)
   category: PublicationCategory;
+
+  @IsOptional()
+  @IsDateString()
   publishedDate?: Date;
 }
 
@@ -60,7 +91,13 @@ export class PublicationsController {
     @Body() createDto: CreatePublicationDto,
     @Request() req: AuthenticatedRequest,
   ) {
-    return this.publicationsService.create(createDto, req.user.userId);
+    try {
+      const result = await this.publicationsService.create(createDto, req.user.userId);
+      return result;
+    } catch (e: any) {
+      require('fs').appendFileSync('publication_error.log', new Date().toISOString() + ' ERROR: ' + e.message + '\n' + e.stack + '\n');
+      throw e;
+    }
   }
 
   @Patch(':id')

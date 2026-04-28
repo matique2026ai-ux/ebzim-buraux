@@ -1,6 +1,16 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { v2 as cloudinary } from 'cloudinary';
-import * as streamifier from 'streamifier';
+import * as admin from 'firebase-admin';
+import { v4 as uuidv4 } from 'uuid';
+import * as path from 'path';
+
+// Initialize Firebase Admin SDK once
+if (!admin.apps.length) {
+  const serviceAccount = require(path.join(process.cwd(), 'src', 'firebase-service-account.json'));
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    storageBucket: 'ebzim-storage.firebasestorage.app',
+  });
+}
 
 export interface CloudinaryResponse {
   url: string;
@@ -15,47 +25,52 @@ export class MediaService {
     file: any,
     folder = 'ebzim/uploads',
   ): Promise<CloudinaryResponse> {
-    // Strict MIME boundary validation
     if (
-      !file.mimetype.match(/^(image\/(jpeg|png|gif|webp)|video\/(mp4|webm))$/)
+      !file.mimetype.match(/^(image\/(jpeg|png|gif|webp)|video\/(mp4|webm)|application\/pdf)$/)
     ) {
       throw new BadRequestException(
-        'Invalid file type. Only jpeg, png, gif, webp imagery or mp4, webm videos are allowed.',
+        'Invalid file type. Only jpeg, png, gif, webp imagery, mp4, webm videos, or pdf documents are allowed.',
       );
     }
 
-    // Increased limit for institutional media content (images/videos)
-    const MAX_MB = 50;
-    if (file.size > MAX_MB * 1024 * 1024) {
-      throw new BadRequestException(
-        `File size exceeds strict ${MAX_MB}MB limit.`,
-      );
-    }
+    try {
+      const bucket = admin.storage().bucket();
+      const ext = file.originalname ? path.extname(file.originalname) : '';
+      const fileName = `${folder}/${uuidv4()}${ext}`;
 
-    return new Promise<CloudinaryResponse>((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        { folder, resource_type: 'auto' }, // Preparation for handling diverse media later
-        (error: any, result: any) => {
-          if (error) return reject(error);
-          resolve({
-            url: result.secure_url,
-            public_id: result.public_id,
-            resource_type: result.resource_type,
-            format: result.format,
-          });
+      const fileRef = bucket.file(fileName);
+
+      await fileRef.save(file.buffer, {
+        metadata: {
+          contentType: file.mimetype,
         },
-      );
+      });
 
-      streamifier.createReadStream(file.buffer).pipe(uploadStream);
-    });
+      // Make the file publicly accessible
+      await fileRef.makePublic();
+
+      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+
+      return {
+        url: publicUrl,
+        public_id: fileName,
+        resource_type: file.mimetype.startsWith('image/') ? 'image' : 'raw',
+        format: ext.replace('.', ''),
+      };
+    } catch (error) {
+      console.error('[Firebase Storage Upload Error]', error);
+      throw new BadRequestException(`فشل رفع الملف: ${error.message}`);
+    }
   }
 
   async deleteMedia(publicId: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader.destroy(publicId, (error: any, result: any) => {
-        if (error) return reject(error);
-        resolve(result);
-      });
-    });
+    try {
+      const bucket = admin.storage().bucket();
+      await bucket.file(publicId).delete();
+      return { result: 'ok' };
+    } catch (error) {
+      console.error('[Firebase Storage Delete Error]', error);
+      return { result: 'not_found' };
+    }
   }
 }

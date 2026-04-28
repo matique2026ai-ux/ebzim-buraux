@@ -2,13 +2,31 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
-import serviceAccount from '../../firebase-service-account.json';
+import * as fs from 'fs';
 
-// Initialize Firebase Admin SDK once
+// Initialize Firebase Admin SDK once using service account file or env vars
 if (!admin.apps.length) {
+  const keyPath = path.join(process.cwd(), 'src', 'firebase-service-account.json');
+  let credential: admin.credential.Credential;
+
+  if (fs.existsSync(keyPath)) {
+    // Local development: load from JSON file
+    const serviceAccount = JSON.parse(
+      fs.readFileSync(keyPath, 'utf-8'),
+    ) as admin.ServiceAccount;
+    credential = admin.credential.cert(serviceAccount);
+  } else {
+    // Production (Render): load from environment variables
+    credential = admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    });
+  }
+
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
-    storageBucket: 'ebzim-storage.firebasestorage.app',
+    credential,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? 'ebzim-storage.firebasestorage.app',
   });
 }
 
@@ -49,7 +67,7 @@ export class MediaService {
 
       const fileRef = bucket.file(fileName);
 
-      await fileRef.save(file.buffer as Buffer, {
+      await fileRef.save(file.buffer, {
         metadata: {
           contentType: file.mimetype,
         },

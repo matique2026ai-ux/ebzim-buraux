@@ -20,6 +20,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "resolveJsonModule": true
   }
 }

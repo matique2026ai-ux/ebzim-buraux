@@ -55,4 +55,11 @@ export class AdminController {
   async updateUser(@Param('id') id: string, @Body() data: any) {
     return this.adminService.updateUser(id, data);
   }
+
+  @Delete('debug/wipe-all-test-data')
+  @Roles(Role.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Wipe all test data (Super Admin only)' })
+  async wipeAllTestData() {
+    return this.adminService.wipeAllTestData();
+  }
 }

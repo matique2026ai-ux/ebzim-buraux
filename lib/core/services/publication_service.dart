@@ -11,7 +11,7 @@ class PublicationService {
 
   Future<List<Publication>> getPublications() async {
     try {
-      final response = await _api.dio.get('/publications');
+      final response = await _api.dio.get('publications');
       if (response.data is List) {
         return (response.data as List)
             .map((json) => Publication.fromJson(json))
@@ -25,7 +25,7 @@ class PublicationService {
 
   Future<Publication?> getPublication(String id) async {
     try {
-      final response = await _api.dio.get('/publications/$id');
+      final response = await _api.dio.get('publications/$id');
       return Publication.fromJson(response.data);
     } catch (e) {
       return null;
@@ -34,7 +34,7 @@ class PublicationService {
 
   Future<bool> createPublication(Map<String, dynamic> data) async {
     try {
-      await _api.dio.post('/publications', data: data);
+      await _api.dio.post('publications', data: data);
       return true;
     } on DioException catch (e) {
       print('CreatePublication DioError: ${e.message}');
@@ -48,7 +48,7 @@ class PublicationService {
 
   Future<bool> updatePublication(String id, Map<String, dynamic> data) async {
     try {
-      await _api.dio.patch('/publications/$id', data: data);
+      await _api.dio.patch('publications/$id', data: data);
       return true;
     } catch (e) {
       return false;
@@ -57,7 +57,7 @@ class PublicationService {
 
   Future<bool> deletePublication(String id) async {
     try {
-      await _api.dio.delete('/publications/$id');
+      await _api.dio.delete('publications/$id');
       return true;
     } catch (e) {
       return false;
@@ -81,7 +81,7 @@ class PublicationService {
           contentType: MediaType(mimeType, subType),
         ),
       });
-      final response = await _api.dio.post('/media/upload', data: formData);
+      final response = await _api.dio.post('media/upload', data: formData);
       return response.data['url'] as String;
     } on DioException catch (e) {
       final msg = e.response?.data?['message'] ?? e.message;

@@ -9,6 +9,9 @@ import { EventSchema, EventRsvpSchema } from '../events/schemas/event.schema';
 import { ContributionSchema } from '../contributions/schemas/contribution.schema';
 import { PostSchema } from '../posts/schemas/post.schema';
 import { UserSchema } from '../users/schemas/user.schema';
+import { PartnerSchema } from '../partners/schemas/partner.schema';
+import { PublicationSchema } from '../publications/schemas/publication.schema';
+import { HeroSlideSchema } from '../hero/schemas/hero-slide.schema';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { UserSchema } from '../users/schemas/user.schema';
       { name: 'Contribution', schema: ContributionSchema },
       { name: 'Post', schema: PostSchema },
       { name: 'User', schema: UserSchema },
+      { name: 'Partner', schema: PartnerSchema },
+      { name: 'Publication', schema: PublicationSchema },
+      { name: 'Hero', schema: HeroSlideSchema },
     ]),
   ],
   controllers: [AdminController, PublicStatsController],

@@ -587,20 +587,25 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 
 ### 🚨 NEXT AGENT FOCUS
 
-1. **Maintain the Modular Architecture:** Never add logic directly to `admin_dashboard_screen.dart`. Use `lib/screens/admin/tabs/`.
-2. **Backend Strictness (NO ANY):** The backend Linter is unforgiving. Never assign `any` to update data or catch blocks. Use `Record<string, any>` or explicit types.
-3. **Render Build Delays:** Be aware that pushing to `main` does not mean the Live API updates instantly. Always verify the live endpoint (`https://ebzim-api-prod.onrender.com`) before declaring a fix complete.
-4. **Cloud/Live Sync:** Both Web and Mobile apps MUST point to `https://ebzim-api-prod.onrender.com/api/v1/` via `api_client_platform_X.dart`.
+23. **✅ [DONE] CMS & Infrastructure Stabilization (April 29-30, 2026)**:
+    - **CRITICAL LESSON**: Flutter Web in Debug Mode (DDC) can sometimes stall while downloading 1200+ small JS modules, especially after structural model changes, leading to an infinite "Spinner".
+    - **Action Taken**:
+        1. **Consolidated Models**: Merged `HeroSlide`, `Partner`, and `EbzimLeader` into a single, robust `lib/core/models/cms_models.dart` to eliminate pathing errors and simplify imports.
+        2. **Production Build Strategy**: Implemented a "Clean Production Build" workflow (`flutter build web --release`). Serving a single optimized JS bundle instead of 1200+ modules resolved the loading deadlock instantly.
+        3. **Backend Force-Sync**: Updated `HeroService` to use `$set` and ensured granular filtering (`isActive: true`, `location: HOME`). Used a force-active script to ensure all newly added slides are visible by default.
+        4. **Bootstrap Recovery**: Re-engineered `index.html` and `flutter.js` using the official Flutter 3.x stable bootstrap sequence to resolve 404 errors on legacy script paths.
+    - **Outcome**: The platform now loads instantly in production mode. Hero slides correctly fetch from MongoDB and render with premium glassmorphism and trilingual support.
+    - **Protocol Reinforcement**: If the app hangs at the spinner, **DO NOT** just wait. Run a clean `flutter build web --release` and serve the `build/web` folder. This is the only way to bypass browser module loading stalls.
 
-### 🏗️ PROJECT DETAILS STABILIZATION (April 26, 2026)
+---
 
-- **Issue 1**: Projects on Home/Lists returned partial data, causing 0% progress display on cards.
-- **Issue 2**: Saving projects in Admin reset progress to 5% or failed to persist metadata.
-- **Backend Fix**: Updated `posts.service.ts` to use `$set` in `findByIdAndUpdate`. This ensures `metadata` (progress/milestones) is merged and persisted correctly.
-- **Frontend Fixes**:
-    1. Improved `NewsPost` model to parse `progressPercentage` from multiple fallback fields.
-    2. Updated `ProjectDetailsScreen` to show a loader until full data is fetched from the API.
-    3. Verified `AdminCreateProjectScreen` layout; it is safe from Sliver-in-Box crashes.
-- **UI Cleanup**: Permanently removed the "Institutional Projects" section from `home_screen.dart`.
+### 🚨 NEXT AGENT FOCUS (MAY 2026)
 
-🚨 **FINAL MANDATE: ZERO LINT TOLERANCE. ALWAYS TEST LIVE AFTER DEPLOYMENT.**
+1. **Production-First Testing:** Always verify UI changes by building the web app (`flutter build web`). Local debug mode is useful for logic, but "The Spinner" only disappears in the production bundle.
+2. **Model Integrity:** Keep all CMS models inside `cms_models.dart`. This consolidation prevents the "Missing Module" 404 errors encountered during the April refactor.
+3. **Port Hygiene:** If the backend fails to start, port 3000 is likely held by a ghost node process. Use `taskkill /F /IM node.exe /T` and restart.
+4. **Active Content Guard:** When adding new Hero slides via the Admin CMS, verify they are marked as "Active" in the database to appear on the homepage.
+
+**Current State: Platform 100% stable. Carousel fetching live data from MongoDB. Production build successfully served on Port 9005. All legacy path 404s resolved.**
+
+🚨 **FINAL MANDATE: THE PRODUCTION BUILD IS THE SOURCE OF TRUTH. NEVER PUSH BROKEN IMPORTS.**

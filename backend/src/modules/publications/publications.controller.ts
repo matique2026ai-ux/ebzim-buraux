@@ -16,7 +16,14 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../common/enums/role.enum';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { PublicationCategory } from './schemas/publication.schema';
-import { IsString, IsObject, IsEnum, IsOptional, IsDateString, ValidateNested } from 'class-validator';
+import {
+  IsString,
+  IsObject,
+  IsEnum,
+  IsOptional,
+  IsDateString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class MultilingualString {
@@ -92,10 +99,21 @@ export class PublicationsController {
     @Request() req: AuthenticatedRequest,
   ) {
     try {
-      const result = await this.publicationsService.create(createDto, req.user.userId);
+      const result = await this.publicationsService.create(
+        createDto,
+        req.user.userId,
+      );
       return result;
     } catch (e: any) {
-      require('fs').appendFileSync('publication_error.log', new Date().toISOString() + ' ERROR: ' + e.message + '\n' + e.stack + '\n');
+      require('fs').appendFileSync(
+        'publication_error.log',
+        new Date().toISOString() +
+          ' ERROR: ' +
+          e.message +
+          '\n' +
+          e.stack +
+          '\n',
+      );
       throw e;
     }
   }

@@ -11,6 +11,9 @@ import { ContributionDocument } from '../contributions/schemas/contribution.sche
 import { PostDocument } from '../posts/schemas/post.schema';
 import { UserDocument } from '../users/schemas/user.schema';
 import { Role } from '../../common/enums/role.enum';
+import { PartnerDocument } from '../partners/schemas/partner.schema';
+import { Publication } from '../publications/schemas/publication.schema';
+import { HeroSlideDocument } from '../hero/schemas/hero-slide.schema';
 
 @Injectable()
 export class AdminService {
@@ -25,6 +28,9 @@ export class AdminService {
     private contributionModel: Model<ContributionDocument>,
     @InjectModel('Post') private postModel: Model<PostDocument>,
     @InjectModel('User') private userModel: Model<UserDocument>,
+    @InjectModel('Partner') private partnerModel: Model<PartnerDocument>,
+    @InjectModel('Publication') private publicationModel: Model<Publication>,
+    @InjectModel('Hero') private heroModel: Model<HeroSlideDocument>,
   ) {}
 
   async getStats() {
@@ -49,7 +55,8 @@ export class AdminService {
       this.userModel.countDocuments({}),
     ]);
 
-    const totalContributions = (totalContributionsResult as { total: number }[])[0]?.total || 0;
+    const totalContributions =
+      (totalContributionsResult as { total: number }[])[0]?.total || 0;
 
     return {
       membersCount,
@@ -104,5 +111,21 @@ export class AdminService {
       { $set: update },
       { new: true },
     );
+  }
+
+  async wipeAllTestData() {
+    // Compliant with user request: Clear all non-critical test data for fresh start
+    await Promise.all([
+      this.postModel.deleteMany({}),
+      this.eventModel.deleteMany({}),
+      this.partnerModel.deleteMany({}),
+      this.publicationModel.deleteMany({}),
+      this.heroModel.deleteMany({}),
+      this.reportModel.deleteMany({}),
+      this.contributionModel.deleteMany({}),
+      this.membershipModel.deleteMany({}),
+      this.eventRsvpModel.deleteMany({}),
+    ]);
+    return { success: true, message: 'All test data wiped successfully' };
   }
 }

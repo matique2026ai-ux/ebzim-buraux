@@ -880,6 +880,11 @@ class _AccountActionsGrid extends StatelessWidget {
           onTap: () => context.push('/profile/edit'),
         ),
         _ActionItem(
+          icon: Icons.auto_stories_outlined,
+          label: loc.libTitle,
+          onTap: () => context.push('/library'),
+        ),
+        _ActionItem(
           icon: Icons.support_agent_rounded,
           label: loc.supportContactTitle,
           onTap: () {

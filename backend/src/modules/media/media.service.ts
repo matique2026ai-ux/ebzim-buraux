@@ -10,7 +10,7 @@ const BUCKET_NAME = 'ebzim';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-export interface CloudinaryResponse {
+export interface MediaResponse {
   url: string;
   public_id: string;
   resource_type: string;
@@ -29,7 +29,7 @@ export class MediaService {
   async uploadImage(
     file: UploadedFile,
     folder = 'uploads',
-  ): Promise<CloudinaryResponse> {
+  ): Promise<MediaResponse> {
     if (
       !/^(image\/(jpeg|png|gif|webp)|video\/(mp4|webm)|application\/pdf)$/.test(
         file.mimetype,

@@ -8,10 +8,23 @@ import 'package:ebzim_app/core/providers/locale_provider.dart';
 import 'package:ebzim_app/core/providers/theme_provider.dart';
 import 'package:ebzim_app/core/widgets/network_aware_app.dart';
 
-void main() {
+import 'package:ebzim_app/core/services/supabase_service.dart';
+import 'package:ebzim_app/core/providers/realtime_provider.dart';
+
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Supabase for Realtime & Storage enhancements
+  try {
+    await SupabaseService.initialize();
+  } catch (e) {
+    debugPrint('Supabase initialization failed: $e');
+  }
+  
   runApp(const ProviderScope(child: EbzimApp()));
 }
+
 
 class EbzimApp extends ConsumerWidget {
   const EbzimApp({super.key});
@@ -24,6 +37,28 @@ class EbzimApp extends ConsumerWidget {
     // Select theme based on language and set both globally required defaults
     final lightTheme = AppTheme.getTheme(currentLocale, ThemeMode.light);
     final darkTheme = AppTheme.getTheme(currentLocale, ThemeMode.dark);
+
+    // Listen for Realtime Announcements
+    ref.listen(realtimeNotificationProvider, (previous, next) {
+      next.whenData((notification) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(notification.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(notification.message),
+              ],
+            ),
+            backgroundColor: AppTheme.accentColor,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      });
+    });
 
     return NetworkAwareApp(
       child: MaterialApp.router(

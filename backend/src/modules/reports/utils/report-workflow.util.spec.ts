@@ -12,7 +12,9 @@ describe('ReportWorkflowUtil', () => {
 
   describe('validateAuthorityAccess', () => {
     it('allows SUPER_ADMIN complete access unconditionally', () => {
-      const report = { institutionId: new Types.ObjectId() } as unknown as Report;
+      const report = {
+        institutionId: new Types.ObjectId(),
+      } as unknown as Report;
       expect(() =>
         ReportWorkflowUtil.validateAuthorityAccess(superAdmin, report),
       ).not.toThrow();

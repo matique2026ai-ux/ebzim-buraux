@@ -25,7 +25,13 @@ export class HeroController {
 
   @Get()
   async findAll(@Query('location') location: string = 'HOME') {
-    return this.heroService.findAll(location);
+    console.log(`[HERO] GET /hero-slides request for location: ${location}`);
+    const slides = await this.heroService.findAll(location);
+    console.log(`[HERO] Found ${slides.length} active slides for ${location}`);
+    if (slides.length > 0) {
+      console.log(`[HERO] Slide 0: ID=${slides[0]._id}, Active=${slides[0].isActive}`);
+    }
+    return slides;
   }
 
   @Get('admin')

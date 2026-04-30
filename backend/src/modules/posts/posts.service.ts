@@ -88,9 +88,7 @@ export class PostsService {
     locale: string,
     options: CursorPaginationOptions,
   ) {
-    const pagination = buildCursorPagination(
-      options as CursorPaginationOptions,
-    );
+    const pagination = buildCursorPagination(options);
     const query: Record<string, any> = pagination.query;
     const limit = pagination.limit;
 

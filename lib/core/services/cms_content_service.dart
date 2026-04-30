@@ -11,13 +11,20 @@ class CMSContentService {
   /// ── HERO SLIDES ──────────────────────────────────────────────────────────
   Future<List<HeroSlide>> getHeroSlides({String location = 'HOME'}) async {
     try {
+      if (kDebugMode) print('[CMS] Fetching hero slides for location: $location');
       final response = await _ref.read(apiClientProvider).dio.get(
         'hero-slides',
         queryParameters: {'location': location},
       );
+      if (kDebugMode) print('[CMS] Response received: ${response.data}');
+      
       final List data = response.data is List ? response.data : (response.data['data'] ?? []);
-      return data.map((e) => HeroSlide.fromJson(Map<String, dynamic>.from(e))).toList();
-    } catch (e) {
+      final slides = data.map((e) => HeroSlide.fromJson(Map<String, dynamic>.from(e))).toList();
+      
+      if (kDebugMode) print('[CMS] Successfully parsed ${slides.length} slides');
+      return slides;
+    } catch (e, stack) {
+      if (kDebugMode) print('[CMS] Error fetching slides: $e\n$stack');
       return [];
     }
   }

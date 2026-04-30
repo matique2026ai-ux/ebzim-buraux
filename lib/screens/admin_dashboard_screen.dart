@@ -28,6 +28,8 @@ import 'package:ebzim_app/screens/admin/tabs/reports_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/financials_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/settings_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/publications_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/alerts_tab.dart';
+
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -95,6 +97,11 @@ class AdminDashboardScreen extends ConsumerWidget {
         'view': const PublicationsTab(),
       },
       if (isSuperAdmin) ...[
+        {
+          'icon': Icons.bolt_rounded,
+          'text': 'التنبيهات',
+          'view': const AlertsTab(),
+        },
         {
           'icon': Icons.account_balance_wallet_rounded,
           'text': 'المساهمات',

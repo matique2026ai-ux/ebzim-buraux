@@ -31,9 +31,12 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       exceptionFactory: (errors) => {
-        fs.appendFileSync('validation_errors.log', new Date().toISOString() + ' ' + JSON.stringify(errors) + '\n');
+        fs.appendFileSync(
+          'validation_errors.log',
+          new Date().toISOString() + ' ' + JSON.stringify(errors) + '\n',
+        );
         return new BadRequestException(errors);
-      }
+      },
     }),
   );
 

@@ -112,15 +112,7 @@ class _PublicationsTabState extends ConsumerState<PublicationsTab> {
   }
 
   String _getCategoryLabel(PublicationCategory cat) {
-    switch (cat) {
-      case PublicationCategory.heritage: return 'تراث';
-      case PublicationCategory.research: return 'بحوث';
-      case PublicationCategory.reports: return 'تقارير';
-      case PublicationCategory.history: return 'تاريخ';
-      case PublicationCategory.legal: return 'قانون';
-      case PublicationCategory.cultural: return 'ثقافة';
-      default: return 'أخرى';
-    }
+    return cat.getLabel('ar');
   }
 
   void _confirmDelete(BuildContext context, Publication pub) async {
@@ -183,8 +175,8 @@ class _FilterChip extends StatelessWidget {
         labelStyle: TextStyle(color: isSelected ? AppTheme.primaryColor : Colors.grey.shade700),
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20), 
-          side: BorderSide(color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300)
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300),
         ),
       ),
     );
@@ -315,7 +307,7 @@ class __AddEditPublicationDialogState extends ConsumerState<_AddEditPublicationD
     _summaryEnController = TextEditingController(text: widget.publication?.summaryEn ?? '');
     _thumbnailController = TextEditingController(text: widget.publication?.thumbnailUrl ?? '');
     _pdfController = TextEditingController(text: widget.publication?.pdfUrl ?? '');
-    _category = widget.publication?.category ?? PublicationCategory.cultural;
+    _category = widget.publication?.category ?? PublicationCategory.heritage;
   }
 
   @override
@@ -518,14 +510,10 @@ class __AddEditPublicationDialogState extends ConsumerState<_AddEditPublicationD
     bool success = false;
     try {
       if (widget.publication == null) {
-        final response = await ref.read(apiClientProvider).dio.post('/publications', data: data);
-        success = response.statusCode == 201;
+        success = await ref.read(publicationServiceProvider).createPublication(data);
       } else {
-        final response = await ref.read(apiClientProvider).dio.patch('/publications/${widget.publication!.id}', data: data);
-        success = response.statusCode == 200;
+        success = await ref.read(publicationServiceProvider).updatePublication(widget.publication!.id, data);
       }
-    } on DioException catch (e) {
-      errorMessage = e.response?.data?.toString() ?? e.message;
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -533,6 +521,7 @@ class __AddEditPublicationDialogState extends ConsumerState<_AddEditPublicationD
     if (mounted) {
       setState(() => _isSaving = false);
       if (success) {
+        ref.invalidate(allPublicationsProvider);
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(adminSuccessSnack('تم حفظ المنشور بنجاح'));
       } else {

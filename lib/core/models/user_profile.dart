@@ -136,12 +136,14 @@ class UserProfile {
       if (role == EbzimRole.admin) return 'عضو المكتب التنفيذي';
       if (role == EbzimRole.authority) return 'شريك مؤسساتي';
       if (role == EbzimRole.member) return 'عضو عامل';
+      if (role == EbzimRole.seller) return 'بائع معتمد';
       return 'زائر المنصة';
     } else {
       if (role == EbzimRole.superAdmin) return 'President of Association';
       if (role == EbzimRole.admin) return 'Executive Board Member';
       if (role == EbzimRole.authority) return 'Institutional Partner';
       if (role == EbzimRole.member) return 'Active Member';
+      if (role == EbzimRole.seller) return 'Certified Seller';
       return 'Platform Guest';
     }
   }

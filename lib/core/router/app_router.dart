@@ -171,19 +171,21 @@ final appRouterProvider = Provider((ref) {
       if (isAuthenticated) {
         final role = authState.user?.role ?? EbzimRole.public;
         final isAdmin = role == EbzimRole.admin || role == EbzimRole.superAdmin;
+        final isSeller = role == EbzimRole.seller;
+        final isAuthorisedForAdmin = isAdmin || isSeller;
 
         if (isLoggingIn || isRegistering) {
           if (kDebugMode) print('[ROUTER] Auth & at login/reg -> redirect');
-          return isAdmin ? '/admin' : '/home';
+          return isAuthorisedForAdmin ? '/admin' : '/home';
         }
 
         final landingPages = ['/splash', '/language', '/onboarding', '/'];
         if (landingPages.contains(loc)) {
           if (kDebugMode) print('[ROUTER] Auth & at landing ($loc) -> redirect');
-          return isAdmin ? '/admin' : '/home';
+          return isAuthorisedForAdmin ? '/admin' : '/home';
         }
 
-        if (loc.startsWith('/admin') && !isAdmin) {
+        if (loc.startsWith('/admin') && !isAuthorisedForAdmin) {
           if (kDebugMode) print('[ROUTER] User at admin -> /home');
           return '/home';
         }

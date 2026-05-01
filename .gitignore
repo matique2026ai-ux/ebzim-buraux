@@ -52,17 +52,32 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# Project-specific logs
+# Project-specific: Analysis & Build Outputs (NEVER commit these)
 *.txt
 *.log
-query
-analysis_result.txt
-analyze_output*.txt
-build_log.txt
-errors.txt
-true_errors.txt
+analysis*.txt
+analyze*.txt
+build_log*.txt
+build_error*.txt
+errors*.txt
 final_analysis*.txt
 fresh_analysis*.txt
+true_errors*.txt
+
+# Project-specific: Scratch & Temp directories (NEVER commit these)
+scratch/
+scripts/
+brain/
+
+# JSON data dumps (not app assets)
+wonders.json
+swagger.json
+
+# Old session/audit reports (use MASTER_HANDOVER.md only)
+SESSION_RECOVERY_REPORT.md
+EBZIM_LOGIC_AUDIT.md
+*_AUDIT.md
+*_RECOVERY*.md
 
 # Firebase service account keys (NEVER commit these!)
 *firebase-service-account*.json

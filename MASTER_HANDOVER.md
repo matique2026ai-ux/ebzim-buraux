@@ -272,7 +272,6 @@ c:\ebzim-buraux\
 └── analysis_options.yaml
 ```
 
-
 > [!CAUTION]
 > The backend at `c:\ebzim-buraux\backend\` is the **same repository**. Never tell the user "I cannot find the backend" — it is right here. Any change to the backend + `git push` triggers an automatic redeploy on Render.
 

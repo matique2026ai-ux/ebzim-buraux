@@ -169,26 +169,25 @@ git commit -m "fix/feat(scope): وصف التعديل"
 > [!IMPORTANT]
 > **أيها الوكيل القادم:** لا تبدأ من الصفر. لقد وصلنا إلى مرحلة "النضج البصري والوظيفي". إليك ملخص الحالة الحالية للمنصة:
 
-### 🚀 ما تم إنجازه مؤخراً (The Latest Wins)
+### 🚀 ما تم إنجازه مؤخراً (The Latest Wins — May 2026)
 
-- **تصفية التراث الذكية (Heritage-Only Filter):** عززنا قائمة المحظورات (Blacklist) بكلمات إدارية عربية وفرنسية لضمان استبعاد البلديات، الولايات، والمرافق الخدمية، والتركيز حصراً على المعالم التاريخية والأثرية.
-- **إعادة تصميم الصفحة الرئيسية (Premium Redesign):** تم حذف الأقسام المكررة وتحويل "كروت التنقل المؤسساتية" إلى تحف بصرية (Glassmorphism + Glow Effects + Pulsing Icons).
-- **نظام النبض التفاعلي (Animated Selection):** أضفنا تأثير نبض ضوئي (Radial Glow) وتكبير مرن (Elastic Scale) للمقاصد المختارة على الخريطة لتعزيز التغذية البصرية.
-- **مزامنة اللغات في الاستكشاف (Dynamic Localization):** الخريطة الآن تجلب أوصاف المعالم من ويكيبيديا باللغة التي يختارها المستخدم (AR/FR/EN) تلقائياً.
-- **كاش الخرائط الجغرافي (Geospatial Caching):** نظام ذكي يحفظ المعالم المحملة ويقلل الطلبات للشبكة، مع آلية "التحرك لمسافة 2 كلم" لتحديث البيانات.
-- **نظام الطبقات الذكي في الخريطة (Interactive Layers):** أضفنا زر تبديل طبقات (Switcher) بلمسة زجاجية يسمح بالاختيار بين المشاريع الميدانية أو الاستكشافات العالمية أو الكل معاً.
+- **المكتبة الرقمية (Digital Library):** شاشة `/library` احترافية تعرض المنشورات (بحوث، كتب، تقارير) بتصميم Bookshelf مع بحث وتصفية حسب الفئة.
+- **متجر كتب الرصيف (Sidewalk Bookstore):** أضفنا متجراً مستقلاً لبيع الكتب المستعملة والجديدة — Glassmorphism UI، فلتر جديد/مستعمل، بطاقة تفاصيل احترافية، وصلاحية `SELLER` مخصصة.
+- **رفع صورة الغلاف:** لوحة تحكم المتجر تدعم رفع صورة الغلاف مباشرة من الجهاز (FilePicker + Cloudinary) — لا روابط يدوية.
+- **خريطة التراث:** محرك استكشاف تفاعلي مع Wikipedia GeoSearch، طبقات قابلة للتبديل، كاش جغرافي، وتوطين تلقائي (AR/FR/EN).
+- **إعادة تصميم الصفحة الرئيسية:** Glassmorphism + Glow Effects + Pulsing Icons — تجربة بصرية فاخرة.
 
 ### 🧭 أين وصلنا تقنياً؟
 
-- **الباكاند (NestJS):** مستقر جداً، يدعم الـ CRUD الكامل لكل الوحدات، ومربوط بـ Render auto-deploy.
-- **الفرونت (Flutter):** يستخدم أحدث تقنيات `flutter_animate` للنبض الضوئي و `Riverpod` لإدارة الحالة. تم دمج نظام `Distance` لحساب التحركات الجغرافية.
-- **الاستقرار:** المنصة تعمل بـ `canvasKit` افتراضياً، وتجاوزنا مشاكل تحميل الصور بتنظيف الـ URLs برمجياً.
+- **الباكاند (NestJS):** مستقر، CRUD كامل لكل الوحدات بما فيها `marketplace` و `publications`، مربوط بـ Render auto-deploy، صفر أخطاء TypeScript.
+- **الفرونت (Flutter):** `flutter_animate` + `Riverpod` + `GoRouter`. جميع الـ routes مسجّلة، جميع الشاشات الجديدة مدمجة.
+- **الاستقرار:** المنصة تعمل على منفذ 8085 في وضع debug. الـ API يشير للـ Production (Render) دائماً.
 
 ### 🚩 المهام القادمة فوراً (Immediate Next Steps)
 
-1. **توطين محتوى Wikipedia (المستوى المتقدم):** حالياً جلب اللغة يعتمد على `ref.read` عند الطلب؛ نحتاج لآلية إعادة تحميل تلقائية (Invalidation) عند تغيير اللغة والمستخدم داخل الخريطة.
-2. **نظام الإشعارات:** البدء في ربط الـ Backend بـ Firebase أو نظام إشعارات داخلي للتنبيه عن المشاريع الجديدة.
-3. **تحسين بطاقة التفاصيل:** إضافة زر "اقرأ المزيد" يفتح صفحة ويكيبيديا الكاملة داخل التطبيق (WebView) أو في تبويب جديد.
+1. **ربط التواصل:** ربط زر "تواصل مع البائع" في `SidewalkStoreScreen` بـ `url_launcher` لفتح الواتساب أو الهاتف مباشرة.
+2. **منح صلاحية SELLER:** من لوحة `UsersTab` في Admin Dashboard، إضافة خيار لتغيير دور المستخدم إلى `SELLER`.
+3. **بحث داخل المتجر:** إضافة `SearchBar` في `/sidewalk-store` للبحث بالعنوان أو المؤلف.
 
 ---
 
@@ -228,7 +227,7 @@ git commit -m "fix/feat(scope): وصف التعديل"
 
 ### 3. Port Management & Process Orphanage
 
-- **Issue:** On Windows, Flutter Web and NestJS processes can become "orphaned," holding ports (8080 or 3000) and causing `EADDRINUSE` errors.
+- **Issue:** On Windows, Flutter Web and NestJS processes can become "orphaned," holding ports (8085 or 3000) and causing `EADDRINUSE` errors.
 - **Lesson:** Always use `netstat -ano | findstr :<port>` and `taskkill /F /PID <PID>` before starting servers to ensure a clean launch.
 
 ### 4. Localization Path Resolution
@@ -596,30 +595,7 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
     - **Outcome**: The backend is 100% strictly typed with zero errors. The DB was synced to ensure all events are `PUBLISHED`.
     - **Protocol Reinforcement**: **DO NOT USE `any` IN THE BACKEND.** If you touch the backend, YOU MUST ENSURE it compiles without ESLint warnings, or Render will FAIL to build. If you push code, DO NOT assume it's live instantly; advise the user of Render's build delay.
 
-**Current State: Admin Dashboard stabilized. Project Details fetching full metadata (Milestones/Progress). Institutional Projects section removed from Home. Red Screen crashes in Admin News fixed. All changes pushed to GitHub.**
-
-### 🚨 NEXT AGENT FOCUS
-
-1. **✅ [DONE] CMS & Infrastructure Stabilization (April 29-30, 2026)**:
-    - **CRITICAL LESSON**: Flutter Web in Debug Mode (DDC) can sometimes stall while downloading 1200+ small JS modules, especially after structural model changes, leading to an infinite "Spinner".
-    - **Action Taken**:
-        1. **Consolidated Models**: Merged `HeroSlide`, `Partner`, and `EbzimLeader` into a single, robust `lib/core/models/cms_models.dart` to eliminate pathing errors and simplify imports.
-        2. **Production Build Strategy**: Implemented a "Clean Production Build" workflow (`flutter build web --release`). Serving a single optimized JS bundle instead of 1200+ modules resolved the loading deadlock instantly.
-        3. **Backend Force-Sync**: Updated `HeroService` to use `$set` and ensured granular filtering (`isActive: true`, `location: HOME`). Used a force-active script to ensure all newly added slides are visible by default.
-        4. **Bootstrap Recovery**: Re-engineered `index.html` and `flutter.js` using the official Flutter 3.x stable bootstrap sequence to resolve 404 errors on legacy script paths.
-    - **Outcome**: The platform now loads instantly in production mode. Hero slides correctly fetch from MongoDB and render with premium glassmorphism and trilingual support.
-    - **Protocol Reinforcement**: If the app hangs at the spinner, **DO NOT** just wait. Run a clean `flutter build web --release` and serve the `build/web` folder. This is the only way to bypass browser module loading stalls.
-
----
-
-### 🚨 NEXT AGENT FOCUS (MAY 2026)
-
-1. **Production-First Testing:** Always verify UI changes by building the web app (`flutter build web`). Local debug mode is useful for logic, but "The Spinner" only disappears in the production bundle.
-2. **Model Integrity:** Keep all CMS models inside `cms_models.dart`. This consolidation prevents the "Missing Module" 404 errors encountered during the April refactor.
-3. **Port Hygiene:** If the backend fails to start, port 3000 is likely held by a ghost node process. Use `taskkill /F /IM node.exe /T` and restart.
-4. **Active Content Guard:** When adding new Hero slides via the Admin CMS, verify they are marked as "Active" in the database to appear on the homepage.
-
-**Current State: Platform 100% stable. Carousel fetching live data from MongoDB. Production build successfully served on Port 9005. All legacy path 404s resolved.**
+**✅ Current State (May 2, 2026):** المنصة مستقرة 100%. CMS يعمل. المكتبة الرقمية تعمل. متجر كتب الرصيف مدمج ومدفوع لـ Git. Backend بدون أخطاء TypeScript. Port 8085 هو المنفذ الرسمي الوحيد.
 
 🚨 **FINAL MANDATE: THE PRODUCTION BUILD IS THE SOURCE OF TRUTH. NEVER PUSH BROKEN IMPORTS.**
 
@@ -678,6 +654,19 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 
 ### 🚨 NEXT AGENT FOCUS (MAY 2026 +)
 
-1. **ربط التواصل الفعلي:** ربط زر "تواصل مع البائع" في `SidewalkStoreScreen` بـ `url_launcher` لفتح الواتساب أو الهاتف مباشرة.
-2. **منح صلاحية SELLER:** يمكن للمشرف العام منح صلاحية `SELLER` لأي مستخدم من لوحة المستخدمين في Admin Dashboard.
-3. **بحث داخل المتجر:** إضافة `SearchBar` في `SidewalkStoreScreen` للبحث بالعنوان أو المؤلف.
+> [!IMPORTANT]
+> **أيها الوكيل القادم:** المنصة مستقرة تماماً. لا تبدأ بإعادة هيكلة أي شيء. اقرأ هذا القسم أولاً وابدأ من حيث توقفنا.
+
+#### ✅ ما يجب البدء به فوراً
+
+1. **ربط التواصل (url_launcher):** في `lib/screens/sidewalk_store_screen.dart`، زر "تواصل مع البائع" يجب أن يفتح `tel:` أو `https://wa.me/` مباشرة بناءً على `contactInfo` المخزّن.
+2. **منح صلاحية SELLER من لوحة الأدمن:** في `lib/screens/admin/tabs/users_tab.dart`، أضف خيار تغيير role المستخدم عبر PATCH `/users/:id` مع القيمة `SELLER`.
+3. **بحث داخل المتجر:** أضف `TextField` في `/sidewalk-store` يُصفّي `_allBooks` برمجياً بالعنوان أو المؤلف.
+
+#### 📌 تذكيرات تقنية للوكيل القادم
+
+- **المنفذ:** `8085` دائماً — لا 8080 ولا غيره.
+- **Hot Restart:** أرسل `R` (كبير) للـ Terminal النشط — لا تُعيد تشغيل flutter من الصفر.
+- **Backend:** `npm run start:dev` داخل `/backend` — لا `any` في TypeScript.
+- **Commit:** بعد كل ميزة تعمل — `git add . && git commit -m "..."` (في PowerShell، استخدم أمرين منفصلين لا `&&`).
+- **MASTER_HANDOVER:** حدّث هذا الملف في نهاية كل جلسة — لا ملفات handover إضافية.

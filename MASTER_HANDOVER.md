@@ -108,9 +108,9 @@ cd c:\ebzim-buraux\backend
 npm run start:dev
 
 # في Terminal 2 — تشغيل الفرونت (Flutter) في وضع debug
-# استخدم المنفذ 8085 لتجنب التعارض مع 8080
+# استخدم المنفذ 8085 لتجنب التعارض مع 8080 (استخدم chrome للثبات)
 cd c:\ebzim-buraux
-flutter run -d web-server --web-port 8085
+flutter run -d chrome --web-port 8085
 ```
 
 > **ملاحظة:** عند تشغيل Flutter، سيُطبع في التيرمنال رابط مثل: `http://localhost:8085`. افتح هذا الرابط في المتصفح.
@@ -159,7 +159,7 @@ git commit -m "fix/feat(scope): وصف التعديل"
 ### 📌 الوضع الحالي للتطبيق (آخر تحديث: 2 مايو 2026)
 
 - ✅ التطبيق يعمل على: `http://localhost:8085` (المنفذ الرسمي الوحيد — لا تُغيّره أبداً)
-- ✅ الباكاند يعمل على: `http://localhost:3000/api/v1` (محلي) أو `https://ebzim-api-prod.onrender.com/api/v1/` (إنتاج)
+- ✅ الباكاند يعمل على: `https://ebzim-api-prod.onrender.com/api/v1/` (التطبيق مبرمج حالياً للاتصال بالإنتاج مباشرة). يمكن التبديل لـ `localhost:3000` يدوياً في `api_client_platform_web.dart` عند تعديل الـ Schema.
 - ✅ أوامر Flutter تُرسل عبر الـ Background Command ID النشط في الجلسة (يتغير في كل جلسة)
 
 ---

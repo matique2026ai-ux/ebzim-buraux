@@ -11,8 +11,14 @@ export class PublicationsService {
     private readonly publicationModel: Model<Publication>,
   ) {}
 
-  async create(createDto: CreatePublicationDto, userId: string): Promise<Publication> {
-    const plainDto = JSON.parse(JSON.stringify(createDto)) as Record<string, unknown>;
+  async create(
+    createDto: CreatePublicationDto,
+    userId: string,
+  ): Promise<Publication> {
+    const plainDto = JSON.parse(JSON.stringify(createDto)) as Record<
+      string,
+      unknown
+    >;
     const newPub = new this.publicationModel({
       ...plainDto,
       createdBy: userId,
@@ -30,8 +36,14 @@ export class PublicationsService {
     return pub;
   }
 
-  async update(id: string, updateDto: Partial<CreatePublicationDto>): Promise<Publication> {
-    const plainDto = JSON.parse(JSON.stringify(updateDto)) as Record<string, unknown>;
+  async update(
+    id: string,
+    updateDto: Partial<CreatePublicationDto>,
+  ): Promise<Publication> {
+    const plainDto = JSON.parse(JSON.stringify(updateDto)) as Record<
+      string,
+      unknown
+    >;
     const updated = await this.publicationModel
       .findByIdAndUpdate(id, plainDto, { new: true })
       .exec();

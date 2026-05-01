@@ -156,16 +156,15 @@ git commit -m "fix/feat(scope): وصف التعديل"
 | **وثّق كل إضافة في MASTER_HANDOVER.md** | لا تترك الملف قديماً أبداً |
 | **لا تُغير LateInitializationError** | هذا الخطأ في CanvasKit هو خطأ Flutter web معروف وغير مؤثر |
 
-### 📌 الوضع الحالي للتطبيق (آخر تحديث: 25 أبريل 2026)
+### 📌 الوضع الحالي للتطبيق (آخر تحديث: 2 مايو 2026)
 
-- ✅ التطبيق يعمل على: `http://localhost:8085` (Debug) أو `http://localhost:8080` (Release)
-- ✅ الباكاند يعمل على: `http://localhost:3000/api/v1`
-- ✅ أوامر Flutter تُرسل عبر الـ Background Command ID النشط في الجلسة
-- ✅ آخر Command ID كان: `1b77ebd5-c2c8-4b32-ba4b-98824fb4b125` (قد يتغير في الجلسات الجديدة)
+- ✅ التطبيق يعمل على: `http://localhost:8085` (المنفذ الرسمي الوحيد — لا تُغيّره أبداً)
+- ✅ الباكاند يعمل على: `http://localhost:3000/api/v1` (محلي) أو `https://ebzim-api-prod.onrender.com/api/v1/` (إنتاج)
+- ✅ أوامر Flutter تُرسل عبر الـ Background Command ID النشط في الجلسة (يتغير في كل جلسة)
 
 ---
 
-## 🎯 CURRENT PROJECT COMPASS (WHERE WE STAND — APRIL 25, 2026)
+## 🎯 CURRENT PROJECT COMPASS (WHERE WE STAND — MAY 2, 2026)
 
 > [!IMPORTANT]
 > **أيها الوكيل القادم:** لا تبدأ من الصفر. لقد وصلنا إلى مرحلة "النضج البصري والوظيفي". إليك ملخص الحالة الحالية للمنصة:
@@ -271,28 +270,24 @@ Go to `lib/core/services/api_client_platform_web.dart` and ensure `getPlatformBa
 https://ebzim-api-prod.onrender.com/api/v1/
 ```
 
-### Step 3 — Clear Port 8080
+### Step 3 — Clear Port 8085
 
-Before running, ensure port 8080 is free (orphaned Dart processes block it):
+Before running, ensure port 8085 is free (orphaned Dart processes block it):
 
 ```powershell
-netstat -ano | findstr :8080
+netstat -ano | findstr :8085
 taskkill /PID <PID_NUMBER> /F
 ```
 
-### Step 4 — Launch the App (The "Zero Spinner" Way)
+### Step 4 — Launch the App
 
 ```bash
-# 1. First, clear the port (crucial for Windows)
-netstat -ano | findstr :8080
-taskkill /PID <PID_NUMBER> /F
-
-# 2. Run in Release mode with fixed port to bypass Debug/WebSocket hangs
-flutter run -d web-server --web-port 8080 --release
+# تشغيل الفرونت على المنفذ الرسمي 8085
+flutter run -d web-server --web-port 8085
 ```
 
-- **Note:** We forced `window.flutterWebRenderer = "html"` in `index.html` to guarantee stability.
 - Use `web-server` for headless hosting or `chrome` for local interaction.
+- **HOT RESTART:** Send `R` (capital) to the running terminal after any code change. Never restart from scratch.
 
 ### Step 5 — Production Sync (Backend Deployment)
 
@@ -329,12 +324,24 @@ Every `git push origin main` triggers a redeploy of the **NestJS Backend** on Re
 
 ### Platform Roles
 
-The platform serves 4 audiences:
+The platform serves 5 audiences:
 
 1. **Public Portal** — News, events, partnerships, institutional projects.
 2. **Associative Hub** — Activity and project management with dynamic timelines.
 3. **Membership Ecosystem** — Secure auth, profiles, digital ID cards.
 4. **Admin Governance** — CMS control, member management, Excel exports, reports.
+5. **Sidewalk Bookstore** — `SELLER` role: sell used/new books via the Digital Library marketplace.
+
+### User Roles (Hierarchy)
+
+| Role | Access |
+| :--- | :--- |
+| `SUPER_ADMIN` | Full platform control — cannot be deleted |
+| `ADMIN` | Admin Dashboard (all tabs except super-admin-only) |
+| `AUTHORITY` | Institutional content access |
+| `MEMBER` | Membership dashboard, profile, contributions |
+| `SELLER` | Admin Dashboard — **Marketplace tab only** (add/edit/delete books) |
+| `public` | Read-only public pages |
 
 ---
 
@@ -345,7 +352,7 @@ The platform serves 4 audiences:
 | Module | Purpose |
 | :--- | :--- |
 | `auth` | JWT-based authentication (Login, Register, OTP, Password Reset) |
-| `users` | User profiles, roles (`SUPER_ADMIN`, `ADMIN`, `AUTHORITY`, `MEMBER`) |
+| `users` | User profiles, roles (`SUPER_ADMIN`, `ADMIN`, `AUTHORITY`, `MEMBER`, `SELLER`) |
 | `memberships` | Membership applications, approval workflow, status tracking |
 | `hero` | CMS for Home & Onboarding carousel slides |
 | `partners` | Institutional partner management with branding colors |
@@ -358,7 +365,8 @@ The platform serves 4 audiences:
 | `admin` | Admin dashboard stats, member management actions |
 | `reports` | Excel export generation for admin |
 | `settings` | Platform-level configuration |
-| `institutions` | Institution records (shared `MultilingualText` schema) |
+| `publications` | Digital Library publications (PDF/books, trilingual) |
+| `marketplace` | Sidewalk Bookstore — book listings with SELLER role access |
 | `mail` | Email dispatch (currently simulated — needs real SMTP) |
 
 ### Key Backend Rules
@@ -377,23 +385,26 @@ The platform serves 4 audiences:
 | Screen | Route | Notes |
 | :--- | :--- | :--- |
 | `splash_screen.dart` | `/` | Auto-login check — redirects to admin or home if session is valid |
-| `language_selection_screen.dart` | `/lang` | First-run language picker |
+| `language_selection_screen.dart` | `/language` | First-run language picker |
 | `onboarding_slider_screen.dart` | `/onboarding` | Intro slides (uses `HeroSlide` with `location: ONBOARDING`) |
 | `login_screen.dart` | `/login` | Pre-fills last used credential |
 | `register_screen.dart` | `/register` | Registration with OTP |
 | `home_screen.dart` | `/home` | Main public portal with Hero carousel, stats, news, projects |
 | `admin_dashboard_screen.dart` | `/admin` | Navigation shell for the modular admin tabs |
-| `admin/tabs/*.dart` | N/A | **Modularized Admin Components** (Users, Projects, News, etc.) |
+| `admin/tabs/*.dart` | N/A | **Modularized Admin Components** (Users, Projects, News, Marketplace, etc.) |
 | `admin_cms_manage_screen.dart` | `/admin/cms/...` | CMS CRUD for Hero, Partners, Leadership, Onboarding |
-| `admin_create_news_screen.dart` | `/admin/news/create` | Trilingual news/project editor |
-| `admin_create_project_screen.dart` | `/admin/project/create` | Project with milestones timeline |
+| `admin_create_news_screen.dart` | `/admin/news/create` | Trilingual news/project editor with FilePicker image upload |
+| `admin_create_project_screen.dart` | `/admin/projects/create` | Project with milestones timeline |
 | `dashboard_screen.dart` | `/dashboard` | Member personal dashboard |
-| `profile_screen.dart` | `/profile` | Member profile + Digital ID Card |
+| `profile_screen.dart` | `/profile` | Member profile + Digital ID Card + role badge |
 | `heritage_projects_screen.dart` | `/heritage` | All institutional projects |
-| `membership_flow_screen.dart` | `/membership` | Membership application flow |
+| `heritage_map_screen.dart` | `/heritage-map` | Interactive heritage map with Wikipedia landmarks |
+| `membership_flow_screen.dart` | `/membership/apply` | Membership application flow |
 | `contributions_screen.dart` | `/contributions` | Financial contributions |
 | `news_screen.dart` | `/news` | News listing |
 | `activities_screen.dart` | `/activities` | Events listing |
+| `digital_library_screen.dart` | `/library` | Digital Library with PDF publications |
+| `sidewalk_store_screen.dart` | `/sidewalk-store` | 🆕 Sidewalk Bookstore — premium book marketplace |
 
 ### Key Services (`lib/core/services/`)
 
@@ -450,12 +461,14 @@ The platform serves 4 audiences:
 
 ## 🚨 6. Technical Taboos (NEVER Do These)
 
-1. **NO `.withValues()`** — Always use `.withOpacity()` for colors.
+1. **NO `.withOpacity()`** — Always use `.withValues(alpha: x)` instead (withOpacity is deprecated).
 2. **NO `SlideTransition` in Router** — Causes infinite loading hangs on Flutter Web.
 3. **NO `import 'excel.dart'` without hiding Border** — Always: `import 'package:excel/excel.dart' hide Border;`
 4. **NO Google Fonts loaded at boot over the network** — Pre-bundle or use `GoogleFonts.config.allowRuntimeFetching = false` carefully.
 5. **NO raw `findByIdAndUpdate(id, dto)` in Mongoose** — Always use `findByIdAndUpdate(id, { $set: dto }, { new: true })`.
 6. **NO new handover documents** — Only update THIS file.
+7. **NO port 8080** — Port **8085** is the ONLY official dev port. Never change it.
+8. **NO `any` in the Backend** — All TypeScript must be strictly typed. `any` breaks Render builds.
 
 ---
 

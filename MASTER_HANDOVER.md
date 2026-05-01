@@ -298,13 +298,19 @@ taskkill /PID <PID_NUMBER> /F
 
 ### Step 4 — Launch the App
 
-```bash
-# تشغيل الفرونت على المنفذ الرسمي 8085
+```powershell
+# الطريقة الأساسية — تفتح Chrome مباشرة (الأسرع والأوثق)
+flutter run -d chrome --web-port 8085
+
+# أو بدون Chrome (headless) ثم افتح http://localhost:8085 يدوياً
 flutter run -d web-server --web-port 8085
 ```
 
-- Use `web-server` for headless hosting or `chrome` for local interaction.
-- **HOT RESTART:** Send `R` (capital) to the running terminal after any code change. Never restart from scratch.
+> [!IMPORTANT]
+> بعد ظهور الرابط في التيرمنال، افتح `http://localhost:8085` في المتصفح.
+> إذا ظهر spinner لا ينتهي — أغلق وأعد تشغيل الأمر. لا تستخدم `--release` في التطوير (يُبطئ الـ rebuild).
+
+- **HOT RESTART:** أرسل `R` (كبير) للتيرمنال النشط بعد أي تعديل. لا تُعيد تشغيل Flutter من الصفر.
 
 ### Step 5 — Production Sync (Backend Deployment)
 
@@ -331,13 +337,14 @@ Every `git push origin main` triggers a redeploy of the **NestJS Backend** on Re
 
 > [!IMPORTANT]
 > **🚀 2026 STABLE OPERATION PROTOCOL**
-> To avoid the "Infinite Loading Spinner" (caused by DDC script loading stalls), ALWAYS use the following command to launch the app for testing:
+> الأمر الرسمي للتشغيل هو:
 >
 > ```powershell
-> flutter run -d chrome --web-port 8085 --no-pub --release
+> flutter run -d chrome --web-port 8085
 > ```
 >
-> This is the only documented way to guarantee a 100% successful launch on this environment.
+> إذا لم يكن Chrome متاحاً، استخدم `web-server` وافتح `http://localhost:8085` يدوياً في المتصفح.
+> **لا تستخدم `--release` في التطوير** — يُلغي Hot Restart ويُبطئ دورة العمل.
 
 ### Platform Roles
 

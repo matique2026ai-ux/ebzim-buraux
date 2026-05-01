@@ -63,7 +63,7 @@ class EbzimApp extends ConsumerWidget {
     return NetworkAwareApp(
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        title: 'Ebzim',
+        title: 'إبزيم | Ebzim',
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: themeMode,

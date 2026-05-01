@@ -638,7 +638,7 @@ GitHub (matique2026ai-ux/ebzim-buraux)
 To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent Hang" syndrome), the following methodology is currently employed and highly recommended:
 
 1. **Targeted Micro-Edits**: Instead of rewriting entire files, updates are applied via precise chunk replacements (`replace_file_content` tools).
-2. **Instant Hot Restart Validation**: After a UI or logical change is applied, a `Hot Restart` (`R` via command input) is sent to the running Flutter web process on port 8080. This instantly flushes the state and applies the new code without requiring a full rebuild or stopping the server.
+2. **Instant Hot Restart Validation**: After a UI or logical change is applied, a `Hot Restart` (`R` via command input) is sent to the running Flutter web process on port 8085. This instantly flushes the state and applies the new code without requiring a full rebuild or stopping the server.
 3. **Continuous State Tracking**: The NestJS backend remains untouched unless the DTO/Schema demands a change, isolating frontend rapid-prototyping from backend recompilation.
 
 ---
@@ -669,7 +669,7 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
     - **CRITICAL LESSON**: A previous agent attempted to "modularize" the dashboard but inadvertently reverted to an old, non-artistic state and broke the Port 8085 protocol.
     - **Action Taken**: Performed a surgical restoration of all "Artistic" UI files from Git history (Commits 6cef63e & ddc01f6).
     - **Outcome**: Restored Heritage Map, Satellite Picker, Sovereign Branding, and proper filtering categories (Associative, Social, etc.).
-    - **Protocol Reinforcement**: Port 8085 is NON-NEGOTIABLE. The "Artist's" UI peak is the source of truth for aesthetics. Always use `flutter run -d web-server --web-port 8085 --release`.
+    - **Protocol Reinforcement**: Port 8085 is NON-NEGOTIABLE. The "Artist's" UI peak is the source of truth for aesthetics. Always use `flutter run -d chrome --web-port 8085`.
 
 21. **✅ [DONE] Cloud/Live Sync & Path Alignment (April 25, 2026)**:
     - **CRITICAL DISCOVERY**: Fixed a major desync where the Web app was pointing to `localhost:3000` (seeing local data) while the Mobile app was pointing to the Cloud (seeing nothing due to 404 on old `/activities` paths).

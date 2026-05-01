@@ -587,7 +587,7 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 
 ### 🚨 NEXT AGENT FOCUS
 
-23. **✅ [DONE] CMS & Infrastructure Stabilization (April 29-30, 2026)**:
+1. **✅ [DONE] CMS & Infrastructure Stabilization (April 29-30, 2026)**:
     - **CRITICAL LESSON**: Flutter Web in Debug Mode (DDC) can sometimes stall while downloading 1200+ small JS modules, especially after structural model changes, leading to an infinite "Spinner".
     - **Action Taken**:
         1. **Consolidated Models**: Merged `HeroSlide`, `Partner`, and `EbzimLeader` into a single, robust `lib/core/models/cms_models.dart` to eliminate pathing errors and simplify imports.
@@ -644,7 +644,9 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
    - مسار `/sidewalk-store` مضاف في `app_router.dart`.
    - Admin Dashboard يُظهر تبويب "متجر الكتب" لـ `SELLER` و `SUPER_ADMIN` فقط.
 
+
 **ملفات المعدّلة:**
+
 - `backend/src/common/enums/role.enum.ts`
 - `backend/src/app.module.ts`
 - `backend/src/modules/marketplace/*` (جديد كلياً)

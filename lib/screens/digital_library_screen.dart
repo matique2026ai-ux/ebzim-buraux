@@ -8,13 +8,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ebzim_app/core/theme/app_theme.dart';
 import 'package:ebzim_app/core/widgets/ebzim_background.dart';
-import 'package:ebzim_app/core/common_widgets/glass_card.dart';
 import 'package:ebzim_app/core/localization/l10n/app_localizations.dart';
 import 'package:ebzim_app/core/models/publication.dart';
 import 'package:ebzim_app/core/services/publication_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Digital Library Screen — Institutional Knowledge Base
+// Digital Library Screen — Premium Bookshelf UI
 // ─────────────────────────────────────────────────────────────────────────────
 
 class DigitalLibraryScreen extends ConsumerStatefulWidget {
@@ -32,7 +31,6 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
   Widget build(BuildContext context) {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final theme = Theme.of(context);
     
     final publicationsAsync = ref.watch(allPublicationsProvider);
     final allPublications = publicationsAsync.value ?? [];
@@ -51,21 +49,58 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
       appBar: AppBar(
         title: Text(
           loc.libTitle,
-          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 18),
-        ),
+          style: GoogleFonts.tajawal(fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: 1),
+        ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, size: 20),
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isDark ? Colors.black26 : Colors.white24,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          ),
           onPressed: () => context.pop(),
         ),
       ),
       body: EbzimBackground(
         child: Column(
           children: [
-            SizedBox(height: MediaQuery.of(context).padding.top + 56),
+            SizedBox(height: MediaQuery.of(context).padding.top + kToolbarHeight + 10),
             
+            // ── Hero Text ─────────────────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              child: Column(
+                children: [
+                  Text(
+                    isAr ? 'معارف لا حدود لها' : 'Boundless Knowledge',
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.accentColor,
+                    ),
+                  ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2),
+                  const SizedBox(height: 8),
+                  Text(
+                    isAr 
+                      ? 'تصفح أحدث البحوث والكتب والمقالات القيمة'
+                      : 'Explore the latest research, books, and valuable articles',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.cairo(
+                      fontSize: 14,
+                      color: isDark ? Colors.white70 : Colors.black87,
+                    ),
+                  ).animate().fadeIn(delay: 200.ms, duration: 800.ms),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 16),
+
             // ── Search & Filter ─────────────────────────────────────────────
             _SearchAndFilterBar(
               onSearch: (v) => setState(() => _searchQuery = v),
@@ -75,7 +110,7 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
               isDark: isDark,
             ),
             
-            // ── Grid ────────────────────────────────────────────────────────
+            // ── Bookshelf Grid ────────────────────────────────────────────────────────
             Expanded(
               child: publicationsAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.accentColor)),
@@ -83,23 +118,23 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
                 data: (_) => filteredPublications.isEmpty
                   ? _NoResults(isAr: isAr)
                   : GridView.builder(
-                      padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
+                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 120),
                       physics: const BouncingScrollPhysics(),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 0.62,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
+                        childAspectRatio: 0.55, // Adjusted to fit book + title comfortably
+                        crossAxisSpacing: 24,
+                        mainAxisSpacing: 32,
                       ),
                       itemCount: filteredPublications.length,
                       itemBuilder: (context, index) {
                         final pub = filteredPublications[index];
-                        return _PublicationCard(
+                        return _BookCard(
                           pub: pub,
                           isAr: isAr,
                           isDark: isDark,
                           onTap: () => _showDetails(context, pub, isAr, isDark),
-                        ).animate().fadeIn(delay: Duration(milliseconds: 50 * index)).slideY(begin: 0.05);
+                        ).animate().fadeIn(delay: Duration(milliseconds: 50 * index)).slideY(begin: 0.1);
                       },
                     ),
               ),
@@ -143,27 +178,37 @@ class _SearchAndFilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Premium Search Field
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           child: Container(
             decoration: BoxDecoration(
-              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.1)),
+              color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.7),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.15), width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                )
+              ],
             ),
             child: TextField(
               onChanged: onSearch,
-              style: GoogleFonts.tajawal(fontSize: 14),
+              style: GoogleFonts.tajawal(fontSize: 15, fontWeight: FontWeight.w600),
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.libSearchHint,
-                hintStyle: GoogleFonts.tajawal(color: isDark ? Colors.white30 : Colors.black26),
-                prefixIcon: const Icon(Icons.search, color: AppTheme.accentColor, size: 20),
+                hintStyle: GoogleFonts.tajawal(color: isDark ? Colors.white30 : Colors.black38),
+                prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.accentColor, size: 22),
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                contentPadding: const EdgeInsets.symmetric(vertical: 18),
               ),
             ),
-          ),
+          ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.05),
         ),
+        
+        // Filter Chips
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -172,114 +217,196 @@ class _SearchAndFilterBar extends StatelessWidget {
             children: PublicationCategory.values.map((cat) {
               final isSelected = selectedCategory == cat;
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: FilterChip(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: ChoiceChip(
                   label: Text(cat.getLabel(isAr ? 'ar' : 'en')),
                   selected: isSelected,
                   onSelected: (_) => onCategoryToggle(cat),
-                  backgroundColor: isDark ? Colors.white10 : Colors.white54,
+                  backgroundColor: isDark ? const Color(0xFF151515) : const Color(0xFFF5F5F5),
                   selectedColor: AppTheme.accentColor,
                   labelStyle: GoogleFonts.tajawal(
-                    fontSize: 11,
-                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                    fontSize: 12,
+                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                     color: isSelected ? Colors.white : (isDark ? Colors.white70 : AppTheme.primaryColor),
                   ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  side: BorderSide(color: isSelected ? Colors.transparent : AppTheme.accentColor.withValues(alpha: 0.2)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    side: BorderSide(color: isSelected ? Colors.transparent : AppTheme.accentColor.withValues(alpha: 0.2)),
+                  ),
                   showCheckmark: false,
+                  elevation: isSelected ? 4 : 0,
+                  shadowColor: AppTheme.accentColor.withValues(alpha: 0.5),
                 ),
-              );
+              ).animate().fadeIn(delay: Duration(milliseconds: 400 + (cat.index * 50))).slideY(begin: 0.1);
             }).toList(),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
       ],
     );
   }
 }
 
-class _PublicationCard extends StatelessWidget {
+class _BookCard extends StatelessWidget {
   final Publication pub;
   final bool isAr;
   final bool isDark;
   final VoidCallback onTap;
 
-  const _PublicationCard({required this.pub, required this.isAr, required this.isDark, required this.onTap});
+  const _BookCard({required this.pub, required this.isAr, required this.isDark, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
-        crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // The Physical Book Cover
           Expanded(
-            child: GlassCard(
-              padding: EdgeInsets.zero,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isDark 
-                    ? AppTheme.accentColor.withValues(alpha: 0.15)
-                    : AppTheme.accentColor.withValues(alpha: 0.1),
-                width: 1.5,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.35),
+                    blurRadius: 15,
+                    offset: const Offset(8, 12),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    blurRadius: 4,
+                    offset: const Offset(2, 4),
+                  ),
+                ],
               ),
-              color: isDark 
-                  ? Colors.white.withValues(alpha: 0.02)
-                  : Colors.white.withValues(alpha: 0.65),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Stack(
-                  children: [
-                    CachedNetworkImage(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Cover Image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: CachedNetworkImage(
                       imageUrl: pub.thumbnailUrl,
-                      placeholder: (context, url) => Container(color: Colors.grey.withValues(alpha: 0.2)),
-                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                      placeholder: (context, url) => Container(color: isDark ? Colors.grey[900] : Colors.grey[200]),
+                      errorWidget: (context, url, error) => Container(color: AppTheme.primaryColor, child: const Icon(Icons.book, color: Colors.white)),
                       fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
                     ),
-                    Positioned(
-                      top: 8,
-                      right: isAr ? 8 : null,
-                      left: isAr ? null : 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppTheme.accentColor.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          pub.category.getLabel(isAr ? 'ar' : 'en').toUpperCase(),
-                          style: GoogleFonts.playfairDisplay(fontSize: 8, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  
+                  // Glossy Overlay for 3D realism
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Colors.white.withValues(alpha: 0.25),
+                            Colors.white.withValues(alpha: 0.0),
+                            Colors.black.withValues(alpha: 0.1),
+                          ],
+                          stops: const [0.0, 0.15, 1.0],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  
+                  // Book Spine Shadow
+                  Positioned(
+                    top: 0, bottom: 0, 
+                    left: isAr ? null : 0, 
+                    right: isAr ? 0 : null,
+                    width: 14,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: isAr ? Alignment.centerRight : Alignment.centerLeft,
+                          end: isAr ? Alignment.centerLeft : Alignment.centerRight,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.4),
+                            Colors.transparent,
+                          ],
+                        ),
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(isAr ? 0 : 6),
+                          right: Radius.circular(isAr ? 6 : 0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  // Category Badge (Elegant Tag)
+                  Positioned(
+                    top: 10,
+                    right: isAr ? null : 10,
+                    left: isAr ? 10 : null,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.6),
+                            border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.5)),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            pub.category.getLabel(isAr ? 'ar' : 'en').toUpperCase(),
+                            style: GoogleFonts.playfairDisplay(
+                              fontSize: 9, 
+                              fontWeight: FontWeight.w900, 
+                              color: AppTheme.accentColor,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          
+          const SizedBox(height: 16),
+          
+          // Book Meta
           Text(
             pub.getTitle(isAr ? 'ar' : 'en'),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            textAlign: isAr ? TextAlign.end : TextAlign.start,
-            style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 13, height: 1.2),
+            textAlign: TextAlign.center,
+            style: GoogleFonts.tajawal(
+              fontWeight: FontWeight.w900, 
+              fontSize: 14, 
+              height: 1.3,
+              color: isDark ? Colors.white : AppTheme.primaryColor,
+            ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Text(
             pub.getAuthor(isAr ? 'ar' : 'en'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            textAlign: isAr ? TextAlign.end : TextAlign.start,
-            style: GoogleFonts.tajawal(fontSize: 10, color: isDark ? Colors.white54 : Colors.black45),
+            textAlign: TextAlign.center,
+            style: GoogleFonts.tajawal(
+              fontSize: 11, 
+              color: isDark ? Colors.white60 : Colors.black54, 
+              fontWeight: FontWeight.w600
+            ),
           ),
         ],
       ),
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Beautiful Publication Details Sheet
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _PublicationDetailsSheet extends StatelessWidget {
   final Publication pub;
@@ -291,57 +418,142 @@ class _PublicationDetailsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.88,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A2E26) : const Color(0xFFFAF9F6),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 40)],
+        color: isDark ? const Color(0xFF0A0F0C) : const Color(0xFFFDFCF8),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(36)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5), 
+            blurRadius: 50,
+            offset: const Offset(0, -10),
+          )
+        ],
       ),
       child: Stack(
         children: [
+          // Background Aesthetic Pattern
+          Positioned(
+            top: -100, right: -100,
+            child: Container(
+              width: 300, height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(colors: [AppTheme.accentColor.withValues(alpha: 0.1), Colors.transparent]),
+              ),
+            ),
+          ),
+          
           CustomScrollView(
+            physics: const BouncingScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    const SizedBox(height: 20),
-                    Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(10))),
+                    const SizedBox(height: 16),
+                    // Drag Handle
+                    Container(
+                      width: 48, height: 5, 
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.3), 
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                    const SizedBox(height: 32),
+                    
+                    // Large 3D Hero
+                    _PublicationHero(pub: pub, isAr: isAr).animate().scale(delay: 200.ms, duration: 600.ms, curve: Curves.easeOutBack),
+                    
+                    const SizedBox(height: 40),
+                    
                     Padding(
-                      padding: const EdgeInsets.all(32),
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
                       child: Column(
                         children: [
-                          _PublicationHero(pub: pub),
-                          const SizedBox(height: 24),
+                          // Category Label
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppTheme.accentColor.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.3)),
+                            ),
+                            child: Text(
+                              pub.category.getLabel(isAr ? 'ar' : 'en').toUpperCase(),
+                              style: GoogleFonts.tajawal(color: AppTheme.accentColor, fontSize: 11, fontWeight: FontWeight.bold),
+                            ),
+                          ).animate().fadeIn(delay: 300.ms),
+                          
+                          const SizedBox(height: 16),
+                          
+                          // Title
                           Text(
                             pub.getTitle(isAr ? 'ar' : 'en'),
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.tajawal(fontSize: 22, fontWeight: FontWeight.w900, height: 1.2),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            pub.getAuthor(isAr ? 'ar' : 'en'),
-                            style: GoogleFonts.tajawal(fontSize: 15, color: AppTheme.accentColor, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(height: 24),
-                          Text(
-                            pub.getSummary(isAr ? 'ar' : 'en'),
-                            textAlign: isAr ? TextAlign.end : TextAlign.start,
-                            style: GoogleFonts.cairo(fontSize: 14, height: 1.6, color: isDark ? Colors.white70 : Colors.black54),
-                          ),
+                            style: GoogleFonts.tajawal(
+                              fontSize: 26, 
+                              fontWeight: FontWeight.w900, 
+                              height: 1.3,
+                              color: isDark ? Colors.white : AppTheme.primaryColor,
+                            ),
+                          ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1),
+                          
+                          const SizedBox(height: 12),
+                          
+                          // Author
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.edit_note_rounded, size: 18, color: AppTheme.accentColor.withValues(alpha: 0.8)),
+                              const SizedBox(width: 8),
+                              Text(
+                                pub.getAuthor(isAr ? 'ar' : 'en'),
+                                style: GoogleFonts.tajawal(
+                                  fontSize: 16, 
+                                  color: isDark ? Colors.white70 : Colors.black54, 
+                                  fontWeight: FontWeight.w700
+                                ),
+                              ),
+                            ],
+                          ).animate().fadeIn(delay: 500.ms),
+                          
+                          const SizedBox(height: 36),
+                          
+                          // Summary / Description
+                          Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.02),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
+                            ),
+                            child: Text(
+                              pub.getSummary(isAr ? 'ar' : 'en'),
+                              textAlign: isAr ? TextAlign.justify : TextAlign.start,
+                              style: GoogleFonts.cairo(
+                                fontSize: 15, 
+                                height: 1.8, 
+                                color: isDark ? Colors.white.withValues(alpha: 0.85) : Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.05),
+                          
                         ],
                       ),
                     ),
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 120), // Padding for bottom bar
                   ],
                 ),
               ),
             ],
           ),
+          
+          // Fixed Bottom Bar
           Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _ActionBottomBar(pub: pub, isAr: isAr, isDark: isDark),
+            bottom: 0, left: 0, right: 0,
+            child: _ActionBottomBar(pub: pub, isAr: isAr, isDark: isDark)
+              .animate().fadeIn(delay: 800.ms).slideY(begin: 0.5),
           ),
         ],
       ),
@@ -351,20 +563,63 @@ class _PublicationDetailsSheet extends StatelessWidget {
 
 class _PublicationHero extends StatelessWidget {
   final Publication pub;
-  const _PublicationHero({required this.pub});
+  final bool isAr;
+  const _PublicationHero({required this.pub, required this.isAr});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 150,
-      height: 220,
+      width: 180,
+      height: 270,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 10))],
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.4), blurRadius: 30, offset: const Offset(0, 20)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 5)),
+        ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(14),
-        child: CachedNetworkImage(imageUrl: pub.thumbnailUrl, fit: BoxFit.cover),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: CachedNetworkImage(imageUrl: pub.thumbnailUrl, fit: BoxFit.cover),
+          ),
+          // Deep glossy overlay for hero
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Colors.white.withValues(alpha: 0.3),
+                  Colors.transparent,
+                  Colors.black.withValues(alpha: 0.2),
+                ],
+                stops: const [0.0, 0.2, 1.0],
+              ),
+            ),
+          ),
+          // Strong spine
+          Positioned(
+            top: 0, bottom: 0, left: isAr ? null : 0, right: isAr ? 0 : null,
+            width: 16,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: isAr ? Alignment.centerRight : Alignment.centerLeft,
+                  end: isAr ? Alignment.centerLeft : Alignment.centerRight,
+                  colors: [Colors.black.withValues(alpha: 0.5), Colors.transparent],
+                ),
+                borderRadius: BorderRadius.horizontal(
+                  left: Radius.circular(isAr ? 0 : 8),
+                  right: Radius.circular(isAr ? 8 : 0),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -381,41 +636,54 @@ class _ActionBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+          padding: EdgeInsets.fromLTRB(24, 20, 24, MediaQuery.of(context).padding.bottom + 20),
           decoration: BoxDecoration(
-            color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.7),
-            border: Border(top: BorderSide(color: AppTheme.accentColor.withValues(alpha: 0.2))),
+            color: (isDark ? const Color(0xFF050806) : Colors.white).withValues(alpha: 0.85),
+            border: Border(top: BorderSide(color: AppTheme.accentColor.withValues(alpha: 0.15))),
           ),
           child: Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
+                child: ElevatedButton(
                   onPressed: () => launchUrl(Uri.parse(pub.pdfUrl)),
-                  icon: const Icon(Icons.picture_as_pdf_rounded),
-                  label: Text(AppLocalizations.of(context)!.libOpenPdf),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.accentColor,
                     foregroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 54),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    elevation: 0,
+                    minimumSize: const Size(double.infinity, 58),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 10,
+                    shadowColor: AppTheme.accentColor.withValues(alpha: 0.5),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.menu_book_rounded, size: 22),
+                      const SizedBox(width: 12),
+                      Text(
+                        AppLocalizations.of(context)!.libOpenPdf,
+                        style: GoogleFonts.tajawal(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
+              // Download or Share Button
               Container(
-                width: 54,
-                height: 54,
+                width: 58,
+                height: 58,
                 decoration: BoxDecoration(
-                  color: AppTheme.accentColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppTheme.accentColor.withValues(alpha: 0.2)),
+                  color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
                 ),
-                child: const IconButton(
-                  onPressed: null, // Share functionality could go here
-                  icon: Icon(Icons.share_outlined, color: AppTheme.accentColor),
+                child: IconButton(
+                  onPressed: () {}, // Implementation for download/share
+                  icon: const Icon(Icons.bookmark_add_outlined),
+                  color: isDark ? Colors.white : AppTheme.primaryColor,
+                  iconSize: 24,
                 ),
               ),
             ],
@@ -436,14 +704,19 @@ class _NoResults extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.search_off_rounded, size: 64, color: AppTheme.accentColor.withValues(alpha: 0.3)),
-          const SizedBox(height: 16),
+          Icon(Icons.auto_stories_rounded, size: 80, color: AppTheme.accentColor.withValues(alpha: 0.2)),
+          const SizedBox(height: 24),
           Text(
-            isAr ? 'لم يتم العثور على نتائج' : 'No results found',
-            style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: Colors.grey),
+            isAr ? 'المكتبة فارغة حالياً' : 'The library is currently empty',
+            style: GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.grey),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            isAr ? 'لم يتم العثور على أي منشورات تطابق بحثك' : 'No publications matched your search',
+            style: GoogleFonts.cairo(fontSize: 14, color: Colors.grey),
           ),
         ],
-      ),
+      ).animate().fadeIn().scale(delay: 200.ms),
     );
   }
 }

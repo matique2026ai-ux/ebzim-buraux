@@ -379,31 +379,90 @@ The platform serves 5 audiences:
 
 ## 📱 3. Frontend Architecture (Flutter Web — `c:\ebzim-buraux\lib\`)
 
-### Key Screens (`lib/screens/`)
+### Key Screens (`lib/screens/`) — Complete Map
+
+#### Public Screens (accessible without login)
 
 | Screen | Route | Notes |
 | :--- | :--- | :--- |
-| `splash_screen.dart` | `/` | Auto-login check — redirects to admin or home if session is valid |
+| `splash_screen.dart` | `/splash` | Auto-login check, redirects based on role |
 | `language_selection_screen.dart` | `/language` | First-run language picker |
-| `onboarding_slider_screen.dart` | `/onboarding` | Intro slides (uses `HeroSlide` with `location: ONBOARDING`) |
-| `login_screen.dart` | `/login` | Pre-fills last used credential |
-| `register_screen.dart` | `/register` | Registration with OTP |
-| `home_screen.dart` | `/home` | Main public portal with Hero carousel, stats, news, projects |
-| `admin_dashboard_screen.dart` | `/admin` | Navigation shell for the modular admin tabs |
-| `admin/tabs/*.dart` | N/A | **Modularized Admin Components** (Users, Projects, News, Marketplace, etc.) |
-| `admin_cms_manage_screen.dart` | `/admin/cms/...` | CMS CRUD for Hero, Partners, Leadership, Onboarding |
-| `admin_create_news_screen.dart` | `/admin/news/create` | Trilingual news/project editor with FilePicker image upload |
-| `admin_create_project_screen.dart` | `/admin/projects/create` | Project with milestones timeline |
-| `dashboard_screen.dart` | `/dashboard` | Member personal dashboard |
-| `profile_screen.dart` | `/profile` | Member profile + Digital ID Card + role badge |
-| `heritage_projects_screen.dart` | `/heritage` | All institutional projects |
-| `heritage_map_screen.dart` | `/heritage-map` | Interactive heritage map with Wikipedia landmarks |
-| `membership_flow_screen.dart` | `/membership/apply` | Membership application flow |
-| `contributions_screen.dart` | `/contributions` | Financial contributions |
+| `onboarding_slider_screen.dart` | `/onboarding` | Intro slides from MongoDB |
+| `login_screen.dart` | `/login` | Pre-fills last credential |
+| `register_screen.dart` | `/register` | With OTP verification |
+| `home_screen.dart` | `/home` | Hero carousel, stats, news, projects |
+| `about_screen.dart` | `/about` | Association info, history, mission |
 | `news_screen.dart` | `/news` | News listing |
+| `news_detail_screen.dart` | `/news/:id` | News post detail |
 | `activities_screen.dart` | `/activities` | Events listing |
-| `digital_library_screen.dart` | `/library` | Digital Library with PDF publications |
-| `sidewalk_store_screen.dart` | `/sidewalk-store` | 🆕 Sidewalk Bookstore — premium book marketplace |
+| `event_details_screen.dart` | `/event/:id` | Event detail |
+| `heritage_projects_screen.dart` | `/heritage` | All institutional projects |
+| `heritage_map_screen.dart` | `/heritage-map` | Wikipedia landmark discovery map |
+| `digital_library_screen.dart` | `/library` | Publications (books, reports, research) |
+| `sidewalk_store_screen.dart` | `/sidewalk-store` | 🆕 Sidewalk Bookstore marketplace |
+| `statute_screen.dart` | `/statute` | Algerian Law 06/12 statutes |
+| `leadership_screen.dart` | `/leadership` | Executive board listing |
+| `legal_content_screen.dart` | `/auth/privacy`, `/auth/terms` | Privacy policy & terms |
+
+#### Authenticated Screens (require login)
+
+| Screen | Route | Notes |
+| :--- | :--- | :--- |
+| `dashboard_screen.dart` | `/dashboard` | Member personal dashboard |
+| `profile_screen.dart` | `/profile` | Profile + Digital ID Card + role badge |
+| `edit_profile_screen.dart` | `/profile/edit` | Edit name, bio, photo |
+| `notifications_screen.dart` | `/notifications` | In-app notifications |
+| `settings_screen.dart` | `/settings` | App preferences |
+| `help_support_screen.dart` | `/support` | Help & contact support |
+| `contributions_screen.dart` | `/contributions` | Financial contributions |
+| `civic_report_screen.dart` | `/report` | Civic reporting feature |
+| `membership_discover_screen.dart` | `/membership/discover` | Membership info & CTA |
+| `membership_flow_screen.dart` | `/membership/apply` | Full application flow |
+| `membership_review_screen.dart` | `/membership/review` | Admin review of pending application |
+| `membership_success_screen.dart` | `/membership/success` | Success confirmation |
+| `project_details_screen.dart` | `/project/:id` | Project detail with milestones |
+| `forgot_password_screen.dart` | `/auth/forgot-password` | Password reset request |
+| `otp_verification_screen.dart` | `/auth/forgot-password/otp` | OTP for reset or registration |
+| `reset_password_screen.dart` | `/auth/reset-password` | New password entry |
+
+#### Admin Screens (require ADMIN or SUPER_ADMIN)
+
+| Screen | Route | Notes |
+| :--- | :--- | :--- |
+| `admin_dashboard_screen.dart` | `/admin` | Main navigation shell for all admin tabs |
+| `admin_create_news_screen.dart` | `/admin/news/create` | Trilingual editor + FilePicker |
+| `admin_create_project_screen.dart` | `/admin/projects/create` | Project + milestones timeline |
+| `admin_create_event_screen.dart` | `/admin/events/create` | Event creation form |
+| `admin_cms_manage_screen.dart` | `/admin/cms/:type` | CMS for Hero, Partners, Leadership, Onboarding |
+
+### Admin Dashboard Tabs (`lib/screens/admin/tabs/`)
+
+| Tab File | Purpose | Roles |
+| :--- | :--- | :--- |
+| `users_tab.dart` | User management, role assignment, Excel export | SUPER_ADMIN, ADMIN |
+| `news_tab.dart` | News posts CRUD | SUPER_ADMIN, ADMIN |
+| `projects_tab.dart` | Institutional projects CRUD | SUPER_ADMIN, ADMIN |
+| `events_tab.dart` | Events CRUD | SUPER_ADMIN, ADMIN |
+| `membership_tab.dart` | Membership applications management | SUPER_ADMIN, ADMIN |
+| `financials_tab.dart` | Financial contributions overview | SUPER_ADMIN, ADMIN |
+| `publications_tab.dart` | Digital Library publications CRUD | SUPER_ADMIN, ADMIN |
+| `marketplace_tab.dart` | 🆕 Sidewalk Bookstore management (FilePicker upload) | SUPER_ADMIN, SELLER |
+| `cms_tab.dart` | CMS navigation hub | SUPER_ADMIN, ADMIN |
+| `reports_tab.dart` | Excel export & reports | SUPER_ADMIN, ADMIN |
+| `alerts_tab.dart` | Platform alerts & announcements | SUPER_ADMIN, ADMIN |
+| `settings_tab.dart` | Platform settings | SUPER_ADMIN |
+| `admin_shared_components.dart` | Shared widgets used across tabs | — |
+
+### Key Models (`lib/core/models/`)
+
+| Model | Purpose |
+| :--- | :--- |
+| `user_profile.dart` | User data + `EbzimRole` enum (public, member, authority, admin, superAdmin, seller) |
+| `news_post.dart` | News & projects (trilingual, milestones, media) |
+| `cms_models.dart` | `HeroSlide`, `Partner`, `EbzimLeader` — all CMS models consolidated |
+| `publication.dart` | Digital Library item (PDF/book) |
+| `market_book.dart` | 🆕 Sidewalk Bookstore book listing |
+| `statute_article.dart` | Algerian Law 06/12 article |
 
 ### Key Services (`lib/core/services/`)
 
@@ -416,11 +475,27 @@ The platform serves 5 audiences:
 | `news_service.dart` | Posts and projects (with category filtering) |
 | `event_service.dart` | Events CRUD |
 | `member_service.dart` | Member management for admins |
-| `media_service.dart` | Cloudinary upload |
+| `admin_user_service.dart` | Admin-specific user actions (role change, delete) |
+| `membership_service.dart` | Membership application workflow |
+| `publication_service.dart` | Digital Library publications CRUD |
+| `marketplace_service.dart` | 🆕 Sidewalk Bookstore books CRUD |
+| `media_service.dart` | Cloudinary image upload |
+| `financial_service.dart` | Financial contributions |
+| `report_service.dart` | Excel report generation |
+| `notification_service.dart` | In-app notifications |
 | `public_stats_service.dart` | Live platform stats (member count, etc.) |
 | `storage_service.dart` | Local storage (SharedPreferences) |
 | `statute_service.dart` | Algerian Law 06/12 statutes |
+| `user_profile_service.dart` | User profile updates |
+| `supabase_service.dart` | Supabase storage (alternative media service) |
 | `web_helper_web.dart` | Web-only file download trigger |
+
+### Router Architecture (`lib/core/router/app_router.dart`)
+
+- **Shell Route:** `/home`, `/dashboard`, `/leadership`, `/activities`, `/about`, `/news`, `/profile` — wrapped in `MainShellScreen` (bottom nav)
+- **Standalone Routes:** All admin, auth, settings, notifications, heritage, library, sidewalk-store, etc.
+- **Auth Guard:** `redirect` logic checks `isAuthenticated` and `EbzimRole` — SELLER redirected to `/admin` (marketplace tab only)
+- **Transition Types:** `_fadePage` (shell), `_slidePage` (detail), `_slideHoriz` (auth), `_scalePage` (success)
 
 ---
 

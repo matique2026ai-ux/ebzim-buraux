@@ -41,7 +41,6 @@ import 'package:ebzim_app/screens/civic_report_screen.dart';
 import 'package:ebzim_app/screens/statute_screen.dart';
 import 'package:ebzim_app/screens/digital_library_screen.dart';
 import 'package:ebzim_app/screens/sidewalk_store_screen.dart';
-import 'package:ebzim_app/screens/sidewalk_store_screen.dart';
 import 'package:ebzim_app/screens/contributions_screen.dart';
 import 'package:ebzim_app/screens/news_detail_screen.dart';
 import 'package:ebzim_app/screens/edit_profile_screen.dart';

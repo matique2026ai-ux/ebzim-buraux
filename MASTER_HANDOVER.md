@@ -609,3 +609,61 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
 **Current State: Platform 100% stable. Carousel fetching live data from MongoDB. Production build successfully served on Port 9005. All legacy path 404s resolved.**
 
 🚨 **FINAL MANDATE: THE PRODUCTION BUILD IS THE SOURCE OF TRUTH. NEVER PUSH BROKEN IMPORTS.**
+
+---
+
+### ✅ DONE — Sidewalk Bookstore (كتب الرصيف) — May 1-2, 2026
+
+**ما تم إنجازه:**
+
+1. **صلاحية SELLER الجديدة:**
+   - أضفنا القيمة `SELLER` إلى الـ `EbzimRole` enum في الفرونت (`user_profile.dart`) وفي الـ Backend (`role.enum.ts`).
+   - المستخدم ذو صلاحية `SELLER` يرى في لوحة التحكم **فقط** تبويب متجر الكتب. لا يملك صلاحيات إدارة الأخبار أو الأعضاء أو الإعدادات.
+   - أيقونة الدور في الـ Profile: `storefront_rounded`.
+
+2. **Backend: MarketplaceModule (`backend/src/modules/marketplace/`):**
+   - `MarketBook` Schema في Mongoose بالحقول: `titleAr, titleFr, titleEn, author, descriptionAr, price, deliveryCost, condition (NEW/USED), coverImage (URL), contactInfo, isAvailable`.
+   - `marketplace.service.ts`: CRUD كامل (Create, FindAll, FindById, Update, Delete).
+   - `marketplace.controller.ts`: مربوط بـ `JwtAuthGuard` و `RolesGuard` (SUPER_ADMIN | SELLER فقط يستطيعان الكتابة).
+   - مُسجَّل في `app.module.ts`.
+
+3. **Frontend Admin: MarketplaceTab (`lib/screens/admin/tabs/marketplace_tab.dart`):**
+   - يعرض قائمة بالكتب مع إمكانية التعديل والحذف.
+   - زر "إضافة كتاب جديد" يفتح Dialog متكاملاً بكل حقول الكتاب.
+   - **رفع صورة الغلاف:** تم استبدال حقل الرابط النصي بـ `FilePicker` تفاعلي يرفع الصورة من الجهاز مباشرةً عبر `mediaServiceProvider` (Cloudinary).
+   - معاينة الصورة فورية في الـ Dialog قبل الحفظ.
+
+4. **Frontend Store: SidewalkStoreScreen (`lib/screens/sidewalk_store_screen.dart`):**
+   - واجهة عصرية بـ Glassmorphism وتأثير "رفوف خشبية" فاخرة.
+   - نظام تصفية: الكل / جديد / مستعمل.
+   - بطاقة تفاصيل الكتاب تعرض السعر، التوصيل، الحالة، وزر التواصل.
+   - Route: `/sidewalk-store`.
+
+5. **التكامل:**
+   - زر عائم (FAB) في المكتبة الرقمية (`/library`) ينقل للمتجر.
+   - مسار `/sidewalk-store` مضاف في `app_router.dart`.
+   - Admin Dashboard يُظهر تبويب "متجر الكتب" لـ `SELLER` و `SUPER_ADMIN` فقط.
+
+**ملفات المعدّلة:**
+- `backend/src/common/enums/role.enum.ts`
+- `backend/src/app.module.ts`
+- `backend/src/modules/marketplace/*` (جديد كلياً)
+- `lib/core/models/user_profile.dart`
+- `lib/core/models/market_book.dart` (جديد)
+- `lib/core/services/marketplace_service.dart` (جديد)
+- `lib/screens/sidewalk_store_screen.dart` (جديد)
+- `lib/screens/admin/tabs/marketplace_tab.dart` (جديد — مع FilePicker)
+- `lib/screens/admin_dashboard_screen.dart`
+- `lib/screens/digital_library_screen.dart` (FAB جديد)
+- `lib/screens/profile_screen.dart` (إضافة `seller` للـ switch)
+- `lib/core/router/app_router.dart` (route جديد)
+
+**الحالة:** ✅ مستقر — مُدفوع إلى Git.
+
+---
+
+### 🚨 NEXT AGENT FOCUS (MAY 2026 +)
+
+1. **ربط التواصل الفعلي:** ربط زر "تواصل مع البائع" في `SidewalkStoreScreen` بـ `url_launcher` لفتح الواتساب أو الهاتف مباشرة.
+2. **منح صلاحية SELLER:** يمكن للمشرف العام منح صلاحية `SELLER` لأي مستخدم من لوحة المستخدمين في Admin Dashboard.
+3. **بحث داخل المتجر:** إضافة `SearchBar` في `SidewalkStoreScreen` للبحث بالعنوان أو المؤلف.

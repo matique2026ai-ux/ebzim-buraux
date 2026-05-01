@@ -247,13 +247,31 @@ This is a **MONOREPO** containing both the frontend and backend:
 
 ```text
 c:\ebzim-buraux\
-├── lib/                        ← Flutter Web (Frontend)
-├── backend/                    ← NestJS API (Backend) ← DO NOT IGNORE THIS
-│   ├── src/modules/            ← All API modules
-│   └── src/modules/hero/       ← Example: Hero CMS module
-├── MASTER_HANDOVER.md          ← YOU ARE HERE
-└── render.yaml                 ← Render deployment config (backend)
+├── lib/
+│   ├── core/
+│   │   ├── models/         ← user_profile, news_post, cms_models, publication, market_book, statute_article
+│   │   ├── services/       ← 19 services (auth, news, marketplace, media, publications...)
+│   │   ├── router/         ← app_router.dart (GoRouter — all 40+ routes)
+│   │   ├── providers/      ← locale_provider, theme_provider, realtime_provider
+│   │   ├── theme/          ← AppTheme, colors, typography
+│   │   ├── widgets/        ← MainShellScreen, EbzimBackground, NetworkAwareApp
+│   │   └── common_widgets/ ← GlassCard, PrimaryButton, EbzimLogo, EbzimAppBar...
+│   ├── screens/            ← 40 screens (public, auth, admin, member)
+│   │   └── admin/tabs/     ← 13 admin tab modules
+│   └── main.dart
+├── backend/                ← NestJS API — DO NOT IGNORE
+│   └── src/
+│       ├── modules/        ← 18 modules (auth, users, posts, hero, marketplace, publications...)
+│       └── common/enums/   ← role.enum.ts, category.enum.ts
+├── assets/                 ← fonts, icons, images, css, data
+├── web/                    ← Flutter web bootstrap (index.html)
+├── MASTER_HANDOVER.md      ← YOU ARE HERE (single source of truth)
+├── README.md
+├── pubspec.yaml
+├── render.yaml             ← Render auto-deploy config
+└── analysis_options.yaml
 ```
+
 
 > [!CAUTION]
 > The backend at `c:\ebzim-buraux\backend\` is the **same repository**. Never tell the user "I cannot find the backend" — it is right here. Any change to the backend + `git push` triggers an automatic redeploy on Render.

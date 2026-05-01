@@ -5,6 +5,7 @@ enum EbzimRole {
   admin,
   authority,
   member,
+  seller,
   public;
 
   String get apiValue {
@@ -17,6 +18,8 @@ enum EbzimRole {
         return 'AUTHORITY';
       case member:
         return 'MEMBER';
+      case seller:
+        return 'SELLER';
       case public:
         return 'PUBLIC';
     }
@@ -28,6 +31,7 @@ enum EbzimRole {
       case 'ADMIN': return EbzimRole.admin;
       case 'AUTHORITY': return EbzimRole.authority;
       case 'MEMBER': return EbzimRole.member;
+      case 'SELLER': return EbzimRole.seller;
       default: return EbzimRole.public;
     }
   }
@@ -39,6 +43,7 @@ enum EbzimRole {
         case admin: return 'عضو المكتب التنفيذي';
         case authority: return 'شريك مؤسساتي';
         case member: return 'عضو عامل';
+        case seller: return 'بائع معتمد';
         case public: return 'زائر المنصة';
       }
     } else {
@@ -47,6 +52,7 @@ enum EbzimRole {
         case admin: return 'Executive Board Member';
         case authority: return 'Institutional Partner';
         case member: return 'Active Member';
+        case seller: return 'Certified Seller';
         case public: return 'Platform Guest';
       }
     }
@@ -58,6 +64,7 @@ enum EbzimRole {
       case admin: return const Color(0xFF052011); // Ebzim Emerald
       case authority: return const Color(0xFFB91C1C); // Deep Red
       case member: return const Color(0xFF0369A1); // Deep Blue
+      case seller: return const Color(0xFFF59E0B); // Amber
       case public: return Colors.grey;
     }
   }

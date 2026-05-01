@@ -20,6 +20,7 @@ import { LeadershipModule } from './modules/leadership/leadership.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { UsersModule } from './modules/users/users.module';
 import { PublicationsModule } from './modules/publications/publications.module';
+import { MarketplaceModule } from './modules/marketplace/marketplace.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { PublicationsModule } from './modules/publications/publications.module';
     AdminModule,
     UsersModule,
     PublicationsModule,
+    MarketplaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

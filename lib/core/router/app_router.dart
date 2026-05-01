@@ -40,6 +40,8 @@ import 'package:ebzim_app/screens/heritage_map_screen.dart';
 import 'package:ebzim_app/screens/civic_report_screen.dart';
 import 'package:ebzim_app/screens/statute_screen.dart';
 import 'package:ebzim_app/screens/digital_library_screen.dart';
+import 'package:ebzim_app/screens/sidewalk_store_screen.dart';
+import 'package:ebzim_app/screens/sidewalk_store_screen.dart';
 import 'package:ebzim_app/screens/contributions_screen.dart';
 import 'package:ebzim_app/screens/news_detail_screen.dart';
 import 'package:ebzim_app/screens/edit_profile_screen.dart';
@@ -381,6 +383,10 @@ final appRouterProvider = Provider((ref) {
       GoRoute(
         path: '/library',
         pageBuilder: (context, state) => _fadePage(state, const DigitalLibraryScreen()),
+      ),
+      GoRoute(
+        path: '/sidewalk-store',
+        pageBuilder: (context, state) => _fadePage(state, const SidewalkStoreScreen()),
       ),
       GoRoute(
         path: '/contributions',

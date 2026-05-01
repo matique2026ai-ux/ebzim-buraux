@@ -142,6 +142,15 @@ class _DigitalLibraryScreenState extends ConsumerState<DigitalLibraryScreen> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push('/sidewalk-store'),
+        backgroundColor: AppTheme.accentColor,
+        icon: const Icon(Icons.storefront_rounded),
+        label: Text(
+          isAr ? 'متجر الرصيف' : 'Sidewalk Store',
+          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+        ),
+      ).animate().scale(delay: 500.ms, curve: Curves.easeOutBack),
     );
   }
 

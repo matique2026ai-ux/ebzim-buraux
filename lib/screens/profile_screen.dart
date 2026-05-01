@@ -481,6 +481,7 @@ class _RoleBadge extends StatelessWidget {
       case EbzimRole.admin: icon = Icons.admin_panel_settings_rounded; break;
       case EbzimRole.authority: icon = Icons.account_balance_rounded; break;
       case EbzimRole.member: icon = Icons.verified_rounded; break;
+      case EbzimRole.seller: icon = Icons.storefront_rounded; break;
       case EbzimRole.public: icon = Icons.person_outline_rounded; break;
     }
 

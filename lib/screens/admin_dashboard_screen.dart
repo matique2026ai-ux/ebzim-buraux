@@ -29,6 +29,7 @@ import 'package:ebzim_app/screens/admin/tabs/financials_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/settings_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/publications_tab.dart';
 import 'package:ebzim_app/screens/admin/tabs/alerts_tab.dart';
+import 'package:ebzim_app/screens/admin/tabs/marketplace_tab.dart';
 
 
 
@@ -53,50 +54,65 @@ class AdminDashboardScreen extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
     final user = userAsync.value;
     final isSuperAdmin = user?.role == EbzimRole.superAdmin;
+    final isSeller = user?.role == EbzimRole.seller;
 
+    final List<Map<String, dynamic>> allTabs = [];
 
-    final List<Map<String, dynamic>> allTabs = [
-      {
-        'icon': Icons.group_add_rounded,
-        'text': 'العضوية',
-        'view': MembershipTab(),
-      },
-      {
-        'icon': Icons.people_alt_rounded,
-        'text': 'المستخدمون',
-        'view': UsersTab(),
-      },
-      {
-        'icon': Icons.dashboard_customize_rounded,
-        'text': 'المحتوى',
-        'view': CMSTab(),
-      },
-      {
-        'icon': Icons.event_rounded,
-        'text': 'الأنشطة',
-        'view': EventsTab(),
-      },
-      {
-        'icon': Icons.newspaper_rounded,
-        'text': 'الأخبار',
-        'view': NewsTab(),
-      },
-      {
-        'icon': Icons.architecture_rounded,
-        'text': 'المشاريع',
-        'view': ProjectsTab(),
-      },
-      {
-        'icon': Icons.flag_rounded,
-        'text': 'البلاغات',
-        'view': ReportsTab(),
-      },
-      {
-        'icon': Icons.menu_book_rounded,
-        'text': 'المكتبة',
-        'view': const PublicationsTab(),
-      },
-      if (isSuperAdmin) ...[
+    if (!isSeller) {
+      allTabs.addAll([
+        {
+          'icon': Icons.group_add_rounded,
+          'text': 'العضوية',
+          'view': MembershipTab(),
+        },
+        {
+          'icon': Icons.people_alt_rounded,
+          'text': 'المستخدمون',
+          'view': UsersTab(),
+        },
+        {
+          'icon': Icons.dashboard_customize_rounded,
+          'text': 'المحتوى',
+          'view': CMSTab(),
+        },
+        {
+          'icon': Icons.event_rounded,
+          'text': 'الأنشطة',
+          'view': EventsTab(),
+        },
+        {
+          'icon': Icons.newspaper_rounded,
+          'text': 'الأخبار',
+          'view': NewsTab(),
+        },
+        {
+          'icon': Icons.architecture_rounded,
+          'text': 'المشاريع',
+          'view': ProjectsTab(),
+        },
+        {
+          'icon': Icons.flag_rounded,
+          'text': 'البلاغات',
+          'view': ReportsTab(),
+        },
+        {
+          'icon': Icons.menu_book_rounded,
+          'text': 'المكتبة',
+          'view': const PublicationsTab(),
+        },
+      ]);
+    }
+
+    if (isSuperAdmin || isSeller) {
+      allTabs.add({
+        'icon': Icons.storefront_rounded,
+        'text': 'متجر الكتب',
+        'view': const MarketplaceTab(),
+      });
+    }
+
+    if (isSuperAdmin) {
+      allTabs.addAll([
         {
           'icon': Icons.bolt_rounded,
           'text': 'التنبيهات',
@@ -112,8 +128,9 @@ class AdminDashboardScreen extends ConsumerWidget {
           'text': 'الإعدادات',
           'view': SettingsTab(),
         },
-      ],
-    ];
+      ]);
+    }
+
 
     return DefaultTabController(
       length: allTabs.length,

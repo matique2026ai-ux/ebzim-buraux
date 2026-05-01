@@ -657,7 +657,6 @@ To avoid codebase freezing and IDE sync issues (the "Infinite Loading" or "Agent
    - مسار `/sidewalk-store` مضاف في `app_router.dart`.
    - Admin Dashboard يُظهر تبويب "متجر الكتب" لـ `SELLER` و `SUPER_ADMIN` فقط.
 
-
 **ملفات المعدّلة:**
 
 - `backend/src/common/enums/role.enum.ts`

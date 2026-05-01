@@ -550,7 +550,7 @@ The platform serves 5 audiences:
 ## 🔐 5. Security & Auth
 
 - **JWT Auth:** Tokens stored via `StorageService`. Intercepted automatically by `ApiClient`.
-- **Roles:** `SUPER_ADMIN` > `ADMIN` > `AUTHORITY` > `MEMBER`. `SUPER_ADMIN` accounts are protected — they cannot be deleted or demoted.
+- **Roles:** `SUPER_ADMIN` > `ADMIN` > `AUTHORITY` > `MEMBER` > `SELLER`. `SUPER_ADMIN` accounts are protected — they cannot be deleted or demoted. `SELLER` has access only to the Marketplace tab in Admin Dashboard.
 - **Auto-Login:** `SplashScreen` reads the stored JWT and redirects automatically on valid sessions.
 - **Credential Recall:** `LoginScreen` pre-fills last used email from `StorageService`.
 - **OTP Verification:** Used for registration and password reset flows.
@@ -602,12 +602,6 @@ The CMS (`admin_cms_manage_screen.dart`) manages 4 content types via `CMSManageT
 - **Financial Contributions:** Linked to projects. Payment receipts tracked.
 - **Live Stats:** `publicStatsProvider` feeds the `StatsStrip` widget on both Home and Admin screens.
 - **[APRIL 25] News & Projects Separation:** Complete structural separation achieved. News has `newsType` (Urgent/Important/Normal) and Projects have enforced `contentType: 'PROJECT'`.
-- **[APRIL 25] Professional Heritage Map Refactor:** Overhauled the discovery system to include permanent architectural anchors for Algeria's crown jewels (Djemila, Timgad, Tipaza, Ghardaïa) and global wonders (Petra, Taj Mahal). Implemented a persistent landmark cache (`_landmarkCache`) that eliminates flickering and prevents historical sites from disappearing during
-
-## 🏆 April 2026 Milestone: Professional Map & Institutional Identity
-
-- **Status**: Stable / Production Ready
-- **Key Fixes**: Corrected Djemila (Cuicul) coordinates, fixed infinite loading spinner by migrating to Port 8085/Release mode, implemented Ebzim Golden Logo for field projects.
 - **[APRIL 25] Discovery Stability & Density:** Increased the Wikipedia discovery limit to 150 results and implemented a robust fallback system for CORS-restricted images, ensuring a clean and reliable visual experience across the globe.
 
 ---
@@ -627,7 +621,7 @@ GitHub (matique2026ai-ux/ebzim-buraux)
        │       build: npm install && npm run build
        │       start: npm run start:prod
        │
-       └──▶ Flutter Web (Manual build or dev mode on port 8080)
+       └──▶ Flutter Web (Manual: `flutter run -d chrome --web-port 8085`)
 ```
 
 **Environment Variables on Render (set in dashboard, never commit):**

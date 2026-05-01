@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateQuery } from 'mongoose';
+import { Model } from 'mongoose';
 import { Publication } from './schemas/publication.schema';
+import { CreatePublicationDto } from './publications.controller';
 
 @Injectable()
 export class PublicationsService {
@@ -10,8 +11,8 @@ export class PublicationsService {
     private readonly publicationModel: Model<Publication>,
   ) {}
 
-  async create(createDto: any, userId: string): Promise<Publication> {
-    const plainDto = JSON.parse(JSON.stringify(createDto));
+  async create(createDto: CreatePublicationDto, userId: string): Promise<Publication> {
+    const plainDto = JSON.parse(JSON.stringify(createDto)) as Record<string, unknown>;
     const newPub = new this.publicationModel({
       ...plainDto,
       createdBy: userId,
@@ -29,11 +30,8 @@ export class PublicationsService {
     return pub;
   }
 
-  async update(
-    id: string,
-    updateDto: any,
-  ): Promise<Publication> {
-    const plainDto = JSON.parse(JSON.stringify(updateDto));
+  async update(id: string, updateDto: Partial<CreatePublicationDto>): Promise<Publication> {
+    const plainDto = JSON.parse(JSON.stringify(updateDto)) as Record<string, unknown>;
     const updated = await this.publicationModel
       .findByIdAndUpdate(id, plainDto, { new: true })
       .exec();

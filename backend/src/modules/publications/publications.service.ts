@@ -11,8 +11,9 @@ export class PublicationsService {
   ) {}
 
   async create(createDto: any, userId: string): Promise<Publication> {
+    const plainDto = JSON.parse(JSON.stringify(createDto));
     const newPub = new this.publicationModel({
-      ...createDto,
+      ...plainDto,
       createdBy: userId,
     });
     return newPub.save();
@@ -30,10 +31,11 @@ export class PublicationsService {
 
   async update(
     id: string,
-    updateDto: UpdateQuery<Publication>,
+    updateDto: any,
   ): Promise<Publication> {
+    const plainDto = JSON.parse(JSON.stringify(updateDto));
     const updated = await this.publicationModel
-      .findByIdAndUpdate(id, updateDto, { new: true })
+      .findByIdAndUpdate(id, plainDto, { new: true })
       .exec();
     if (!updated) throw new NotFoundException('Publication not found');
     return updated;

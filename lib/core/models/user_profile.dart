@@ -110,8 +110,8 @@ class UserProfile {
       role: EbzimRole.fromString(json['role'] ?? 'PUBLIC'),
       membershipBadge: json['membershipBadge'],
       status: json['status'] ?? 'ACTIVE',
-      membershipExpiry: json['membershipExpiry'] != null ? DateTime.parse(json['membershipExpiry']) : null,
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      membershipExpiry: json['membershipExpiry'] != null ? DateTime.tryParse(json['membershipExpiry'].toString()) : null,
+      createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt'].toString()) : null,
       bio: profile['bio'],
     );
   }

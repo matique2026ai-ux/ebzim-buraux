@@ -45,4 +45,12 @@ export class HeroService {
   async delete(id: string) {
     return this.slideModel.findByIdAndDelete(id).exec();
   }
+
+  async syncEmergency() {
+    // Force all hero slides to be active and on HOME
+    await this.slideModel.updateMany({}, { $set: { isActive: true, location: 'HOME' } });
+    // Force all posts to be PUBLISHED
+    await this.slideModel.db.collection('posts').updateMany({}, { $set: { status: 'PUBLISHED' } });
+    return { success: true, timestamp: new Date() };
+  }
 }

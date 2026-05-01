@@ -15,7 +15,7 @@ import {
 
 export class CreatePostDto {
   @IsMongoId()
-  @IsNotEmpty()
+  @IsOptional()
   categoryId: string;
 
   @ValidateNested()

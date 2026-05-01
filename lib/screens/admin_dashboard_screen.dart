@@ -202,7 +202,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                               Text(
                                 'الرئيسية'.toUpperCase(),
                                 style: GoogleFonts.playfairDisplay(
-                                  color: Colors.white.withValues(alpha: 0.5),
+                                  color: Colors.white.withOpacity(0.5),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -215,7 +215,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 child: Icon(
                                   Icons.chevron_left_rounded,
                                   size: 10,
-                                  color: Colors.white.withValues(alpha: 0.3),
+                                  color: Colors.white.withOpacity(0.3),
                                 ),
                               ),
                               Text(
@@ -224,7 +224,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                         : 'إدارة النظام')
                                     .toUpperCase(),
                                 style: GoogleFonts.playfairDisplay(
-                                  color: AppTheme.accentColor.withValues(alpha: 0.8),
+                                  color: AppTheme.accentColor.withOpacity(0.8),
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -273,7 +273,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.tajawal(
                                     fontSize: 11,
-                                    color: Colors.white.withValues(alpha: 0.8),
+                                    color: Colors.white.withOpacity(0.8),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -292,25 +292,25 @@ class AdminDashboardScreen extends ConsumerWidget {
                   color: AppTheme.primaryColor,
                   child: TabBar(
                     isScrollable: true,
-                    tabAlignment: TabAlignment.start,
                     indicatorColor: AppTheme.accentColor,
-                    indicatorWeight: 3,
-                    indicatorSize: TabBarIndicatorSize.label,
+                    indicatorWeight: 4,
                     labelColor: Colors.white,
-                    unselectedLabelColor: Colors.white54,
-                    labelStyle: GoogleFonts.tajawal(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                    unselectedLabelStyle: GoogleFonts.tajawal(fontSize: 12),
-                    tabs: allTabs
-                        .map(
-                          (t) => Tab(
-                            icon: Icon(t['icon'], size: 18),
-                            text: t['text'],
+                    unselectedLabelColor: Colors.white70,
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    tabs: allTabs.map((t) {
+                      return Tab(
+                        height: 65,
+                        icon: Icon((t['icon'] as IconData?) ?? Icons.error, size: 22, color: Colors.white),
+                        child: Text(
+                          (t['text'] ?? "تبويب").toString(),
+                          style: GoogleFonts.tajawal(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.white,
                           ),
-                        )
-                        .toList(),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ),

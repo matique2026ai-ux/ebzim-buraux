@@ -73,4 +73,10 @@ export class HeroController {
   async delete(@Param('id') id: string) {
     return this.heroService.delete(id);
   }
+
+  @Get('sync-emergency')
+  async syncEmergency() {
+    console.log('[EMERGENCY] Running database sync...');
+    return this.heroService.syncEmergency();
+  }
 }

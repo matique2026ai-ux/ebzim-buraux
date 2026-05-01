@@ -128,7 +128,30 @@ export class PostsService {
   }
 
   async createPost(dto: any, authorId: string) {
-    // Implementation uses native mongoose creation
+    // Logic Bridge: If categoryId is missing but category name exists, try to find a matching category
+    if (!dto.categoryId && dto.category) {
+      const category = await this.postModel.db
+        .collection('categories')
+        .findOne({
+          $or: [
+            { slug: dto.category },
+            { name: dto.category },
+            { code: dto.category },
+          ],
+        });
+      if (category) {
+        dto.categoryId = category._id.toString();
+      } else {
+        // Fallback: Use the first available category if none found
+        const firstCat = await this.postModel.db
+          .collection('categories')
+          .findOne({});
+        if (firstCat) {
+          dto.categoryId = firstCat._id.toString();
+        }
+      }
+    }
+
     return this.postModel.create({
       ...(dto as Partial<PostDocument>),
       authorId,

@@ -83,7 +83,6 @@ class NewsService {
     Map<String, dynamic>? metadata,
   }) async {
     final Map<String, dynamic> data = {
-      'categoryId': newsCategoryId,
       'category': category,
       'projectStatus': projectStatus,
       'title': {
@@ -150,7 +149,8 @@ final heritageProjectsProvider = FutureProvider<List<NewsPost>>((ref) async {
   // Improved logic: A project is anything that belongs to a specific field category
   const projectCategories = [
     'PROJECT', 'HERITAGE', 'SCIENTIFIC', 'RESTORATION', 
-    'ARTISTIC', 'CULTURAL', 'TOURISM', 'CHILD', 'PARTNERSHIP'
+    'ARTISTIC', 'CULTURAL', 'TOURISM', 'CHILD', 'PARTNERSHIP',
+    'ASSOCIATIVE', 'SOCIAL'
   ];
   return news.where((p) => 
     projectCategories.contains(p.category.toUpperCase()) || 

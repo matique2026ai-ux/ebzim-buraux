@@ -35,20 +35,20 @@ class StatsStrip extends ConsumerWidget {
           borderRadius: BorderRadius.circular(36),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
+              color: Colors.black.withOpacity(isDark ? 0.4 : 0.08),
               blurRadius: 40,
               offset: const Offset(0, 15),
             ),
             BoxShadow(
-              color: AppTheme.accentColor.withValues(alpha: isDark ? 0.05 : 0.0),
+              color: AppTheme.accentColor.withOpacity(isDark ? 0.05 : 0.0),
               blurRadius: 20,
               spreadRadius: -10,
             ),
           ],
           border: Border.all(
             color: isDark
-                ? AppTheme.accentColor.withValues(alpha: 0.15)
-                : AppTheme.primaryColor.withValues(alpha: 0.08),
+                ? AppTheme.accentColor.withOpacity(0.15)
+                : AppTheme.primaryColor.withOpacity(0.08),
             width: 1.5,
           ),
         ),
@@ -161,8 +161,8 @@ class _StatDivider extends StatelessWidget {
     return Container(
       width: 1,
       height: 32,
-      color: Theme.of(context).dividerTheme.color?.withValues(alpha: 0.1) ??
-          Colors.grey.withValues(alpha: 0.1),
+      color: Theme.of(context).dividerTheme.color?.withOpacity(0.1) ??
+          Colors.grey.withOpacity(0.1),
     );
   }
 }

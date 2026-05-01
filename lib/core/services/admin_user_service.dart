@@ -19,7 +19,16 @@ class AdminUserService {
         rawList = responseData['data'];
       }
       
-      final users = rawList.map((json) => UserProfile.fromJson(Map<String, dynamic>.from(json))).toList();
+      final List<UserProfile> users = [];
+      for (var json in rawList) {
+        try {
+          users.add(UserProfile.fromJson(Map<String, dynamic>.from(json)));
+        } catch (e) {
+          print('Error parsing single user: $e');
+          // Skip corrupted user instead of crashing the whole list
+        }
+      }
+      print('Successfully fetched ${users.length} users');
       
       // Defect Fix: Ensure only matique2025@gmail.com is the المشرف العام (Super Admin) 
       // if multiple Super Admins exist, as requested by the owner.

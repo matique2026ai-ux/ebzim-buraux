@@ -95,78 +95,76 @@ class _UsersTabState extends ConsumerState<UsersTab> {
         final activeUsers = users.where((u) => u.status.toUpperCase() == 'ACTIVE').length;
         final pendingUsers = users.where((u) => u.status.toUpperCase() == 'PENDING').length;
 
-        return SingleChildScrollView(
+        return ListView(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const AdminSectionHeader(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: const AdminSectionHeader(
                     title: 'إدارة المستخدمين',
                     subtitle: 'التحكم في الحسابات والأدوار والصلاحيات',
                     icon: Icons.people_alt_rounded,
                   ),
-                  AdminExportButton(
-                    isLoading: _isExporting,
-                    onPressed: () => _exportUsersToExcel(users),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  AdminStatCard(
-                    label: 'إجمالي المستخدمين',
-                    value: users.length.toString(),
-                    icon: Icons.group_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1B4332)]),
-                  ),
-                  const SizedBox(width: 16),
-                  AdminStatCard(
-                    label: 'حسابات نشطة',
-                    value: activeUsers.toString(),
-                    icon: Icons.check_circle_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFF15803D), Color(0xFF22C55E)]),
-                  ),
-                  const SizedBox(width: 16),
-                  AdminStatCard(
-                    label: 'طلبات معلقة',
-                    value: pendingUsers.toString(),
-                    icon: Icons.hourglass_empty_rounded,
-                    gradient: const LinearGradient(colors: [Color(0xFFB45309), Color(0xFFF59E0B)]),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade200),
                 ),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'البحث باسم المستخدم أو البريد الإلكتروني...',
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search_rounded),
-                  ),
-                  onChanged: (v) => setState(() => _searchQuery = v),
+                AdminExportButton(
+                  isLoading: _isExporting,
+                  onPressed: () => _exportUsersToExcel(users),
                 ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                AdminStatCard(
+                  label: 'إجمالي المستخدمين',
+                  value: users.length.toString(),
+                  icon: Icons.group_rounded,
+                  gradient: const LinearGradient(colors: [Color(0xFF052011), Color(0xFF1B4332)]),
+                ),
+                const SizedBox(width: 16),
+                AdminStatCard(
+                  label: 'حسابات نشطة',
+                  value: activeUsers.toString(),
+                  icon: Icons.check_circle_rounded,
+                  gradient: const LinearGradient(colors: [Color(0xFF15803D), Color(0xFF22C55E)]),
+                ),
+                const SizedBox(width: 16),
+                AdminStatCard(
+                  label: 'طلبات معلقة',
+                  value: pendingUsers.toString(),
+                  icon: Icons.hourglass_empty_rounded,
+                  gradient: const LinearGradient(colors: [Color(0xFFB45309), Color(0xFFF59E0B)]),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200),
               ),
-              const SizedBox(height: 24),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: filtered.length,
-                itemBuilder: (context, index) {
-                  return _UserListItem(user: filtered[index]);
-                },
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'البحث باسم المستخدم أو البريد الإلكتروني...',
+                  border: InputBorder.none,
+                  icon: Icon(Icons.search_rounded),
+                ),
+                onChanged: (v) => setState(() => _searchQuery = v),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 24),
+            if (filtered.isEmpty)
+              const Center(child: Padding(
+                padding: EdgeInsets.all(40),
+                child: Text('لا يوجد مستخدمون لعرضهم', style: TextStyle(color: Colors.grey)),
+              ))
+            else
+              ...filtered.map((u) => _UserListItem(user: u)),
+          ],
         );
       },
     );
@@ -189,9 +187,9 @@ class _UserListItem extends ConsumerWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
-          backgroundColor: user.role.getBadgeColor().withValues(alpha: 0.1),
+          backgroundColor: user.role.getBadgeColor().withOpacity(0.1),
           child: Text(
-            user.firstName[0].toUpperCase(),
+            user.firstName.isNotEmpty ? user.firstName[0].toUpperCase() : '?',
             style: TextStyle(color: user.role.getBadgeColor(), fontWeight: FontWeight.bold),
           ),
         ),
@@ -206,7 +204,7 @@ class _UserListItem extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: user.role.getBadgeColor().withValues(alpha: 0.1),
+                color: user.role.getBadgeColor().withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -219,10 +217,16 @@ class _UserListItem extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 8),
-            IconButton(
-              icon: const Icon(Icons.more_vert_rounded),
-              onPressed: () => _showUserActions(context, ref),
-            ),
+            if (user.role != EbzimRole.superAdmin && user.email.toLowerCase() != 'matique2025@gmail.com')
+              IconButton(
+                icon: const Icon(Icons.more_vert_rounded),
+                onPressed: () => _showUserActions(context, ref),
+              )
+            else
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: Icon(Icons.shield_rounded, color: Color(0xFFD4AF37), size: 20),
+              ),
           ],
         ),
       ),

@@ -623,13 +623,22 @@ GitHub (matique2026ai-ux/ebzim-buraux)
        └──▶ Flutter Web (Manual: `flutter run -d chrome --web-port 8085`)
 ```
 
-**Environment Variables on Render (set in dashboard, never commit):**
+- `MONGODB_URI` — MongoDB Atlas connection string (Primary Database)
+- `JWT_SECRET` — Auth signing key (Minimum 32 characters)
+- `JWT_EXPIRES_IN` — `7d` (Standard session duration)
+- `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` (Media Storage)
+- `MAIL_HOST` / `MAIL_USER` / `MAIL_PASS` (Nodemailer - for OTP emails)
 
-- `MONGODB_URI` — MongoDB Atlas connection string
-- `JWT_SECRET` — Auth signing key
-- `JWT_EXPIRES_IN` — `7d`
-- `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET`
-- `MAIL_HOST` / `MAIL_USER` / `MAIL_PASS`
+**Hardcoded Infrastructure (For Instant Stability):**
+
+- **Supabase:** Used as a fallback/alternative storage.
+  - URL: `https://kuoezhgkfxctcxecodak.supabase.co`
+  - Keys: Hardcoded in `lib/core/services/supabase_service.dart` (Frontend) and `backend/src/modules/media/media.service.ts` (Backend).
+- **MongoDB Atlas:** Hosted on a shared cluster. Backup access via the user's Atlas Dashboard.
+- **Render Hosting:** Linked to the GitHub `main` branch.
+
+> [!WARNING]
+> **SECRETS MANAGEMENT:** Do NOT commit the values of `MONGODB_URI` or `JWT_SECRET` to this file or any other markdown file. They must remain exclusively in the Render Dashboard and the local `.env` (which is git-ignored).
 
 ---
 
